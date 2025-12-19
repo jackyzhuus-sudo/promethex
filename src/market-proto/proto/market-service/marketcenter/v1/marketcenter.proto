@@ -1,0 +1,1368 @@
+syntax = "proto3";
+
+package marketcenter.v1;
+
+option go_package = "market-service/api/marketcenter/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.marketcenter.v1";
+option java_outer_classname = "MarketcenterProtoV1";
+
+
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+
+  // base
+  // - client error
+  PARAM                  = 110101;
+  NOT_FOUND              = 110102;
+
+  // - server error
+  INTERNAL               = 110201;
+  NETWORK                = 110202;
+  DATABASE               = 110203;
+  REDIS                  = 110204;
+  RPC                    = 110205;
+
+  // - third party error
+  S3                     = 110301;
+  ALCHEMY                = 110302;
+
+  // business error
+
+  // - market
+  MARKET_NOT_FOUND       = 113101;
+  REPEAT_FOLLOW_MARKET   = 113102;
+  MUST_FOLLOW_FIRST      = 113103;
+  FOLLOW_MARKET_TOO_QUICK = 113104;
+
+  // - asset
+  INVALID_USER_OPERATION = 114101;
+  PLACE_ORDER_TOO_QUICK = 114102;
+}
+
+// Marketcenter服务定义
+// 提供市场中心相关功能，包括市场查询、市场交易等
+service Marketcenter {
+
+    rpc GetPayMasterData(GetPayMasterDataRequest) returns (GetPayMasterDataResponse) {}
+
+    rpc UpdateUserMarketFollowStatus(UpdateUserMarketFollowStatusRequest) returns (UpdateUserMarketFollowStatusResponse) {}
+    rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse) {}
+    rpc ClaimMarketResult(ClaimMarketResultRequest) returns (ClaimMarketResultResponse) {}
+    rpc TransferBaseToken(TransferBaseTokenRequest) returns (TransferBaseTokenResponse) {}
+    rpc GetOptionTokensPrice(GetOptionTokensPriceRequest) returns (GetOptionTokensPriceResponse) {}
+    // 获取某市场下用户的持仓情况
+    rpc GetMarketUsersPositions(GetMarketUsersPositionsRequest) returns (GetMarketUsersPositionsResponse) {}
+
+    rpc GetHotMarkets(GetHotMarketsRequest) returns (GetHotMarketsResponse) {}
+    rpc GetFollowedMarkets(GetFollowedMarketsRequest) returns (GetFollowedMarketsResponse) {}
+    // 获取用户有持仓的市场信息
+    rpc GetHoldingPositionsMarkets(GetHoldingPositionsMarketsRequest) returns (GetHoldingPositionsMarketsResponse) {}
+    rpc GetMarketDetail(GetMarketDetailRequest) returns (GetMarketDetailResponse) {}
+    rpc GetMarketTrades(GetMarketTradesRequest) returns (GetMarketTradesResponse) {}
+    rpc GetUserPositions(GetUserPositionsRequest) returns (GetUserPositionsResponse) {}
+    rpc GetUserTrades(GetUserTradesRequest) returns (GetUserTradesResponse) {}
+    rpc GetUserLatestAssetValue(GetUserLatestAssetValueRequest) returns (GetUserLatestAssetValueResponse) {}
+    rpc SearchMarket(SearchMarketRequest) returns (SearchMarketResponse) {}
+    rpc GetUserAssetHistory(GetUserAssetHistoryRequest) returns (GetUserAssetHistoryResponse) {}
+    rpc GetMarketOptionPriceHistory(GetMarketOptionPriceHistoryRequest) returns (GetMarketOptionPriceHistoryResponse) {}
+
+    rpc GetMarketTags(GetMarketTagsRequest) returns (GetMarketTagsResponse) {}
+    rpc GetMarketCategories(GetMarketCategoriesRequest) returns (GetMarketCategoriesResponse) {}
+
+    // 分页获取市场信息
+    rpc GetMarketsAndOptionsInfo(GetMarketsAndOptionsInfoRequest) returns (GetMarketsAndOptionsInfoResponse) {}
+    // 批量查询市场用户的持仓
+    rpc BatchGetMarketUsersPositions(BatchGetMarketUsersPositionsRequest) returns (BatchGetMarketUsersPositionsResponse) {}
+
+    // 爬块监听链上事件后调用
+    rpc GetMarketsAndOptionsForBlockListener(GetMarketsAndOptionsForBlockListenerRequest) returns (GetMarketsAndOptionsForBlockListenerResponse) {}
+    rpc CreateMarketsAndOptions(CreateMarketsAndOptionsRequest) returns (CreateMarketsAndOptionsResponse) {} // 创建市场和条件
+
+    rpc ProcessMarketDepositOrWithdrawEvent(ProcessMarketDepositOrWithdrawEventRequest) returns (ProcessMarketDepositOrWithdrawEventResponse) {} // 处理市场押注或撤回事件
+    rpc ProcessMarketSwapEvent(ProcessMarketSwapEventRequest) returns (ProcessMarketSwapEventResponse) {} // 处理市场换仓事件
+    rpc ProcessMarketClaimResultEvent(ProcessMarketClaimResultEventRequest) returns (ProcessMarketClaimResultEventResponse) {} // 
+    rpc ProcessMarketSettingEvent(ProcessMarketSettingEventRequest) returns (ProcessMarketSettingEventResponse) {} // 处理市场设置事件
+    rpc ProcessMarketAssertDisputedEvent(ProcessMarketAssertDisputedEventRequest) returns (ProcessMarketAssertDisputedEventResponse) {} // 处理市场断言争议事件
+    rpc ProcessMarketAssertionResolvedEvent(ProcessMarketAssertionResolvedEventRequest) returns (ProcessMarketAssertionResolvedEventResponse) {} // 处理市场断言解决事件
+
+    rpc UpdateUserBaseTokenBalance(UpdateUserBaseTokenBalanceRequest) returns (UpdateUserBaseTokenBalanceResponse) {} // 更新用户基础代币余额
+    rpc BatchUpdateOptionPrice(BatchUpdateOptionPriceRequest) returns (BatchUpdateOptionPriceResponse) {} // 批量更新条件代币价格
+    rpc UpdateMarketStatus(UpdateMarketStatusRequest) returns (UpdateMarketStatusResponse) {} // 更新市场状态(结算 争议 解决 结束)
+
+    rpc UpdateMarketInfo(UpdateMarketInfoRequest) returns (UpdateMarketInfoResponse) {} // 更新市场信息
+
+    rpc GetUserTransactions(GetUserTransactionsRequest) returns (GetUserTransactionsResponse) {}
+    
+    rpc GetBanners(GetBannersRequest) returns (GetBannersResponse) {}
+    rpc GetSections(GetSectionsRequest) returns (GetSectionsResponse) {}
+
+    rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse) {}
+
+    rpc GetQuestionDetail(GetQuestionDetailRequest) returns (GetQuestionDetailResponse) {}
+
+
+}
+
+message GetLeaderboardRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_DAY = 1;
+    TIME_INTERVAL_WEEK = 2;
+    TIME_INTERVAL_MONTH = 3;
+    TIME_INTERVAL_ALL = 4;
+  }
+  enum SortType {
+    SORT_TYPE_UNSPECIFIED = 0;
+    SORT_TYPE_PNL = 1;
+    SORT_TYPE_VOLUME = 2;
+    SORT_TYPE_TRADE_COUNT = 3;
+  }
+
+  TimeInterval time_interval = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+  BaseTokenType base_token_type = 4;
+  string uid = 5;
+  SortType sort_type = 6;
+}
+
+message GetLeaderboardResponse {
+  message Entry {
+    string uid = 1;
+    string score = 2;
+    uint32 decimal = 3;
+    uint32 rank = 4;
+  }
+  uint32 total = 1;
+  repeated Entry entries = 2;
+  Entry user_own_entry = 3;
+}
+
+message GetQuestionsRequest {
+  enum SortType {
+    UNKNOWN = 0;
+    CREATED = 1;
+    VOLUME = 2;
+    PARTICIPANTS = 3;
+    EXPIRED = 4;
+  }
+  // 用户uid
+  string uid = 1;
+  // 标签（可选）
+  string tag = 2;
+  // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按过期时间
+  SortType sort_type = 3; 
+  BaseTokenType base_token_type = 4;
+  uint32 status = 5;
+  uint32 page = 6;
+  uint32 page_size = 7;
+  MarketIsShow is_show = 8; // 1: 显示 2: 隐藏
+  string category_id = 11; // 分类id 可选
+  bool sort_asc = 12; // 是否升序 默认false即默认降序
+  bool followed = 13; // 筛选关注市场
+  bool min_volume_trending = 14; // 筛选 （trending标签）交易量大于配置的最小值的市场 true: 筛选 false: 不筛选(默认不筛选)
+  bool soon_expired = 15; // 筛选 即将过期  true: 筛选 false: 不筛选(默认不筛选)
+  bool new_market = 16; // 筛选 最新创建的16个市场  true: 筛选 false: 不筛选(默认不筛选)
+  
+}
+
+message GetQuestionsResponse {
+
+  message Question {
+    message Market {
+      message Option {
+        string address = 1;
+        string name = 2;
+        string symbol = 3;
+        string pic_url = 4;
+        uint32 decimal = 5;
+        uint32 index = 6;
+        string description = 7;
+
+        string price = 8;
+      }
+  
+      string address = 1;
+      string name = 2;
+      string pic_url = 3;
+      string description = 4;
+      uint32 status = 5;
+      uint32 participants_count = 6;
+      string volume = 7;
+      BaseTokenType base_token_type = 8;  // 1: points 2: usdc
+      uint32 decimal = 10;  // 精度
+  
+      repeated Option options = 11;
+      uint32 created_at = 13;
+      uint32 deadline = 14;
+      string result = 15;
+    }
+
+    string question_uuid = 1;
+    string name = 2;
+    string description = 3;
+    string pic_url = 4;
+    uint32 status = 7; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    uint32 participants_count = 8;
+    string volume = 9;
+    BaseTokenType base_token_type = 10;  // 1: points 2: usdc
+    uint32 decimal = 11;  // 精度
+    uint32 created_at = 12;
+    uint32 deadline = 13;
+
+    repeated Market markets = 15;
+
+  }
+ 
+
+
+  uint32 total = 1;
+  repeated Question questions = 2;
+}
+
+message GetQuestionDetailRequest {
+  string uid = 1;
+  string question_uuid = 2;
+}
+
+message GetQuestionDetailResponse {
+  enum IsClaim {
+    IS_CLAIMED_UNSPECIFIED = 0;
+    IS_CLAIMED_YES = 1;
+    IS_CLAIMED_NO = 2;
+  }
+  message Market {
+    message Option {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      string pic_url = 4;
+      string price = 5;
+      uint32 decimal = 6;
+      string description = 7;
+    }
+
+    string address = 1;
+    string name = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint64 deadline = 5;
+    string volume = 6;
+    uint64 participants_count = 7;
+    string result_option_address = 8;
+    uint32 status = 9; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    BaseTokenType base_token_type = 10; // 1: points 2: usdc
+    string base_token_address = 11; // points或者usdc等的合约地址
+    // 是否以领取结果 
+    IsClaim is_claim = 12;
+    repeated Option options = 13;
+  }
+
+
+  string question_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string pic_url = 4;
+  string rules = 5;
+  string rules_file_url = 6;
+  uint32 status = 7; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+  BaseTokenType base_token_type = 8; // 1: points 2: usdc
+  string base_token_address = 9; // points或者usdc等的合约地址
+  // 是否以领取结果 
+  IsClaim is_claim = 10;
+}
+
+
+
+message UpdateMarketInfoRequest {
+  string market_address = 1;
+}
+
+message UpdateMarketInfoResponse {
+}
+
+message ProcessMarketSettingEventRequest {
+  string market_address = 1;
+  string final_option_address = 2;
+  bytes assertion_id = 3;
+  uint64 block_number = 4;
+  string tx_hash = 5;
+}
+
+message ProcessMarketSettingEventResponse {
+}
+
+message ProcessMarketAssertDisputedEventRequest {
+  string market_address = 1;
+  bytes assertion_id = 2;
+  uint64 block_number = 3;
+  string tx_hash = 4;
+}
+
+message ProcessMarketAssertDisputedEventResponse {
+}
+
+message ProcessMarketAssertionResolvedEventRequest {
+  string market_address = 1;
+  bytes assertion_id = 2;
+  bool asserted_truthfully = 3;
+  uint64 block_number = 4;
+  string tx_hash = 5;
+}
+
+message ProcessMarketAssertionResolvedEventResponse {
+}
+
+
+
+
+message GetPayMasterDataRequest {
+  UserOperation user_operation = 1;
+}
+
+message GetPayMasterDataResponse {
+  string paymaster = 1;
+  string paymaster_data = 2;
+  string paymaster_verification_gas_limit = 3;
+  string pre_verification_gas = 4;
+  string verification_gas_limit = 5;
+  string call_gas_limit = 6;
+}
+
+message BatchUpdateOptionPriceRequest {
+  message OptionPrice {
+    string option_address = 1;
+    string price = 2;
+    uint32 decimal = 3;
+    uint64 block_time = 4;
+    uint64 block_number = 5;
+    BaseTokenType base_token_type = 6;
+  }
+  repeated OptionPrice option_prices = 1;
+}
+
+message BatchUpdateOptionPriceResponse {
+}
+
+
+message GetMarketTagsRequest {
+  uint32 page = 1;
+  uint32 page_size = 2;
+}
+
+
+message GetMarketTagsResponse {
+   // 总数量
+  uint32 total = 1;
+  repeated string tags = 2;
+}
+
+message GetMarketCategoriesRequest {
+  uint32 page = 1;
+  uint32 page_size = 2;
+  BaseTokenType base_token_type = 3;
+}
+
+message GetMarketCategoriesResponse {
+  message Category {
+    string id = 1;
+    string name = 2;
+    int32 weight = 3;
+  }
+  uint32 total = 1;
+  repeated Category categories = 2;
+}
+
+message BatchGetMarketUsersPositionsRequest {
+  message MarketAndUser {
+    string market_address = 1;
+    string uid = 2;
+  }
+  repeated MarketAndUser market_and_users = 1;
+}
+
+message BatchGetMarketUsersPositionsResponse {
+  message UserMarketPosition {
+    message Position {
+      string option_address = 1;
+      string amount = 2;
+      uint32 decimal = 3;
+    }
+    string market_address = 1;
+    string uid = 2;
+    repeated Position positions = 3;
+  }
+  repeated UserMarketPosition user_market_positions = 1;
+}
+
+message GetMarketsAndOptionsInfoRequest {
+  enum SortType {
+    SORT_TYPE_UNKNOWN = 0;
+    SORT_TYPE_LATEST = 1;
+    SORT_TYPE_VOLUME = 2;
+    SORT_TYPE_PARTICIPANTS = 3;
+    SORT_TYPE_OLDEST = 4;
+    SORT_TYPE_SIMILARITY = 5;
+    SORT_TYPE_EXPIRED = 6;
+  }
+  // 用户uid
+  string uid = 1;
+  // 标签（可选）
+  string tag = 2;
+  // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
+  SortType sort_type = 3; 
+  BaseTokenType base_token_type = 4;
+  uint32 status = 5;
+  uint32 page = 6;
+  uint32 page_size = 7;
+  MarketIsShow is_show = 8; // 1: 显示 2: 隐藏
+  // 标签列表  查看推荐信息流时（sort_type = 5) 随机选几个标签传入 
+  repeated string hot_words = 9;
+  bool not_query_price = 10; // 是否不查询价格 默认查询
+  string category_id = 11; // 分类id 可选
+  bool sort_asc = 12; // 是否升序 默认false即默认降序
+  bool followed = 13; // 筛选关注市场
+  bool min_volume_trending = 14; // 筛选 （trending标签）交易量大于配置的最小值的市场 true: 筛选 false: 不筛选(默认不筛选)
+  bool soon_expired = 15; // 筛选 即将过期  true: 筛选 false: 不筛选(默认不筛选)
+  bool new_market = 16; // 筛选 最新创建的16个市场  true: 筛选 false: 不筛选(默认不筛选)
+  
+}
+
+enum MarketIsShow {
+  MARKET_IS_SHOW_UNSPECIFIED = 0;
+  MARKET_IS_SHOW_SHOW = 1;
+  MARKET_IS_SHOW_HIDE = 2;
+}
+
+enum QuestionShow {
+  UNSPECIFIED = 0;
+  SHOW = 1;
+  HIDE = 2;
+}
+
+enum IsFollowed {
+  IS_FOLLOWED_UNSPECIFIED = 0;
+  IS_FOLLOWED_YES = 1;
+  IS_FOLLOWED_NO = 2;
+}
+
+message GetMarketsAndOptionsInfoResponse {
+  message Market {
+    message Option {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      string pic_url = 4;
+      uint32 decimal = 5;
+      uint32 index = 6;
+
+      string price = 7;
+      string description = 8;
+    }
+
+    string address = 1;
+    string name = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5;
+    uint32 participants_count = 6;
+    string volume = 7;
+    BaseTokenType base_token_type = 8;  // 1: points 2: usdc
+    IsFollowed is_followed = 9;
+    uint32 decimal = 10;  // 精度
+
+    repeated Option options = 11;
+    int64 id = 12; // 市场ID 用于分页
+    uint32 created_at = 13;
+    uint32 deadline = 14;
+    string result = 15;
+  }
+
+
+  uint32 total = 1;
+  repeated Market markets = 2;
+}
+
+
+message UpdateOptionPrice {
+  string address = 1;
+  string price = 2;
+  uint32 decimal = 3;
+}
+
+message ProcessMarketDepositOrWithdrawEventRequest {
+  enum Side {
+    SIDE_UNSPECIFIED = 0;
+    SIDE_DEPOSIT = 1;
+    SIDE_WITHDRAW = 2;
+  }
+  Side side = 1;
+  // 用户uid
+  string uid = 2;
+  // 市场地址
+  string market_address = 3;
+  // 用户地址
+  string user_address = 4;
+  // 该事件交易的条件代币地址
+  string user_option_token_address = 5;
+  // 该事件交易的条件代币用户余额
+  string user_option_token_balance = 6;
+  // deposit买：投入的资产代币数量 withdraw卖：投入的条件代币数量
+  string amount_in = 7;
+  // deposit买：实际接收的条件代币数量 withdraw卖：实际接收的资产代币数量
+  string amount_out = 8;
+  // 成交价格
+  string price = 9;
+  // 区块高度
+  uint64 block_number = 10;
+  // 交易hash
+  string tx_hash = 11;
+  // 区块时间
+  uint64 block_time = 12;
+
+  BaseTokenType base_token_type = 13;
+  uint32 decimal = 14;
+  // 条件代币价格
+  repeated UpdateOptionPrice option_prices = 15;
+}
+
+message ProcessMarketDepositOrWithdrawEventResponse {
+}
+
+message ProcessMarketSwapEventRequest {
+  repeated UpdateOptionPrice option_prices = 1;
+  uint64 block_number = 2;
+  string tx_hash = 3;
+  BaseTokenType base_token_type = 4;
+  uint64 block_time = 5;
+}
+
+message ProcessMarketSwapEventResponse {
+}
+
+message CreateMarketsAndOptionsRequest {
+  message Option {
+    string name = 1;
+    string address = 2;
+    string symbol = 3;
+    string description = 4;
+    uint32 decimal = 5;
+    uint32 index = 6;
+  }
+
+  message Market {
+    string name = 1;
+    string address = 2;
+    string base_token_address = 3;
+    string oracle_address = 4;
+    uint64 deadline = 5;
+    string tx_hash = 6;
+    repeated Option options = 7;
+  }
+
+  repeated Market markets = 1;
+}
+
+message CreateMarketsAndOptionsResponse {
+}
+
+message TokenBalance {
+  string token_address = 1;
+  string amount = 2;
+  string market_address = 3;
+  uint32 decimal = 4;
+  uint64 block_number = 5;
+}
+
+message UpdateUserBaseTokenBalanceRequest {
+  enum Side {
+    SIDE_UNSPECIFIED = 0;
+    SIDE_DEPOSIT = 1;
+    SIDE_WITHDRAW = 2;
+  }
+  string uid = 1;
+  string user_address = 2;
+  TokenBalance token_balance = 3;
+  string tx_hash = 4;
+  uint64 block_number = 5;
+  string from = 6;
+  string to = 7;
+  string transfer_amount = 8;
+  uint32 side = 9; // 1: deposit 2: withdraw
+}
+
+message UpdateUserBaseTokenBalanceResponse {
+}
+
+message UpdateOptionsPriceRequest {
+  message OptionPrice {
+    string option_address = 1;
+    uint32 option_index = 2;
+    string market_address = 3;
+    string price = 4;
+  }
+  repeated OptionPrice option_prices = 1;
+  uint64 block_number = 2;
+}
+
+message UpdateOptionsPriceResponse {
+}
+
+message UpdateSettleMarketsRequest {
+  message SettleMarket {
+    string market_address = 1;
+    uint32 option_index = 2;
+    bytes assertion_id = 3;
+    uint64 block_number = 4;
+    string tx_hash = 5;
+  }
+  repeated SettleMarket settle_markets = 1;
+}
+
+message UpdateSettleMarketsResponse {}
+
+message UpdateUsersClaimRequest {
+  message UserClaim {
+    string user_address = 1;
+    string uid = 2;
+    uint32 option_index = 3;
+    string amount = 4;
+    string market_address = 5;
+    string tx_hash = 6;
+    uint64 block_number = 7;
+  }
+  repeated UserClaim user_claims = 1;
+}
+
+message UpdateUsersClaimResponse {}
+
+message GetMarketsAndOptionsForBlockListenerRequest {
+  repeated string market_addresses = 1;
+}
+
+message GetMarketsAndOptionsForBlockListenerResponse {
+  message Market {
+    message Option {
+      string address = 1;
+      uint32 index = 2;
+      string market_address = 3;
+      uint32 decimal = 4;
+      BaseTokenType base_token_type = 5;
+    }
+
+    string address = 1;
+    BaseTokenType base_token_type = 2;
+    repeated Option options = 3;
+  }
+
+  repeated Market markets = 1;
+}
+
+// UserOperation 0.7
+message UserOperation {
+  string sender = 1;                    // 合约钱包地址
+  string nonce = 2;                     // 交易序号
+  string init_code = 3;                 // 合约部署代码
+  string call_data = 4;                 // 调用数据
+  string call_gas_limit = 5;            // 执行gas限制
+  string verification_gas_limit = 6;     // 验证gas限制
+  string pre_verification_gas = 7;       // 预验证gas
+  string max_fee_per_gas = 8;           // 最大gas价格
+  string max_priority_fee_per_gas = 9;   // 最大优先gas价格
+  string signature = 10;                 // 签名
+
+  // 0.7新增字段
+  string factory = 11;                   // 工厂合约地址
+  string factory_data = 12;              // 工厂数据
+  string paymaster = 13;                 // paymaster地址
+  string paymaster_data = 14;            // paymaster数据
+  string paymaster_verification_gas_limit = 15;  // paymaster验证gas限制
+  string paymaster_post_op_gas_limit = 16;      // paymaster后处理gas限制
+}
+
+message PlaceOrderRequest {
+  enum Side {
+    SIDE_UNSPECIFIED = 0;
+    SIDE_DEPOSIT = 1;
+    SIDE_WITHDRAW = 2;
+  }
+
+  string uid = 1;
+  string market_address = 2;
+  string option_address = 3;
+  Side side = 4;
+  string price = 5; // 下单时期望的价格
+  string amount = 6; // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+  string min_receive_amount = 7; // deposit买 min_receive_amount为最小接收的条件代币数量 / withdraw卖 min_receive_amount为最小接收的基础代币数量
+  uint64 deadline = 8; // 截止时间
+  UserOperation user_operation = 9; // 前端构建的userOperation结构
+}
+
+message PlaceOrderResponse {
+  string op_hash = 1;
+  string order_uuid = 2;
+}
+
+message ClaimMarketResultRequest {
+  string uid = 1;
+  string market_address = 2;
+  string option_address = 3;
+  UserOperation user_operation = 5;
+}
+
+message ClaimMarketResultResponse {
+  string op_hash = 1;
+}
+
+message TransferBaseTokenRequest {
+  string uid = 1;
+  BaseTokenType base_token_type = 2;
+  string amount = 3;
+  string to_address = 4;
+  UserOperation user_operation = 5;
+}
+
+message TransferBaseTokenResponse {
+  string op_hash = 1;
+}
+
+message GetOptionTokensPriceRequest {
+  message Option {
+    string address = 1;
+    string market_address = 2;
+    uint32 index = 3;
+
+  }
+  repeated Option options = 1;
+}
+
+message GetOptionTokensPriceResponse {
+  message OptionPrice {
+    string address = 1;
+    string price = 2;
+    uint32 decimal = 3;
+  }
+  repeated OptionPrice option_prices = 1;
+}
+
+message UpdateOrderPriceByTxHashRequest {
+  string tx_hash = 1;
+  string price = 2;
+}
+
+message UpdateOrderPriceByTxHashResponse {
+}
+
+message UpdateUserMarketFollowStatusRequest {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_FOLLOW = 1;
+    STATUS_UNFOLLOW = 2;
+  }
+  string uid = 1;
+  string market_address = 2;
+  Status status = 3;
+  string question_uuid = 4;
+}
+
+message UpdateUserMarketFollowStatusResponse {}
+
+
+message GetHotMarketsRequest {
+  BaseTokenType base_token_type = 1;
+}
+
+message GetHotMarketsResponse {
+  message Market {
+    string name = 1;
+    string address = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    BaseTokenType base_token_type = 6;
+  }
+  repeated Market markets = 1;
+}
+
+
+message GetFollowedMarketsRequest {
+  string uid = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+  BaseTokenType base_token_type = 4;
+}
+
+message GetFollowedMarketsResponse {
+  message Market {
+    string name = 1;
+    string address = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    int64 deadline = 6;
+    BaseTokenType base_token_type = 7;
+  }
+  uint32 total = 1;
+  repeated Market markets = 2;
+}
+
+
+message GetHoldingPositionsMarketsRequest {
+  string uid = 1;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
+  uint32 page = 3;
+  uint32 page_size = 4;
+}
+
+message GetHoldingPositionsMarketsResponse {
+  message Market {
+    message Position {
+      string token_address = 1;
+      string token_name = 2;
+      string token_symbol = 3;
+      string token_pic_url = 4;
+      string token_description = 5;
+      
+      string balance = 6;
+      uint32 decimal = 7;
+    }
+    string name = 1;
+    string address = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+
+    string market_volume = 6;
+    uint32 market_participants_count = 7;
+    uint32 decimal = 8;
+    BaseTokenType base_token_type = 9; // 1: points 2: usdc
+
+    string user_market_total_value = 10;
+    repeated Position positions = 11;
+  }
+  uint32 total = 1;
+  string total_value = 2;
+  repeated Market markets = 3;
+}
+
+message GetMarketDetailRequest {
+  string uid = 1;
+  string address = 2;
+}
+
+message GetMarketDetailResponse {
+  enum IsClaim {
+    IS_CLAIMED_UNSPECIFIED = 0;
+    IS_CLAIMED_YES = 1;
+    IS_CLAIMED_NO = 2;
+  }
+  message Option {
+    string address = 1;
+    string name = 2;
+    string symbol = 3;
+    string pic_url = 4;
+    string price = 5;
+    uint32 decimal = 6;
+    string description = 7;
+  }
+
+  string address = 1;
+  string name = 2;
+  string pic_url = 3;
+  string description = 4;
+  uint64 deadline = 5;
+  string volume = 6;
+  uint64 participants_count = 7;
+  string rules = 8;
+  string rules_file_url = 9;
+  string result_option_address = 10;
+  uint32 status = 11; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+  IsFollowed is_followed = 12; // 1: 关注 2: 未关注
+  repeated Option options = 13;
+  uint32 decimal = 14;  
+  BaseTokenType base_token_type = 15; // 1: points 2: usdc
+  string base_token_address = 16; // points或者usdc等的合约地址
+  // 是否以领取结果 
+  IsClaim is_claim = 17;
+}
+
+message GetMarketTradesRequest {
+  string address = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+
+message GetMarketTradesResponse {
+  message Order {
+    message Option {
+      string address = 1;
+      string name = 2;
+      string description = 3;
+      uint32 decimal = 4;
+      string symbol = 5;
+      string pic_url = 6;
+    }
+    string uuid = 1;
+    string uid = 2;
+    uint32 side = 3; // 1: deposit买 2: withdraw卖
+    string amount = 4; // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+    string receive_amount = 5; // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
+    uint64 timestamp = 6; // 交易时间
+    string deal_price = 7; // 成交价格
+
+    Option option = 8;
+  }
+  uint32 total = 1;
+  repeated Order orders = 2;
+}
+
+
+message GetUserTradesRequest {
+  string uid = 1;
+  string market_address = 2;
+  uint32 page = 3;
+  uint32 page_size = 4;
+  BaseTokenType base_token_type = 5;
+}
+
+message GetUserTradesResponse {
+  message Order {
+    message Option {
+      string address = 1;
+      string name = 2;
+      string description = 3;
+      uint32 decimal = 4;
+      string symbol = 5;
+      string pic_url = 6;
+      
+      string market_address = 7;
+      string market_name = 8;
+      string market_description = 9;
+      string market_pic_url = 10;
+      uint32 market_participants_count = 11;
+    }
+    string uuid = 1;
+    string uid = 2;
+    uint32 side = 3; // 1: deposit买 2: withdraw卖
+    string amount = 4; // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+    string receive_amount = 5; // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
+    uint64 timestamp = 6; // 交易时间
+    string deal_price = 7; // 成交价格
+
+    Option option = 8;
+    BaseTokenType base_token_type = 9;
+  }
+  uint32 total = 1;
+  repeated Order orders = 2;
+}
+
+message GetMarketUsersPositionsRequest {
+  string market_address = 1;
+  repeated string uids = 2;
+}
+
+message GetMarketUsersPositionsResponse {
+  message UserPosition {
+    message Position {
+      string token_address = 1;
+      string token_name = 2;
+      string token_description = 3;
+      string token_symbol = 4;
+      string token_decimal = 5;
+      string token_pic_url = 6;
+      
+      string balance = 7;
+      uint32 decimal = 8;
+    }
+    string uid = 1;
+    repeated Position positions = 2;
+  }
+  repeated UserPosition user_positions = 1;
+}
+
+enum BaseTokenType {
+  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
+  BASE_TOKEN_TYPE_POINTS = 1;
+  BASE_TOKEN_TYPE_USDC = 2;
+}
+
+message GetUserPositionsRequest {
+  string uid = 1;
+  string market_address = 2;
+  BaseTokenType base_token_type = 3; // 1: points 2: usdc
+  uint32 page = 4;
+  uint32 page_size = 5;
+  string option_address = 6;
+}
+
+message GetUserPositionsResponse {
+  message Position {
+    string market_address = 1;
+    string market_name = 2;
+    string market_pic_url = 3;
+    string market_description = 4;
+
+    string option_address = 5;
+    BaseTokenType base_token_type = 6;
+    string option_name = 7;
+    string option_description = 8;
+    uint32 option_decimal = 9; 
+    string option_symbol = 10; 
+    string option_pic_url = 11;
+
+    string balance = 12;
+    string entry_price = 13;
+    string market_pirce = 14;
+    string bet_value = 15;
+    string current_value = 16;
+    string pnl = 17;
+    string to_win = 18;
+    uint32 status = 19; // 1持仓中 2已结束获胜选项 3已结束非获胜选项"
+    int64 deadline = 20; // 市场的结束时间
+    uint32 is_claimed = 21; // 非获胜选项 是否点击了领取 1是2否
+  }
+  uint32 total = 1;
+  repeated Position positions = 3;
+}
+
+message GetUserLatestAssetValueRequest {
+  string uid = 1;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
+}
+
+message GetUserLatestAssetValueResponse {
+  string value = 1;
+  string balance = 2;
+  string portfolio = 3;
+  string pnl = 4;
+  uint32 decimal = 5;
+  BaseTokenType base_token_type = 6;
+  string volume = 7;
+  uint32 pnl_rank = 8;
+}
+
+message SearchMarketRequest {
+  string keyword = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+  BaseTokenType base_token_type = 4;
+}
+
+message SearchMarketResponse {
+  message Market {
+    string address = 1;
+    string name = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    uint32 participants_count = 6;
+    string volume = 7;
+    int64 deadline = 8;
+    BaseTokenType base_token_type = 9;
+  }
+  uint32 total = 1;
+  repeated Market markets = 2;
+}
+
+message GetUserAssetHistoryRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_7D = 1;
+    TIME_INTERVAL_1M = 2;
+    TIME_INTERVAL_3M = 3;
+    TIME_INTERVAL_ALL = 4;
+  }
+  string uid = 1;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
+  TimeInterval time_interval = 3; // 1: 7d  2: 1m  3: 3m   4: all
+}
+
+message GetUserAssetHistoryResponse {
+  message OneSnapshot {
+    string value = 1;
+    string balance = 2;
+    string portfolio = 3;
+    string pnl = 4;
+    uint64 timestamp = 5;
+  }
+  uint32 total = 1;
+  repeated OneSnapshot snapshots = 2;
+  BaseTokenType base_token_type = 3;
+  uint32 decimal = 4;
+}
+
+message GetMarketOptionPriceHistoryRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_1H = 1;
+    TIME_INTERVAL_6H = 2;
+    TIME_INTERVAL_1D = 3;
+    TIME_INTERVAL_1W = 4;
+    TIME_INTERVAL_ALL = 5;
+  }
+  string market_address = 1;
+  TimeInterval time_interval = 2; // 1: 1h 2: 6h 3: 1d 4: 1w 5: all
+}
+
+message GetMarketOptionPriceHistoryResponse {
+  message OneSnapshot {
+    message TokenPrice {
+      string token_address = 1;
+      string price = 2;
+      uint32 decimal = 3;
+    }
+    uint64 timestamp = 1;
+    repeated TokenPrice token_prices = 2;
+  }
+  uint32 total = 1;
+  repeated OneSnapshot snapshots = 2;
+}
+
+message ProcessMarketClaimResultEventRequest {
+  string uid = 1;
+  string user_address = 2;
+  string market_address = 3;
+  BaseTokenType base_token_type = 4; // 1: points 2: usdc
+  string option_address = 5;
+  string option_balance = 6;
+  string amount = 7;
+  string tx_hash = 8;
+  uint64 block_number = 9;
+  uint64 block_time = 10;
+}
+
+message ProcessMarketClaimResultEventResponse {
+}
+
+message UpdateMarketStatusRequest {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_RUNNING = 1;
+    STATUS_SETTLING = 2;
+    STATUS_DISPUTE = 3;
+    STATUS_ENDED = 4;
+  }
+  string market_address = 1;
+  Status status = 2; // 1: running 2: settling 3: disputed 4: ended
+}
+
+message UpdateMarketStatusResponse {
+}
+
+
+
+message S3TagInfo {
+  string id = 1 [json_name = "Id"];
+}
+
+message S3CategoryInfo {
+  string id = 1 [json_name = "Id"]; // category的id 因为能修改分类名称 所以用id唯一标识
+  string name = 2 [json_name = "Name"]; // category的名称
+  int32 weight = 3 [json_name = "Weight"]; // 权重 排序
+}
+
+message S3CategoryList {
+  int32 total = 1 [json_name = "Total"];
+  repeated S3CategoryInfo categories = 2 [json_name = "Categories"];
+}
+
+
+message S3OptionInfo {
+  string content = 1 [json_name = "Content"];
+  string image_file_url = 2 [json_name = "ImageFileUrl"];
+  string prediction_id = 3 [json_name = "PredictionId"];
+  double index = 4 [json_name = "Index"];
+  double weight = 5 [json_name = "Weight"];
+  bool is_deleted = 6 [json_name = "IsDeleted"];
+  optional int32 deleter_user_id = 7 [json_name = "DeleterUserId"];
+  int32 last_modifier_user_id = 8 [json_name = "LastModifierUserId"];
+  int32 creator_user_id = 9 [json_name = "CreatorUserId"];
+  string id = 10 [json_name = "Id"];
+}
+
+message S3PredictionInfo {
+  optional string tenant_id = 1 [json_name = "TenantId"];
+  string title = 2 [json_name = "Title"];
+  string description = 3 [json_name = "Description"];
+  string rules = 4 [json_name = "Rules"];
+  string rules_file_url = 5 [json_name = "RulesFileUrl"];
+  string image_file_url = 6 [json_name = "ImageFileUrl"];
+  bool is_settled = 7 [json_name = "IsSettled"];
+  optional string winning_option_id = 8 [json_name = "WinningOptionId"];
+  int32 status = 9 [json_name = "Status"];
+  string publish_tx = 10 [json_name = "PublishTx"];
+  optional string settle_tx = 11 [json_name = "SettleTx"];
+  string address = 12 [json_name = "Address"];
+  repeated S3OptionInfo options = 13 [json_name = "Options"];
+  bool is_deleted = 14 [json_name = "IsDeleted"];
+  optional int32 deleter_user_id = 15 [json_name = "DeleterUserId"];
+  int32 last_modifier_user_id = 16 [json_name = "LastModifierUserId"];
+  int32 creator_user_id = 17 [json_name = "CreatorUserId"];
+  string id = 18 [json_name = "Id"];
+  repeated S3TagInfo tags = 19 [json_name = "Tags"];
+  repeated string category_ids = 20 [json_name = "CategoryIds"];
+}
+
+message GetUserTransactionsRequest {
+  string uid = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+  BaseTokenType base_token_type = 4;
+}
+
+enum TxType {
+  TX_TYPE_UNSPECIFIED = 0;
+  TX_TYPE_BUY = 1;
+  TX_TYPE_SELL = 2;
+  TX_TYPE_CLAIM = 3;
+  TX_TYPE_MINT_POINTS = 4;
+  TX_TYPE_MINT_INVITE_POINTS = 5;
+  TX_TYPE_DEPOSIT = 6;
+  TX_TYPE_WITHDRAW = 7;
+  TX_TYPE_MINT_TASK_REWARD_POINTS = 8;
+}
+
+message GetUserTransactionsResponse {
+  message Transaction {
+    string uid = 1;
+    uint32 timestamp = 2;
+    uint32 side = 3; // 1 转入  2 转出
+    BaseTokenType base_token_type = 4;
+    string token_address = 5;
+    uint32 decimal = 6;
+    string amount = 7;
+    TxType type = 8;
+    uint32 status = 9;
+
+    string biz_data = 10;
+    string tx_hash = 11;
+  }
+
+  uint32 total = 1;
+  repeated Transaction transactions = 2;
+}
+
+
+// type = 1 
+message TxDataBuy {
+  // 市场地址
+  string market_address = 1 [json_name = "marketAddress"]; 
+  // 市场名称
+  string market_name = 2 [json_name = "marketName"];
+  // 市场图片
+  string market_pic_url = 3 [json_name = "marketPicUrl"];
+  // 市场描述
+  string market_description = 4 [json_name = "marketDescription"];
+
+  // 选项地址
+  string option_address = 5 [json_name = "optionAddress"];
+  // 选项名称
+  string option_name = 6 [json_name = "optionName"];
+  // 选项描述
+  string option_description = 7 [json_name = "optionDescription"];
+}
+
+// type = 2
+message TxDataSell {
+  // 市场地址   
+  string market_address = 1 [json_name = "marketAddress"];
+  // 市场名称
+  string market_name = 2 [json_name = "marketName"];
+  // 市场图片
+  string market_pic_url = 3 [json_name = "marketPicUrl"];
+  // 市场描述
+  string market_description = 4 [json_name = "marketDescription"];
+
+  // 选项地址
+  string option_address = 5 [json_name = "optionAddress"];
+  // 选项名称
+  string option_name = 6 [json_name = "optionName"];
+  // 选项描述
+  string option_description = 7 [json_name = "optionDescription"];
+}
+
+// type = 3
+message TxDataClaim {
+  // 市场地址
+  string market_address = 1 [json_name = "marketAddress"]; 
+  // 市场名称
+  string market_name = 2 [json_name = "marketName"]; 
+  // 市场图片
+  string market_pic_url = 3 [json_name = "marketPicUrl"];
+  // 市场描述
+  string market_description = 4 [json_name = "marketDescription"];
+
+  // 选项地址
+  string option_address = 5 [json_name = "optionAddress"];
+  // 选项名称
+  string option_name = 6 [json_name = "optionName"];
+  // 选项描述
+  string option_description = 7 [json_name = "optionDescription"];
+}
+
+// type = 4
+message TxDataMintPoints {
+}
+
+// type = 5
+message TxDataMintInvitePoints {
+  // 被邀请用户uid
+  string invited_uid = 1 [json_name = "invitedUid"];
+  // 被邀请用户名称
+  string invited_name = 2 [json_name = "invitedName"];
+  // 被邀请用户头像
+  string invited_avator = 3 [json_name = "invitedAvator"];
+}
+
+// type = 6
+message TxDataDeposit {
+  // 转入地址
+  string address = 1 [json_name = "address"];
+}
+
+// type = 7
+message TxDataWithdraw {
+  // 转出地址
+  string address = 1 [json_name = "address"];
+}
+
+message GetBannersRequest {
+  BaseTokenType base_token_type = 1;
+}
+
+// [{"Weight":1,"Image":"image_7e895486-04f2-4559-b4f1-73898136ae3d_X Cover.png","Type":1,"Url":"0x3AaC6832dCF48577B042567443F03c5cF9E3FfF3","Id":"7e895486-04f2-4559-b4f1-73898136ae3d"},{"Weight":2,"Image":"image_f043d535-48d0-4200-9351-ac134f0f2c57_X Cover.png","Type":0,"Url":"Sports","Id":"f043d535-48d0-4200-9351-ac134f0f2c57"}]
+message GetBannersResponse {
+  message Banner {
+    int32 weight = 1 ;
+    string image = 2 ;
+    int32 type = 3 ;
+    string url = 4 ;
+    string id = 5 ;
+  }
+  repeated Banner banners = 1 ;
+}
+
+message GetSectionsRequest {
+  BaseTokenType base_token_type = 1;
+}
+
+// [{"Predictions":[{"Prediction":"0x1F0c087178a5a189671B69889Cc5ef40cb8e37ec","Weight":3,"Id":"3fd884d7-9138-4bd8-4bba-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":2,"Id":"142cfb75-1434-48fa-4bbb-08ddbea6190f"},{"Prediction":"0x769a0B6ADd80c77bDaC51b84461c7D8eC126fFD8","Weight":1,"Id":"f1ac40bb-6fcc-4ecc-4bbc-08ddbea6190f"}],"Color":"rgb(255,208,208)","Title":"Sports","Type":1,"Weight":1,"Id":"2b86b132-512d-4946-9892-6231667818cb"},{"Predictions":[{"Prediction":"0xF6F2E039D31Bd5B6560b7474e3b2c2aC6b6876a3","Weight":0,"Id":"60d1d5d7-89c2-4a0b-4bbd-08ddbea6190f"},{"Prediction":"0xCb806005752D3460b159EdF182BFB96CfE078F7d","Weight":1,"Id":"56176a73-9ed0-4f6d-4bbe-08ddbea6190f"},{"Prediction":"0x764774E6E926C43C0417C3374D6df9E7cD736bF3","Weight":2,"Id":"7a349794-8a74-49ed-4bbf-08ddbea6190f"},{"Prediction":"0xb29f7fc2637dDf58168fD184376fe8612d3d043E","Weight":3,"Id":"a14566cb-4d06-4680-4bc0-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":4,"Id":"eb914ee8-a6af-4754-4bc1-08ddbea6190f"}],"Color":"rgb(83,159,143)","Title":"Trump","Type":0,"Weight":2,"Id":"4ace4d3f-c9a0-4982-be9b-9c00ecba8263"}]
+message GetSectionsResponse {
+  message Section {
+    message Prediction {
+      string prediction = 1 ;
+      int32 weight = 2 ;
+      string id = 3 ;
+    }
+    string color = 1 ;
+    string title = 2 ;
+    int32 type = 3 ;
+    int32 weight = 4 ;
+    string id = 5 ;
+    repeated Prediction predictions = 6 ;
+  }
+  repeated Section sections = 1 ;
+}

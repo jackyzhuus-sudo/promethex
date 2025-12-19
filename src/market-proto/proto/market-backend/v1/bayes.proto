@@ -1,0 +1,2120 @@
+syntax = "proto3";
+
+package bayes.v1;
+
+import "google/protobuf/descriptor.proto";
+import "google/api/annotations.proto";
+
+option go_package = "market-backend/api/bayes/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.bayes.v1";
+option java_outer_classname = "BayesProtoV1";
+
+
+extend google.protobuf.MethodOptions {
+    bool need_auth = 50001;  // 使用一个唯一的数字
+}
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+
+  // base
+  // - client error
+  PARAM                      = 110101;
+  NOT_FOUND                  = 110102;
+  PLEASE_WAIT                = 110103;
+
+  // - server error
+  INTERNAL                   = 110201;
+  NETWORK                    = 110202;
+  DATABASE                   = 110203;
+  REDIS                      = 110204;
+  RPC                        = 110205;
+
+  // - third party error
+  S3                         = 110301;
+  ALCHEMY                    = 110302;
+  PRIVY                      = 110303;
+  OPENAI                     = 110304;
+
+}
+
+service BayesSse {
+  rpc Subscribe (SubscribeRequest) returns (SubscribeReply) {
+    option (google.api.http) = {
+      post: "/bayes/sse/subscribe"
+      body: "*"
+    };
+    option (need_auth) = false;
+  }
+
+  rpc Unsubscribe (UnsubscribeRequest) returns (UnsubscribeReply) {
+    option (google.api.http) = {
+      post: "/bayes/sse/unsubscribe"
+      body: "*"
+    };
+    option (need_auth) = false;
+  }
+}
+
+message SubscribeRequest {
+  // 可选 指定在哪个连接id订阅
+  string connection_id = 1;
+  // 必填 订阅的topic名
+  repeated string topics = 2;
+}
+
+message SubscribeReply {
+}
+
+message UnsubscribeRequest {
+  // 可选 指定在哪个连接id取消订阅
+  string connection_id = 1;
+  // 必填 取消订阅的topic名
+  repeated string topics = 2;
+}
+
+message UnsubscribeReply {
+}
+
+// BayesHttp 服务
+// 市场的API接口，包括用户管理、市场交易、基础工具等功能
+service BayesHttp {
+  //==============================
+  // 用户管理相关API
+  //==============================
+  
+  // 用户登录 每次在登录后调用 需要登录态didtoken need_auth = true
+  // 没找到用户则自动创建 返回用户uid
+  rpc Login (LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/login"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 设置用户头像 need_auth = true
+  rpc SetAvatar (SetAvatarRequest) returns (SetAvatarReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/set-avatar"
+      body: "*"
+    };
+    option (need_auth) = true;
+  } 
+
+  // 设置用户名称 need_auth = true
+  rpc SetName (SetNameRequest) returns (SetNameReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/set-name"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 设置用户描述 need_auth = true
+  rpc SetDescription (SetDescriptionRequest) returns (SetDescriptionReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/set-description"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+  
+  //==============================
+  // 市场交易相关API
+  //==============================
+  
+  // 下单交易 need_auth = true
+  rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/place-order"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 领取市场结果 need_auth = true
+  rpc ClaimMarketResult (ClaimMarketResultRequest) returns (ClaimMarketResultReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/claim-market-result"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 转账基础代币 need_auth = true
+  rpc TransferBaseToken (TransferBaseTokenRequest) returns (TransferBaseTokenReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/transfer-base-token"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 关注市场 need_auth = true
+  rpc FollowMarket (FollowMarketRequest) returns (FollowMarketReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/follow-market"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 取消关注市场 need_auth = true
+  rpc UnfollowMarket (UnfollowMarketRequest) returns (UnfollowMarketReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/unfollow-market"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  //==============================
+  // 基础工具API
+  //==============================
+  
+  // 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
+  rpc UploadFile (UploadFileRequest) returns (UploadFileReply) {
+    option (google.api.http) = {
+      post: "/bayes/base/upload-file"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 下载文件 need_auth = false
+  rpc DownloadFile (DownloadFileRequest) returns (DownloadFileReply) {
+    option (google.api.http) = {
+      get: "/bayes/base/download-file"
+    };
+    option (need_auth) = false;
+  }
+
+  // 发布帖子 need_auth = true
+  rpc PublishPost (PublishPostRequest) returns (PublishPostReply) {
+    option (google.api.http) = {
+      post: "/bayes/community/publish-post"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 发布评论 need_auth = true
+  rpc PublishComment (PublishCommentRequest) returns (PublishCommentReply) {
+    option (google.api.http) = {
+      post: "/bayes/community/publish-comment"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 点赞 need_auth = true
+  rpc LikeContent (LikeContentRequest) returns (LikeContentReply) {
+    option (google.api.http) = {
+      post: "/bayes/community/like-content"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 取消点赞 need_auth = true
+  rpc UnlikeContent (UnlikeContentRequest) returns (UnlikeContentReply) {
+    option (google.api.http) = {
+      post: "/bayes/community/unlike-content"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 关注用户 need_auth = true
+  rpc FollowUser (FollowUserRequest) returns (FollowUserReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/follow-user"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 取消关注用户 need_auth = true
+  rpc UnfollowUser (UnfollowUserRequest) returns (UnfollowUserReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/unfollow-user"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+  
+  // 获取自己关注的市场列表 need_auth = true
+  rpc GetFollowMarkets (GetFollowMarketsRequest) returns (GetFollowMarketsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-follow-markets"
+    };
+    option (need_auth) = true;
+  }
+
+  // 获取持仓的市场列表（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
+  rpc GetHoldingPositionsMarket (GetHoldingPositionsMarketRequest) returns (GetHoldingPositionsMarketReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-holding-positions-market"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取热门市场列表 need_auth = false
+  rpc GetHotMarkets (GetHotMarketsRequest) returns (GetHotMarketsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-hot-markets"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取市场详情 代币信息 与当前价格 need_auth = false
+  rpc GetMarketDetail (GetMarketDetailRequest) returns (GetMarketDetailReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-market-detail"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取市场交易记录 need_auth = false
+  rpc GetMarketTrades (GetMarketTradesRequest) returns (GetMarketTradesReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-market-trades"
+    };
+    option (need_auth) = false;
+  }
+
+  // 查看交易记录 可以看自己 也可以看别人 need_auth = false
+  rpc GetUserTrades (GetUserTradesRequest) returns (GetUserTradesReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-user-trades"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取市场帖子列表 need_auth = false
+  rpc GetMarketPosts (GetMarketPostsRequest) returns (GetMarketPostsReply) {
+    option (google.api.http) = {
+      get: "/bayes/community/get-market-posts"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取评论区 root_uuid为空只获取根评论 root_uuid不为空只获取该根评论下的二级评论(回复) need_auth = false
+  rpc GetComments (GetCommentsRequest) returns (GetCommentsReply) {
+    option (google.api.http) = {
+      get: "/bayes/community/get-comments"
+    };
+    option (need_auth) = false;
+  }
+  
+  // 获取用户持仓信息 可以看自己 也可以看别人 need_auth = false
+  rpc GetUserPositions (GetUserPositionsRequest) returns (GetUserPositionsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-user-positions"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取用户基础信息(可以看自己 也可以看别人) need_auth = false
+  rpc GetUserBaseInfo (GetUserBaseInfoRequest) returns (GetUserBaseInfoReply) {
+    option (google.api.http) = {
+      get: "/bayes/user/get-user-base-info"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取用户自身的当前资产信息 need_auth = false
+  rpc GetUserAssetInfo (GetUserAssetInfoRequest) returns (GetUserAssetInfoReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-user-asset-info"
+    };
+    option (need_auth) = false;
+  }
+
+  // 搜索 支持市场 用户 搜索  need_auth = false
+  rpc Search(SearchRequest) returns (SearchReply) {
+    option (google.api.http) = {
+      get: "/bayes/base/search"
+    };
+    option (need_auth) = false;
+  }
+
+
+  // 查看用户资产历史变化（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
+  rpc GetUserAssetHistory(GetUserAssetHistoryRequest) returns (GetUserAssetHistoryReply) {
+    option (google.api.http) = {
+      get: "/bayes/user/get-user-asset-history"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取市场期权价格历史 need_auth = false
+  rpc GetMarketOptionPriceHistory(GetMarketOptionPriceHistoryRequest) returns (GetMarketOptionPriceHistoryReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-market-option-price-history"
+    };
+    option (need_auth) = false;
+  }
+
+  // 首页获取市场列表 need_auth = false
+  rpc GetMarkets(GetMarketsRequest) returns (GetMarketsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-markets"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取标签列表 need_auth = false
+  rpc GetTags(GetTagsRequest) returns (GetTagsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-tags"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取市场分类列表 need_auth = false
+  rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-categories"
+    };
+    option (need_auth) = false;
+  }
+
+
+  // 获取paymaster数据 need_auth = true
+  rpc GetPaymasterData(GetPaymasterDataRequest) returns (GetPaymasterDataReply) {
+    option (google.api.http) = {
+      post: "/bayes/market/get-paymaster-data"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // 获取用户通知列表 need_auth = true
+  rpc GetUserNotifications(GetUserNotificationsRequest) returns (GetUserNotificationsReply) {
+    option (google.api.http) = {
+      get: "/bayes/user/get-user-notifications"
+    };
+    option (need_auth) = true;
+  }
+
+  // 标记用户的通知为已读 need_auth = true
+  rpc MarkNotificationsAsRead(MarkNotificationsAsReadRequest) returns (MarkNotificationsAsReadReply) {
+    option (google.api.http) = {
+      post: "/bayes/user/mark-notifications-as-read"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+
+  // 获取邀请用户列表 need_auth = true
+  rpc GetInviteUserList(GetInviteUserListRequest) returns (GetInviteUserListReply) {
+    option (google.api.http) = {
+      get: "/bayes/user/get-invite-user-list"
+    };
+    option (need_auth) = true;
+  }
+
+  // 获取用户交易记录 need_auth = true
+  rpc GetUserTransactions(GetUserTransactionsRequest) returns (GetUserTransactionsReply) {
+    option (google.api.http) = {
+      get: "/bayes/user/get-user-transactions"
+    };
+    option (need_auth) = true;
+  }
+
+  // 获取基础代币配置 need_auth = false
+  rpc GetBaseTokenConfig(GetBaseTokenConfigRequest) returns (GetBaseTokenConfigReply) {
+    option (google.api.http) = {
+      get: "/bayes/base/get-base-token-config"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取banner列表 need_auth = false
+  rpc GetBanners(GetBannersRequest) returns (GetBannersReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-banners"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取section列表 need_auth = false
+  rpc GetSections(GetSectionsRequest) returns (GetSectionsReply) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-sections"
+    };
+    option (need_auth) = false;
+  }
+
+  rpc GetTasks(GetTasksRequest) returns (GetTasksReply) {
+    option (google.api.http) = {
+      get: "/bayes/task/get-tasks"
+    };
+    option (need_auth) = false;
+  }
+
+  rpc ClaimTaskReward(ClaimTaskRewardRequest) returns (ClaimTaskRewardReply) {
+    option (google.api.http) = {
+      post: "/bayes/task/claim-task-reward"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  rpc ShareTaskDone(ShareTaskDoneRequest) returns (ShareTaskDoneReply) {
+    option (google.api.http) = {
+      post: "/bayes/task/share-task-done"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  rpc Translate(TranslateRequest) returns (TranslateReply) {
+    option (google.api.http) = {
+      post: "/bayes/base/translate"
+      body: "*"
+    };
+    option (need_auth) = false;
+  }
+
+  rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse) {
+    option (google.api.http) = {
+      get: "/bayes/market/get-leaderboard"
+    };
+    option (need_auth) = false;
+  }
+}
+
+message GetLeaderboardRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_DAY = 1;
+    TIME_INTERVAL_WEEK = 2;
+    TIME_INTERVAL_MONTH = 3;
+    TIME_INTERVAL_ALL = 4;
+  }
+  enum SortType {
+    SORT_TYPE_UNSPECIFIED = 0;
+    SORT_TYPE_PNL = 1;
+    SORT_TYPE_VOLUME = 2;
+    SORT_TYPE_TRADE_COUNT = 3;
+  }
+
+  // 时间间隔 1: 日 2: 周 3: 月 4: 全部
+  TimeInterval time_interval = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+  // 排序类型 1: pnl 2: volume 3: trade_count
+  SortType sort_type = 4;
+  // 用户uid
+  string uid = 5;
+}
+
+message GetLeaderboardResponse {
+  message Entry {
+    // 用户uid
+    string uid = 1;
+    // 用户名
+    string name = 2;
+    // 用户头像
+    string avatar = 3;
+    // 分数
+    string score = 4;
+    // 精度
+    uint32 decimal = 5;
+    // 排名
+    uint32 rank = 6;
+  }
+  // 总数量
+  uint32 total = 1;
+  // 排行榜列表
+  repeated Entry entries = 2;
+  // 自己的排名
+  Entry user_own_entry = 3;
+}
+
+message TranslateRequest {
+  // 翻译文本
+  string text = 1;
+  // 源语言
+  string source_lang = 2;
+  // 目标语言
+  string target_lang = 3;
+}
+
+message TranslateReply {  
+  // 翻译后的文本
+  string translated_text = 1;
+  // 源语言
+  string source_lang = 2;
+  // 目标语言
+  string target_lang = 3;
+  // 是否来自缓存
+  bool cached = 4;
+  // 使用的token数量
+  uint32 tokens_used = 5;
+}
+
+
+message ShareTaskDoneRequest {
+}
+
+message ShareTaskDoneReply {
+}
+
+message ClaimTaskRewardRequest {
+  string task_key = 1;
+}
+
+message ClaimTaskRewardReply {
+}
+
+
+message GetTasksRequest {
+}
+
+message GetTasksReply {
+  message Task {
+    // 任务uuid
+    string task_uuid = 1;
+    // 任务唯一标识key
+    string task_key = 2;
+    // 任务名称
+    string name = 3;
+    // 任务描述
+    string desc = 4;
+    // 任务类型 1新手一次性任务 2每日任务
+    uint32 type = 5;
+    // 任务图片url
+    string pic_url = 6;
+    // 任务奖励积分
+    uint32 reward_points = 7;
+    // 任务跳转url
+    string jump_url = 8;
+
+    // 是否完成
+    bool is_done = 9;
+
+    // 是否领取奖励 1是2否
+    uint32 is_claimed = 10;
+    // 领取奖励时间
+    uint32 claim_at = 11;
+    // 领取奖励tx_hash
+    string tx_hash = 12;
+    // 交易上链状态 1成功 2失败 3执行中
+    uint32 tx_status = 13;
+  }
+  uint32 total = 1;
+  repeated Task tasks = 2;
+  uint32 total_reward_points = 3;
+}
+
+
+message GetBannersRequest {
+}
+
+message GetBannersReply {
+  message Banner {
+    int32 weight = 1 ;
+    string image = 2 ;
+    int32 type = 3 ;
+    string url = 4 ;
+    string id = 5 ;
+  }
+  repeated Banner banners = 1 ;
+}
+
+message GetSectionsRequest {
+}
+
+message GetSectionsReply {
+  message Section {
+    message Prediction {
+      string prediction = 1 ;
+      int32 weight = 2 ;
+      string id = 3 ;
+    }
+    string color = 1 ;
+    string title = 2 ;
+    int32 type = 3 ;
+    int32 weight = 4 ;
+    string id = 5 ;
+    repeated Prediction predictions = 6 ;
+  }
+  repeated Section sections = 1 ;
+}
+
+
+
+message GetBaseTokenConfigRequest {
+}
+
+message GetBaseTokenConfigReply {
+  message BaseToken {
+    // 代币类型 1: points 2: usdc
+    uint32 base_token_type = 1;
+    // 代币名称
+    string base_token_name = 2;
+    // 代币符号
+    string base_token_symbol = 3;
+    // 代币地址
+    string base_token_address = 4;
+    // 代币精度
+    uint32 base_token_decimals = 5;
+  }
+  repeated BaseToken base_tokens = 1;
+}
+
+
+
+message GetInviteUserListRequest {
+  // 页码
+  uint32 page = 1;
+  // 每页数量
+  uint32 page_size = 2;
+}
+
+message GetInviteUserListReply {
+  message User {
+    string uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string desc = 4;
+    string email = 5;
+    uint32 created_at = 6;
+    uint32 invite_at = 7;
+    // 提供的奖励积分
+    uint32 reward_points = 8;
+  }
+  uint32 total = 1;
+  repeated User users = 2;
+  // 获取的总奖励积分
+  uint32 total_reward_points = 3;
+}
+
+message GetUserNotificationsRequest {
+  // 分类 1. transaction 2. mention
+  uint32 category = 1;
+  // 状态 1. 已读 2. 未读
+  uint32 status = 2;
+  // 类型 1. 注册收到初始points  3. 交易买卖 4. 市场结算  6. 收到评论/回复 7. post收到点赞 8. 被关注
+  uint32 type = 3;
+  // 页码
+  uint32 page = 4;
+  // 每页数量
+  uint32 page_size = 5;
+}
+
+// 获取用户的通知列表 响应
+message GetUserNotificationsReply {
+  message Notification {
+    // 用户ID
+    string uid = 1;
+    // 通知 uuid
+    string uuid = 2;
+    // 类型
+    uint32 type = 3;
+    // 分类
+    uint32 category = 4;
+    // 状态
+    uint32 status = 5;
+    // 具体业务数据json
+    string biz_json = 6; 
+    // 时间
+    int64 created_at = 7;
+    // 基础代币类型
+    BaseTokenType base_token_type = 8;
+  }
+  uint32 total = 1;
+  repeated Notification notifications = 2;
+}
+
+message MarkNotificationsAsReadRequest {
+  // 通知uuid列表
+  repeated string notification_uuids = 1;
+}
+
+message MarkNotificationsAsReadReply {
+}
+
+
+message GetPaymasterDataRequest {
+  UserOperation user_operation = 1;
+}
+
+message GetPaymasterDataReply {
+  string paymaster = 1;
+  string paymaster_data = 2;
+  string paymaster_verification_gas_limit = 3;
+  string pre_verification_gas = 4;
+  string verification_gas_limit = 5;
+  string call_gas_limit = 6;
+}
+
+
+
+message GetTagsRequest {
+  // 页码
+  uint32 page = 1;
+  // 每页数量
+  uint32 page_size = 2;
+}
+
+message GetTagsReply {
+  // 总数量
+  uint32 total = 1;
+  // 标签列表
+  repeated string tags = 2;
+}
+
+
+message GetCategoriesRequest {
+}
+
+message GetCategoriesReply {
+  message Category {
+    string id = 1;
+    string name = 2;
+    int32 weight = 3;
+  }
+  // 总数量
+  uint32 total = 1;
+  // 分类列表
+  repeated Category categories = 2;
+}
+
+
+
+message GetMarketsRequest {
+  enum SortType {
+    SORT_TYPE_UNKNOWN = 0;
+    SORT_TYPE_LATEST = 1;
+    SORT_TYPE_VOLUME = 2;
+    SORT_TYPE_PARTICIPANTS = 3;
+    SORT_TYPE_OLDEST = 4;
+    SORT_TYPE_SIMILARITY = 5;
+    SORT_TYPE_EXPIRED = 6;
+  }
+  // 用户uid（可选）
+  string uid = 1;
+  // 标签（可选）
+  string tag = 2;
+  // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
+  SortType sort_type = 3;
+  // 基础代币类型（可选）1: points 2: usdc
+  BaseTokenType base_token_type = 4;
+  // 市场状态（可选）
+  uint32 status = 5;
+  // 页码
+  uint32 page = 6;
+  // 每页数量
+  uint32 page_size = 7;
+  
+  // 标签列表  查看推荐信息流时（sort_type = 5) 随机选几个标签传入 
+  repeated string hot_words = 8;
+
+  string category_id = 9; // 分类id 可选
+
+  // 是否升序 默认false即默认降序
+  bool sort_asc = 10;
+
+  // 筛选关注市场
+  bool followed = 11;
+
+  // 筛选 （trending标签）交易量大于配置的最小值的市场 true: 筛选 false: 不筛选(默认不筛选)
+  bool min_volume_trending = 12;
+
+  // 筛选 (Live标签)即将过期  true: 筛选 false: 不筛选(默认不筛选)
+  bool soon_expired = 13;
+
+  // 筛选 (new标签)最新创建的16个市场  true: 筛选 false: 不筛选(默认不筛选)  
+  bool new_market = 14;
+}
+
+
+message GetMarketsReply {
+    enum IsLike {
+    IS_LIKE_UNKNOWN = 0;
+    IS_LIKE_YES = 1;
+    IS_LIKE_NO = 2;
+  }
+
+  message Market {
+    message Option {
+      // 选项合约地址
+      string token_address = 1;
+      // 选项合约名称
+      string token_name = 2;
+      // 选项合约图片key
+      string token_pic_url = 3;
+      // 选项合约价格
+      string token_price = 4;
+      // 精度
+      uint32 decimal = 5;
+      // 选项合约描述
+      string token_description = 6;
+    }
+
+    message Post {
+      message UserInfo {
+        string uid = 1;
+        string user_name = 2;
+        string user_avatar_url = 3;
+      }
+
+      message Position {
+        // 代币地址
+        string token_address = 1;
+        // 代币名称
+        string token_name = 2;
+        // 代币图片key
+        string token_pic_url = 3;
+        // 代币余额
+        string balance = 4;
+        // 代币精度
+        uint32 decimal = 5;
+        // 代币描述
+        string token_description = 6;
+      }
+      // 帖子ID
+      string uuid = 1;
+      // 用户ID
+      string uid = 2;
+      // 用户名称
+      string user_name = 3;
+      // 用户头像URL
+      string user_avatar_url = 4;
+      // 帖子标题
+      string title = 5;
+      // 帖子内容
+      string content = 6;
+      // 点赞数
+      uint32 like_count = 7;
+      // 评论数
+      uint32 comment_count = 8;
+      // 创建时间
+      uint64 timestamp = 9;
+      // 用户持仓信息
+      repeated Position positions = 10;
+      // 点赞
+      IsLike is_like = 11;
+      // 帖子ID 用于分页
+      int64 id = 12;
+    }
+    // 市场地址
+    string market_address = 1;
+    // 市场名称
+    string market_name = 2;
+    // 市场图片key
+    string market_pic_url = 3;
+    // 市场描述
+    string market_description = 4;
+    // 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
+    uint32 market_status = 5;
+    // 市场交易量
+    string market_volume = 6;
+    // 市场精度
+    uint32 market_decimal = 7;  
+    // 市场交易人数
+    uint32 participants_count = 8;
+    // 基础代币类型 1: points 2: usdc
+    uint32 base_token_type = 9;
+    // 市场选项信息
+    repeated Option options = 10;
+    // 市场帖子信息
+    Post post = 11;
+
+    // 是否关注
+    IsFollowed is_followed = 12;
+
+    // 创建时间
+    uint32 created_at = 13;
+    // 截止时间
+    uint32 deadline = 14;
+    // 结果选项地址
+    string result = 15;
+  }
+  
+  // 总数量
+  uint32 total_count = 1;
+  // 市场列表
+  repeated Market markets = 2;
+}
+
+
+// 登录请求
+// 其他 eoa_address issuser email 后端通过didtoken 从 magic查询
+message LoginRequest {
+  // alchemy生成的代理钱包地址 必填
+  string address = 1;
+  // 邀请码 (可选)
+  string invite_by_code = 2;
+  // 用户名（可选）
+  string user_name = 3;
+  // 头像url（可选）
+  string avatar_url = 4;
+}
+
+// 登录响应
+// 返回用户uid
+message LoginReply {
+  // 用户唯一标识
+  string uid = 1;
+  // 是否是新用户
+  bool is_new_user = 2;
+}
+
+// 设置头像请求
+// 用于更新用户的个人头像
+message SetAvatarRequest {
+  // 头像URL
+  // 指向用户头像图片的完整URL地址
+  string avatar_url = 1;
+}
+
+// 设置头像响应
+message SetAvatarReply {
+  // 保留字段，暂无返回内容
+}
+
+// 设置用户名和邀请码请求
+message SetNameRequest {
+  // 用户名称
+  // 用户在平台上显示的名称
+  string name = 1;
+
+  string invite_by_code = 2;
+}
+
+// 设置用户名响应
+message SetNameReply {
+  // 保留字段，暂无返回内容
+}
+
+// 设置描述请求
+// 用于更新用户的个人简介或描述
+message SetDescriptionRequest {
+  // 用户描述
+  // 用户的个人简介或详细描述信息
+  string description = 1;
+}
+
+// 设置描述响应
+message SetDescriptionReply {
+  // 保留字段，暂无返回内容
+}
+
+//==============================
+// 市场交易相关消息
+//==============================
+
+// 下单请求
+// 用于在期权市场上进行交易下单
+message PlaceOrderRequest {
+  // 市场合约地址
+  string market_address = 1;
+  
+  // 条件代币合约地址
+  string option_address = 2;
+  
+  // 交易方向
+  // 1: deposit - 买入期权
+  // 2: withdraw - 卖出期权
+  uint32 side = 3;
+  
+  // 交易价格
+  // 下单时期望的成交价格
+  string price = 4;
+  
+  // 交易数量
+  // - 买入(deposit): 投入的基础代币数量
+  // - 卖出(withdraw): 投入的条件代币数量
+  string amount = 5;
+  
+  // 最小接收数量
+  // - 买入(deposit): 最小接收的条件代币数量
+  // - 卖出(withdraw): 最小接收的基础代币数量
+  string min_receive_amount = 6;
+  
+  // 交易截止时间
+  uint64 deadline = 7;
+  
+  // 用户操作信息
+  // 包含交易所需的签名及其他链上操作参数
+  UserOperation user_operation = 8;
+}
+
+// 下单响应
+// 返回交易提交后的操作哈希
+message PlaceOrderReply {
+  // 操作哈希
+  // 可用于在链上查询交易状态
+  string op_hash = 1;
+  // 订单唯一标识
+  string order_uuid = 2;
+}
+
+// 领取市场结果请求
+message ClaimMarketResultRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // 条件代币合约地址
+  string option_address = 2;
+  // 用户操作信息
+  UserOperation user_operation = 3;
+}
+
+// 领取市场结果响应
+message ClaimMarketResultReply {
+  // 操作哈希
+  // 可用于在链上查询交易状态
+  string op_hash = 1;
+}
+
+
+message TransferBaseTokenRequest {
+  // 接收地址
+  string to_address = 1;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 2;
+  // 转账数量
+  string amount = 3;
+  // 用户操作信息
+  UserOperation user_operation = 4;
+}
+
+message TransferBaseTokenReply {
+  // 操作哈希
+  // 可用于在链上查询交易状态
+  string op_hash = 1;
+}
+
+
+// 关注市场请求
+// 用户关注特定的市场以接收更新
+message FollowMarketRequest {
+  // 市场合约地址
+  // 要关注的期权市场的智能合约地址
+  string market_address = 1;
+}
+
+// 关注市场响应
+message FollowMarketReply {
+  // 保留字段，暂无返回内容
+} 
+
+// 取消关注市场请求
+// 用户取消关注特定的市场
+message UnfollowMarketRequest {
+  // 市场合约地址
+  // 要取消关注的期权市场的智能合约地址
+  string market_address = 1;
+}
+
+// 取消关注市场响应
+message UnfollowMarketReply {
+  // 保留字段，暂无返回内容
+}
+//==============================
+// 基础工具相关消息
+//==============================
+
+// 上传图片响应
+// 返回可访问的图片URL
+message UploadFileRequest {
+  // 文件
+  bytes file = 1;
+  // 文件名
+  string file_name = 2;
+  // 文件类型
+  string content_type = 3;
+}
+
+message UploadFileReply {
+  // 图片URL
+  // 上传成功后图片的访问地址
+  string file_key = 1;
+}
+
+//==============================
+// 通用结构
+//==============================
+
+// 用户操作信息 (UserOperation 0.7)
+// 包含区块链交易所需的完整参数集
+message UserOperation {
+  // 合约钱包地址
+  // 用户的智能合约钱包地址
+  string sender = 1;
+  
+  // 交易序号
+  // 用于防止重放攻击的递增序号
+  string nonce = 2;
+  
+  // 合约部署代码
+  // 如果是首次使用，包含合约部署的初始化代码
+  string init_code = 3;
+  
+  // 调用数据
+  // 智能合约调用的编码数据
+  string call_data = 4;
+  
+  // 执行gas限制
+  // 执行交易的最大gas限制
+  string call_gas_limit = 5;
+  
+  // 验证gas限制
+  // 验证交易的最大gas限制
+  string verification_gas_limit = 6;
+  
+  // 预验证gas
+  // 预验证阶段消耗的gas
+  string pre_verification_gas = 7;
+  
+  // 最大gas价格
+  // 愿意支付的最高gas价格
+  string max_fee_per_gas = 8;
+  
+  // 最大优先gas价格
+  // 愿意支付给矿工的最大优先费用
+  string max_priority_fee_per_gas = 9;
+  
+  // 交易签名
+  // 用户对交易的ECDSA签名
+  string signature = 10;
+
+  // 工厂合约地址
+  // 创建合约钱包的工厂合约地址 (0.7新增)
+  string factory = 11;
+
+  // factory数据
+  // factory合约的验证数据 (0.7新增)
+  string factory_data = 12;
+  
+  // Paymaster地址
+  // 代付gas费的Paymaster合约地址 (0.7新增)
+  string paymaster = 13;
+
+  // Paymaster数据
+  // Paymaster合约的验证数据 (0.7新增)
+  string paymaster_data = 14;
+  
+  // Paymaster验证gas限制
+  // Paymaster验证阶段的gas限制 (0.7新增)
+  string paymaster_verification_gas_limit = 15;
+  
+  // Paymaster后处理gas限制
+  // Paymaster后处理操作的gas限制 (0.7新增)
+  string paymaster_post_op_gas_limit = 16;
+  
+}
+
+
+message PublishPostRequest {
+  // 市场地址
+  string market_address = 1;
+  // 标题
+  string title = 2;
+  // 内容
+  string content = 3;
+}
+
+message PublishPostReply {
+  string post_uuid = 1;
+}
+
+
+message PublishCommentRequest {
+  string post_uuid = 1;
+  // 根评论唯一标识
+  string root_uuid = 2;
+  // 父评论唯一标识
+  string parent_uuid = 3;
+  // 内容
+  string content = 4;
+}
+
+message PublishCommentReply {
+  string comment_uuid = 1;
+}
+
+message LikeContentRequest {
+  // 内容唯一标识
+  string content_uuid = 1;
+  // 内容类型 1: post 2: 评论
+  uint32 content_type = 2;
+}
+
+message LikeContentReply {
+}
+
+message UnlikeContentRequest {
+  // 内容唯一标识
+  string content_uuid = 1;
+  // 内容类型 1: post 2: 评论
+  uint32 content_type = 2;
+}
+
+message UnlikeContentReply {
+}
+
+message DownloadFileRequest {
+  // 文件key
+  string file_key = 1;
+}
+
+message DownloadFileReply {
+  // 文件数据
+  bytes file_data = 1;
+  // 文件内容类型
+  string content_type = 2;
+}
+
+
+message GetFollowMarketsRequest {
+  // 页码
+  uint32 page = 1;
+  // 每页数量
+  uint32 page_size = 2;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 3;
+}
+
+message GetFollowMarketsReply {
+  message MarketInfo {
+    // 市场地址
+    string market_address = 1;
+    // 市场名称
+    string market_name = 2;
+    // 市场图片key
+    string market_pic_url = 3;
+    // 市场描述
+    string market_description = 4;
+    // 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
+    uint32 market_status = 5;
+    // 市场截止时间
+    int64 deadline = 6;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 7;
+  }
+  // 总页数
+  uint32 total = 1;
+  // 市场列表
+  repeated MarketInfo market_list = 2;
+}
+
+message GetHoldingPositionsMarketRequest {
+  // 查看的用户uid
+  string uid = 1;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 2;
+  // 页码
+  uint32 page = 3;
+  // 每页数量
+  uint32 page_size = 4;
+}
+
+message GetHoldingPositionsMarketReply {
+  message Market {
+    message Position {
+      // 代币地址
+      string token_address = 1;
+      // 代币名称
+      string token_name = 2;
+      // 代币简称
+      string token_symbol = 3;
+      // 代币图片key
+      string token_pic_url = 4;
+      // 持仓余额
+      string balance = 5;
+      // 代币精度
+      uint32 decimal = 6;
+      // 代币描述
+      string description = 7;
+    }
+    // 市场名称
+    string name = 1;
+    // 市场地址
+    string address = 2;
+    // 市场图片key
+    string pic_url = 3;
+    // 市场描述
+    string description = 4;
+    // 市场状态 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    uint32 status = 5;
+    // 市场历史成交量
+    string market_volume = 6;
+    // 市场参与者数量
+    uint32 market_participants_count = 7;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 8;
+    // 用户该市场的总持仓价值
+    string user_market_total_value = 9;
+    // 用户该市场具体持仓
+    repeated Position positions = 10;
+  }
+  uint32 total = 1;
+  // 总持仓价值
+  string total_value = 2;
+  // 市场列表
+  repeated Market markets = 3;
+}
+
+message GetHotMarketsRequest {
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 1;
+}
+
+message GetHotMarketsReply {
+  message MarketInfo {
+    // 市场地址
+    string market_address = 1;
+    // 市场名称
+    string market_name = 2;
+    // 市场图片key
+    string market_pic_url = 3;
+    // 市场描述
+    string market_description = 4;
+    // 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
+    uint32 market_status = 5;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 6;
+  }
+  // 市场列表
+  repeated MarketInfo market_list = 1;
+}
+
+message GetMarketDetailRequest {
+  string market_address = 1;
+}
+
+enum IsFollowed {
+  IS_FOLLOWED_UNKNOWN = 0;
+  IS_FOLLOWED_YES = 1;
+  IS_FOLLOWED_NO = 2;
+}
+
+enum IsClaim {
+  IS_CLAIM_UNKNOWN = 0;
+  IS_CLAIM_YES = 1;
+  IS_CLAIM_NO = 2;
+}
+
+message GetMarketDetailReply {
+  enum MaketStatus {
+    MARKET_STATUS_UNKNOWN = 0;
+    MARKET_STATUS_RUNING = 1;
+    MARKET_STATUS_Settling = 2;
+    MARKET_STATUS_Disputed = 3;
+    MARKET_STATUS_CLOSED = 4;
+  }
+
+  message OptionInfo {
+    // 条件代币地址
+    string option_address = 1;
+    // 名称
+    string option_name = 2;
+    // 简称
+    string option_symbol = 3;
+    // 图片key
+    string option_pic_url = 4;
+    // 价格
+    string price = 5;
+    // 精度
+    uint32 decimal = 6;
+    // 描述
+    string description = 7;
+  }
+
+  // 市场地址
+  string market_address = 1;
+  // 市场名称
+  string market_name = 2;
+  // 市场图片key
+  string market_pic_url = 3;
+  // 市场描述
+  string market_description = 4;
+  // 市场截止时间
+  uint64 deadline = 5;
+  // 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
+  MaketStatus market_status = 6;
+  // 历史成交量
+  string volume = 7;
+  // 精度
+  uint32 decimal = 8;
+  // 参与者数量 
+  uint32 participants_count = 9;
+  // 结果条件代币地址
+  string result_option_address = 10;
+  // 规则
+  string rule = 11;
+  // 规则文件key
+  string rule_file_key = 12;
+  // 是否关注 1是2否
+  IsFollowed is_followed = 13;
+  // 条件代币列表
+  repeated OptionInfo option_list = 14;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 15;
+  // 基础代币地址
+  string base_token_address = 16;
+  // 是否已结算
+  IsClaim is_claim = 17;
+}
+
+message GetMarketTradesRequest {
+  // 市场地址
+  string market_address = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+}
+
+message GetMarketTradesReply {
+  
+  message Order {
+    message Option {
+      // 代币地址
+      string address = 1;
+      // 代币名称
+      string name = 2;
+      // 代币描述
+      string description = 3;
+      // 代币精度
+      uint32 decimal = 4;
+      // 代币符号
+      string symbol = 5;
+      // 代币图片key
+      string pic_url = 6;
+    }
+    // 交易ID
+    string uuid = 1;
+    // 用户ID
+    string uid = 2;
+    // 用户名称
+    string user_name = 3;
+    // 用户头像URL
+    string user_avatar_url = 4;
+    // 交易类型 1: deposit买 2: withdraw卖
+    uint32 side = 5; 
+    // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+    string amount = 6; 
+    // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
+    string receive_amount = 7; 
+    // 交易时间
+    uint64 timestamp = 8; 
+    // 成交价格
+    string deal_price = 9; 
+
+    Option option = 10;
+  }
+  // 总页数
+  uint32 total = 1;
+  repeated Order orders = 2;
+}
+
+message GetMarketPostsRequest {
+  string market_address = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+  // 游标分页时传
+  int64 last_id = 4;
+}
+
+message GetMarketPostsReply {
+  message Post {
+    message UserInfo {
+      string uid = 1;
+      string user_name = 2;
+      string user_avatar_url = 3;
+    }
+    message Position {
+      // 代币地址
+      string token_address = 1;
+      // 代币名称
+      string token_name = 2;
+      // 代币图片key
+      string token_pic_url = 3;
+      // 代币余额
+      string balance = 4;
+      // 代币精度
+      uint32 decimal = 5;
+      // 代币描述
+      string token_description = 6;
+    }
+    // 帖子ID
+    string uuid = 1;
+    // 用户ID
+    string uid = 2;
+    // 用户名称
+    string user_name = 3;
+    // 用户头像URL
+    string user_avatar_url = 4;
+    // 帖子标题
+    string title = 5;
+    // 帖子内容
+    string content = 6;
+    // 点赞数
+    uint32 like_count = 7;
+    // 评论数
+    uint32 comment_count = 8;
+    // 创建时间
+    uint64 timestamp = 9;
+    // 是否点赞 1是2否
+    uint32 is_like = 10;
+
+    UserInfo user_info = 11;
+    repeated Position positions = 12;
+    // 帖子ID 用于分页
+    int64 id = 13;
+  }
+  // 总页数
+  uint32 total = 1;
+  // 帖子列表
+  repeated Post posts = 2;
+}
+
+// 1. 查询评论区（根评论）root_uuid为空  多返回每一个根评论下的固定个数回复
+// 2. 查询根评论下的回复（子评论） root_uuid为根评论ID
+message GetCommentsRequest {
+  // 帖子ID
+  string post_uuid = 1;
+  // 根评论ID
+  string root_uuid = 2;
+  // 页码
+  int64 page = 3;
+  // 每页数量
+  int64 page_size = 4;
+
+  // 如果是查看整个评论区 传入这个值查询每个根评论下的多少个回复
+  int64 reply_page_size = 5;
+
+  // 游标分页时传
+  int64 last_id = 6;
+}
+
+message GetCommentsReply {
+  enum IsLike {
+    IS_LIKE_UNSPECIFIED = 0;
+    IS_LIKE_YES = 1;
+    IS_LIKE_NO = 2;
+  }
+  message Comment { 
+    message Position {
+      // 代币地址
+      string token_address = 1;
+      // 代币名称
+      string token_name = 2;
+      // 代币图片key
+      string token_pic_url = 3;
+      // 代币余额
+      string balance = 4;
+      // 代币精度
+      uint32 decimal = 5;
+      // 市场地址
+      string market_address = 6;
+      // 代币描述
+      string token_description = 7;
+    }
+    message Reply { 
+      // 用户ID
+      string uid = 1;
+      // 用户名称
+      string user_name = 2;
+      // 用户头像URL
+      string user_avatar_url = 3;
+      // 市场地址
+      string market_address = 4;
+      // 回复ID
+      string uuid = 5;
+      // 父评论ID
+      string parent_uuid = 6;
+      // 根评论ID
+      string root_uuid = 7;
+      // 回复内容
+      string content = 8;
+      // 点赞数
+      int64 like_count = 9;
+      // 创建时间
+      int64 created_at = 10;
+      // 是否点赞 1是2否
+      IsLike is_like = 11;
+      // 父评论的用户名 (显示@回复用户名)
+      string parent_user_name = 12;
+      // 父评论的用户头像URL (显示@回复用户头像)
+      string parent_user_avatar_url = 13;
+      // 回复ID 用于分页
+      int64 id = 14;
+    }
+
+    // 用户ID
+    string uid = 1;
+    // 用户名称
+    string user_name = 2;
+    // 用户头像URL
+    string user_avatar_url = 3;
+
+    // 回复ID
+    string uuid = 4;
+    // 父评论ID
+    string parent_uuid = 5;
+    // 根评论ID
+    string root_uuid = 6;
+    // 回复内容
+    string content = 7;
+    // 点赞数
+    int64 like_count = 8;
+    // 创建时间
+    int64 timestamp = 9;
+    // 是否点赞 1是2否
+    IsLike is_like = 10;
+
+    // 如果是回复，则显示父评论的用户名 (显示@回复用户名)
+    string parent_user_name = 11;
+    // 如果是回复，则显示父评论的用户头像URL (显示@回复用户头像)
+    string parent_user_avatar_url = 12;
+    // 该用户的持仓
+    repeated Position positions = 13;
+    // 回复列表
+    repeated Reply replies = 14;
+    // 回复总数
+    int64 replies_total_count = 15;
+
+    // 该评论的id
+    int64 id = 16;
+  }
+  int32 total = 1;
+  repeated Comment comments = 2;
+}
+
+
+message FollowUserRequest {
+  string follow_uid = 1;
+}
+
+message FollowUserReply {
+}
+
+message UnfollowUserRequest {
+  string unfollow_uid = 1;
+}
+
+message UnfollowUserReply {
+}
+
+
+
+enum BaseTokenType {
+  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
+  BASE_TOKEN_TYPE_POINTS = 1;
+  BASE_TOKEN_TYPE_USDC = 2;
+}
+
+message GetUserPositionsRequest {
+  // 用户uid
+  string uid = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+  // 市场地址(可选)
+  string market_address = 4;
+  // 基础代币类型(可选) 1: points 2: usdc
+  BaseTokenType base_token_type = 5;
+  // 条件代币地址(可选)
+  string option_address = 6;
+}
+
+message GetUserPositionsReply {
+  message Position {
+    // 市场地址
+    string market_address = 1;
+    // 市场名称
+    string market_name = 2;
+    // 市场描述
+    string market_description = 3;
+    // 市场图片key
+    string market_pic_url = 4;
+    // 条件代币地址
+    string option_address = 5;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 6;
+    // 条件代币名称
+    string option_name = 7;
+    // 条件代币描述
+    string option_description = 8;
+    // 条件代币精度
+    uint32 option_decimal = 9; 
+    // 条件代币简称
+    string option_symbol = 10;
+    // 条件代币图片key
+    string option_pic_url = 11;
+    // 余额
+    string balance = 12;
+    // 入场价格
+    string entry_price = 13;
+    // 市场价格
+    string market_pirce = 14;
+    // 投注金额
+    string bet_value = 15;
+    // 当前价值
+    string current_value = 16;  
+    // 盈亏
+    string pnl = 17;
+    // 可赢取金额
+    string to_win = 18;
+    // 持仓状态 1持仓中 2已结束获胜选项 3已结束非获胜选项
+    uint32 status = 19; 
+    // 市场的结束时间
+    int64 deadline = 20; 
+    // 非获胜选项 是否点击了领取 1是2否
+    uint32 is_claimed = 21;
+  }
+  uint32 total = 1;
+  // 持仓列表
+  repeated Position positions = 3;
+}
+
+message GetUserTradesRequest {
+  // 市场地址(可选)
+  string market_address = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+  // 查看的用户uid
+  string uid = 4;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 5;
+}
+
+message GetUserTradesReply {
+  message Order {
+    message Option {
+      // 代币地址 条件代币地址
+      string address = 1;
+      // 代币名称
+      string name = 2;
+      // 代币描述
+      string description = 3;
+      // 代币精度
+      uint32 decimal = 4;
+      // 代币符号
+      string symbol = 5;
+      // 代币图片key
+      string pic_url = 6;
+
+      // 市场地址
+      string market_address = 7;
+      // 市场名称
+      string market_name = 8;
+      // 市场图片key
+      string market_pic_url = 9;
+      // 市场描述
+      string market_description = 10;
+      // 市场参与者数量
+      uint32 participants_count = 11;
+    }
+    // 交易ID
+    string uuid = 1;
+    // 用户ID
+    string uid = 2;
+    // 交易类型 1: deposit买 2: withdraw卖
+    uint32 side = 3; 
+    // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+    string amount = 4; 
+    // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
+    string receive_amount = 5; 
+    // 交易时间
+    uint64 timestamp = 6; 
+    // 成交价格
+    string deal_price = 7; 
+
+    Option option = 8;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 9;
+  }
+  uint32 total = 1;
+  repeated Order orders = 2;
+}
+
+message GetUserBaseInfoRequest {
+  // 查看的用户uid
+  string uid = 1;
+  // 用户邮箱
+  string email = 2;
+  // 用户eoa地址
+  string eoa_address = 3;
+  // 用户代理钱包地址
+  string address = 4;
+  // 身份发行者
+  string issuer = 5;
+  // 用户名称
+  string name = 6;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 7;
+  // 邀请码
+  string invite_code = 8;
+}
+
+message GetUserBaseInfoReply {
+  // 用户ID
+  string uid = 1;
+  // 用户邮箱
+  string email = 2;
+  // 用户区块链地址
+  string eoa_address = 3;
+  // 用户代理钱包地址
+  string address = 4;
+  // 身份发行者
+  string issuer = 5;
+  // 用户名称
+  string name = 6;
+  // 用户头像URL
+  string avatar = 7;
+  // 用户描述/简介
+  string desc = 8;
+  // 用户的邀请码
+  string invite_code = 9;
+  // 邀请人的用户ID
+  string inviter_uid = 10;
+  // 创建时间
+  int64 created_at = 11;
+  // 帖子数
+  int64 post_count = 12;
+  // 评论数
+  int64 comment_count = 13;
+  // 点赞数
+  int64 like_count = 14;
+  // 是否关注 1是2否
+  IsFollowed is_followed = 15;
+  // 粉丝数
+  int64 follower_count = 16;
+  // 关注数
+  int64 following_count = 17;
+
+  // 邀请码
+  string invite_by_code = 18;
+  // 邀请人用户名
+  string inviter_user_name = 19;
+  // 邀请时间
+  uint32 invite_at = 20;
+}
+
+message GetUserAssetInfoRequest {
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 1;
+  // 用户uid
+  string uid = 2;
+}
+
+message GetUserAssetInfoReply {
+  // 该代币的总资产
+  string value = 1;
+  // 该代币的余额
+  string balance = 2;
+  // 该代币的持仓总价值
+  string portfolio = 3;
+  // 该代币的历史总盈亏
+  string pnl = 4;
+  // 精度
+  uint32 decimal = 5;
+  // 总成交额
+  string volume = 6;
+  // pnl排名
+  uint32 pnl_rank = 7;
+}
+
+
+message SearchRequest {
+  enum SearchType {
+    SEARCH_TYPE_UNSPECIFIED = 0;
+    SEARCH_TYPE_MARKET = 1;
+    SEARCH_TYPE_USER = 2;
+  }
+  string keyword = 1;
+  // 搜索类型 0：不筛选 1: 只市场 2： 只用户
+  SearchType search_type = 2;
+  // 页码
+  uint32 market_page = 3;
+  // 每页数量
+  uint32 market_page_size = 4;
+  // 页码
+  uint32 user_page = 5;
+  // 每页数量
+  uint32 user_page_size = 6;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 7;
+}
+
+message SearchReply {
+  message Market {
+    // 市场地址
+    string address = 1;
+    // 市场名称
+    string name = 2;
+    // 市场图片key
+    string pic_url = 3;
+    // 市场描述
+    string description = 4;
+    // 市场状态 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    uint32 status = 5;
+    // 市场参与者数量
+    uint32 participants_count = 6;
+    // 市场历史成交量
+    string volume = 7;
+    // 市场截止时间
+    uint64 deadline = 8;
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 9;
+  }
+  message User {
+    // 用户ID
+    string uid = 1;
+    // 用户名称
+    string name = 2;
+    // 用户头像URL
+    string avatar = 3;
+    // 用户描述/简介
+    string desc = 4;
+    // 用户代理钱包地址
+    string address = 5;
+    // 用户eoa地址
+    string eoa_address = 6;
+  }
+
+  uint32 user_total = 1;
+  repeated User users = 2;
+
+  uint32 market_total = 3;
+  repeated Market markets = 4;
+}
+
+message GetUserAssetHistoryRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_7D = 1;
+    TIME_INTERVAL_1M = 2;
+    TIME_INTERVAL_3M = 3;
+    TIME_INTERVAL_ALL = 4;
+  }
+  // 查看的用户uid
+  string uid = 1;
+  // 基础代币类型 1: points 2: usdc
+  BaseTokenType base_token_type = 2;
+  // 时间间隔 1: 7d  2: 1m  3: 3m   4: all
+  TimeInterval time_interval = 3;
+}
+
+message GetUserAssetHistoryReply {
+  message OneSnapshot {
+    // 总资产
+    string value = 1;
+    // 余额
+    string balance = 2;
+    // 持仓总价值
+    string portfolio = 3;
+    // 当前盈亏
+    string pnl = 4;
+    // 时间戳
+    uint64 timestamp = 5;
+  }
+  uint32 total = 1;
+  repeated OneSnapshot snapshots = 2;
+  BaseTokenType base_token_type = 3;
+  // 精度
+  uint32 decimal = 4;
+}
+
+message GetMarketOptionPriceHistoryRequest {
+  enum TimeInterval {
+    TIME_INTERVAL_UNSPECIFIED = 0;
+    TIME_INTERVAL_1H = 1;
+    TIME_INTERVAL_6H = 2;
+    TIME_INTERVAL_1D = 3;
+    TIME_INTERVAL_1W = 4;
+    TIME_INTERVAL_ALL = 5;
+  }
+  // 市场地址
+  string market_address = 1;
+  // 时间间隔 1: 1h   2: 6h   3: 1d   4: 1w   5: all
+  TimeInterval time_interval = 2;
+}
+
+message GetMarketOptionPriceHistoryReply {
+  message OneSnapshot {
+    message TokenPrice {
+      // 代币地址
+      string token_address = 1;
+      // 价格
+      string price = 2;
+      // 精度
+      uint32 decimal = 3;
+    }
+    // 时间戳
+    uint64 timestamp = 1;
+    repeated TokenPrice token_prices = 2;
+  }
+  uint32 total = 1;
+  repeated OneSnapshot snapshots = 2;
+}
+
+
+message GetUserTransactionsRequest {
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+// 交易类型枚举
+enum TxType {
+  TX_TYPE_UNSPECIFIED = 0;
+  TX_TYPE_BUY = 1;
+  TX_TYPE_SELL = 2;
+  TX_TYPE_CLAIM = 3;
+  TX_TYPE_MINT_POINTS = 4;
+  TX_TYPE_MINT_INVITE_POINTS = 5;
+  TX_TYPE_DEPOSIT = 6;
+  TX_TYPE_WITHDRAW = 7;
+}
+
+message GetUserTransactionsReply {
+  message Transaction {
+    // 用户ID
+    string uid = 1;
+    // 交易时间
+    uint32 timestamp = 2;
+    // 方向 1 转入base token  2 转出base token
+    uint32 side = 3; 
+    // 基础代币类型 1: points 2: usdc
+    BaseTokenType base_token_type = 4;
+    // 代币地址
+    string token_address = 5;
+    // 代币精度
+    uint32 decimal = 6;
+    // 代币数量
+    string amount = 7;
+    // 交易类型 1 交易买 2 交易卖 3 claim领取结果 4 新用户获得积分 5 邀请获得积分奖励 6 存入资金 7 转出资金
+    TxType type = 8;
+    
+    // 交易状态 1: 成功 2: 失败 3: 进行中
+    uint32 status = 9;
+    
+    // 业务数据json
+    string biz_data_json = 10;
+
+    // 交易hash
+    string tx_hash = 11;
+  }
+
+  uint32 total = 1;
+  repeated Transaction transactions = 2;
+}

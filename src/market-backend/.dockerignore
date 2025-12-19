@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+.github
+
+# 日志文件
+logs/
+*.log
+
+# 二进制文件（我们会在容器内构建）
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 测试文件
+*_test.go
+*_test/
+
+# IDE和编辑器文件
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# 其他不需要的文件
+README.md
+LICENSE
+Dockerfile
+.dockerignore 

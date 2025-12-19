@@ -1,0 +1,105 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "market-service/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+  Custom custom = 3;
+}
+
+message Server {
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  GRPC grpc = 1;
+}
+
+message Data {
+  message PostgresqlData {
+    message Postgresql {
+      string dsn = 1;
+      int32 max_idle_conns = 2;
+      int32 max_open_conns = 3;
+      google.protobuf.Duration conn_max_lifetime = 4;
+    }
+
+    Postgresql usercenter = 1;
+    Postgresql marketcenter = 2;
+  }
+
+  message RedisData {
+    message Redis {
+      string network = 1;
+      string addr = 2;
+      int32 db = 3;
+      string password = 4;
+      google.protobuf.Duration read_timeout = 5;
+      google.protobuf.Duration write_timeout = 6;
+      google.protobuf.Duration dial_timeout = 7;
+    }
+    Redis usercenter = 1;
+    Redis marketcenter = 2;
+  }
+
+  message Alchemy {
+    string api_key = 1;
+    string network = 2;
+    uint64 chain_id = 3;
+    string policy_id = 4;
+    string entrypoint_address = 5;
+    string fallback_address = 6;
+    string sign_tx_from_address = 7;
+    string sign_tx_private_key = 8;
+  }
+
+  message S3 {
+    string access_key = 1;
+    string secret_key = 2;
+    string biz_bucket = 3;
+    string admin_bucket = 4;
+    string region = 5;
+  }
+
+  message Rpc {
+    message Rpc_client {
+      string addr = 1;
+      google.protobuf.Duration timeout = 2;
+    }
+    Rpc_client recommendation_rpc = 1;
+  }
+
+  PostgresqlData postgresql = 1;
+  RedisData redis = 2;
+  Alchemy alchemy = 3;
+  S3 s3 = 4;  
+  Rpc rpc = 5;
+}
+
+message Custom {
+  message AssetTokens {
+    message token {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      uint32 decimals = 4;
+    }
+
+    token points = 1;
+    token usdc = 2;
+  }
+
+
+  AssetTokens asset_tokens = 1;
+  uint32 new_user_points = 2;
+  string chain = 3;
+  string lark_webhook_key = 4;
+  uint32 min_volume = 5;
+  uint32 max_deadline_hours = 6;
+  bool lark_enabled = 7;
+}

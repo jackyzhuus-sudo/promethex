@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package recommendation.v1;
+
+import "google/protobuf/any.proto";
+
+option py_generic_services = true;
+option go_package = "recommendation/api/recommendation/v1;v1";
+
+message HotRequest {
+  // the words that you want to query
+  repeated string word = 1;
+  // how many ids that you want
+  int32 k = 2;
+  // the type of the data
+  string pattern = 3;
+}
+message HotResponse {
+  message HotResult {
+    // the word that you passed
+    string word = 1;
+    // the count of the ids
+    int64 count = 2;
+    // the ids matched
+    repeated string ids = 3;
+  }
+  // the result of the hot response
+  repeated HotResult res = 1;
+}
+
+message EmbeddingRequest {
+  // the pattern while embedding, you should tag some of fieldNames from the
+  // data with `@`, E.g `@title@`,`@fieldName@`. you can combine any format that
+  // you want. for more information, please refer to [example.md](./example.md)
+  repeated string pattern = 1;
+  // the data that you want to embed, can be anything. but must have a field
+  // `id`
+  repeated google.protobuf.Any data = 2;
+}
+
+message EmbeddingResponse {
+  message EmbeddingResult {
+    string id = 1; // the id of the data
+    string pattern = 2;
+    repeated float embedding = 3;
+  }
+  repeated EmbeddingResult res = 1; // embedded data count
+}
+
+service RecommendationHttp {
+  /*Embedding all the data with patterns, the total count of embedded data will
+  be **len(pattern) * len(data)**. for more information, please refer to
+  [example.md](./example.md)*/
+  rpc Embedding(EmbeddingRequest) returns (EmbeddingResponse) {}
+  /* return top K ids, will match the type first, then word. the count of result
+   * will be **len(word) * k**. */
+  rpc Hot(HotRequest) returns (HotResponse) {}
+}

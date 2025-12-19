@@ -1,0 +1,138 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg18-trixie
+    container_name: market-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: market-user
+      POSTGRES_PASSWORD: market-password
+      POSTGRES_DB: postgres
+    volumes:
+      - ./sql/00-initdb.sql:/docker-entrypoint-initdb.d/00-initdb.sql
+      - ./sql:/sql:ro
+      - ./postgres-data:/var/lib/postgresql
+    restart: always
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  redis:
+    image: redis:8
+    container_name: market-redis
+    command: ["redis-server", "--requirepass", "market_redis_password"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    restart: always
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  recommendation:
+    container_name: recommendation
+    build:
+      context: ./src/recommendation
+      dockerfile: ./Dockerfile
+    ports:
+      - "50051:50051"
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+psycopg2://market-user:market-password@host.docker.internal:5432/embedding?sslmode=disable
+      GRPC_WORKERS: ${GRPC_WORKERS:-10}
+      GRPC_PORT: ${GRPC_PORT:-50051}
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  market-backend:
+    container_name: market-backend
+    build:
+      context: ./src/market-backend
+      dockerfile: Dockerfile
+      additional_contexts:
+        - market-proto=./src/market-proto
+    restart: always
+    depends_on:
+      - market-service
+      - recommendation
+      - postgres
+      - redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./configs/market-backend/config.yaml:/app/configs/config.yaml
+    environment:
+      - TZ=Asia/Shanghai
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  block-listener:
+    container_name: block-listener
+    build:
+      context: ./src/block-listener
+      dockerfile: Dockerfile
+      additional_contexts:
+        - market-proto=./src/market-proto
+    restart: always
+    depends_on:
+      - market-service
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configs/block-listener/config.yaml:/app/configs/config.yaml
+    environment:
+      - TZ=Asia/Shanghai
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
+  market-service:
+    container_name: market-service
+    build:
+      context: ./src/market-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        - market-proto=./src/market-proto
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./configs/market-service/config.yaml:/app/configs/config.yaml
+    environment:
+      - TZ=Asia/Shanghai
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"

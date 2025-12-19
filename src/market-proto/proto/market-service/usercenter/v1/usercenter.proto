@@ -1,0 +1,765 @@
+syntax = "proto3";
+
+package usercenter.v1;
+
+option go_package = "market-service/api/usercenter/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.usercenter.v1";
+option java_outer_classname = "UsercenterProtoV1";
+
+
+// aa-b-c-dd 
+// aa: 服务编号
+// b: 服务内的领域编号
+// c: 错误类型 1 客户端错误  2 服务端错误 3 第三方错误
+// dd: 具体错误
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+
+  // base
+  // - client error
+  PARAM                      = 100101;
+  NOT_FOUND                  = 100102;
+  PLEASE_WAIT                = 100103;
+
+  // - server error
+  INTERNAL                   = 100201;
+  NETWORK                    = 100202;
+  DATABASE                   = 100203;
+  REDIS                      = 100204;
+  RPC                        = 100205;
+
+  // - third party error
+  S3                         = 100301;
+  ALCHEMY                    = 100302;
+
+  // business error
+  // - user
+  NAME_TOO_LONG              = 101101;
+  DESC_TOO_LONG              = 101102;
+  INVALID_INVITE_CODE        = 101103;
+  DUPLICATE_ADDRESS          = 101104;
+  DUPLICATE_EMAIL            = 101105;
+  USER_NOT_FOUND             = 101106;
+  REPEAT_FOLLOW_OR_UNFOLLOW  = 101107;
+  FOLLOW_SELF                = 101108;
+  NOT_FOLLOW                 = 101109;
+  MARK_OTHER_NOTIFICATIONS   = 101110;
+  INVALID_NOTIFICATION_UUID  = 101111;
+  BIND_INVITE_CODE_REPEAT    = 101112;
+  BIND_SELF_INVITE_CODE      = 101113;
+  MUTUAL_INVITE_CODE         = 101114;
+  LOGIN_TOO_QUICK            = 101115;
+  UPDATE_USER_INFO_TOO_QUICK = 101116;
+
+  // - community
+  POST_TITLE_TOO_LONG        = 102101;
+  POST_CONTENT_TOO_LONG      = 102102;
+  COMMENT_CONTENT_TOO_LONG   = 102103;
+  EMPTY_POST                 = 102104;
+  EMPTY_COMMENT              = 102105;
+  POST_NOT_FOUND             = 102106;
+  COMMENT_NOT_FOUND          = 102107;
+  REPEAT_LIKE_OR_UNLIKE      = 102108;
+  MUST_LIKE_FIRST            = 102109;
+  LIKE_TOO_QUICK             = 102110;
+
+  // - task
+  TASK_NOT_FOUND = 103101;
+
+
+  
+  
+
+
+}
+
+
+// Usercenter服务定义
+// 提供用户中心相关功能，包括用户注册、获取用户信息和设置用户信息
+service Usercenter {
+  // 用户注册
+  // 通过邮箱、地址等信息创建新用户
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
+  
+  // 获取用户信息
+  rpc GetUserInfo (GetUserInfoRequest) returns (GetUserInfoReply);
+  rpc GetUsersInfoByAddresses (GetUsersInfoByAddressesRequest) returns (GetUsersInfoByAddressesReply);
+  rpc GetUserInfosByUids (GetUserInfosByUidsRequest) returns (GetUserInfosByUidsReply);
+  rpc SearchUser(SearchUserRequest) returns (SearchUserResponse);
+  
+  // 设置用户信息
+  // 更新用户的名称、头像、描述等基本信息
+  rpc SetUserInfo (SetUserInfoRequest) returns (SetUserInfoReply);
+
+  rpc GetInviteUserList(GetInviteUserListRequest) returns (GetInviteUserListReply);
+
+  // 发布帖子
+  rpc PublishPost (PublishPostRequest) returns (PublishPostReply);
+
+  // 发布评论
+  rpc PublishComment (PublishCommentRequest) returns (PublishCommentReply);
+
+  // 更新点赞状态
+  rpc UpdateLikeContentStatus (UpdateLikeContentStatusRequest) returns (UpdateLikeContentStatusReply);
+
+  // 更新关注状态
+  rpc UpdateFollowStatus (UpdateFollowStatusRequest) returns (UpdateFollowStatusReply);
+
+  rpc UploadFileToBizBucketS3 (UploadFileToBizBucketS3Request) returns (UploadFileToBizBucketS3Reply);
+
+  rpc DownloadFileFromBizBucketS3 (DownloadFileFromBizBucketS3Request) returns (DownloadFileFromBizBucketS3Reply);
+
+
+  rpc GetMarketPostsAndPublishers(GetMarketPostsAndPublishersRequest) returns (GetMarketPostsAndPublishersResponse) {}
+  // 批量获取多个市场的一个帖子和发帖人信息
+  rpc BatchGetMarketPostAndPublisher(BatchGetMarketPostAndPublisherRequest) returns (BatchGetMarketPostAndPublisherResponse) {}
+
+  rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {}
+
+  // 批量查询多个根评论的前几条回复
+  rpc BatchGetCommentReplysAndUsers(BatchGetCommentReplysAndUsersRequest) returns (BatchGetCommentReplysAndUsersResponse) {}
+
+  rpc GetUserNotifications(GetUserNotificationsRequest) returns (GetUserNotificationsResponse) {}
+
+  rpc MarkNotificationsAsRead(MarkNotificationsAsReadRequest) returns (MarkNotificationsAsReadResponse) {}
+
+  rpc GetTasks(GetTasksRequest) returns (GetTasksResponse) {}
+
+  rpc ClaimTaskReward(ClaimTaskRewardRequest) returns (ClaimTaskRewardResponse) {}
+
+  rpc TaskDone(TaskDoneRequest) returns (TaskDoneResponse) {}
+
+}
+
+message BatchGetUserInfoRequest {
+  repeated string uids = 1;
+}
+
+message BatchGetUserInfoResponse {
+  message UserInfo {
+    string uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string desc = 4;
+    string email = 5;
+    string address = 6;
+    string eoa_address = 7;
+    string issuer = 8;
+    string invite_code = 9;
+    string inviter_uid = 10;
+  }
+  repeated UserInfo user_infos = 1;
+}
+
+message TaskDoneRequest {
+  string uid = 1;
+  string task_key = 2;
+}
+
+message TaskDoneResponse {
+}
+
+message ClaimTaskRewardRequest {
+  string uid = 1;
+  string task_key = 2;
+}
+
+message ClaimTaskRewardResponse {
+}
+
+enum IsShow {
+  IS_SHOW_UNSPECIFIED = 0;
+  IS_SHOW_YES = 1;
+  IS_SHOW_NO = 2;
+}
+
+message GetTasksRequest {
+  string uid = 1;
+  uint32 is_show = 2;
+}
+
+message GetTasksResponse {
+  message Task {
+    string task_uuid = 1;
+    string task_key = 2;
+    string name = 3;
+    string desc = 4;
+    uint32 type = 5;
+    string pic_url = 6;
+    uint32 reward_points = 7;
+    string jump_url = 8;
+
+    // 是否完成
+    bool is_done = 9;
+
+    // 是否领取奖励 1是2否
+    uint32 is_claimed = 10;
+    // 领取奖励时间
+    uint32 claim_at = 11;
+    // 领取奖励tx_hash
+    string tx_hash = 12;
+    // 交易上链状态 1成功 2失败 3执行中
+    uint32 tx_status = 13;
+  }
+  uint32 total = 1;
+  repeated Task tasks = 2;
+  uint32 total_reward_points = 3;
+}
+
+
+message GetInviteUserListRequest {
+  string uid = 1;
+  // 页码
+  uint32 page = 2;
+  // 每页数量
+  uint32 page_size = 3;
+}
+
+message GetInviteUserListReply {
+  message User {
+    string uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string desc = 4;
+    string email = 5;
+    uint32 created_at = 6;
+    uint32 invite_at = 7;
+    uint32 reward_points = 8;
+  }
+  uint32 total = 1;
+  repeated User users = 2;
+  uint32 total_reward_points = 3;
+}
+
+message GetUserNotificationsRequest {
+  string uid = 1;
+  uint32 category = 2;
+  uint32 status = 3;
+  uint32 type = 4;
+  uint32 page = 5;
+  uint32 page_size = 6;
+  BaseTokenType base_token_type = 7;
+}
+
+
+enum BaseTokenType {
+  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
+  BASE_TOKEN_TYPE_POINTS = 1;
+  BASE_TOKEN_TYPE_USDC = 2;
+}
+
+message GetUserNotificationsResponse {
+  message Notification {
+    string uid = 1;
+    string uuid = 2;
+    uint32 type = 3;
+    uint32 category = 4;
+    uint32 status = 5;
+    string biz_json = 6; // 具体业务数据json
+    int64 created_at = 7;
+    BaseTokenType base_token_type = 8;
+  }
+  uint32 total = 1;
+  repeated Notification notifications = 2;
+}
+
+message MarkNotificationsAsReadRequest {
+  string uid = 1;
+  repeated string notification_uuids = 2;
+}
+
+message MarkNotificationsAsReadResponse {
+}
+
+message BatchGetMarketPostAndPublisherRequest {
+  string uid = 1;
+  repeated string market_addresses = 2;
+}
+
+message BatchGetMarketPostAndPublisherResponse {
+
+  message Post {
+    string market_address = 1;
+    string uid = 2;
+    string user_name = 3;
+    string user_avatar_url = 4;
+    string post_uuid = 5;
+    string title = 6;
+    string content = 7;
+    int64 like_count = 8;
+    int64 comment_count = 9;
+    int64 view_count = 10;
+    int64 created_at = 11;
+    
+    IsLike is_like = 12;
+
+    int64 id = 13;
+  }
+  repeated Post posts = 1;
+}
+
+// 用户注册请求
+message CreateUserRequest {
+
+  enum Source {
+    SOURCE_UNSPECIFIED = 0;
+    SOURCE_MAGICLINK = 1;
+    SOURCE_PRIVY = 2;
+  }
+  // 用户邮箱
+  string email = 1;
+  // 用户eoa地址
+  string eoa_address = 2;
+  // 用户代理钱包地址
+  string address = 3;
+  // 身份发行者
+  string issuer = 4;
+  // 用户名称
+  string name = 5;
+  // 用户描述/简介
+  string desc = 6;
+  // 用户头像URL
+  string avatar = 7;
+  // 邀请码（如有）
+  string invited_by_code = 8;
+  bytes privy_user_info = 9;
+  Source source = 10;
+}
+
+// 用户注册响应
+message CreateUserReply {
+  // 注册成功后生成的用户ID
+  string uid = 2;
+}
+
+// 获取用户信息请求
+// 可以通过多种方式查询用户信息，至少需要提供其中一个参数
+message GetUserInfoRequest {
+  // 用户ID
+  string uid = 1;
+  // 用户邮箱
+  string email = 2;
+  // 用户区块链地址
+  string address = 3;
+  // 用户eoa地址
+  string eoa_address = 4;
+  // 身份发行者
+  string issuer = 5;
+  // 用户名称
+  string name = 6;
+  // 邀请码
+  string invite_code = 7;
+
+  string viewer = 8;
+}
+
+// 获取用户信息响应
+message GetUserInfoReply {
+  // 用户ID
+  string uid = 1;
+  // 用户邮箱
+  string email = 2;
+  // 用户区块链地址
+  string eoa_address = 3;
+  // 用户代理钱包地址
+  string address = 4;
+  // 身份发行者
+  string issuer = 5;
+  // 用户名称
+  string name = 6;
+  // 用户头像URL
+  string avatar = 7;
+  // 用户描述/简介
+  string desc = 8;
+  // 用户的邀请码
+  string invite_code = 9;
+  // 邀请人的用户ID
+  string inviter_uid = 10;
+  // 创建时间（Unix时间戳）
+  int64 created_at = 11;
+  // 更新时间（Unix时间戳）
+  int64 updated_at = 12;
+  // 帖子数
+  int64 post_count = 13;
+  // 评论数
+  int64 comment_count = 14;
+  // 点赞数
+  int64 like_count = 15;
+  // 是否关注
+  IsFollowedUser is_follow = 16;
+  // 粉丝数
+  int64 follower_count = 17;
+  // 关注数
+  int64 following_count = 18;
+  // 邀请码
+  string invite_by_code = 19;
+  // 邀请人用户名
+  string inviter_user_name = 20;
+  uint32 invite_at = 21;
+}
+
+enum IsFollowedUser {
+  IS_FOLLOWED_UNSPECIFIED = 0;
+  IS_FOLLOWED_YES = 1;
+  IS_FOLLOWED_NO = 2;
+}
+
+message GetUserInfosByUidsRequest {
+  // 用户ID列表
+  repeated string uids = 1;
+}
+
+message GetUserInfosByUidsReply {
+  message UserInfo {
+     // 用户ID
+  string uid = 1;
+  // 用户邮箱
+  string email = 2;
+  // 用户区块链地址
+  string eoa_address = 3;
+  // 用户代理钱包地址
+  string address = 4;
+  // 身份发行者
+  string issuer = 5;
+  // 用户名称
+  string name = 6;
+  // 用户头像URL
+  string avatar = 7;
+  // 用户描述/简介
+  string desc = 8;
+  // 用户的邀请码
+  string invite_code = 9;
+  // 邀请人的用户ID
+  string inviter_uid = 10;
+  // 创建时间（Unix时间戳）
+  int64 created_at = 11;
+  // 更新时间（Unix时间戳）
+  int64 updated_at = 12;
+}
+  repeated UserInfo user_infos = 1;
+}
+
+// 设置用户信息请求
+message SetUserInfoRequest {
+  // 用户ID（必填）
+  string uid = 1;
+  // 用户名称
+  string name = 2;
+  // 用户头像URL
+  string avatar = 3;
+  // 用户描述/简介
+  string desc = 4;
+  // 邀请码
+  string invite_by_code = 5;
+}
+
+// 设置用户信息响应
+// 空响应表示操作成功
+message SetUserInfoReply {
+}
+
+
+
+message PublishPostRequest {
+  // 用户ID
+  string uid = 1;
+  // 市场地址
+  string market_address = 2;
+  // 标题
+  string title = 3;
+  // 内容
+  string content = 4;
+}
+
+message PublishPostReply {
+  // post ID
+  string post_uuid = 1;
+}
+
+message PublishCommentRequest {
+  // 用户ID
+  string uid = 1;
+  // 市场地址
+  string market_address = 2;
+  // post ID
+  string post_uuid = 3;
+  // 根评论ID
+  string root_uuid = 4;
+  // 父评论ID
+  string parent_uuid = 5;
+  // 内容
+  string content = 6;
+}
+
+message PublishCommentReply {
+  // 评论ID
+  string comment_uuid = 1;
+}
+
+message UpdateLikeContentStatusRequest {
+  enum ContentType {
+    CONTENT_TYPE_UNSPECIFIED = 0;
+    CONTENT_TYPE_POST = 1;
+    CONTENT_TYPE_COMMENT = 2;
+  }
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_LIKE = 1;
+    STATUS_UNLIKE = 2;
+  }
+  // 用户ID
+  string uid = 1;
+  // 内容ID
+  string content_uuid = 2;
+  // 内容类型
+  ContentType content_type = 3;
+  // 点赞状态
+  Status status = 4;
+}
+
+message UpdateLikeContentStatusReply {
+}
+
+message UploadFileToBizBucketS3Request {
+  // 文件数据
+  bytes file_data = 1;
+  // 业务类型
+  string biz = 2;
+}
+
+message UploadFileToBizBucketS3Reply {
+  // key
+  string file_url = 1;
+}
+
+message DownloadFileFromBizBucketS3Request {
+  // key
+  string file_url = 2;
+}
+
+message DownloadFileFromBizBucketS3Reply {
+  // 文件数据
+  bytes file_data = 1;
+  // 文件类型
+  string content_type = 2;
+}
+
+
+message GetMarketPostsAndPublishersRequest {
+  // 用户ID
+  string uid = 1;
+  // 市场地址
+  string market_address = 2;
+  // 页码
+  int64 page = 3;
+  // 每页数量
+  int64 page_size = 4;
+
+  int32 last_id = 5;
+}
+
+message GetMarketPostsAndPublishersResponse {
+  message Post {
+    // 用户ID
+    string uid = 1;
+    // 用户名称
+    string user_name = 2;
+    // 用户头像URL
+    string user_avatar_url = 3;
+    // id
+    string uuid = 4;
+    // 市场地址
+    string market_address = 5;
+    // 标题
+    string title = 6;
+    // 内容
+    string content = 7;
+    // 点赞数
+    int64 like_count = 8;
+    // 评论数
+    int64 comment_count = 9;
+    // 查看数
+    int64 view_count = 10;
+    // 创建时间
+    int64 created_at = 11;
+    // 是否点赞 1是2否
+    uint32 is_like = 12;
+
+    int64 id = 13;
+  }
+  // 总数量
+  int64 total = 1;
+  repeated Post posts = 2;
+}
+
+message BatchGetCommentReplysAndUsersRequest {
+  // 用户ID
+  string uid = 1;
+  // 根评论ID列表
+  repeated string root_uuids = 2;
+  // 回复页码
+  int64 reply_page = 3;
+  // 回复每页数量
+  int64 reply_page_size = 4;
+}
+
+message BatchGetCommentReplysAndUsersResponse {
+  message CommentAndReplys {
+    message Reply { 
+      // 用户ID
+      string uid = 1;
+      // 用户名称
+      string user_name = 2;
+      // 用户头像URL
+      string user_avatar_url = 3;
+      // 市场地址
+      string market_address = 4;
+      // 回复ID
+      string uuid = 5;
+      // 父评论ID
+      string parent_uuid = 6;
+      // 根评论ID
+      string root_uuid = 7;
+      // 回复内容
+      string content = 8;
+      // 点赞数
+      int64 like_count = 9;
+      // 创建时间
+      int64 created_at = 10;
+      // 是否点赞 1是2否
+      IsLike is_like = 11;
+      // 父评论的用户名 (显示@回复用户名)
+      string parent_user_name = 12;
+      // 父评论的用户头像URL (显示@回复用户头像)
+      string parent_user_avatar_url = 13;
+      // 回复ID 用于分页
+      int64 id = 14;
+    }
+
+    string root_uuid = 1;
+    int64 total = 2;
+    repeated Reply replies = 3;
+  }
+
+  repeated CommentAndReplys comment_and_replys = 1;
+}
+
+message GetCommentsRequest {
+  // 用户ID
+  string uid = 1;
+  // 帖子ID
+  string post_uuid = 2;
+  // 根评论ID
+  string root_uuid = 3;
+  // 页码
+  int64 page = 4;
+  // 每页数量
+  int64 page_size = 5;
+  
+  // 已经看过的最后一条评论
+  int64 last_id = 6;
+}
+
+enum IsLike {
+  IS_LIKE_UNSPECIFIED = 0;
+  IS_LIKE_YES = 1;
+  IS_LIKE_NO = 2;
+}
+
+message GetCommentsResponse {
+
+  message Comment { 
+    // 用户ID
+    string uid = 1;
+    // 用户名称
+    string user_name = 2;
+    // 用户头像URL
+    string user_avatar_url = 3;
+    // 市场地址
+    string market_address = 4;
+    // 回复ID
+    string uuid = 5;
+    // 父评论ID
+    string parent_uuid = 6;
+    // 根评论ID
+    string root_uuid = 7;
+    // 回复内容
+    string content = 8;
+    // 点赞数
+    int64 like_count = 9;
+    // 创建时间
+    int64 created_at = 10;
+    // 是否点赞 1是2否
+    IsLike is_like = 11;
+    // 父评论的用户名 (显示@回复用户名)
+    string parent_user_name = 12;
+    // 父评论的用户头像URL (显示@回复用户头像)
+    string parent_user_avatar_url = 13;
+ 
+    // 评论ID 用于分页
+    int64 id = 14;
+  }
+  // 总数量 
+  int64 total = 1;
+  repeated Comment comments = 2;
+}
+
+
+message UpdateFollowStatusRequest {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_FOLLOW = 1;
+    STATUS_UNFOLLOW = 2;
+  }
+  // 用户ID
+  string uid = 1;
+  // 关注用户ID
+  string follow_uid = 2;
+  // 关注状态
+  Status status = 3;
+}
+
+message UpdateFollowStatusReply {
+}
+
+message SearchUserRequest {
+  string keyword = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message SearchUserResponse {
+  message User {
+    string uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string desc = 4;
+    string address = 5;
+    string eoa_address = 6;
+  }
+  uint32 total = 1;
+  repeated User users = 2;
+}
+
+message GetUsersInfoByAddressesRequest {
+  repeated string addresses = 1;
+}
+
+message GetUsersInfoByAddressesReply {
+  message User {
+    string uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string desc = 4;
+    string address = 5;
+    string eoa_address = 6;
+    string issuer = 7;
+    string invite_code = 8;
+    string inviter_uid = 9;
+    int64 created_at = 10;
+    int64 updated_at = 11;
+  }
+  repeated User users = 1;
+}

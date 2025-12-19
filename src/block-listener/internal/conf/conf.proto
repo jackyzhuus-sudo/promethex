@@ -1,0 +1,66 @@
+syntax = "proto3";
+package conf;
+
+option go_package = "block-listener/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Data data = 1;
+  Custom custom = 2;
+}
+
+message Data {
+  message Db {
+    string dsn = 1;
+    int32 max_idle_conns = 2;
+    int32 max_open_conns = 3;
+    google.protobuf.Duration conn_max_lifetime = 4;
+  }
+  message Redis {
+    string addr = 1;
+    string password = 2;
+    int32 db = 3;
+    google.protobuf.Duration read_timeout = 4;
+    google.protobuf.Duration write_timeout = 5;
+  }
+  
+  message Rpc {
+    string addr = 1;
+    google.protobuf.Duration timeout = 2;
+  }
+  message Blockchain {
+    uint64 start_block = 1;
+    string factory_contract_address = 2; // 工厂合约地址
+    string points_token_address = 3; // 积分代币地址
+    uint64 batch_scan_size = 4; // 批量扫描的区块数量
+    uint32 confirmed_block_num = 5; // 检查分叉的区块深度，通常设置为6-12确认
+    uint32 cron_scan_db_rows = 6; // 定时扫描的db行数
+    repeated string arb_rpc_urls = 7; // Arbitrum RPC URL列表
+  }
+  
+  Db db = 1;
+  Redis redis = 2;
+  Rpc marketcenter_rpc = 3;
+  Rpc usercenter_rpc = 4;
+  Blockchain blockchain = 5;
+}
+
+message Custom {
+  message AssetTokens {
+    message token {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      uint32 decimals = 4;
+    }
+
+    token points = 1;
+    token usdc = 2;
+  }
+
+
+  AssetTokens asset_tokens = 1;
+  string lark_webhook_key = 2;
+  bool lark_enabled = 3;
+}

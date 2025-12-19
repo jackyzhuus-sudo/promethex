@@ -1,0 +1,1 @@
+ALTER TABLE t_user_token_balance ADD COLUMN is_claimed SMALLINT NOT NULL DEFAULT 2;

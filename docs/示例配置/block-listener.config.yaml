@@ -1,0 +1,42 @@
+data:
+  db:
+    dsn: postgresql://market-user:market-password@host.docker.internal:5432/embedding?sslmode=disable # 监听服务使用的库（生产建议使用独立 chain_events）
+    max_idle_conns: 5        # 最大空闲连接数
+    max_open_conns: 20       # 最大打开连接数
+    conn_max_lifetime: 3600s # 连接最大生命周期
+  redis:
+    addr: host.docker.internal:6379 # Redis 地址
+    password: ""                    # Redis 密码
+    db: 0                           # 逻辑库索引（0-15）
+    read_timeout: 60s                # 读超时
+    write_timeout: 60s               # 写超时
+  marketcenter_rpc:
+    addr: host.docker.internal:9000 # market-service gRPC 地址（市场中心）
+    timeout: 60s                     # gRPC 调用超时
+  usercenter_rpc:
+    addr: host.docker.internal:9000 # market-service gRPC 地址（用户中心）
+    timeout: 60s                     # gRPC 调用超时
+  blockchain:
+    start_block: 0                         # 起始区块高度
+    factory_contract_address: ""           # 工厂合约地址（用于事件解析）
+    points_token_address: ""               # 积分代币地址（用于余额/转账事件）
+    batch_scan_size: 500                   # 批量扫描大小
+    confirmed_block_num: 12                # 需要确认的区块数（防重组）
+    cron_scan_db_rows: 1000                # 定时回扫 DB 记录的批大小
+    arb_rpc_urls:
+      - "https://rpc.sepolia.org"          # 备用 RPC 地址（容灾）
+      - "https://ethereum-sepolia.blockpi.network/v1/rpc/public"
+custom:
+  lark_webhook_key: ""       # 飞书告警 Webhook Key
+  lark_enabled: false        # 是否启用飞书告警
+  asset_tokens:
+    points:
+      address: ""                                         # Points 代币地址
+      name: Points                                        # 代币名称
+      symbol: POINTS                                      # 代币符号
+      decimals: 18                                        # 小数位数
+    usdc:
+      address: ""                                        # USDC 代币地址
+      name: USD Coin                                     # 代币名称
+      symbol: USDC                                       # 代币符号
+      decimals: 6                                        # 小数位数

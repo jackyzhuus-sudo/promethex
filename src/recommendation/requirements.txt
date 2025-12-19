@@ -1,0 +1,7 @@
+psycopg2-binary==2.9.10
+grpcio==1.71.0
+pandas==2.2.3
+pgvector==0.4.1
+protobuf==5.29.0
+sentence_transformers==4.1.0
+SQLAlchemy==2.0.40
