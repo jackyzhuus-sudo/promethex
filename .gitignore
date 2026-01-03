@@ -1,2 +1,19 @@
 configs/*/*.yaml
 *.zip
+
+# macos
+.DS_Store
+
+# cursor
+.cursor/
+
+# vscode
+.vscode/
+
+# configs
+.env
+
+# build
+build/
+
+# others
