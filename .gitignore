@@ -17,3 +17,8 @@ configs/*/*.yaml
 build/
 
 # others
+
+# db
+postgres-data/
+redis-data/
+
