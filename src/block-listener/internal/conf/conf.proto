@@ -24,7 +24,7 @@ message Data {
     google.protobuf.Duration read_timeout = 4;
     google.protobuf.Duration write_timeout = 5;
   }
-  
+
   message Rpc {
     string addr = 1;
     google.protobuf.Duration timeout = 2;
@@ -38,7 +38,7 @@ message Data {
     uint32 cron_scan_db_rows = 6; // 定时扫描的db行数
     repeated string arb_rpc_urls = 7; // Arbitrum RPC URL列表
   }
-  
+
   Db db = 1;
   Redis redis = 2;
   Rpc marketcenter_rpc = 3;

@@ -7,9 +7,9 @@ Block Listener is a blockchain monitoring service that listens to on-chain event
 ```mermaid
 graph TB
     A[Frontend]
-    
+
     B[Bayes Market Backend]
-    
+
     C[Bayes Service]
     D[Bayes Recommendation]
     E[Block Listener]
@@ -87,10 +87,12 @@ block-listener/
 ### Directory Description
 
 #### Core Directories
+
 - **`cmd/`**: Application entry point with dependency injection configuration
 - **`internal/`**: Internal packages containing all business logic
 
 #### Internal Directory Details
+
 - **`biz/`**: Business logic layer, contains block scanning and event processing
 - **`data/`**: Data access layer, handles blockchain interactions and gRPC calls
 - **`contract/`**: Smart contract interfaces and ABI definitions
@@ -100,6 +102,7 @@ block-listener/
 - **`server/`**: Server initialization and lifecycle management
 
 #### Shared Packages
+
 - **`pkg/`**: Shared utility packages for alarm and common functions
 
 ## Tech Stack
@@ -116,21 +119,25 @@ block-listener/
 ### Local Development
 
 1. Install dependencies:
+
 ```bash
 make init
 ```
 
 2. Generate API code:
+
 ```bash
 make api
 ```
 
 3. Build project:
+
 ```bash
 make build
 ```
 
 4. Run service:
+
 ```bash
 make run
 ```
@@ -170,16 +177,19 @@ client:
 ## Key Components
 
 ### Block Scanner
+
 - Continuously monitors blockchain for new blocks
 - Handles block range scanning with configurable batch sizes
 - Supports resuming from last processed block
 
 ### Event Processor
+
 - Processes prediction market events (creation, trading, settlement)
 - Batch queries blockchain data using MultiCall contracts
 - Updates downstream services via gRPC
 
 ### Arbitrum Client
+
 - Multi-RPC endpoint support with automatic failover
 - Health monitoring and automatic switching
 - Batch operations using MultiCall2/MultiCall3 contracts
