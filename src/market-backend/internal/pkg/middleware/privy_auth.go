@@ -117,6 +117,7 @@ func privyValid(authToken string, verificationKey string, appId string) (*PrivyC
 func AuthenticateWithToken(ctx context.Context, authHeader string, cfgData *conf.Data, cfgCustom *conf.Custom, data *data.Data, isLoginOp bool) (context.Context, string, error) {
 	if !cfgCustom.GetNeedAuth() {
 		ctx = context.WithValue(ctx, util.UidKey, "test_user")
+		ctx = context.WithValue(ctx, util.DidKey, "did:privy:test_user")
 		return ctx, "test_user", nil
 	}
 
