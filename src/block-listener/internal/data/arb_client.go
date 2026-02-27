@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/big"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -477,123 +476,6 @@ func (c *ArbClient) BatchMutiCall(ctx context.Context, args [][]interface{}) ([]
 	return allResults, nil
 }
 
-// BatchQueryPredictionMarkets 批量查询多个预测市场合约信息
-// index 0 -> predictionAddresses string
-// index 1 -> blockNumber uint64
-
-func (c *ArbClient) BatchQueryPredictionMarkets(ctx context.Context, predictionQueryParams [][2]interface{}, endBlockNumber uint64) ([]*contract.PredictionMarketInfo, error) {
-	if len(predictionQueryParams) == 0 {
-		return nil, fmt.Errorf("预测市场地址列表为空")
-	}
-
-	comCtx := com.NewBaseCtx(ctx, c.log)
-	comCtx.Log.Infof("BatchQueryPredictionMarkets")
-	predictionContract := c.Contract.PredictionContract
-
-	// 准备批量调用的参数
-	callArgs := [][]interface{}{}
-
-	// 需要查询的方法列表
-	methods := []string{
-		contract.MethodDescription,
-		contract.MethodBaseToken,
-		contract.MethodOracle,
-		contract.MethodAssertTime,
-		contract.MethodOptionsArray,
-	}
-
-	// 为每个预测市场构建调用参数
-	for _, onePredictionParams := range predictionQueryParams {
-		for _, method := range methods {
-
-			predictionAddr := onePredictionParams[0].(string)
-			blockNumber := onePredictionParams[1].(uint64)
-			// 根据blockNumber设置查询区块
-			queryBlockNumber := endBlockNumber
-			if blockNumber > 0 {
-				queryBlockNumber = blockNumber
-			}
-			data, err := predictionContract.GetABI().Pack(method)
-			if err != nil {
-				comCtx.Log.Errorf("打包%s调用数据失败: %v", method, err)
-				return nil, fmt.Errorf("打包%s调用数据失败: %v", method, err)
-			}
-
-			callArgs = append(callArgs, []interface{}{
-				map[string]interface{}{
-					"to":   predictionAddr,
-					"data": hexutil.Encode(data),
-				},
-				hexutil.EncodeUint64(queryBlockNumber),
-			})
-		}
-	}
-
-	// 执行批量调用
-	results, err := c.BatchMutiCall(ctx, callArgs)
-	if err != nil {
-		return nil, err
-	}
-
-	// 解析结果
-	markets := make([]*contract.PredictionMarketInfo, len(predictionQueryParams))
-	for i, onePredictionParams := range predictionQueryParams {
-
-		predictionAddr := onePredictionParams[0].(string)
-		blockNumber := onePredictionParams[1].(uint64)
-		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
-		baseIndex := i * 5 // 每个市场5个调用
-
-		info := &contract.PredictionMarketInfo{
-			Address:     common.HexToAddress(predictionAddr),
-			BlockNumber: queryBlockNumber,
-		}
-
-		// 解析description
-		var description string
-		if err := predictionContract.GetABI().UnpackIntoInterface(&description, contract.MethodDescription, common.FromHex(results[baseIndex])); err != nil {
-			return nil, fmt.Errorf("解析description失败: %v", err)
-		}
-		info.Description = description
-
-		// 解析baseToken
-		var baseToken common.Address
-		if err := predictionContract.GetABI().UnpackIntoInterface(&baseToken, contract.MethodBaseToken, common.FromHex(results[baseIndex+1])); err != nil {
-			return nil, fmt.Errorf("解析baseToken失败: %v", err)
-		}
-		info.BaseToken = baseToken
-
-		// 解析oracle
-		var oracle common.Address
-		if err := predictionContract.GetABI().UnpackIntoInterface(&oracle, contract.MethodOracle, common.FromHex(results[baseIndex+2])); err != nil {
-			return nil, fmt.Errorf("解析oracle失败: %v", err)
-		}
-		info.Oracle = oracle
-
-		// 解析assertTime
-		var assertTime *big.Int
-		if err := predictionContract.GetABI().UnpackIntoInterface(&assertTime, contract.MethodAssertTime, common.FromHex(results[baseIndex+3])); err != nil {
-			return nil, fmt.Errorf("解析assertTime失败: %v", err)
-		}
-		info.AssertTime = assertTime.Uint64()
-
-		// 解析options数组
-		var options []common.Address
-		if err := predictionContract.GetABI().UnpackIntoInterface(&options, contract.MethodOptionsArray, common.FromHex(results[baseIndex+4])); err != nil {
-			return nil, fmt.Errorf("解析options数组失败: %v", err)
-		}
-		info.Options = options
-		info.OptionCount = uint64(len(options))
-
-		markets[i] = info
-	}
-
-	return markets, nil
-}
-
 // BatchQueryERC20BalancesByPairs 批量查询指定[用户地址,代币地址]对的余额
 // 参数:
 // - pairs: 每个元素是[用户地址(common.Address),代币地址(common.Address),区块号(uint64)]对
@@ -614,7 +496,7 @@ func (c *ArbClient) BatchQueryERC20BalancesByPairs(ctx context.Context, pairs []
 		return nil, fmt.Errorf("查询对列表为空")
 	}
 
-	erc20Contract := c.Contract.Erc20Contract
+	ctfContract := c.Contract.PredictionCTFContract
 
 	// 准备批量调用的参数
 	callArgs := [][]interface{}{}
@@ -624,15 +506,11 @@ func (c *ArbClient) BatchQueryERC20BalancesByPairs(ctx context.Context, pairs []
 
 		holderAddr := pair[0].(common.Address)
 		tokenAddr := pair[1].(common.Address)
-		blockNumber := pair[2].(uint64)
-		// 根据blockNumber设置查询区块
+		// 始终使用最新区块查询，避免公共 RPC 无法读取旧区块状态（missing trie node）
 		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
 
 		// 打包balanceOf调用数据
-		data, err := erc20Contract.GetABI().Pack(contract.MethodBalanceOf, holderAddr)
+		data, err := ctfContract.GetABI().Pack(contract.MethodBalanceOf, holderAddr)
 		if err != nil {
 			comCtx.Log.Errorf("打包balanceOf调用数据失败 [token=%s, holder=%s]: %v",
 				tokenAddr.Hex(), holderAddr.Hex(), err)
@@ -664,17 +542,13 @@ func (c *ArbClient) BatchQueryERC20BalancesByPairs(ctx context.Context, pairs []
 
 		holderAddr := pairs[i][0].(common.Address)
 		tokenAddr := pairs[i][1].(common.Address)
-		blockNumber := pairs[i][2].(uint64)
-		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
-		// 生成key
-		key := fmt.Sprintf("%s-%s-%d", holderAddr.Hex(), tokenAddr.Hex(), queryBlockNumber)
+		origBlockNumber := pairs[i][2].(uint64)
+		// 生成key（使用原始区块号以匹配 getBalance 查找）
+		key := fmt.Sprintf("%s-%s-%d", holderAddr.Hex(), tokenAddr.Hex(), origBlockNumber)
 
 		// 解析余额
 		var balance *big.Int
-		if err := erc20Contract.GetABI().UnpackIntoInterface(&balance, contract.MethodBalanceOf, common.FromHex(result)); err != nil {
+		if err := ctfContract.GetABI().UnpackIntoInterface(&balance, contract.MethodBalanceOf, common.FromHex(result)); err != nil {
 			comCtx.Log.Errorf("解析余额失败 [token=%s, holder=%s]: %v", tokenAddr.Hex(), holderAddr.Hex(), err)
 			return nil, fmt.Errorf("解析余额失败 [token=%s, holder=%s]: %v", tokenAddr.Hex(), holderAddr.Hex(), err)
 		} else {
@@ -682,158 +556,12 @@ func (c *ArbClient) BatchQueryERC20BalancesByPairs(ctx context.Context, pairs []
 				UserAddr:    holderAddr,
 				TokenAddr:   tokenAddr,
 				Balance:     balance,
-				BlockNumber: queryBlockNumber,
+				BlockNumber: origBlockNumber,
 			}
 		}
 	}
 
 	return balances, nil
-}
-
-// BatchQueryOptionInfo 批量查询Option代币信息
-// 参数:
-// - optionQueryParams: 每个元素是[Option代币地址(common.Address), 区块号(uint64)]对
-// 返回:
-// - 按输入顺序的Option代币信息列表
-func (c *ArbClient) BatchQueryOptionInfo(ctx context.Context, optionQueryParams [][2]interface{}, endBlockNumber uint64) ([]*contract.OptionInfo, error) {
-	comCtx := com.NewBaseCtx(ctx, c.log)
-	comCtx.Log.Infof("BatchQueryOptionInfo")
-	if len(optionQueryParams) == 0 {
-		return nil, fmt.Errorf("Option代币地址列表为空")
-	}
-
-	// 创建Option合约解析器
-	optionContract := c.Contract.OptionContract
-
-	// 准备批量调用的参数
-	callArgs := [][]interface{}{}
-
-	// 需要查询的方法列表
-	methods := []string{
-		contract.MethodName,
-		contract.MethodSymbol,
-		contract.MethodDecimals,
-		contract.MethodOptionDesc,
-		contract.MethodPool,
-	}
-
-	// 为每个Option地址构建调用参数序列
-	for _, oneOptionParams := range optionQueryParams {
-		for _, method := range methods {
-
-			optionAddr := oneOptionParams[0].(common.Address)
-			blockNumber := oneOptionParams[1].(uint64)
-			// 根据blockNumber设置查询区块
-			queryBlockNumber := endBlockNumber
-			if blockNumber > 0 {
-				queryBlockNumber = blockNumber
-			}
-
-			data, err := optionContract.GetABI().Pack(method)
-			if err != nil {
-				comCtx.Log.Errorf("打包%s调用数据失败 [option=%s]: %v", method, optionAddr.Hex(), err)
-				return nil, fmt.Errorf("打包%s调用数据失败: %v", method, err)
-			}
-			callArgs = append(callArgs, []interface{}{
-				map[string]interface{}{
-					"to":   optionAddr.Hex(),
-					"data": hexutil.Encode(data),
-				},
-				hexutil.EncodeUint64(queryBlockNumber),
-			})
-		}
-	}
-
-	// 执行批量调用
-	results, err := c.BatchMutiCall(ctx, callArgs)
-	if err != nil {
-		return nil, fmt.Errorf("批量查询Option代币信息失败: %v", err)
-	}
-
-	// 解析结果
-	optionInfos := make([]*contract.OptionInfo, len(optionQueryParams))
-
-	for i, oneOptionParams := range optionQueryParams {
-
-		optionAddr := oneOptionParams[0].(common.Address)
-		blockNumber := oneOptionParams[1].(uint64)
-		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
-		// 每个Option有4个调用结果
-		baseIndex := i * 5
-
-		// 确保有足够的结果
-		if baseIndex+4 >= len(results) {
-			comCtx.Log.Warnf("Option %s 的结果不完整", optionAddr.Hex())
-			return nil, fmt.Errorf("Option %s 的结果不完整", optionAddr.Hex())
-		}
-
-		// 创建OptionInfo对象
-		optionInfo := &contract.OptionInfo{
-			BlockNumber: queryBlockNumber,
-			ERC20TokenInfo: contract.ERC20TokenInfo{
-				Address: optionAddr,
-			},
-		}
-
-		// 解析名称
-		var name string
-		if err := optionContract.GetABI().UnpackIntoInterface(&name, "name", common.FromHex(results[baseIndex])); err != nil {
-			comCtx.Log.Errorf("解析name失败 [option=%s]: %v", optionAddr.Hex(), err)
-			return nil, fmt.Errorf("解析name失败 [option=%s]: %v", optionAddr.Hex(), err)
-		} else {
-			optionInfo.Name = name
-
-			// 从名称中提取索引 (格式: "Option X")
-			nameParts := strings.Split(name, " ")
-			if len(nameParts) > 1 {
-				if index, err := strconv.ParseUint(nameParts[len(nameParts)-1], 10, 64); err == nil {
-					optionInfo.Index = index - 1
-				}
-			}
-		}
-
-		// 解析符号
-		var symbol string
-		if err := optionContract.GetABI().UnpackIntoInterface(&symbol, "symbol", common.FromHex(results[baseIndex+1])); err != nil {
-			comCtx.Log.Errorf("解析symbol失败 [option=%s]: %v", optionAddr.Hex(), err)
-			return nil, fmt.Errorf("解析symbol失败 [option=%s]: %v", optionAddr.Hex(), err)
-		} else {
-			optionInfo.Symbol = symbol
-		}
-
-		// 解析精度
-		var decimals uint8
-		if err := optionContract.GetABI().UnpackIntoInterface(&decimals, "decimals", common.FromHex(results[baseIndex+2])); err != nil {
-			comCtx.Log.Errorf("解析decimals失败 [option=%s]: %v", optionAddr.Hex(), err)
-			return nil, fmt.Errorf("解析decimals失败 [option=%s]: %v", optionAddr.Hex(), err)
-		} else {
-			optionInfo.Decimals = decimals
-		}
-
-		// 解析描述
-		var description string
-		if err := optionContract.GetABI().UnpackIntoInterface(&description, contract.MethodOptionDesc, common.FromHex(results[baseIndex+3])); err != nil {
-			comCtx.Log.Errorf("解析description失败 [option=%s]: %v", optionAddr.Hex(), err)
-			return nil, fmt.Errorf("解析description失败 [option=%s]: %v", optionAddr.Hex(), err)
-		} else {
-			optionInfo.Description = description
-		}
-
-		var poolAddress common.Address
-		if err := optionContract.GetABI().UnpackIntoInterface(&poolAddress, contract.MethodPool, common.FromHex(results[baseIndex+4])); err != nil {
-			comCtx.Log.Errorf("解析pool失败 [option=%s]: %v", optionAddr.Hex(), err)
-			return nil, fmt.Errorf("解析pool失败 [option=%s]: %v", optionAddr.Hex(), err)
-		} else {
-			optionInfo.PoolAddress = poolAddress
-		}
-
-		optionInfos[i] = optionInfo
-	}
-
-	return optionInfos, nil
 }
 
 // BatchQueryOptionPrices 批量查询预测市场中选项的价格
@@ -858,8 +586,7 @@ func (c *ArbClient) BatchQueryOptionPrices(ctx context.Context, pairs [][3]inter
 		return nil, fmt.Errorf("查询对列表为空")
 	}
 
-	// 创建预测市场合约解析器
-	predictionContract := c.Contract.PredictionContract
+	ctfContract := c.Contract.PredictionCTFContract
 
 	// 准备批量调用的参数
 	callArgs := [][]interface{}{}
@@ -868,14 +595,10 @@ func (c *ArbClient) BatchQueryOptionPrices(ctx context.Context, pairs [][3]inter
 	for _, pair := range pairs {
 		predictionAddr := pair[0].(string)
 		optionIndex := pair[1].(uint32)
-		blockNumber := pair[2].(uint64)
-		// 根据blockNumber设置查询区块
+		// 始终使用最新区块查询
 		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
 		// 打包getPrice调用数据
-		data, err := predictionContract.GetABI().Pack(contract.MethodPrice, big.NewInt(int64(optionIndex)))
+		data, err := ctfContract.GetABI().Pack(contract.MethodPrice, big.NewInt(int64(optionIndex)))
 		if err != nil {
 			comCtx.Log.Errorf("打包getPrice调用数据失败 [market=%s, index=%d]: %v",
 				predictionAddr, optionIndex, err)
@@ -907,15 +630,11 @@ func (c *ArbClient) BatchQueryOptionPrices(ctx context.Context, pairs [][3]inter
 
 		predictionAddr := pairs[i][0].(string)
 		optionIndex := pairs[i][1].(uint32)
-		blockNumber := pairs[i][2].(uint64)
-		queryBlockNumber := endBlockNumber
-		if blockNumber > 0 {
-			queryBlockNumber = blockNumber
-		}
-		key := fmt.Sprintf("%s-%d-%d", predictionAddr, optionIndex, queryBlockNumber)
+		origBlockNumber := pairs[i][2].(uint64)
+		key := fmt.Sprintf("%s-%d-%d", predictionAddr, optionIndex, origBlockNumber)
 		// 解析价格
 		var price *big.Int
-		if err := predictionContract.GetABI().UnpackIntoInterface(&price, contract.MethodPrice, common.FromHex(result)); err != nil {
+		if err := ctfContract.GetABI().UnpackIntoInterface(&price, contract.MethodPrice, common.FromHex(result)); err != nil {
 			comCtx.Log.Errorf("解析价格失败 [market=%s, index=%v]: %v", predictionAddr, optionIndex, err)
 			return nil, fmt.Errorf("解析价格失败 [market=%s, index=%v]: %v", predictionAddr, optionIndex, err)
 		} else {
@@ -923,7 +642,7 @@ func (c *ArbClient) BatchQueryOptionPrices(ctx context.Context, pairs [][3]inter
 				PredictionAddr: predictionAddr,
 				OptionIndex:    optionIndex,
 				Price:          price,
-				BlockNumber:    queryBlockNumber,
+				BlockNumber:    origBlockNumber,
 			}
 		}
 	}

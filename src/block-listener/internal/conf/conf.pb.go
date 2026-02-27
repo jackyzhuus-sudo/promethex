@@ -435,7 +435,9 @@ type Data_Blockchain struct {
 	BatchScanSize          uint64   `protobuf:"varint,5,opt,name=batch_scan_size,json=batchScanSize,proto3" json:"batch_scan_size,omitempty"`                           // 批量扫描的区块数量
 	ConfirmedBlockNum      uint32   `protobuf:"varint,6,opt,name=confirmed_block_num,json=confirmedBlockNum,proto3" json:"confirmed_block_num,omitempty"`               // 检查分叉的区块深度，通常设置为6-12确认
 	CronScanDbRows         uint32   `protobuf:"varint,7,opt,name=cron_scan_db_rows,json=cronScanDbRows,proto3" json:"cron_scan_db_rows,omitempty"`                      // 定时扫描的db行数
-	ArbRpcUrls             []string `protobuf:"bytes,8,rep,name=arb_rpc_urls,json=arbRpcUrls,proto3" json:"arb_rpc_urls,omitempty"`                                     // Arbitrum RPC URL列表
+	ArbRpcUrls               []string `protobuf:"bytes,8,rep,name=arb_rpc_urls,json=arbRpcUrls,proto3" json:"arb_rpc_urls,omitempty"`                                                         // Arbitrum RPC URL列表
+	ConditionalTokensAddress string   `protobuf:"bytes,9,opt,name=conditional_tokens_address,json=conditionalTokensAddress,proto3" json:"conditional_tokens_address,omitempty"`               // ConditionalTokens合约地址
+	PredictionCtfAddresses   []string `protobuf:"bytes,10,rep,name=prediction_ctf_addresses,json=predictionCtfAddresses,proto3" json:"prediction_ctf_addresses,omitempty"`                    // PredictionCTF池合约地址列表
 }
 
 func (x *Data_Blockchain) Reset() {
@@ -515,6 +517,20 @@ func (x *Data_Blockchain) GetCronScanDbRows() uint32 {
 func (x *Data_Blockchain) GetArbRpcUrls() []string {
 	if x != nil {
 		return x.ArbRpcUrls
+	}
+	return nil
+}
+
+func (x *Data_Blockchain) GetConditionalTokensAddress() string {
+	if x != nil {
+		return x.ConditionalTokensAddress
+	}
+	return ""
+}
+
+func (x *Data_Blockchain) GetPredictionCtfAddresses() []string {
+	if x != nil {
+		return x.PredictionCtfAddresses
 	}
 	return nil
 }

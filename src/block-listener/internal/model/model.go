@@ -22,9 +22,8 @@ const (
 	EventLogStatusFiltered      = 3
 	EventLogStatusFailed        = 4
 
-	TypeFactory       = 1
-	TypePrediction    = 2
-	TypeErc20Transfer = 3
+	TypeCTF           = 1 // ConditionalTokens合约事件
+	TypePredictionCTF = 2 // PredictionCTF池合约事件
 )
 
 type EventLog struct {
@@ -39,7 +38,7 @@ type EventLog struct {
 	LogIndex    uint           `gorm:"column:log_index;type:int;not null;comment:日志索引"`
 	Removed     bool           `gorm:"column:removed;type:boolean;not null;default:false;comment:是否被移除"`
 	Status      uint           `gorm:"column:status;type:smallint;not null;default:1;comment:状态 1:待处理 2:处理中 3:处理完成"`
-	Type        uint           `gorm:"column:type;type:smallint;not null;default:1;comment:事件类型 1:工厂合约 2:预测市场合约 3:erc20代币转移"`
+	Type        uint           `gorm:"column:type;type:smallint;not null;default:1;comment:事件类型 1:ConditionalTokens合约 2:PredictionCTF池合约"`
 }
 
 func (EventLog) TableName() string {

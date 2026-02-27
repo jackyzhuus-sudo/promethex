@@ -37,6 +37,8 @@ message Data {
     uint32 confirmed_block_num = 5; // 检查分叉的区块深度，通常设置为6-12确认
     uint32 cron_scan_db_rows = 6; // 定时扫描的db行数
     repeated string arb_rpc_urls = 7; // Arbitrum RPC URL列表
+    string conditional_tokens_address = 8; // ConditionalTokens合约地址
+    repeated string prediction_ctf_addresses = 9; // PredictionCTF池合约地址列表
   }
 
   Db db = 1;

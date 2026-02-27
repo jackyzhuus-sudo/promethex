@@ -101,78 +101,34 @@ func (p *EventProcessor) Run(ctx context.Context) error {
 		return err
 	}
 
-	// 分离创建市场事件和其他事件
-	factoryEvents, operationEvents := p.separateEvents(c, eventLogs)
-
-	// 1. 先处理创建市场事件
-	if len(factoryEvents) > 0 {
-		c.Log.Infof("处理创建市场事件，数量: %d", len(factoryEvents))
-
-		err := p.handleFactoryEvents(c, factoryEvents, endBlockNumber)
-		if err != nil {
-			c.Log.Errorf("处理创建市场事件失败: %v", err)
-			return err
-		}
-
-		c.Log.Infof("创建市场事件处理完成")
+	if len(eventLogs) == 0 {
+		return nil
 	}
 
-	// 2. 再处理其他事件
-	if len(operationEvents) > 0 {
-		c.Log.Infof("处理市场运营事件，数量: %d", len(operationEvents))
-
-		err := p.handleOperationEvents(c, operationEvents, endBlockNumber)
-		if err != nil {
-			c.Log.Errorf("处理市场运营事件失败: %v", err)
-			return err
-		}
-
-		c.Log.Infof("市场运营事件处理完成")
-	}
-
-	return nil
-}
-
-// EventCategories 事件分类结果
-type EventCategories struct {
-	FactoryEvents []*model.EventLog
-	OtherEvents   []*model.EventLog
-}
-
-// separateEvents 分离创建市场事件和运营事件
-func (p *EventProcessor) separateEvents(ctx com.Ctx, eventLogs []*model.EventLog) ([]*model.EventLog, []*model.EventLog) {
-	factoryEvents := make([]*model.EventLog, 0)
-	operationEvents := make([]*model.EventLog, 0)
-
+	// 过滤已删除的事件
+	validEvents := make([]*model.EventLog, 0, len(eventLogs))
 	for _, eventLog := range eventLogs {
 		if eventLog.Removed {
-			ctx.Log.Debugf("事件已删除: %s", eventLog.TxHash)
+			c.Log.Debugf("事件已删除: %s", eventLog.TxHash)
 			continue
 		}
-
-		switch eventLog.Type {
-		case model.TypeFactory:
-			if p.isMarketCreationEvent(ctx, eventLog) {
-				factoryEvents = append(factoryEvents, eventLog)
-			}
-		default:
-			operationEvents = append(operationEvents, eventLog)
-		}
+		validEvents = append(validEvents, eventLog)
 	}
 
-	return factoryEvents, operationEvents
-}
+	if len(validEvents) == 0 {
+		return nil
+	}
 
-// isMarketCreationEvent 检查是否为市场创建事件
-func (p *EventProcessor) isMarketCreationEvent(ctx com.Ctx, eventLog *model.EventLog) bool {
-	factoryEvent, err := p.arbClient.Contract.FactoryContract.ParseEvent(*eventLog.ToChainLog())
+	c.Log.Infof("处理CTF事件，数量: %d", len(validEvents))
+
+	err = p.handleOperationEvents(c, validEvents, endBlockNumber)
 	if err != nil {
-		ctx.Log.Errorf("解析工厂事件失败: %v", err)
-		return false
+		c.Log.Errorf("处理CTF事件失败: %v", err)
+		return err
 	}
 
-	_, ok := factoryEvent.(*contract.PredictionCreatedEvent)
-	return ok
+	c.Log.Infof("CTF事件处理完成")
+	return nil
 }
 
 // ChainData 用于存储链上批量查询结果
@@ -196,203 +152,6 @@ type QueryParams struct {
 	BlockNumberList   []uint64
 	UserTokenPairs    [][3]interface{}
 	MarketOptionPairs [][3]interface{}
-}
-
-// handleFactoryEvents 专门处理创建市场事件
-func (p *EventProcessor) handleFactoryEvents(ctx com.Ctx, factoryEvents []*model.EventLog, endBlockNumber uint64) error {
-	// 提取预测市场地址和区块号
-	creationParams := make([][2]interface{}, 0)
-	addrToEvent := make(map[string]*model.EventLog)
-
-	for _, eventLog := range factoryEvents {
-		factoryEvent, err := p.arbClient.Contract.FactoryContract.ParseEvent(*eventLog.ToChainLog())
-		if err != nil {
-			ctx.Log.Errorf("解析工厂事件失败: %v", err)
-			continue
-		}
-
-		if e, ok := factoryEvent.(*contract.PredictionCreatedEvent); ok {
-			marketAddr := e.Prediction.Hex()
-			creationParams = append(creationParams, [2]interface{}{marketAddr, e.BlockNumber})
-			addrToEvent[marketAddr] = eventLog
-			ctx.Log.Debugf("添加预测市场创建参数: address=%s, block number=%d", marketAddr, e.BlockNumber)
-		}
-	}
-
-	if len(creationParams) == 0 {
-		return nil
-	}
-
-	// 批量查询市场信息
-	marketInfos, err := p.arbClient.BatchQueryPredictionMarkets(ctx.Ctx, creationParams, endBlockNumber)
-	if err != nil {
-		return fmt.Errorf("批量查询市场信息失败: %w", err)
-	}
-
-	// 查询选项信息
-	optionParams := make([][2]interface{}, 0)
-	addrToInfo := make(map[string]*contract.PredictionMarketInfo)
-
-	for _, marketInfo := range marketInfos {
-		marketAddr := marketInfo.Address.Hex()
-		addrToInfo[marketAddr] = marketInfo
-
-		for _, optionAddress := range marketInfo.Options {
-			optionParams = append(optionParams, [2]interface{}{optionAddress, marketInfo.BlockNumber})
-		}
-	}
-
-	// 查询选项详情
-	optionInfos, err := p.arbClient.BatchQueryOptionInfo(ctx.Ctx, optionParams, endBlockNumber)
-	if err != nil {
-		return fmt.Errorf("批量查询选项信息失败: %w", err)
-	}
-
-	optionPriceParams := make([][3]interface{}, 0)
-	optionKeyToOptionInfo := make(map[string]*contract.OptionInfo)
-	// 将选项信息关联到市场
-	for _, optionInfo := range optionInfos {
-		marketAddress := optionInfo.PoolAddress.Hex()
-		optionIndex := uint32(optionInfo.Index)
-		oneQueryParams := [3]interface{}{marketAddress, optionIndex, endBlockNumber}
-		optionPriceParams = append(optionPriceParams, oneQueryParams)
-		optionKeyToOptionInfo[fmt.Sprintf(PriceKeyFormat, marketAddress, optionIndex, endBlockNumber)] = optionInfo
-		marketInfo, ok := addrToInfo[marketAddress]
-		if ok {
-			marketInfo.OptionsInfo = append(marketInfo.OptionsInfo, optionInfo)
-		}
-	}
-
-	err = p.createMarkets(ctx, addrToInfo, addrToEvent)
-	if err != nil {
-		return fmt.Errorf("创建市场失败: %w", err)
-	}
-
-	go func(newCtx com.Ctx) {
-		defer func() {
-			if e := recover(); e != nil {
-				newCtx.Log.Errorf("new market query option price panic error: %v, stack: %s", e, string(debug.Stack()))
-			}
-		}()
-
-		newCtx.Log.Infof("新市场开始批量查询选项价格")
-		optionPrices, err := p.arbClient.BatchQueryOptionPrices(newCtx.Ctx, optionPriceParams, endBlockNumber)
-		if err != nil {
-			newCtx.Log.Errorf("批量查询选项价格失败: %v", err)
-			return
-		}
-
-		blockTimeMap, err := p.arbClient.BatchQueryBlockTimestamps(newCtx.Ctx, []uint64{endBlockNumber})
-		if err != nil {
-			newCtx.Log.Errorf("批量查询区块时间失败: %v", err)
-			return
-		}
-
-		updateReq := &marketcenterPb.BatchUpdateOptionPriceRequest{
-			OptionPrices: make([]*marketcenterPb.BatchUpdateOptionPriceRequest_OptionPrice, 0),
-		}
-		for _, oneOptionPrice := range optionPrices {
-			if optionInfo, ok := optionKeyToOptionInfo[fmt.Sprintf(PriceKeyFormat, oneOptionPrice.PredictionAddr, oneOptionPrice.OptionIndex, oneOptionPrice.BlockNumber)]; ok {
-				blocktime, ok := blockTimeMap[oneOptionPrice.BlockNumber]
-				if !ok {
-					newCtx.Log.Errorf("区块时间不存在: %d", oneOptionPrice.BlockNumber)
-					continue
-				}
-
-				marketInfo, ok := addrToInfo[oneOptionPrice.PredictionAddr]
-				if !ok {
-					newCtx.Log.Errorf("市场信息不存在: %s", oneOptionPrice.PredictionAddr)
-					continue
-				}
-
-				onePricereq := &marketcenterPb.BatchUpdateOptionPriceRequest_OptionPrice{
-					OptionAddress: optionInfo.Address.Hex(),
-					Price:         oneOptionPrice.Price.String(),
-					Decimal:       uint32(optionInfo.Decimals),
-					BaseTokenType: func(marketInfo *contract.PredictionMarketInfo) marketcenterPb.BaseTokenType {
-						if marketInfo.BaseToken.Hex() == p.bc.Custom.AssetTokens.Usdc.Address {
-							return marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_USDC
-						} else if marketInfo.BaseToken.Hex() == p.bc.Custom.AssetTokens.Points.Address {
-							return marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
-						}
-						return marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
-					}(marketInfo),
-					BlockTime:   blocktime,
-					BlockNumber: oneOptionPrice.BlockNumber,
-				}
-				updateReq.OptionPrices = append(updateReq.OptionPrices, onePricereq)
-			}
-
-		}
-
-		if len(updateReq.OptionPrices) > 0 {
-			_, err = p.rpcClient.MarketcenterClient.BatchUpdateOptionPrice(newCtx.Ctx, updateReq)
-			if err != nil {
-				newCtx.Log.Errorf("批量更新选项价格失败: %v", err)
-			}
-		}
-		newCtx.Log.Infof("新市场批量查询选项价格完成")
-	}(com.CloneBaseCtx(ctx, p.log))
-	return nil
-}
-
-// createMarkets 根据工厂事件创建市场
-func (p *EventProcessor) createMarkets(
-	ctx com.Ctx,
-	addrToInfo map[string]*contract.PredictionMarketInfo,
-	addrToEvent map[string]*model.EventLog,
-) error {
-	reqMarket := make([]*marketcenterPb.CreateMarketsAndOptionsRequest_Market, 0)
-	processedIds := make([]uint64, 0)
-
-	for marketAddr, marketInfo := range addrToInfo {
-		eventLog, exists := addrToEvent[marketAddr]
-		if !exists {
-			continue
-		}
-
-		// 创建选项请求
-		reqOptions := make([]*marketcenterPb.CreateMarketsAndOptionsRequest_Option, 0)
-		for _, option := range marketInfo.OptionsInfo {
-			reqOptions = append(reqOptions, &marketcenterPb.CreateMarketsAndOptionsRequest_Option{
-				Name:        option.Name,
-				Address:     option.Address.Hex(),
-				Symbol:      option.Symbol,
-				Description: option.Description,
-				Decimal:     uint32(option.Decimals),
-				Index:       uint32(option.Index),
-			})
-		}
-
-		reqMarket = append(reqMarket, &marketcenterPb.CreateMarketsAndOptionsRequest_Market{
-			Name:             marketInfo.Description,
-			Address:          marketAddr,
-			BaseTokenAddress: marketInfo.BaseToken.Hex(),
-			OracleAddress:    marketInfo.Oracle.Hex(),
-			Deadline:         uint64(marketInfo.AssertTime),
-			TxHash:           eventLog.TxHash,
-			Options:          reqOptions,
-		})
-
-		processedIds = append(processedIds, uint64(eventLog.ID))
-	}
-
-	_, err := p.rpcClient.MarketcenterClient.CreateMarketsAndOptions(ctx.Ctx, &marketcenterPb.CreateMarketsAndOptionsRequest{
-		Markets: reqMarket,
-	})
-	if err != nil {
-		return fmt.Errorf("创建市场失败: %w", err)
-	}
-
-	// 创建市场成功后，立即更新事件状态
-	if len(processedIds) > 0 {
-		if err := p.db.UpdateEventLogsStatusSucc(ctx.Ctx, processedIds); err != nil {
-			ctx.Log.Errorf("更新工厂事件状态失败: %v", err)
-			return fmt.Errorf("更新工厂事件状态失败: %w", err)
-		}
-	}
-
-	return nil
 }
 
 // handleOperationEvents 处理市场运营事件
@@ -471,8 +230,7 @@ func (p *EventProcessor) extractMarketAddresses(operationEvents []*model.EventLo
 	marketAddrMap := make(map[string]bool)
 
 	for _, eventLog := range operationEvents {
-		switch eventLog.Type {
-		case model.TypePrediction:
+		if eventLog.Type == model.TypePredictionCTF {
 			if !marketAddrMap[eventLog.Address] {
 				marketAddrMap[eventLog.Address] = true
 				marketAddresses = append(marketAddresses, eventLog.Address)
@@ -515,63 +273,41 @@ func (p *EventProcessor) collectUserAddresses(
 	userAddrMap := make(map[string]bool)
 
 	for _, eventLog := range operationEvents {
-		switch eventLog.Type {
-		case model.TypeErc20Transfer:
-			// 对于ERC20事件，需要同时收集from和to地址
-			erc20Event, err := p.arbClient.Contract.Erc20Contract.ParseTransferEvent(*eventLog.ToChainLog())
-			if err != nil {
-				ctx.Log.Errorf("解析erc20代币转移事件失败: %v", err)
-				continue
-			}
-			from := erc20Event.From.Hex()
-			to := erc20Event.To.Hex()
-			if from != "" && !userAddrMap[from] {
-				ctx.Log.Debugf("收集 用户地址: %s", from)
-				userAddrMap[from] = true
-				userAddresses = append(userAddresses, from)
-			}
-			if to != "" && !userAddrMap[to] {
-				ctx.Log.Debugf("收集 用户地址: %s", to)
-				userAddrMap[to] = true
-				userAddresses = append(userAddresses, to)
-			}
+		if eventLog.Type != model.TypePredictionCTF {
+			continue
+		}
 
-		case model.TypePrediction:
-			// 检查是否是已知市场
-			_, marketExists := marketMap[eventLog.Address]
-			if !marketExists {
-				ctx.Log.Debugf("过滤 市场不存在: %s", eventLog.Address)
-				continue
-			}
+		// 检查是否是已知市场
+		_, marketExists := marketMap[eventLog.Address]
+		if !marketExists {
+			ctx.Log.Debugf("过滤 市场不存在: %s", eventLog.Address)
+			continue
+		}
 
-			predictionEvent, err := p.arbClient.Contract.PredictionContract.ParseEvent(*eventLog.ToChainLog())
-			if err != nil {
-				ctx.Log.Errorf("解析预测事件失败: %v", err)
-				continue
-			}
+		predictionEvent, err := p.arbClient.Contract.PredictionCTFContract.ParseEvent(*eventLog.ToChainLog())
+		if err != nil {
+			ctx.Log.Errorf("解析PredictionCTF事件失败: %v", err)
+			continue
+		}
 
-			var userAddr string
-			switch e := predictionEvent.(type) {
-			case *contract.DepositedEvent:
-				ctx.Log.Debugf("处理 存款事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
-				userAddr = e.User.Hex()
-			case *contract.WithdrawnEvent:
-				ctx.Log.Debugf("处理 提款事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
-				userAddr = e.User.Hex()
-			case *contract.SwappedEvent:
-				ctx.Log.Debugf("处理 交换事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
-				// 忽略user
-			case *contract.ClaimedEvent:
-				ctx.Log.Debugf("处理 领取事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
-				userAddr = e.User.Hex()
-			default:
-				// 其他事件不用收集用户地址
-			}
+		var userAddr string
+		switch e := predictionEvent.(type) {
+		case *contract.DepositedEvent:
+			ctx.Log.Debugf("处理 存款事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
+			userAddr = e.User.Hex()
+		case *contract.WithdrawnEvent:
+			ctx.Log.Debugf("处理 提款事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
+			userAddr = e.User.Hex()
+		case *contract.SwappedEvent:
+			ctx.Log.Debugf("处理 交换事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
+			// 忽略user
+		default:
+			// 其他事件不用收集用户地址
+		}
 
-			if userAddr != "" && !userAddrMap[userAddr] {
-				userAddrMap[userAddr] = true
-				userAddresses = append(userAddresses, userAddr)
-			}
+		if userAddr != "" && !userAddrMap[userAddr] {
+			userAddrMap[userAddr] = true
+			userAddresses = append(userAddresses, userAddr)
 		}
 	}
 
@@ -624,14 +360,12 @@ func (p *EventProcessor) prepareEventsAndParams(
 		}
 
 		switch eventLog.Type {
-		case model.TypeErc20Transfer:
-			if p.handleERC20Event(ctx, eventLog, queryParams, eventChannels, processingCtx) {
-				// 事件有效，已处理
-			} else {
-				invalidIds = append(invalidIds, uint64(eventLog.ID))
-			}
-		case model.TypePrediction:
-			if p.handlePredictionEvent(ctx, eventLog, queryParams, eventChannels, processingCtx) {
+		case model.TypeCTF:
+			// CTF合约事件直接入队处理
+			queryParams.BlockNumberList = append(queryParams.BlockNumberList, eventLog.BlockNumber)
+			p.addEventToChannel(eventChannels, eventLog.Address, eventLog)
+		case model.TypePredictionCTF:
+			if p.handlePredictionCTFEvent(ctx, eventLog, queryParams, eventChannels, processingCtx) {
 				// 事件有效，已处理
 			} else {
 				invalidIds = append(invalidIds, uint64(eventLog.ID))
@@ -673,47 +407,8 @@ func removeDuplicateUint64(slice []uint64) []uint64 {
 	return result
 }
 
-// handleERC20Event 处理ERC20事件
-func (p *EventProcessor) handleERC20Event(
-	ctx com.Ctx,
-	eventLog *model.EventLog,
-	queryParams *QueryParams,
-	eventChannels map[string]chan *model.EventLog,
-	processingCtx *ProcessingContext,
-) bool {
-	erc20Event, err := p.arbClient.Contract.Erc20Contract.ParseTransferEvent(*eventLog.ToChainLog())
-	if err != nil {
-		ctx.Log.Errorf("解析erc20代币转移事件失败: %v", err)
-		return false
-	}
-
-	fromAddr := erc20Event.From.Hex()
-	toAddr := erc20Event.To.Hex()
-
-	_, fromOk := processingCtx.UserInfoMap[fromAddr]
-	_, toOk := processingCtx.UserInfoMap[toAddr]
-
-	if !fromOk && !toOk {
-		ctx.Log.Debugf(MsgUserNotFound, eventLog.TxHash)
-		return false
-	}
-
-	// 收集查询参数
-	queryParams.BlockNumberList = append(queryParams.BlockNumberList, eventLog.BlockNumber)
-	if fromOk {
-		queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{erc20Event.From, erc20Event.Address, eventLog.BlockNumber})
-	}
-	if toOk {
-		queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{erc20Event.To, erc20Event.Address, eventLog.BlockNumber})
-	}
-
-	// 添加到事件通道
-	p.addEventToChannel(eventChannels, eventLog.Address, eventLog)
-	return true
-}
-
-// handlePredictionEvent 处理预测事件
-func (p *EventProcessor) handlePredictionEvent(
+// handlePredictionCTFEvent 准备PredictionCTF事件的查询参数
+func (p *EventProcessor) handlePredictionCTFEvent(
 	ctx com.Ctx,
 	eventLog *model.EventLog,
 	queryParams *QueryParams,
@@ -731,23 +426,22 @@ func (p *EventProcessor) handlePredictionEvent(
 	queryParams.BlockNumberList = append(queryParams.BlockNumberList, eventLog.BlockNumber)
 
 	// 解析事件以判断事件类型
-	predictionEvent, err := p.arbClient.Contract.PredictionContract.ParseEvent(*eventLog.ToChainLog())
+	predictionCTFEvent, err := p.arbClient.Contract.PredictionCTFContract.ParseEvent(*eventLog.ToChainLog())
 	if err != nil {
-		ctx.Log.Errorf("解析预测事件失败: %v %s", err, eventLog.TxHash)
+		ctx.Log.Errorf("解析PredictionCTF事件失败: %v %s", err, eventLog.TxHash)
 		return false
 	}
 
 	// 只有swap、deposit、withdraw三个事件才收集选项价格查询参数
-	switch predictionEvent.(type) {
+	switch predictionCTFEvent.(type) {
 	case *contract.DepositedEvent, *contract.WithdrawnEvent, *contract.SwappedEvent:
-		// 收集选项价格查询参数
 		for _, option := range marketInfo.Options {
 			queryParams.MarketOptionPairs = append(queryParams.MarketOptionPairs, [3]interface{}{eventLog.Address, option.Index, eventLog.BlockNumber})
 		}
 	}
 
 	// 解析事件并收集用户代币对
-	if p.collectTokenPairs(ctx, eventLog, marketInfo, queryParams, processingCtx) {
+	if p.collectCTFTokenPairs(ctx, eventLog, marketInfo, queryParams, processingCtx) {
 		p.addEventToChannel(eventChannels, eventLog.Address, eventLog)
 		return true
 	}
@@ -755,31 +449,30 @@ func (p *EventProcessor) handlePredictionEvent(
 	return false
 }
 
-// collectTokenPairs 从预测事件中收集用户代币对
-func (p *EventProcessor) collectTokenPairs(
+// collectCTFTokenPairs 从PredictionCTF事件中收集用户代币对
+func (p *EventProcessor) collectCTFTokenPairs(
 	ctx com.Ctx,
 	eventLog *model.EventLog,
 	marketInfo *marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market,
 	queryParams *QueryParams,
 	processingCtx *ProcessingContext,
 ) bool {
-	predictionEvent, err := p.arbClient.Contract.PredictionContract.ParseEvent(*eventLog.ToChainLog())
+	predictionCTFEvent, err := p.arbClient.Contract.PredictionCTFContract.ParseEvent(*eventLog.ToChainLog())
 	if err != nil {
-		ctx.Log.Errorf("解析预测事件失败: %v %s", err, eventLog.TxHash)
+		ctx.Log.Errorf("解析PredictionCTF事件失败: %v %s", err, eventLog.TxHash)
 		return false
 	}
 
-	switch e := predictionEvent.(type) {
+	switch e := predictionCTFEvent.(type) {
 	case *contract.DepositedEvent:
 		return p.prepareDepositQuery(e, marketInfo, queryParams, processingCtx)
 	case *contract.WithdrawnEvent:
 		return p.prepareWithdrawQuery(e, marketInfo, queryParams, processingCtx)
-	case *contract.ClaimedEvent:
-		return p.prepareClaimQuery(e, marketInfo, queryParams, processingCtx)
-	case *contract.SwappedEvent, *contract.SettlingEvent, *contract.AssertionDisputedEvent, *contract.AssertionResolvedEvent:
+	case *contract.SwappedEvent, *contract.CTFMarketResolvedEvent, *contract.CTFLiquidityRemovedEvent,
+		*contract.LiquidityAddedEvent, *contract.FeeSetEvent, *contract.CTFFeeCollectedEvent:
 		return true // 这些事件不需要收集用户代币对
 	default:
-		ctx.Log.Infof("忽略未知事件: %s", eventLog.TxHash)
+		ctx.Log.Infof("忽略未知PredictionCTF事件: %s", eventLog.TxHash)
 		return false
 	}
 }
@@ -821,29 +514,6 @@ func (p *EventProcessor) prepareWithdrawQuery(
 	}
 
 	optionIndex := uint32(event.OptionIn)
-	for _, option := range marketInfo.Options {
-		if option.Index == optionIndex {
-			queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{event.User, common.HexToAddress(option.Address), uint64(event.BlockNumber)})
-			break
-		}
-	}
-	return true
-}
-
-// prepareClaimQuery 处理认领事件的查询参数收集
-func (p *EventProcessor) prepareClaimQuery(
-	event *contract.ClaimedEvent,
-	marketInfo *marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market,
-	queryParams *QueryParams,
-	processingCtx *ProcessingContext,
-) bool {
-	userAddr := event.User.Hex()
-	_, userExists := processingCtx.UserInfoMap[userAddr]
-	if !userExists {
-		return true
-	}
-
-	optionIndex := uint32(event.Option)
 	for _, option := range marketInfo.Options {
 		if option.Index == optionIndex {
 			queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{event.User, common.HexToAddress(option.Address), uint64(event.BlockNumber)})
@@ -960,10 +630,10 @@ func (p *EventProcessor) processEventsConcurrently(
 			for eventLog := range eventChan {
 				var err error
 				switch eventLog.Type {
-				case model.TypeErc20Transfer:
-					err = p.handleTransferEvent(ctx, eventLog, processingCtx.ChainData, processingCtx.MarketMap, processingCtx.UserInfoMap)
-				case model.TypePrediction:
-					err = p.handleMarketEvent(ctx, eventLog, processingCtx.ChainData, processingCtx.MarketMap, processingCtx.UserInfoMap)
+				case model.TypeCTF:
+					err = p.handleCTFEvent(ctx, eventLog, processingCtx.ChainData)
+				case model.TypePredictionCTF:
+					err = p.handlePredictionCTFMarketEvent(ctx, eventLog, processingCtx.ChainData, processingCtx.MarketMap, processingCtx.UserInfoMap)
 				default:
 					ctx.Log.Debugf("忽略未知事件: address: %s, type: %d, txhash: %s", eventLog.Address, eventLog.Type, eventLog.TxHash)
 					continue
@@ -996,91 +666,76 @@ func (p *EventProcessor) processEventsConcurrently(
 	return nil
 }
 
-func (p *EventProcessor) handleTransferEvent(
+// handleCTFEvent 处理ConditionalTokens合约事件
+func (p *EventProcessor) handleCTFEvent(
 	ctx com.Ctx,
 	eventLog *model.EventLog,
 	chainData *ChainData,
-	marketMap map[string]*marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market,
-	userInfoMap map[string]*usercenterPb.GetUsersInfoByAddressesReply_User,
 ) error {
-
-	erc20Event, err := p.arbClient.Contract.Erc20Contract.ParseTransferEvent(*eventLog.ToChainLog())
+	ctfEvent, err := p.arbClient.Contract.ConditionalTokensContract.ParseEvent(*eventLog.ToChainLog())
 	if err != nil {
-		return fmt.Errorf("解析erc20代币转移事件失败: %v", err)
+		return fmt.Errorf("解析CTF事件失败: %w", err)
 	}
-	from := erc20Event.From.Hex()
-	to := erc20Event.To.Hex()
-	transferAmount := erc20Event.Value.String()
 
-	for _, address := range []string{from, to} {
-		if userInfo, userExists := userInfoMap[address]; userExists {
-
-			isFrom := address == from
-			// 查询用户基础代币余额
-			balanceKey := fmt.Sprintf(BalanceKeyFormat, address, eventLog.Address, eventLog.BlockNumber)
-			if balance, ok := chainData.userTokenBalances[balanceKey]; ok {
-				userBalance := balance.Balance
-
-				// 更新用户余额
-				_, err := p.rpcClient.MarketcenterClient.UpdateUserBaseTokenBalance(ctx.Ctx, &marketcenterPb.UpdateUserBaseTokenBalanceRequest{
-					Uid:         userInfo.Uid,
-					UserAddress: address,
-					TokenBalance: &marketcenterPb.TokenBalance{
-						TokenAddress: eventLog.Address,
-						Amount:       userBalance.String(),
-						BlockNumber:  eventLog.BlockNumber,
-					},
-					TxHash:         eventLog.TxHash,
-					BlockNumber:    eventLog.BlockNumber,
-					From:           from,
-					To:             to,
-					TransferAmount: transferAmount,
-					Side: func() uint32 {
-						if isFrom {
-							return 2
-						}
-						return 1
-					}(),
-				})
-				if err != nil {
-					ctx.Log.Errorf("更新用户基础代币余额失败: %v", err)
-					return fmt.Errorf("更新用户基础代币余额失败: %w", err)
-				}
-
-			}
-		}
+	switch e := ctfEvent.(type) {
+	case *contract.ConditionPreparationEvent:
+		ctx.Log.Infof("CTF ConditionPreparation: conditionId=%s, oracle=%s, questionId=%s, outcomes=%d",
+			e.ConditionId.Hex(), e.Oracle.Hex(), e.QuestionId.Hex(), e.OutcomeSlotCount)
+		// TODO: 记录condition到数据库，关联market
+	case *contract.ConditionResolutionEvent:
+		ctx.Log.Infof("CTF ConditionResolution: conditionId=%s, oracle=%s, outcomes=%d",
+			e.ConditionId.Hex(), e.Oracle.Hex(), e.OutcomeSlotCount)
+		// TODO: 更新condition解决状态，触发市场结算
+	case *contract.PositionSplitEvent:
+		ctx.Log.Infof("CTF PositionSplit: stakeholder=%s, conditionId=%s, amount=%s",
+			e.Stakeholder.Hex(), e.ConditionId.Hex(), e.Amount.String())
+		// TODO: 更新用户position记录
+	case *contract.PositionsMergeEvent:
+		ctx.Log.Infof("CTF PositionsMerge: stakeholder=%s, conditionId=%s, amount=%s",
+			e.Stakeholder.Hex(), e.ConditionId.Hex(), e.Amount.String())
+		// TODO: 更新用户position记录
+	case *contract.PayoutRedemptionEvent:
+		ctx.Log.Infof("CTF PayoutRedemption: redeemer=%s, conditionId=%s, payout=%s",
+			e.Redeemer.Hex(), e.ConditionId.Hex(), e.Payout.String())
+		// TODO: 记录赎回事件
+	case *contract.TransferSingleEvent:
+		ctx.Log.Debugf("CTF TransferSingle: from=%s, to=%s, id=%s, value=%s",
+			e.From.Hex(), e.To.Hex(), e.Id.String(), e.Value.String())
+		// TODO: 更新ERC1155持仓
+	case *contract.TransferBatchEvent:
+		ctx.Log.Debugf("CTF TransferBatch: from=%s, to=%s, ids=%d",
+			e.From.Hex(), e.To.Hex(), len(e.Ids))
+		// TODO: 批量更新ERC1155持仓
+	default:
+		ctx.Log.Debugf("未处理的CTF事件类型: %T", e)
 	}
 
 	return nil
 }
 
-// handleMarketEvent 处理市场事件
-func (p *EventProcessor) handleMarketEvent(
+// handlePredictionCTFMarketEvent 处理PredictionCTF市场事件
+func (p *EventProcessor) handlePredictionCTFMarketEvent(
 	ctx com.Ctx,
 	eventLog *model.EventLog,
 	chainData *ChainData,
 	marketMap map[string]*marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market,
 	userInfoMap map[string]*usercenterPb.GetUsersInfoByAddressesReply_User,
 ) error {
-	if eventLog.Type != model.TypePrediction {
-		return fmt.Errorf("非预测市场事件")
-	}
-
 	marketAddress := eventLog.Address
 	marketInfo, exists := marketMap[marketAddress]
 	if !exists {
-		return fmt.Errorf("市场信息不存在")
+		return fmt.Errorf("PredictionCTF市场信息不存在: %s", marketAddress)
 	}
 
-	predictionEvent, err := p.arbClient.Contract.PredictionContract.ParseEvent(*eventLog.ToChainLog())
+	predictionCTFEvent, err := p.arbClient.Contract.PredictionCTFContract.ParseEvent(*eventLog.ToChainLog())
 	if err != nil {
-		return fmt.Errorf("解析预测事件失败: %w", err)
+		return fmt.Errorf("解析PredictionCTF事件失败: %w", err)
 	}
 
 	// 查询区块时间
 	blockTime, ok := chainData.blockNumberToTime[eventLog.BlockNumber]
 	if !ok {
-		return fmt.Errorf("区块时间不存在")
+		return fmt.Errorf("区块时间不存在: %d", eventLog.BlockNumber)
 	}
 
 	// 准备事件处理参数
@@ -1094,8 +749,7 @@ func (p *EventProcessor) handleMarketEvent(
 		OptionPrices:  p.buildOptionPrices(ctx, marketInfo, chainData, eventLog.BlockNumber),
 	}
 
-	// 根据事件类型处理
-	return p.routeEvent(ctx, predictionEvent, eventParams)
+	return p.routeCTFEvent(ctx, predictionCTFEvent, eventParams)
 }
 
 // EventParams 事件处理参数
@@ -1143,32 +797,39 @@ func (p *EventProcessor) buildOptionPrices(
 	return optionPrices
 }
 
-// routeEvent 分发事件处理器
-func (p *EventProcessor) routeEvent(ctx com.Ctx, predictionEvent interface{}, params *EventParams) error {
-	switch e := predictionEvent.(type) {
+// routeCTFEvent 分发PredictionCTF事件处理器
+func (p *EventProcessor) routeCTFEvent(ctx com.Ctx, predictionCTFEvent interface{}, params *EventParams) error {
+	switch e := predictionCTFEvent.(type) {
 	case *contract.DepositedEvent:
-		ctx.Log.Infof("处理存款事件: %s", params.EventLog.TxHash)
+		ctx.Log.Infof("处理CTF存款事件: %s", params.EventLog.TxHash)
 		return p.handleDepositEvent(ctx, e, params)
 	case *contract.WithdrawnEvent:
-		ctx.Log.Infof("处理提款事件: %s", params.EventLog.TxHash)
+		ctx.Log.Infof("处理CTF提款事件: %s", params.EventLog.TxHash)
 		return p.handleWithdrawEvent(ctx, e, params)
 	case *contract.SwappedEvent:
-		ctx.Log.Infof("处理交换事件: %s", params.EventLog.TxHash)
+		ctx.Log.Infof("处理CTF交换事件: %s", params.EventLog.TxHash)
 		return p.handleSwapEvent(ctx, e, params)
-	case *contract.ClaimedEvent:
-		ctx.Log.Infof("处理认领事件: %s", params.EventLog.TxHash)
-		return p.handleClaimEvent(ctx, e, params)
-	case *contract.SettlingEvent:
-		ctx.Log.Infof("处理结算事件: %s", params.EventLog.TxHash)
-		return p.handleSettlingEvent(ctx, e, params)
-	case *contract.AssertionDisputedEvent:
-		ctx.Log.Infof("处理断言争议事件: %s", params.EventLog.TxHash)
-		return p.handleDisputeEvent(ctx, e, params)
-	case *contract.AssertionResolvedEvent:
-		ctx.Log.Infof("处理断言解决事件: %s", params.EventLog.TxHash)
-		return p.handleResolvedEvent(ctx, e, params)
+	case *contract.CTFMarketResolvedEvent:
+		ctx.Log.Infof("处理CTF市场解决事件: %s, address: %s", params.EventLog.TxHash, params.EventLog.Address)
+		// TODO: 处理CTF市场解决事件（通过RPC通知market-service）
+		return nil
+	case *contract.LiquidityAddedEvent:
+		ctx.Log.Infof("处理CTF流动性添加事件: %s", params.EventLog.TxHash)
+		// TODO: 处理CTF流动性事件
+		return nil
+	case *contract.CTFLiquidityRemovedEvent:
+		ctx.Log.Infof("处理CTF流动性移除事件: %s", params.EventLog.TxHash)
+		// TODO: 处理CTF流动性移除事件
+		return nil
+	case *contract.FeeSetEvent:
+		ctx.Log.Infof("处理CTF费率设置事件: %s", params.EventLog.TxHash)
+		return nil
+	case *contract.CTFFeeCollectedEvent:
+		ctx.Log.Infof("处理CTF费用收集事件: %s, collector: %s, amount: %s",
+			params.EventLog.TxHash, e.Collector.Hex(), e.Amount.String())
+		return nil
 	default:
-		ctx.Log.Infof("未处理的预测事件类型: %T", e)
+		ctx.Log.Infof("未处理的PredictionCTF事件类型: %T", e)
 		return nil
 	}
 }
@@ -1200,7 +861,7 @@ func (p *EventProcessor) updatePricesOnly(ctx com.Ctx, params *EventParams) erro
 	return nil
 }
 
-// getBalance 获取用户代币余额，
+// getBalance 获取用户代币余额
 func (p *EventProcessor) getBalance(ctx com.Ctx, userAddress, tokenAddress string, blockNumber uint64, chainData *ChainData) (*big.Int, error) {
 	balanceKey := fmt.Sprintf(BalanceKeyFormat, userAddress, tokenAddress, blockNumber)
 	if balance, hasBalance := chainData.userTokenBalances[balanceKey]; hasBalance {
@@ -1219,97 +880,6 @@ func (p *EventProcessor) findOptionAddress(optionIndex uint32, marketInfo *marke
 		}
 	}
 	return "", 0, fmt.Errorf("option address not found. market: %s, option: %d", marketInfo.Address, optionIndex)
-}
-
-func (p *EventProcessor) handleSettlingEvent(ctx com.Ctx, event *contract.SettlingEvent, params *EventParams) error {
-	finalOptionAddress, _, err := p.findOptionAddress(uint32(event.FinalOption), params.MarketInfo)
-	if err != nil || finalOptionAddress == "" {
-		ctx.Log.Warnf("最终选项地址不存在: %s", params.EventLog.Address)
-		return fmt.Errorf("最终选项地址不存在")
-	}
-
-	_, err = p.rpcClient.MarketcenterClient.ProcessMarketSettingEvent(ctx.Ctx, &marketcenterPb.ProcessMarketSettingEventRequest{
-		MarketAddress:      params.EventLog.Address,
-		FinalOptionAddress: finalOptionAddress,
-		AssertionId:        event.AssertionId,
-		BlockNumber:        params.EventLog.BlockNumber,
-		TxHash:             params.EventLog.TxHash,
-	})
-	if err != nil {
-		ctx.Log.Errorf("处理市场设置事件失败: %v", err)
-		return fmt.Errorf("处理市场设置事件失败: %w", err)
-	}
-
-	return nil
-}
-
-func (p *EventProcessor) handleDisputeEvent(ctx com.Ctx, event *contract.AssertionDisputedEvent, params *EventParams) error {
-	_, err := p.rpcClient.MarketcenterClient.ProcessMarketAssertDisputedEvent(ctx.Ctx, &marketcenterPb.ProcessMarketAssertDisputedEventRequest{
-		MarketAddress: params.EventLog.Address,
-		AssertionId:   event.AssertionId.Bytes(),
-		BlockNumber:   params.EventLog.BlockNumber,
-		TxHash:        params.EventLog.TxHash,
-	})
-	if err != nil {
-		ctx.Log.Errorf("处理市场断言争议事件失败: %v", err)
-		return fmt.Errorf("处理市场断言争议事件失败: %w", err)
-	}
-	return nil
-}
-
-func (p *EventProcessor) handleResolvedEvent(ctx com.Ctx, event *contract.AssertionResolvedEvent, params *EventParams) error {
-	_, err := p.rpcClient.MarketcenterClient.ProcessMarketAssertionResolvedEvent(ctx.Ctx, &marketcenterPb.ProcessMarketAssertionResolvedEventRequest{
-		MarketAddress:      params.EventLog.Address,
-		AssertedTruthfully: event.AssertedTruthfully,
-		AssertionId:        event.AssertionId.Bytes(),
-		BlockNumber:        params.EventLog.BlockNumber,
-		TxHash:             params.EventLog.TxHash,
-	})
-	if err != nil {
-		ctx.Log.Errorf("处理市场断言解决事件失败: %v", err)
-		return fmt.Errorf("处理市场断言解决事件失败: %w", err)
-	}
-
-	return nil
-}
-
-func (p *EventProcessor) handleClaimEvent(ctx com.Ctx, event *contract.ClaimedEvent, params *EventParams) error {
-	userAddress := event.User.Hex()
-	userInfo, exists := params.UserInfoMap[userAddress]
-	if !exists || userInfo.Uid == "" {
-		ctx.Log.Debugf("非平台用户，忽略: %s", userAddress)
-		return nil // claim 事件 非平台用户什么也不做  忽略
-	}
-
-	optionAddress, _, err := p.findOptionAddress(uint32(event.Option), params.MarketInfo)
-	if err != nil {
-		ctx.Log.Errorf("处理用户代币领取事件失败: %v market: %s, txhash: %s, option: %s, amount: %s", err, params.EventLog.Address, params.EventLog.TxHash, optionAddress, event.Amount.String())
-		return err
-	}
-
-	userBalance, err := p.getBalance(ctx, userAddress, optionAddress, params.EventLog.BlockNumber, params.ChainData)
-	if err != nil {
-		return err
-	}
-
-	_, err = p.rpcClient.MarketcenterClient.ProcessMarketClaimResultEvent(ctx.Ctx, &marketcenterPb.ProcessMarketClaimResultEventRequest{
-		Uid:           userInfo.Uid,
-		UserAddress:   userAddress,
-		MarketAddress: params.EventLog.Address,
-		Amount:        event.Amount.String(),
-		OptionAddress: optionAddress,
-		OptionBalance: userBalance.String(),
-		BaseTokenType: params.BaseTokenType,
-		BlockTime:     params.BlockTime,
-		TxHash:        params.EventLog.TxHash,
-		BlockNumber:   params.EventLog.BlockNumber,
-	})
-	if err != nil {
-		ctx.Log.Errorf("处理用户代币领取事件失败: %v market: %s, txhash: %s, option: %s, amount: %s", err, params.EventLog.Address, params.EventLog.TxHash, optionAddress, event.Amount.String())
-		return fmt.Errorf("处理用户代币领取事件失败: %w", err)
-	}
-
-	return nil
 }
 
 // handleDepositEvent 处理存款事件

@@ -3,7 +3,6 @@ package biz
 import (
 	"context"
 	"fmt"
-	usercenterPb "market-proto/proto/market-service/usercenter/v1"
 	"runtime/debug"
 	"sync"
 	"time"
@@ -21,8 +20,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// const FactoryContractAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
-
 // BlockScanner
 type BlockScanner struct {
 	db          *data.DbClient
@@ -30,14 +27,12 @@ type BlockScanner struct {
 	redisClient *data.RedisClient
 	rpcClient   *data.RpcClient
 
-	cfg    *conf.Data_Blockchain
-	custom *conf.Custom
-	log    log.Logger
+	cfg *conf.Data_Blockchain
+	log log.Logger
 
 	// 解析器
-	factoryParser    *contract.FactoryContract
-	predictionParser *contract.PredictionContract
-	erc20Parser      *contract.ERC20Contract
+	conditionalTokensParser *contract.ConditionalTokensContract
+	predictionCTFParser     *contract.PredictionCTFContract
 
 	// 控制监听的通道
 	stopCh    chan struct{}
@@ -56,20 +51,18 @@ func NewBlockScanner(
 	logger log.Logger,
 ) *BlockScanner {
 	return &BlockScanner{
-		db:               db,
-		arbClient:        arbClient,
-		redisClient:      redisClient,
-		rpcClient:        rpcClient,
-		cfg:              bc.Data.Blockchain,
-		custom:           bc.Custom,
-		log:              logger,
-		factoryParser:    arbClient.Contract.FactoryContract,
-		predictionParser: arbClient.Contract.PredictionContract,
-		erc20Parser:      arbClient.Contract.Erc20Contract,
-		stopCh:           make(chan struct{}),
-		doneCh:           make(chan struct{}),
-		mu:               sync.RWMutex{},
-		isRunning:        false,
+		db:                      db,
+		arbClient:               arbClient,
+		redisClient:             redisClient,
+		rpcClient:               rpcClient,
+		cfg:                     bc.Data.Blockchain,
+		log:                     logger,
+		conditionalTokensParser: arbClient.Contract.ConditionalTokensContract,
+		predictionCTFParser:     arbClient.Contract.PredictionCTFContract,
+		stopCh:                  make(chan struct{}),
+		doneCh:                  make(chan struct{}),
+		mu:                      sync.RWMutex{},
+		isRunning:               false,
 	}
 }
 
@@ -245,65 +238,43 @@ func (scanner *BlockScanner) processScanBlock(ctx com.Ctx) (uint64, error) {
 }
 
 func (scanner *BlockScanner) processBlocks(ctx com.Ctx, fromBlock, toBlock uint64) error {
-	// 处理工厂合约事件
-	factoryLogs, err := scanner.getFactoryEvents(ctx, fromBlock, toBlock)
+	eventLogs := make([]*model.EventLog, 0)
+
+	// 处理ConditionalTokens合约事件
+	ctfLogs, err := scanner.getCTFEvents(ctx, fromBlock, toBlock)
 	if err != nil {
-		ctx.Log.Errorf("获取工厂合约事件失败: %v", err)
+		ctx.Log.Errorf("获取ConditionalTokens合约事件失败: %v", err)
 		return err
 	}
 
-	// 初始化事件日志切片，用于后续批量保存
-	eventLogs := make([]*model.EventLog, 0, len(factoryLogs))
-
-	// 处理工厂合约的创建事件
-	for _, log := range factoryLogs {
+	for _, log := range ctfLogs {
 		if log.Removed {
-			ctx.Log.Infof("工厂合约事件已删除: %s", log.TxHash.Hex())
+			ctx.Log.Infof("ConditionalTokens合约事件已删除: %s", log.TxHash.Hex())
 			continue
 		}
 
 		eventLog := model.EventLog{}
 		eventLog.ToEventLog(&log)
-		eventLog.Type = model.TypeFactory
+		eventLog.Type = model.TypeCTF
 		eventLogs = append(eventLogs, &eventLog)
 	}
 
-	// 处理预测市场合约事件
-	predictionLogs, err := scanner.getPredictionEvents(ctx, fromBlock, toBlock)
+	// 处理PredictionCTF池合约事件
+	predictionCTFLogs, err := scanner.getPredictionCTFEvents(ctx, fromBlock, toBlock)
 	if err != nil {
-		ctx.Log.Errorf("获取预测市场合约事件失败: %v", err)
+		ctx.Log.Errorf("获取PredictionCTF池合约事件失败: %v", err)
 		return err
 	}
 
-	for _, log := range predictionLogs {
+	for _, log := range predictionCTFLogs {
 		if log.Removed {
-			ctx.Log.Infof("预测市场合约事件已删除: %s", log.TxHash.Hex())
+			ctx.Log.Infof("PredictionCTF池合约事件已删除: %s", log.TxHash.Hex())
 			continue
 		}
 
 		eventLog := model.EventLog{}
 		eventLog.ToEventLog(&log)
-		eventLog.Type = model.TypePrediction
-		eventLogs = append(eventLogs, &eventLog)
-	}
-
-	transferLogs, err := scanner.getErc20TransferEvents(ctx, fromBlock, toBlock)
-	if err != nil {
-		ctx.Log.Errorf("获取erc20代币转移事件失败: %v", err)
-		return err
-	}
-
-	filteredTransferLogs, err := scanner.filterTransferLogs(ctx, transferLogs)
-	if err != nil {
-		ctx.Log.Errorf("过滤erc20代币转移事件失败: %v", err)
-		return err
-	}
-
-	for _, log := range filteredTransferLogs {
-
-		eventLog := model.EventLog{}
-		eventLog.ToEventLog(&log)
-		eventLog.Type = model.TypeErc20Transfer
+		eventLog.Type = model.TypePredictionCTF
 		eventLogs = append(eventLogs, &eventLog)
 	}
 
@@ -311,119 +282,53 @@ func (scanner *BlockScanner) processBlocks(ctx com.Ctx, fromBlock, toBlock uint6
 	return scanner.saveEventLogs(ctx, eventLogs)
 }
 
-func (scanner *BlockScanner) filterTransferLogs(ctx com.Ctx, transferLogs []ethereumType.Log) ([]ethereumType.Log, error) {
-	queryUserAddressList := make([]string, 0)
-	for _, log := range transferLogs {
-		transferEvent, err := scanner.erc20Parser.ParseTransferEvent(log)
-		if err != nil {
-			ctx.Log.Errorf("解析ERC20 Transfer事件失败: %v", err)
-			continue
-		}
-		fromAddress := transferEvent.From.Hex()
-		toAddress := transferEvent.To.Hex()
-		queryUserAddressList = append(queryUserAddressList, fromAddress)
-		queryUserAddressList = append(queryUserAddressList, toAddress)
+// getCTFEvents 获取ConditionalTokens合约事件
+func (scanner *BlockScanner) getCTFEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
+	ctfAddress := scanner.cfg.ConditionalTokensAddress
+	if ctfAddress == "" {
+		return nil, nil // 未配置CTF合约地址，跳过
 	}
 
-	userInfoMap := make(map[string]*usercenterPb.GetUsersInfoByAddressesReply_User)
+	// 监听所有CTF事件
+	eventHashes := scanner.conditionalTokensParser.GetAllEventSignatures()
 
-	if len(queryUserAddressList) == 0 {
-		return make([]ethereumType.Log, 0), nil
-	}
-
-	resp, err := scanner.rpcClient.UsercenterClient.GetUsersInfoByAddresses(ctx.Ctx, &usercenterPb.GetUsersInfoByAddressesRequest{
-		Addresses: queryUserAddressList,
-	})
+	txLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(
+		ctx.Ctx, fromBlock, toBlock, eventHashes, []common.Address{common.HexToAddress(ctfAddress)})
 	if err != nil {
-		return nil, err
-	}
-
-	for _, user := range resp.Users {
-		userInfoMap[user.Address] = user
-	}
-
-	filteredTransferLogs := make([]ethereumType.Log, 0, len(transferLogs))
-
-	for _, log := range transferLogs {
-		transferEvent, err := scanner.erc20Parser.ParseTransferEvent(log)
-		if err != nil {
-			ctx.Log.Errorf("解析ERC20 Transfer事件失败: %v", err)
-			continue
-		}
-		fromAddress := transferEvent.From.Hex()
-		toAddress := transferEvent.To.Hex()
-
-		if _, ok := userInfoMap[fromAddress]; ok {
-			filteredTransferLogs = append(filteredTransferLogs, log)
-			continue
-		}
-		if _, ok := userInfoMap[toAddress]; ok {
-			filteredTransferLogs = append(filteredTransferLogs, log)
-			continue
-		}
-	}
-
-	return filteredTransferLogs, nil
-}
-
-// getFactoryEvents 获取工厂合约事件
-func (scanner *BlockScanner) getFactoryEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
-	// 获取工厂合约的PredictionCreated事件签名和地址
-	factoryCreatedEventHash := common.HexToHash(scanner.factoryParser.GetEventSignature(contract.EventTypePredictionCreated))
-	factoryAddress := common.HexToAddress(scanner.cfg.FactoryContractAddress)
-
-	ctx.Log.Infof("start GetBlockRangeLogsWithAddress fromBlock: %d, toBlock: %d, factoryCreatedEventHash: %s, factoryAddress: %s",
-		fromBlock, toBlock, factoryCreatedEventHash.Hex(), factoryAddress.Hex())
-
-	// 查询工厂合约在指定区块范围内的创建事件
-	createPredictionLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(
-		ctx.Ctx, fromBlock, toBlock, []common.Hash{factoryCreatedEventHash}, []common.Address{factoryAddress})
-	if err != nil {
-		ctx.Log.Errorf("获取工厂合约创建事件失败: %v", err)
-		return nil, err
-	}
-
-	ctx.Log.Infof("GetBlockRangeLogsWithAddress result: %d", len(createPredictionLogs))
-
-	return createPredictionLogs, nil
-}
-
-// getPredictionEvents 获取预测市场合约事件
-func (scanner *BlockScanner) getPredictionEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
-	// 定义需要监听的预测市场事件类型
-	eventHashes := []common.Hash{
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeSwapped)),           // 交换事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeWithdrawn)),         // 提现事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeDeposited)),         // 存款事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeClaimed)),           // 认领事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeSettling)),          // 结算事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeAssertionDisputed)), // 争议事件
-		common.HexToHash(scanner.predictionParser.GetEventSignature(contract.EventTypeAssertionResolved)), // 解决事件
-	}
-
-	// 查询预测市场合约的事件日志
-	txLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(ctx.Ctx, fromBlock, toBlock, eventHashes, []common.Address{})
-	if err != nil {
-		ctx.Log.Errorf("获取预测市场交易事件失败: %v", err)
+		ctx.Log.Errorf("获取ConditionalTokens合约事件失败: %v", err)
 		return nil, err
 	}
 
 	return txLogs, nil
 }
 
-// getErc20TransferEvents 获取erc20代币转移事件
-func (scanner *BlockScanner) getErc20TransferEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
-	transferEventHash, err := scanner.erc20Parser.GetTransferEventSignature()
-	if err != nil {
-		ctx.Log.Errorf("获取erc20代币转移事件签名失败: %v", err)
-		return nil, err
+// getPredictionCTFEvents 获取PredictionCTF池合约事件
+func (scanner *BlockScanner) getPredictionCTFEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
+	ctfAddresses := scanner.cfg.PredictionCtfAddresses
+	if len(ctfAddresses) == 0 {
+		return nil, nil // 未配置PredictionCTF池地址，跳过
 	}
 
-	pointsAddress := common.HexToAddress(scanner.custom.AssetTokens.Points.Address)
-	usdcAddress := common.HexToAddress(scanner.custom.AssetTokens.Usdc.Address)
-	txLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(ctx.Ctx, fromBlock, toBlock, []common.Hash{transferEventHash}, []common.Address{pointsAddress, usdcAddress})
+	// 定义需要监听的PredictionCTF事件类型
+	eventHashes := []common.Hash{
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFSwapped)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFWithdrawn)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFDeposited)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFLiquidityAdded)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFLiquidityRemoved)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFMarketResolved)),
+		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFFeeCollected)),
+	}
+
+	// 构建地址列表
+	addresses := make([]common.Address, len(ctfAddresses))
+	for i, addr := range ctfAddresses {
+		addresses[i] = common.HexToAddress(addr)
+	}
+
+	txLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(ctx.Ctx, fromBlock, toBlock, eventHashes, addresses)
 	if err != nil {
-		ctx.Log.Errorf("获取erc20代币转移事件失败: %v", err)
+		ctx.Log.Errorf("获取PredictionCTF池合约事件失败: %v", err)
 		return nil, err
 	}
 

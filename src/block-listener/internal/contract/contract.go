@@ -8,36 +8,24 @@ import (
 var ProviderSet = wire.NewSet(NewContract)
 
 type Contract struct {
-	log                log.Logger
-	FactoryContract    *FactoryContract
-	PredictionContract *PredictionContract
-	OptionContract     *OptionContract
-	Erc20Contract      *ERC20Contract
+	log                       log.Logger
+	ConditionalTokensContract *ConditionalTokensContract
+	PredictionCTFContract     *PredictionCTFContract
 }
 
 func NewContract(logger log.Logger) (*Contract, error) {
-	factoryContract, err := NewFactoryContract(logger)
+	conditionalTokensContract, err := NewConditionalTokensContract(logger)
 	if err != nil {
 		return nil, err
 	}
-	predictionContract, err := NewPredictionContract(logger)
-	if err != nil {
-		return nil, err
-	}
-	optionContract, err := NewOptionContract(logger)
-	if err != nil {
-		return nil, err
-	}
-	erc20Contract, err := NewERC20Contract(logger)
+	predictionCTFContract, err := NewPredictionCTFContract(logger)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Contract{
-		log:                logger,
-		FactoryContract:    factoryContract,
-		PredictionContract: predictionContract,
-		OptionContract:     optionContract,
-		Erc20Contract:      erc20Contract,
+		log:                       logger,
+		ConditionalTokensContract: conditionalTokensContract,
+		PredictionCTFContract:     predictionCTFContract,
 	}, nil
 }
