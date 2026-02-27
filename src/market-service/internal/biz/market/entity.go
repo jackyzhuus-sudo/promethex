@@ -21,6 +21,11 @@ var (
 	MarketStatusSettling = uint8(2)
 	MarketStatusDisputed = uint8(3)
 	MarketStatusEnd      = uint8(4)
+
+	EventStatusActive   = uint8(1)
+	EventStatusResolved = uint8(2)
+	EventStatusVoided   = uint8(3)
+	EventStatusFrozen   = uint8(4)
 )
 
 const (
@@ -59,6 +64,12 @@ type MarketEntity struct {
 	Embedding         []float64       `json:"embedding"`
 	BlockNumber       uint64          `json:"block_number"`
 
+	// CTF fields
+	EventId          string `json:"event_id"`
+	ConditionId      string `json:"condition_id"`
+	QuestionId       string `json:"question_id"`
+	OutcomeSlotCount int32  `json:"outcome_slot_count"`
+
 	IsFollowed uint8 `json:"is_followed"`
 
 	Options []*OptionEntity `json:"options"`
@@ -89,6 +100,7 @@ type OptionEntity struct {
 	Weight        uint32 `json:"weight"`
 	Index         uint32 `json:"index"`
 	PicUrl        string `json:"pic_url"`
+	PositionId    string `json:"position_id"` // ERC1155 token ID
 
 	OptionTokenPrice *OptionTokenPriceEntity `json:"option_token_price"`
 }
@@ -100,6 +112,19 @@ type OptionTokenPriceEntity struct {
 	BlockTime     time.Time       `json:"block_time"`
 	BaseTokenType uint8           `json:"base_token_type"`
 	Decimals      uint8           `json:"decimals"`
+}
+
+// PredictionEventEntity 表示一个 NegRisk Event
+type PredictionEventEntity struct {
+	base.BaseEntity
+	EventId          string `json:"event_id"`
+	Title            string `json:"title"`
+	OutcomeSlotCount int32  `json:"outcome_slot_count"`
+	Collateral       string `json:"collateral"`
+	Status           uint8  `json:"status"`
+	MetadataHash     string `json:"metadata_hash"`
+
+	Markets []*MarketEntity `json:"markets"` // 子市场列表
 }
 
 // TokenPricePoint 表示一个时间点上的所有token价格

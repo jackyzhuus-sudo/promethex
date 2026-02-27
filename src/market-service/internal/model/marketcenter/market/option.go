@@ -19,6 +19,7 @@ type Option struct {
 	Index         uint32 `gorm:"column:index;type:integer;not null;default:0" comment:"在市场的条件中的排序索引"`
 	PicUrl        string `gorm:"column:pic_url;type:varchar(256);not null;default:''" comment:"图片url"`
 	BaseTokenType uint8  `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
+	PositionId    string `gorm:"column:position_id;type:varchar(78);not null;default:''" comment:"ERC1155 token ID"`
 }
 
 func (o *Option) ToEntity() *marketBiz.OptionEntity {
@@ -38,6 +39,7 @@ func (o *Option) ToEntity() *marketBiz.OptionEntity {
 		Index:         o.Index,
 		PicUrl:        o.PicUrl,
 		BaseTokenType: o.BaseTokenType,
+		PositionId:    o.PositionId,
 	}
 }
 
@@ -52,6 +54,7 @@ func (o *Option) FromEntity(entity *marketBiz.OptionEntity) {
 	o.Index = entity.Index
 	o.PicUrl = entity.PicUrl
 	o.BaseTokenType = entity.BaseTokenType
+	o.PositionId = entity.PositionId
 	o.ID = entity.Id
 	o.CreatedAt = entity.CreatedAt
 	o.UpdatedAt = entity.UpdatedAt

@@ -39,6 +39,9 @@ enum ErrorCode {
   // - asset
   INVALID_USER_OPERATION = 114101;
   PLACE_ORDER_TOO_QUICK = 114102;
+
+  // - event
+  EVENT_NOT_FOUND       = 115101;
 }
 
 // Marketcenter服务定义
@@ -102,6 +105,10 @@ service Marketcenter {
 
     rpc GetQuestionDetail(GetQuestionDetailRequest) returns (GetQuestionDetailResponse) {}
 
+    // CTF Event 相关
+    rpc GetEvent(GetEventRequest) returns (GetEventResponse) {}
+    rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {}
+    rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse) {}
 
 }
 
@@ -460,6 +467,7 @@ message GetMarketsAndOptionsInfoResponse {
 
       string price = 7;
       string description = 8;
+      string position_id = 9;  // ERC1155 token ID
     }
 
     string address = 1;
@@ -478,6 +486,11 @@ message GetMarketsAndOptionsInfoResponse {
     uint32 created_at = 13;
     uint32 deadline = 14;
     string result = 15;
+    // CTF fields
+    string event_id = 16;         // NegRisk Event ID
+    string condition_id = 17;     // CTF conditionId
+    string question_id = 18;     // CTF questionId
+    int32 outcome_slot_count = 19; // 结果数量
   }
 
 
@@ -550,6 +563,7 @@ message CreateMarketsAndOptionsRequest {
     string description = 4;
     uint32 decimal = 5;
     uint32 index = 6;
+    string position_id = 7;  // ERC1155 token ID
   }
 
   message Market {
@@ -560,6 +574,11 @@ message CreateMarketsAndOptionsRequest {
     uint64 deadline = 5;
     string tx_hash = 6;
     repeated Option options = 7;
+    // CTF fields
+    string event_id = 8;         // NegRisk Event ID (bytes32 hex)
+    string condition_id = 9;     // CTF conditionId (bytes32 hex)
+    string question_id = 10;     // CTF questionId (bytes32 hex)
+    int32 outcome_slot_count = 11; // 结果数量
   }
 
   repeated Market markets = 1;
@@ -866,6 +885,7 @@ message GetMarketDetailResponse {
     string price = 5;
     uint32 decimal = 6;
     string description = 7;
+    string position_id = 8;  // ERC1155 token ID
   }
 
   string address = 1;
@@ -886,6 +906,11 @@ message GetMarketDetailResponse {
   string base_token_address = 16; // points或者usdc等的合约地址
   // 是否以领取结果 
   IsClaim is_claim = 17;
+  // CTF fields
+  string event_id = 18;         // NegRisk Event ID
+  string condition_id = 19;     // CTF conditionId
+  string question_id = 20;     // CTF questionId
+  int32 outcome_slot_count = 21; // 结果数量
 }
 
 message GetMarketTradesRequest {
@@ -988,6 +1013,16 @@ enum BaseTokenType {
   BASE_TOKEN_TYPE_POINTS = 1;
   BASE_TOKEN_TYPE_USDC = 2;
 }
+
+// CTF Event 状态
+enum EventStatus {
+  EVENT_STATUS_UNSPECIFIED = 0;
+  EVENT_STATUS_ACTIVE = 1;
+  EVENT_STATUS_RESOLVED = 2;
+  EVENT_STATUS_VOIDED = 3;
+  EVENT_STATUS_FROZEN = 4;
+}
+
 
 message GetUserPositionsRequest {
   string uid = 1;
@@ -1365,4 +1400,91 @@ message GetSectionsResponse {
     repeated Prediction predictions = 6 ;
   }
   repeated Section sections = 1 ;
+}
+
+
+// ==================== CTF Event Messages ====================
+
+// PredictionEvent 表示一个 NegRisk Event，包含多个子市场
+message PredictionEvent {
+  message Market {
+    message Option {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      string pic_url = 4;
+      uint32 decimal = 5;
+      uint32 index = 6;
+      string price = 7;
+      string description = 8;
+      string position_id = 9;  // ERC1155 token ID
+    }
+
+    string address = 1;
+    string name = 2;
+    string pic_url = 3;
+    string description = 4;
+    uint32 status = 5;
+    uint32 participants_count = 6;
+    string volume = 7;
+    uint32 decimal = 8;
+    uint32 created_at = 9;
+    uint32 deadline = 10;
+    string result = 11;
+    string condition_id = 12;     // CTF conditionId
+    string question_id = 13;     // CTF questionId
+
+    repeated Option options = 14;
+  }
+
+  string id = 1;                       // UUID
+  string event_id = 2;                 // on-chain NegRisk eventId (bytes32 hex)
+  string title = 3;
+  int32 outcome_slot_count = 4;
+  string collateral = 5;              // USDC 地址
+  EventStatus status = 6;
+  string metadata_hash = 7;
+  uint32 created_at = 8;
+  uint32 updated_at = 9;
+
+  repeated Market markets = 10;        // 子市场列表
+}
+
+message GetEventRequest {
+  string id = 1;            // UUID or event_id
+  string uid = 2;           // 用户ID（用于查询关注状态等）
+}
+
+message GetEventResponse {
+  PredictionEvent event = 1;
+}
+
+message ListEventsRequest {
+  enum SortType {
+    SORT_TYPE_UNKNOWN = 0;
+    SORT_TYPE_LATEST = 1;
+    SORT_TYPE_VOLUME = 2;
+  }
+  string uid = 1;
+  EventStatus status = 2;
+  SortType sort_type = 3;
+  uint32 page = 4;
+  uint32 page_size = 5;
+}
+
+message ListEventsResponse {
+  uint32 total = 1;
+  repeated PredictionEvent events = 2;
+}
+
+message CreateEventRequest {
+  string event_id = 1;               // on-chain NegRisk eventId (bytes32 hex)
+  string title = 2;
+  int32 outcome_slot_count = 3;
+  string collateral = 4;             // USDC 地址
+  string metadata_hash = 5;
+}
+
+message CreateEventResponse {
+  string id = 1;                      // 创建后的 UUID
 }

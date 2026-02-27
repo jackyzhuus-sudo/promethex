@@ -35,6 +35,8 @@ type MarketQuery struct {
 	MinVolume   decimal.Decimal // 最小交易量
 	MaxDeadline uint64          // 最大截止时间
 
+	// CTF 筛选
+	EventId string // 按 NegRisk Event ID 筛选
 }
 
 // OptionQuery 条件代币查询结构体
@@ -142,6 +144,9 @@ func (query *MarketQuery) applyConditions(db *gorm.DB, prefix string) *gorm.DB {
 	if query.MaxDeadline > 0 {
 		db = db.Where(prefix+"deadline <= ?", query.MaxDeadline)
 	}
+	if query.EventId != "" {
+		db = db.Where(prefix+"event_id = ?", query.EventId)
+	}
 	return db
 }
 
@@ -185,6 +190,23 @@ func (query *UserMarketFollowQuery) Condition(db *gorm.DB, total *int64) *gorm.D
 }
 
 // Condition 条件代币价格查询条件
+// PredictionEventQuery 预测事件查询结构体
+type PredictionEventQuery struct {
+	base.BaseQuery
+	EventId string // on-chain NegRisk eventId
+	Status  uint8  // 事件状态
+}
+
+func (query *PredictionEventQuery) Condition(db *gorm.DB, total *int64) *gorm.DB {
+	if query.EventId != "" {
+		db = db.Where("event_id = ?", query.EventId)
+	}
+	if query.Status > 0 {
+		db = db.Where("status = ?", query.Status)
+	}
+	return query.BaseQuery.Condition(db, total)
+}
+
 func (query *OptionTokenPriceQuery) Condition(db *gorm.DB, total *int64) *gorm.DB {
 	if query.TokenAddress != "" {
 		db = db.Where("token_address = ?", query.TokenAddress)

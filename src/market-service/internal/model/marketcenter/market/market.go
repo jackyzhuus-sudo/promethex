@@ -39,6 +39,10 @@ type Market struct {
 	Categories         StringSlice     `gorm:"column:categories;type:jsonb;not null;default:'[]'" comment:"市场分类"`
 	Embedding          VectorArray     `gorm:"column:embedding;type:vector(384);default:NULL" comment:"市场向量"`
 	BlockNumber        uint64          `gorm:"column:block_number;type:bigint;not null;default:0" comment:"区块高度"`
+	EventId            string          `gorm:"column:event_id;type:varchar(66);not null;default:''" comment:"NegRisk Event ID (bytes32 hex)"`
+	ConditionId        string          `gorm:"column:condition_id;type:varchar(66);not null;default:''" comment:"CTF conditionId (bytes32 hex)"`
+	QuestionId         string          `gorm:"column:question_id;type:varchar(66);not null;default:''" comment:"CTF questionId (bytes32 hex)"`
+	OutcomeSlotCount   int32           `gorm:"column:outcome_slot_count;type:integer;not null;default:2" comment:"结果数量"`
 }
 
 type StringSlice []string
@@ -161,6 +165,10 @@ func (m *Market) ToEntity() *marketBiz.MarketEntity {
 		Categories:        m.Categories,
 		Embedding:         m.Embedding,
 		BlockNumber:       m.BlockNumber,
+		EventId:           m.EventId,
+		ConditionId:       m.ConditionId,
+		QuestionId:        m.QuestionId,
+		OutcomeSlotCount:  m.OutcomeSlotCount,
 	}
 }
 
@@ -186,6 +194,10 @@ func (m *Market) FromEntity(entity *marketBiz.MarketEntity) {
 	m.Categories = entity.Categories
 	m.Embedding = entity.Embedding
 	m.BlockNumber = entity.BlockNumber
+	m.EventId = entity.EventId
+	m.ConditionId = entity.ConditionId
+	m.QuestionId = entity.QuestionId
+	m.OutcomeSlotCount = entity.OutcomeSlotCount
 	m.ID = entity.Id
 	m.CreatedAt = entity.CreatedAt
 	m.UpdatedAt = entity.UpdatedAt

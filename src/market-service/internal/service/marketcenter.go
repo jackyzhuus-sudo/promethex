@@ -25,7 +25,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *BayesService) CreateMarketsAndOptions(ctx context.Context, req *marketcenter.CreateMarketsAndOptionsRequest) (*marketcenter.CreateMarketsAndOptionsResponse, error) {
+func (s *MarketService) CreateMarketsAndOptions(ctx context.Context, req *marketcenter.CreateMarketsAndOptionsRequest) (*marketcenter.CreateMarketsAndOptionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	marketEntityList := make([]*marketBiz.MarketEntity, 0, len(req.Markets))
@@ -41,7 +41,11 @@ func (s *BayesService) CreateMarketsAndOptions(ctx context.Context, req *marketc
 				}
 				return marketBiz.BaseTokenTypePoints
 			}(),
-			OracleAddress: market.OracleAddress,
+			OracleAddress:    market.OracleAddress,
+			EventId:          market.EventId,
+			ConditionId:      market.ConditionId,
+			QuestionId:       market.QuestionId,
+			OutcomeSlotCount: market.OutcomeSlotCount,
 			Deadline:      market.Deadline,
 			TxHash:        market.TxHash,
 		}
@@ -55,6 +59,7 @@ func (s *BayesService) CreateMarketsAndOptions(ctx context.Context, req *marketc
 				Decimal:       uint8(option.Decimal),
 				Index:         option.Index,
 				BaseTokenType: marketEntity.TokenType,
+				PositionId:    option.PositionId,
 			})
 		}
 		marketEntityList = append(marketEntityList, marketEntity)
@@ -82,7 +87,7 @@ func (s *BayesService) CreateMarketsAndOptions(ctx context.Context, req *marketc
 	return &marketcenter.CreateMarketsAndOptionsResponse{}, nil
 }
 
-func (s *BayesService) GetMarketsAndOptionsForBlockListener(ctx context.Context, req *marketcenter.GetMarketsAndOptionsForBlockListenerRequest) (*marketcenter.GetMarketsAndOptionsForBlockListenerResponse, error) {
+func (s *MarketService) GetMarketsAndOptionsForBlockListener(ctx context.Context, req *marketcenter.GetMarketsAndOptionsForBlockListenerRequest) (*marketcenter.GetMarketsAndOptionsForBlockListenerResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	// 去重
 	marketAddressMap := make(map[string]struct{})
@@ -123,7 +128,7 @@ func (s *BayesService) GetMarketsAndOptionsForBlockListener(ctx context.Context,
 	return rsp, nil
 }
 
-func (s *BayesService) GetPayMasterData(ctx context.Context, req *marketcenter.GetPayMasterDataRequest) (*marketcenter.GetPayMasterDataResponse, error) {
+func (s *MarketService) GetPayMasterData(ctx context.Context, req *marketcenter.GetPayMasterDataRequest) (*marketcenter.GetPayMasterDataResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	paymasterData, err := s.assetHandler.GetPayMasterData(c, &assetBiz.UserOperation{
 		Sender: req.UserOperation.Sender,
@@ -156,7 +161,7 @@ func (s *BayesService) GetPayMasterData(ctx context.Context, req *marketcenter.G
 	}, nil
 }
 
-func (s *BayesService) PlaceOrder(ctx context.Context, req *marketcenter.PlaceOrderRequest) (*marketcenter.PlaceOrderResponse, error) {
+func (s *MarketService) PlaceOrder(ctx context.Context, req *marketcenter.PlaceOrderRequest) (*marketcenter.PlaceOrderResponse, error) {
 	return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "Trading Paused Due to Upgrading", "Trading Paused Due to Upgrading")
 	c := common.NewBaseCtx(ctx, s.log)
 	amount, err := decimal.NewFromString(req.Amount)
@@ -233,7 +238,7 @@ func (s *BayesService) PlaceOrder(ctx context.Context, req *marketcenter.PlaceOr
 	return &marketcenter.PlaceOrderResponse{OpHash: newOrderEntity.OpHash}, nil
 }
 
-func (s *BayesService) ClaimMarketResult(ctx context.Context, req *marketcenter.ClaimMarketResultRequest) (*marketcenter.ClaimMarketResultResponse, error) {
+func (s *MarketService) ClaimMarketResult(ctx context.Context, req *marketcenter.ClaimMarketResultRequest) (*marketcenter.ClaimMarketResultResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	userClaimResultEntity := &assetBiz.UserClaimResultEntity{
@@ -288,7 +293,7 @@ func (s *BayesService) ClaimMarketResult(ctx context.Context, req *marketcenter.
 	return &marketcenter.ClaimMarketResultResponse{OpHash: newUserClaimResultEntity.OpHash}, nil
 }
 
-func (s *BayesService) TransferBaseToken(ctx context.Context, req *marketcenter.TransferBaseTokenRequest) (*marketcenter.TransferBaseTokenResponse, error) {
+func (s *MarketService) TransferBaseToken(ctx context.Context, req *marketcenter.TransferBaseTokenRequest) (*marketcenter.TransferBaseTokenResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	amount, err := decimal.NewFromString(req.Amount)
@@ -353,7 +358,7 @@ func (s *BayesService) TransferBaseToken(ctx context.Context, req *marketcenter.
 	return &marketcenter.TransferBaseTokenResponse{OpHash: newUserTransferTokensEntity.OpHash}, nil
 }
 
-func (s *BayesService) UpdateUserMarketFollowStatus(ctx context.Context, req *marketcenter.UpdateUserMarketFollowStatusRequest) (*marketcenter.UpdateUserMarketFollowStatusResponse, error) {
+func (s *MarketService) UpdateUserMarketFollowStatus(ctx context.Context, req *marketcenter.UpdateUserMarketFollowStatusRequest) (*marketcenter.UpdateUserMarketFollowStatusResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	err := s.marketHandler.UpdateUserMarketFollowStatus(c, &marketBiz.UserMarketFollowEntity{
 		UID:           req.Uid,
@@ -366,7 +371,7 @@ func (s *BayesService) UpdateUserMarketFollowStatus(ctx context.Context, req *ma
 	return &marketcenter.UpdateUserMarketFollowStatusResponse{}, nil
 }
 
-func (s *BayesService) GetFollowedMarkets(ctx context.Context, req *marketcenter.GetFollowedMarketsRequest) (*marketcenter.GetFollowedMarketsResponse, error) {
+func (s *MarketService) GetFollowedMarkets(ctx context.Context, req *marketcenter.GetFollowedMarketsRequest) (*marketcenter.GetFollowedMarketsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	if req.Page <= 0 {
 		req.Page = 1
@@ -413,7 +418,7 @@ func (s *BayesService) GetFollowedMarkets(ctx context.Context, req *marketcenter
 	return rsp, nil
 }
 
-func (s *BayesService) GetHoldingPositionsMarkets(ctx context.Context, req *marketcenter.GetHoldingPositionsMarketsRequest) (*marketcenter.GetHoldingPositionsMarketsResponse, error) {
+func (s *MarketService) GetHoldingPositionsMarkets(ctx context.Context, req *marketcenter.GetHoldingPositionsMarketsRequest) (*marketcenter.GetHoldingPositionsMarketsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	if req.Page <= 0 {
 		req.Page = 1
@@ -548,7 +553,7 @@ func (s *BayesService) GetHoldingPositionsMarkets(ctx context.Context, req *mark
 	}, nil
 }
 
-func (s *BayesService) GetHotMarkets(ctx context.Context, req *marketcenter.GetHotMarketsRequest) (*marketcenter.GetHotMarketsResponse, error) {
+func (s *MarketService) GetHotMarkets(ctx context.Context, req *marketcenter.GetHotMarketsRequest) (*marketcenter.GetHotMarketsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	marketEntityList, err := s.marketHandler.GetMarkets(c, &marketBiz.MarketQuery{
 		Status:        marketBiz.MarketStatusRunnig,
@@ -578,7 +583,7 @@ func (s *BayesService) GetHotMarkets(ctx context.Context, req *marketcenter.GetH
 	return rsp, nil
 }
 
-func (s *BayesService) GetUserTrades(ctx context.Context, req *marketcenter.GetUserTradesRequest) (*marketcenter.GetUserTradesResponse, error) {
+func (s *MarketService) GetUserTrades(ctx context.Context, req *marketcenter.GetUserTradesRequest) (*marketcenter.GetUserTradesResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	if req.Page <= 0 {
 		req.Page = 1
@@ -682,7 +687,7 @@ func (s *BayesService) GetUserTrades(ctx context.Context, req *marketcenter.GetU
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketTrades(ctx context.Context, req *marketcenter.GetMarketTradesRequest) (*marketcenter.GetMarketTradesResponse, error) {
+func (s *MarketService) GetMarketTrades(ctx context.Context, req *marketcenter.GetMarketTradesRequest) (*marketcenter.GetMarketTradesResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -758,7 +763,7 @@ func (s *BayesService) GetMarketTrades(ctx context.Context, req *marketcenter.Ge
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketUsersPositions(ctx context.Context, req *marketcenter.GetMarketUsersPositionsRequest) (*marketcenter.GetMarketUsersPositionsResponse, error) {
+func (s *MarketService) GetMarketUsersPositions(ctx context.Context, req *marketcenter.GetMarketUsersPositionsRequest) (*marketcenter.GetMarketUsersPositionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	// 查用户持仓余额
@@ -825,7 +830,7 @@ func (s *BayesService) GetMarketUsersPositions(ctx context.Context, req *marketc
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketDetail(ctx context.Context, req *marketcenter.GetMarketDetailRequest) (*marketcenter.GetMarketDetailResponse, error) {
+func (s *MarketService) GetMarketDetail(ctx context.Context, req *marketcenter.GetMarketDetailRequest) (*marketcenter.GetMarketDetailResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	marketAddress, err := util.ToChecksumAddress(req.Address)
 	if err != nil {
@@ -876,6 +881,10 @@ func (s *BayesService) GetMarketDetail(ctx context.Context, req *marketcenter.Ge
 		IsFollowed:          marketcenter.IsFollowed_IS_FOLLOWED_NO,
 		IsClaim:             marketcenter.GetMarketDetailResponse_IS_CLAIMED_NO,
 		Options:             make([]*marketcenter.GetMarketDetailResponse_Option, 0, len(marketEntity.Options)),
+		EventId:          marketEntity.EventId,
+		ConditionId:      marketEntity.ConditionId,
+		QuestionId:       marketEntity.QuestionId,
+		OutcomeSlotCount: marketEntity.OutcomeSlotCount,
 	}
 
 	if req.Uid != "" {
@@ -908,6 +917,7 @@ func (s *BayesService) GetMarketDetail(ctx context.Context, req *marketcenter.Ge
 			PicUrl:      option.PicUrl,
 			Decimal:     uint32(option.Decimal),
 			Description: option.Description,
+			PositionId:  option.PositionId,
 		}
 
 		if option.OptionTokenPrice != nil {
@@ -923,7 +933,7 @@ func (s *BayesService) GetMarketDetail(ctx context.Context, req *marketcenter.Ge
 	return rsp, nil
 }
 
-func (s *BayesService) GetUserPositions(ctx context.Context, req *marketcenter.GetUserPositionsRequest) (*marketcenter.GetUserPositionsResponse, error) {
+func (s *MarketService) GetUserPositions(ctx context.Context, req *marketcenter.GetUserPositionsRequest) (*marketcenter.GetUserPositionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Uid == "" {
@@ -1051,7 +1061,7 @@ func (s *BayesService) GetUserPositions(ctx context.Context, req *marketcenter.G
 	}, nil
 }
 
-func (s *BayesService) GetUserLatestAssetValue(ctx context.Context, req *marketcenter.GetUserLatestAssetValueRequest) (*marketcenter.GetUserLatestAssetValueResponse, error) {
+func (s *MarketService) GetUserLatestAssetValue(ctx context.Context, req *marketcenter.GetUserLatestAssetValueRequest) (*marketcenter.GetUserLatestAssetValueResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Uid == "" {
@@ -1150,7 +1160,7 @@ func (s *BayesService) GetUserLatestAssetValue(ctx context.Context, req *marketc
 	}, nil
 }
 
-func (s *BayesService) SearchMarket(ctx context.Context, req *marketcenter.SearchMarketRequest) (*marketcenter.SearchMarketResponse, error) {
+func (s *MarketService) SearchMarket(ctx context.Context, req *marketcenter.SearchMarketRequest) (*marketcenter.SearchMarketResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -1194,7 +1204,7 @@ func (s *BayesService) SearchMarket(ctx context.Context, req *marketcenter.Searc
 	return rsp, nil
 }
 
-func (s *BayesService) GetUserAssetHistory(ctx context.Context, req *marketcenter.GetUserAssetHistoryRequest) (*marketcenter.GetUserAssetHistoryResponse, error) {
+func (s *MarketService) GetUserAssetHistory(ctx context.Context, req *marketcenter.GetUserAssetHistoryRequest) (*marketcenter.GetUserAssetHistoryResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	var timeRange string
@@ -1240,7 +1250,7 @@ func (s *BayesService) GetUserAssetHistory(ctx context.Context, req *marketcente
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketOptionPriceHistory(ctx context.Context, req *marketcenter.GetMarketOptionPriceHistoryRequest) (*marketcenter.GetMarketOptionPriceHistoryResponse, error) {
+func (s *MarketService) GetMarketOptionPriceHistory(ctx context.Context, req *marketcenter.GetMarketOptionPriceHistoryRequest) (*marketcenter.GetMarketOptionPriceHistoryResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	rsp := &marketcenter.GetMarketOptionPriceHistoryResponse{
 		Total:     0,
@@ -1304,7 +1314,7 @@ func (s *BayesService) GetMarketOptionPriceHistory(ctx context.Context, req *mar
 	return rsp, nil
 }
 
-func (s *BayesService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context, req *marketcenter.ProcessMarketDepositOrWithdrawEventRequest) (*marketcenter.ProcessMarketDepositOrWithdrawEventResponse, error) {
+func (s *MarketService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context, req *marketcenter.ProcessMarketDepositOrWithdrawEventRequest) (*marketcenter.ProcessMarketDepositOrWithdrawEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	assetRepo := s.assetHandler.GetRepo()
@@ -1520,7 +1530,7 @@ func (s *BayesService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context, 
 	return &marketcenter.ProcessMarketDepositOrWithdrawEventResponse{}, nil
 }
 
-func (s *BayesService) ProcessMarketSwapEvent(ctx context.Context, req *marketcenter.ProcessMarketSwapEventRequest) (*marketcenter.ProcessMarketSwapEventResponse, error) {
+func (s *MarketService) ProcessMarketSwapEvent(ctx context.Context, req *marketcenter.ProcessMarketSwapEventRequest) (*marketcenter.ProcessMarketSwapEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	err := s.marketHandler.ProcessMarketSwapEventInMarketHandler(c, req)
@@ -1531,7 +1541,7 @@ func (s *BayesService) ProcessMarketSwapEvent(ctx context.Context, req *marketce
 	return &marketcenter.ProcessMarketSwapEventResponse{}, nil
 }
 
-func (s *BayesService) ProcessMarketClaimResultEvent(ctx context.Context, req *marketcenter.ProcessMarketClaimResultEventRequest) (*marketcenter.ProcessMarketClaimResultEventResponse, error) {
+func (s *MarketService) ProcessMarketClaimResultEvent(ctx context.Context, req *marketcenter.ProcessMarketClaimResultEventRequest) (*marketcenter.ProcessMarketClaimResultEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	assetRepo := s.assetHandler.GetRepo()
@@ -1545,7 +1555,7 @@ func (s *BayesService) ProcessMarketClaimResultEvent(ctx context.Context, req *m
 	return &marketcenter.ProcessMarketClaimResultEventResponse{}, nil
 }
 
-func (s *BayesService) UpdateMarketStatus(ctx context.Context, req *marketcenter.UpdateMarketStatusRequest) (*marketcenter.UpdateMarketStatusResponse, error) {
+func (s *MarketService) UpdateMarketStatus(ctx context.Context, req *marketcenter.UpdateMarketStatusRequest) (*marketcenter.UpdateMarketStatusResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	err := s.marketHandler.UpdateMarketStatus(c, &marketBiz.MarketEntity{
@@ -1559,7 +1569,7 @@ func (s *BayesService) UpdateMarketStatus(ctx context.Context, req *marketcenter
 	return &marketcenter.UpdateMarketStatusResponse{}, nil
 }
 
-func (s *BayesService) UpdateUserBaseTokenBalance(ctx context.Context, req *marketcenter.UpdateUserBaseTokenBalanceRequest) (*marketcenter.UpdateUserBaseTokenBalanceResponse, error) {
+func (s *MarketService) UpdateUserBaseTokenBalance(ctx context.Context, req *marketcenter.UpdateUserBaseTokenBalanceRequest) (*marketcenter.UpdateUserBaseTokenBalanceResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	amount, err := decimal.NewFromString(req.TokenBalance.Amount)
@@ -1600,7 +1610,7 @@ func (s *BayesService) UpdateUserBaseTokenBalance(ctx context.Context, req *mark
 	return &marketcenter.UpdateUserBaseTokenBalanceResponse{}, nil
 }
 
-func (s *BayesService) GetMarketsAndOptionsInfo(ctx context.Context, req *marketcenter.GetMarketsAndOptionsInfoRequest) (*marketcenter.GetMarketsAndOptionsInfoResponse, error) {
+func (s *MarketService) GetMarketsAndOptionsInfo(ctx context.Context, req *marketcenter.GetMarketsAndOptionsInfoRequest) (*marketcenter.GetMarketsAndOptionsInfoResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -1751,6 +1761,10 @@ func (s *BayesService) GetMarketsAndOptionsInfo(ctx context.Context, req *market
 				}
 			}(),
 			Options: make([]*marketcenter.GetMarketsAndOptionsInfoResponse_Market_Option, 0, len(marketEntity.Options)),
+			EventId:          marketEntity.EventId,
+			ConditionId:      marketEntity.ConditionId,
+			QuestionId:       marketEntity.QuestionId,
+			OutcomeSlotCount: marketEntity.OutcomeSlotCount,
 		}
 		for _, optionEntity := range marketEntity.Options {
 			option := &marketcenter.GetMarketsAndOptionsInfoResponse_Market_Option{
@@ -1761,6 +1775,7 @@ func (s *BayesService) GetMarketsAndOptionsInfo(ctx context.Context, req *market
 				Decimal:     uint32(optionEntity.Decimal),
 				Index:       uint32(optionEntity.Index),
 				Description: optionEntity.Description,
+				PositionId:  optionEntity.PositionId,
 			}
 			if optionEntity.OptionTokenPrice != nil {
 				option.Price = optionEntity.OptionTokenPrice.Price.String()
@@ -1773,7 +1788,7 @@ func (s *BayesService) GetMarketsAndOptionsInfo(ctx context.Context, req *market
 	return rsp, nil
 }
 
-func (s *BayesService) BatchGetMarketUsersPositions(ctx context.Context, req *marketcenter.BatchGetMarketUsersPositionsRequest) (*marketcenter.BatchGetMarketUsersPositionsResponse, error) {
+func (s *MarketService) BatchGetMarketUsersPositions(ctx context.Context, req *marketcenter.BatchGetMarketUsersPositionsRequest) (*marketcenter.BatchGetMarketUsersPositionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	rsp := &marketcenter.BatchGetMarketUsersPositionsResponse{
 		UserMarketPositions: make([]*marketcenter.BatchGetMarketUsersPositionsResponse_UserMarketPosition, 0),
@@ -1821,7 +1836,7 @@ func (s *BayesService) BatchGetMarketUsersPositions(ctx context.Context, req *ma
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketTags(ctx context.Context, req *marketcenter.GetMarketTagsRequest) (*marketcenter.GetMarketTagsResponse, error) {
+func (s *MarketService) GetMarketTags(ctx context.Context, req *marketcenter.GetMarketTagsRequest) (*marketcenter.GetMarketTagsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -1853,7 +1868,7 @@ func (s *BayesService) GetMarketTags(ctx context.Context, req *marketcenter.GetM
 	}, nil
 }
 
-func (s *BayesService) BatchUpdateOptionPrice(ctx context.Context, req *marketcenter.BatchUpdateOptionPriceRequest) (*marketcenter.BatchUpdateOptionPriceResponse, error) {
+func (s *MarketService) BatchUpdateOptionPrice(ctx context.Context, req *marketcenter.BatchUpdateOptionPriceRequest) (*marketcenter.BatchUpdateOptionPriceResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	optionTokenPriceEntityList := make([]*marketBiz.OptionTokenPriceEntity, 0, len(req.OptionPrices))
@@ -1880,7 +1895,7 @@ func (s *BayesService) BatchUpdateOptionPrice(ctx context.Context, req *marketce
 	return &marketcenter.BatchUpdateOptionPriceResponse{}, nil
 }
 
-func (s *BayesService) ProcessMarketSettingEvent(ctx context.Context, req *marketcenter.ProcessMarketSettingEventRequest) (*marketcenter.ProcessMarketSettingEventResponse, error) {
+func (s *MarketService) ProcessMarketSettingEvent(ctx context.Context, req *marketcenter.ProcessMarketSettingEventRequest) (*marketcenter.ProcessMarketSettingEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	// 更新市场状态 获胜结果 status AssertionId
@@ -1896,7 +1911,7 @@ func (s *BayesService) ProcessMarketSettingEvent(ctx context.Context, req *marke
 	return &marketcenter.ProcessMarketSettingEventResponse{}, nil
 }
 
-func (s *BayesService) ProcessMarketAssertDisputedEvent(ctx context.Context, req *marketcenter.ProcessMarketAssertDisputedEventRequest) (*marketcenter.ProcessMarketAssertDisputedEventResponse, error) {
+func (s *MarketService) ProcessMarketAssertDisputedEvent(ctx context.Context, req *marketcenter.ProcessMarketAssertDisputedEventRequest) (*marketcenter.ProcessMarketAssertDisputedEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	// 更新市场状态 final_option设置为空
@@ -1912,7 +1927,7 @@ func (s *BayesService) ProcessMarketAssertDisputedEvent(ctx context.Context, req
 	return &marketcenter.ProcessMarketAssertDisputedEventResponse{}, nil
 }
 
-func (s *BayesService) ProcessMarketAssertionResolvedEvent(ctx context.Context, req *marketcenter.ProcessMarketAssertionResolvedEventRequest) (*marketcenter.ProcessMarketAssertionResolvedEventResponse, error) {
+func (s *MarketService) ProcessMarketAssertionResolvedEvent(ctx context.Context, req *marketcenter.ProcessMarketAssertionResolvedEventRequest) (*marketcenter.ProcessMarketAssertionResolvedEventResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	// 更新市场状态
@@ -2039,7 +2054,7 @@ func (s *BayesService) ProcessMarketAssertionResolvedEvent(ctx context.Context, 
 	return &marketcenter.ProcessMarketAssertionResolvedEventResponse{}, nil
 }
 
-func (s *BayesService) GetMarketCategories(ctx context.Context, req *marketcenter.GetMarketCategoriesRequest) (*marketcenter.GetMarketCategoriesResponse, error) {
+func (s *MarketService) GetMarketCategories(ctx context.Context, req *marketcenter.GetMarketCategoriesRequest) (*marketcenter.GetMarketCategoriesResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	categoryList, total, err := s.marketHandler.GetCategoriesFromS3(c, uint8(req.BaseTokenType))
@@ -2063,7 +2078,7 @@ func (s *BayesService) GetMarketCategories(ctx context.Context, req *marketcente
 	}, nil
 }
 
-func (s *BayesService) GetBanners(ctx context.Context, req *marketcenter.GetBannersRequest) (*marketcenter.GetBannersResponse, error) {
+func (s *MarketService) GetBanners(ctx context.Context, req *marketcenter.GetBannersRequest) (*marketcenter.GetBannersResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	banners, _, err := s.marketHandler.GetBannersFromS3(c, uint8(req.BaseTokenType))
@@ -2084,7 +2099,7 @@ func (s *BayesService) GetBanners(ctx context.Context, req *marketcenter.GetBann
 	return rsp, nil
 }
 
-func (s *BayesService) GetSections(ctx context.Context, req *marketcenter.GetSectionsRequest) (*marketcenter.GetSectionsResponse, error) {
+func (s *MarketService) GetSections(ctx context.Context, req *marketcenter.GetSectionsRequest) (*marketcenter.GetSectionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	sections, _, err := s.marketHandler.GetSectionsFromS3(c, uint8(req.BaseTokenType))
@@ -2117,7 +2132,7 @@ func (s *BayesService) GetSections(ctx context.Context, req *marketcenter.GetSec
 	return rsp, nil
 }
 
-func (s *BayesService) UpdateMarketInfo(ctx context.Context, req *marketcenter.UpdateMarketInfoRequest) (*marketcenter.UpdateMarketInfoResponse, error) {
+func (s *MarketService) UpdateMarketInfo(ctx context.Context, req *marketcenter.UpdateMarketInfoRequest) (*marketcenter.UpdateMarketInfoResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	err := s.marketHandler.UpdateMarketInfoByS3Data(c, req.MarketAddress)
@@ -2129,7 +2144,7 @@ func (s *BayesService) UpdateMarketInfo(ctx context.Context, req *marketcenter.U
 
 }
 
-func (s *BayesService) GetUserTransactions(ctx context.Context, req *marketcenter.GetUserTransactionsRequest) (*marketcenter.GetUserTransactionsResponse, error) {
+func (s *MarketService) GetUserTransactions(ctx context.Context, req *marketcenter.GetUserTransactionsRequest) (*marketcenter.GetUserTransactionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -2160,7 +2175,7 @@ func (s *BayesService) GetUserTransactions(ctx context.Context, req *marketcente
 	}, nil
 }
 
-func (s *BayesService) GetLeaderboard(ctx context.Context, req *marketcenter.GetLeaderboardRequest) (*marketcenter.GetLeaderboardResponse, error) {
+func (s *MarketService) GetLeaderboard(ctx context.Context, req *marketcenter.GetLeaderboardRequest) (*marketcenter.GetLeaderboardResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	// 参数验证和默认值设置
@@ -2270,7 +2285,7 @@ func (s *BayesService) GetLeaderboard(ctx context.Context, req *marketcenter.Get
 }
 
 // buildLeaderboardKey 构建排行榜key
-func (s *BayesService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderboardRequest_TimeInterval, baseTokenType marketcenter.BaseTokenType, sortType marketcenter.GetLeaderboardRequest_SortType) (string, error) {
+func (s *MarketService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderboardRequest_TimeInterval, baseTokenType marketcenter.BaseTokenType, sortType marketcenter.GetLeaderboardRequest_SortType) (string, error) {
 	baseTokenTypeUint := uint8(baseTokenType)
 
 	// 根据排序类型选择对应的排行榜
@@ -2302,4 +2317,148 @@ func (s *BayesService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderbo
 	default:
 		return "", errors.New(int(marketcenter.ErrorCode_PARAM), "PARAM_ERROR", "invalid time interval")
 	}
+}
+
+// ==================== CTF Event gRPC Handlers ====================
+
+func (s *MarketService) GetEvent(ctx context.Context, req *marketcenter.GetEventRequest) (*marketcenter.GetEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	query := &marketBiz.PredictionEventQuery{}
+	// 支持按 UUID ID 或 event_id 查询
+	if req.Id != "" {
+		query.EventId = req.Id
+	}
+
+	event, err := s.marketHandler.GetEvent(c, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &marketcenter.GetEventResponse{
+		Event: s.eventEntityToProto(event),
+	}, nil
+}
+
+func (s *MarketService) ListEvents(ctx context.Context, req *marketcenter.ListEventsRequest) (*marketcenter.ListEventsResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	query := &marketBiz.PredictionEventQuery{}
+	if req.Status != marketcenter.EventStatus_EVENT_STATUS_UNSPECIFIED {
+		query.Status = uint8(req.Status)
+	}
+	if req.Page > 0 {
+		query.Offset = int32((req.Page - 1) * req.PageSize)
+	}
+	if req.PageSize > 0 {
+		query.Limit = int32(req.PageSize)
+	}
+
+	// 排序
+	switch req.SortType {
+	case marketcenter.ListEventsRequest_SORT_TYPE_LATEST:
+		query.Order = "created_at DESC"
+	case marketcenter.ListEventsRequest_SORT_TYPE_VOLUME:
+		query.Order = "created_at DESC" // TODO: 未来可聚合子市场 volume
+	default:
+		query.Order = "created_at DESC"
+	}
+
+	events, total, err := s.marketHandler.ListEvents(c, query)
+	if err != nil {
+		return nil, err
+	}
+
+	protoEvents := make([]*marketcenter.PredictionEvent, 0, len(events))
+	for _, e := range events {
+		protoEvents = append(protoEvents, s.eventEntityToProto(e))
+	}
+
+	return &marketcenter.ListEventsResponse{
+		Total:  uint32(total),
+		Events: protoEvents,
+	}, nil
+}
+
+func (s *MarketService) CreateEvent(ctx context.Context, req *marketcenter.CreateEventRequest) (*marketcenter.CreateEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	entity := &marketBiz.PredictionEventEntity{
+		EventId:          req.EventId,
+		Title:            req.Title,
+		OutcomeSlotCount: req.OutcomeSlotCount,
+		Collateral:       req.Collateral,
+		MetadataHash:     req.MetadataHash,
+		Status:           marketBiz.EventStatusActive,
+	}
+
+	if err := s.marketHandler.CreateEvent(c, entity); err != nil {
+		return nil, err
+	}
+
+	return &marketcenter.CreateEventResponse{
+		Id: fmt.Sprintf("%d", entity.Id),
+	}, nil
+}
+
+// eventEntityToProto converts a PredictionEventEntity to proto PredictionEvent
+func (s *MarketService) eventEntityToProto(entity *marketBiz.PredictionEventEntity) *marketcenter.PredictionEvent {
+	pe := &marketcenter.PredictionEvent{
+		Id:               fmt.Sprintf("%d", entity.Id),
+		EventId:          entity.EventId,
+		Title:            entity.Title,
+		OutcomeSlotCount: entity.OutcomeSlotCount,
+		Collateral:       entity.Collateral,
+		Status:           marketcenter.EventStatus(entity.Status),
+		MetadataHash:     entity.MetadataHash,
+		CreatedAt:        uint32(entity.CreatedAt.Unix()),
+		UpdatedAt:        uint32(entity.UpdatedAt.Unix()),
+	}
+
+	if entity.Markets != nil {
+		markets := make([]*marketcenter.PredictionEvent_Market, 0, len(entity.Markets))
+		for _, m := range entity.Markets {
+			protoMarket := &marketcenter.PredictionEvent_Market{
+				Address:          m.Address,
+				Name:             m.Name,
+				PicUrl:           m.PicUrl,
+				Description:      m.Description,
+				Status:           uint32(m.Status),
+				ParticipantsCount: uint32(m.ParticipantsCount),
+				Volume:           m.Volume.String(),
+				Decimal:          uint32(6),
+				CreatedAt:        uint32(m.CreatedAt.Unix()),
+				Deadline:         uint32(m.Deadline),
+				Result:           m.Result,
+				ConditionId:      m.ConditionId,
+				QuestionId:       m.QuestionId,
+			}
+
+			if m.Options != nil {
+				options := make([]*marketcenter.PredictionEvent_Market_Option, 0, len(m.Options))
+				for _, opt := range m.Options {
+					protoOpt := &marketcenter.PredictionEvent_Market_Option{
+						Address:     opt.Address,
+						Name:        opt.Name,
+						Symbol:      opt.Symbol,
+						PicUrl:      opt.PicUrl,
+						Decimal:     uint32(opt.Decimal),
+						Index:       opt.Index,
+						Description: opt.Description,
+						PositionId:  opt.PositionId,
+					}
+					if opt.OptionTokenPrice != nil {
+						protoOpt.Price = opt.OptionTokenPrice.Price.String()
+					}
+					options = append(options, protoOpt)
+				}
+				protoMarket.Options = options
+			}
+
+			markets = append(markets, protoMarket)
+		}
+		pe.Markets = markets
+	}
+
+	return pe
 }

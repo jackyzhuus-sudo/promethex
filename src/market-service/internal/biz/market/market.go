@@ -72,8 +72,18 @@ type MarketRepoInterface interface {
 	SetTagEmbeddingToCache(ctx common.Ctx, tagList []string, embedding []float64) error
 }
 
+// EventRepoInterface 预测事件仓储接口
+type EventRepoInterface interface {
+	base.RepoInterface
+
+	GetEvent(ctx common.Ctx, query *PredictionEventQuery) (*PredictionEventEntity, error)
+	GetEventsWithTotal(ctx common.Ctx, query *PredictionEventQuery) ([]*PredictionEventEntity, int64, error)
+	CreateEvent(ctx common.Ctx, entity *PredictionEventEntity) error
+}
+
 type MarketHandler struct {
 	marketRepo MarketRepoInterface
+	eventRepo  EventRepoInterface
 	log        log.Logger
 	confCustom *conf.Custom
 }
@@ -82,9 +92,9 @@ type S3PredictionInfo struct {
 	TenantId     int    `json:"TenantId"`
 	Title        string `json:"Title"`
 	Description  string `json:"Description"`
-	Rules        string `json:"Rules"`
-	RulesFileUrl string `json:"RulesFileUrl"`
-	ImageFileUrl string `json:"ImageFileUrl"`
+	Rules        string `json:"rule"`
+	RulesFileUrl string `json:"rule_file_key"`
+	ImageFileUrl string `json:"image_url"`
 	IsSettled    bool   `json:"IsSettled"`
 	// WinningOptionId    *string          `json:"WinningOptionId"`
 	Status             int              `json:"Status"`
@@ -98,6 +108,7 @@ type S3PredictionInfo struct {
 	CreatorUserId      int              `json:"CreatorUserId"`
 	Id                 string           `json:"Id"`
 	Tags               []S3TagInfo      `json:"Tags"`
+	CategoryId         string           `json:"category_id"`
 	Categories         []S3CategoryInfo `json:"Categories"`
 	// ExpirationTime       time.Time      `json:"ExpirationTime"`
 	// DeletionTime         *time.Time     `json:"DeletionTime"`
@@ -162,8 +173,8 @@ type S3OptionInfo struct {
 	// CreationTime         time.Time  `json:"CreationTime"`
 }
 
-func NewMarketHandler(marketRepo MarketRepoInterface, logger log.Logger, conf *conf.Custom) *MarketHandler {
-	return &MarketHandler{marketRepo: marketRepo, log: logger, confCustom: conf}
+func NewMarketHandler(marketRepo MarketRepoInterface, eventRepo EventRepoInterface, logger log.Logger, conf *conf.Custom) *MarketHandler {
+	return &MarketHandler{marketRepo: marketRepo, eventRepo: eventRepo, log: logger, confCustom: conf}
 }
 
 // tryFetchAndValidateS3Info 尝试从S3获取市场信息并验证是否包含图片和规则文件
@@ -202,6 +213,26 @@ func (h *MarketHandler) GetMarket(ctx common.Ctx, marketQuery *MarketQuery) (*Ma
 	return marketEntity, nil
 }
 
+// resolveCategoryFromS3 resolves the category slug from the admin panel category_id UUID
+// by fetching the S3 category list and finding the matching category
+func (h *MarketHandler) resolveCategoryFromS3(ctx common.Ctx, categoryId string, baseTokenType uint8) string {
+	if categoryId == "" {
+		return ""
+	}
+	categoryList, _, err := h.GetCategoriesFromS3(ctx, baseTokenType)
+	if err != nil {
+		ctx.Log.Warnf("resolveCategoryFromS3 GetCategoriesFromS3 error: %+v", err)
+		return ""
+	}
+	for _, cat := range categoryList {
+		if cat.Id == categoryId {
+			return cat.Id
+		}
+	}
+	ctx.Log.Warnf("resolveCategoryFromS3: no matching category found for category_id=%s", categoryId)
+	return ""
+}
+
 func (h *MarketHandler) CreateMarketAndOptions(ctx common.Ctx, marketEntityList []*MarketEntity) ([]*MarketEntity, error) {
 	// 从s3查询market图片， desc, rules, rules_file tag 和 option的图片
 	// TODO 查s3能不能批量/并发
@@ -228,6 +259,14 @@ func (h *MarketHandler) CreateMarketAndOptions(ctx common.Ctx, marketEntityList 
 		for _, category := range marketS3Info.Categories {
 			if category.Id != "" {
 				categories = append(categories, category.Id)
+			}
+		}
+
+		// If no categories from S3 Categories array, try resolving from category_id
+		if len(categories) == 0 && marketS3Info.CategoryId != "" {
+			resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, BaseTokenTypeUsdc)
+			if resolvedCategory != "" {
+				categories = append(categories, resolvedCategory)
 			}
 		}
 
@@ -1044,6 +1083,14 @@ func (h *MarketHandler) UpdateMarketInfoByS3Data(ctx common.Ctx, marketAddress s
 		}
 	}
 
+	// If no categories from S3 Categories array, try resolving from category_id
+	if len(categories) == 0 && marketS3Info.CategoryId != "" {
+		resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, BaseTokenTypeUsdc)
+		if resolvedCategory != "" {
+			categories = append(categories, resolvedCategory)
+		}
+	}
+
 	updateMarketEntity := &MarketEntity{
 		Address:     marketAddress,
 		Tags:        tags,
@@ -1084,5 +1131,116 @@ func (h *MarketHandler) UpdateMarketInfoByS3Data(ctx common.Ctx, marketAddress s
 		}
 	}
 
+	return nil
+}
+
+// ==================== Event Handler Methods ====================
+
+func (h *MarketHandler) GetEvent(ctx common.Ctx, eventQuery *PredictionEventQuery) (*PredictionEventEntity, error) {
+	event, err := h.eventRepo.GetEvent(ctx, eventQuery)
+	if err != nil {
+		ctx.Log.Errorf("GetEvent error: %+v", err)
+		return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
+	if event == nil || event.Id == 0 {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_EVENT_NOT_FOUND), "EVENT_NOT_FOUND", "event not found")
+	}
+
+	// 预加载子市场
+	markets, err := h.marketRepo.GetMarkets(ctx, &MarketQuery{EventId: event.EventId})
+	if err != nil {
+		ctx.Log.Errorf("GetEvent GetMarkets error: %+v", err)
+		return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
+
+	// 预加载 options
+	if len(markets) > 0 {
+		addressList := make([]string, 0, len(markets))
+		for _, m := range markets {
+			addressList = append(addressList, m.Address)
+		}
+		options, err := h.marketRepo.GetOptions(ctx, &OptionQuery{MarketAddressList: addressList})
+		if err != nil {
+			ctx.Log.Errorf("GetEvent GetOptions error: %+v", err)
+			return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+		}
+		optionsByMarket := make(map[string][]*OptionEntity)
+		for _, opt := range options {
+			optionsByMarket[opt.MarketAddress] = append(optionsByMarket[opt.MarketAddress], opt)
+		}
+		for _, m := range markets {
+			m.Options = optionsByMarket[m.Address]
+		}
+	}
+
+	event.Markets = markets
+	return event, nil
+}
+
+func (h *MarketHandler) ListEvents(ctx common.Ctx, eventQuery *PredictionEventQuery) ([]*PredictionEventEntity, int64, error) {
+	events, total, err := h.eventRepo.GetEventsWithTotal(ctx, eventQuery)
+	if err != nil {
+		ctx.Log.Errorf("ListEvents error: %+v", err)
+		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
+
+	if len(events) == 0 {
+		return events, total, nil
+	}
+
+	// 收集所有 event_id 用于批量查询子市场
+	eventIds := make([]string, 0, len(events))
+	for _, e := range events {
+		eventIds = append(eventIds, e.EventId)
+	}
+
+	// 查询所有相关市场
+	allMarkets := make([]*MarketEntity, 0)
+	for _, eid := range eventIds {
+		markets, err := h.marketRepo.GetMarkets(ctx, &MarketQuery{EventId: eid})
+		if err != nil {
+			ctx.Log.Errorf("ListEvents GetMarkets error for eventId %s: %+v", eid, err)
+			continue
+		}
+		allMarkets = append(allMarkets, markets...)
+	}
+
+	// 预加载 options
+	if len(allMarkets) > 0 {
+		addressList := make([]string, 0, len(allMarkets))
+		for _, m := range allMarkets {
+			addressList = append(addressList, m.Address)
+		}
+		options, err := h.marketRepo.GetOptions(ctx, &OptionQuery{MarketAddressList: addressList})
+		if err != nil {
+			ctx.Log.Errorf("ListEvents GetOptions error: %+v", err)
+		} else {
+			optionsByMarket := make(map[string][]*OptionEntity)
+			for _, opt := range options {
+				optionsByMarket[opt.MarketAddress] = append(optionsByMarket[opt.MarketAddress], opt)
+			}
+			for _, m := range allMarkets {
+				m.Options = optionsByMarket[m.Address]
+			}
+		}
+	}
+
+	// 按 event_id 分组市场
+	marketsByEventId := make(map[string][]*MarketEntity)
+	for _, m := range allMarkets {
+		marketsByEventId[m.EventId] = append(marketsByEventId[m.EventId], m)
+	}
+	for _, e := range events {
+		e.Markets = marketsByEventId[e.EventId]
+	}
+
+	return events, total, nil
+}
+
+func (h *MarketHandler) CreateEvent(ctx common.Ctx, entity *PredictionEventEntity) error {
+	if err := h.eventRepo.CreateEvent(ctx, entity); err != nil {
+		ctx.Log.Errorf("CreateEvent error: %+v", err)
+		return errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
 	return nil
 }
