@@ -1,4 +1,4 @@
-package bayes_sse
+package sse_api
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"market-backend/internal/pkg/middleware"
 	"market-backend/internal/pkg/util"
 	"market-backend/internal/sse"
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 	"net/http"
 	"strings"
 	"time"
@@ -19,8 +19,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type BayesSseService struct {
-	bayespb.BayesSseServer
+type SseApiService struct {
+	apipb.SseApiServer
 	manager   *sse.ConnectionManager
 	data      *data.Data
 	logger    log.Logger
@@ -28,8 +28,8 @@ type BayesSseService struct {
 	cfgCustom *conf.Custom
 }
 
-func NewBayesSseService(data *data.Data, cfgData *conf.Data, custom *conf.Custom, logger log.Logger, manager *sse.ConnectionManager) *BayesSseService {
-	return &BayesSseService{
+func NewSseApiService(data *data.Data, cfgData *conf.Data, custom *conf.Custom, logger log.Logger, manager *sse.ConnectionManager) *SseApiService {
+	return &SseApiService{
 		data:      data,
 		logger:    logger,
 		cfgData:   cfgData,
@@ -38,7 +38,7 @@ func NewBayesSseService(data *data.Data, cfgData *conf.Data, custom *conf.Custom
 	}
 }
 
-func (s *BayesSseService) Subscribe(ctx context.Context, req *bayespb.SubscribeRequest) (*bayespb.SubscribeReply, error) {
+func (s *SseApiService) Subscribe(ctx context.Context, req *apipb.SubscribeRequest) (*apipb.SubscribeReply, error) {
 	// 1. 参数校验：topics必须存在
 	if len(req.Topics) == 0 {
 		return nil, fmt.Errorf("topics不能为空")
@@ -76,10 +76,10 @@ func (s *BayesSseService) Subscribe(ctx context.Context, req *bayespb.SubscribeR
 		}
 	}
 
-	return &bayespb.SubscribeReply{}, nil
+	return &apipb.SubscribeReply{}, nil
 }
 
-func (s *BayesSseService) Unsubscribe(ctx context.Context, req *bayespb.UnsubscribeRequest) (*bayespb.UnsubscribeReply, error) {
+func (s *SseApiService) Unsubscribe(ctx context.Context, req *apipb.UnsubscribeRequest) (*apipb.UnsubscribeReply, error) {
 	// 1. 参数校验：topics必须存在
 	if len(req.Topics) == 0 {
 		return nil, pkg.ErrParam
@@ -119,11 +119,11 @@ func (s *BayesSseService) Unsubscribe(ctx context.Context, req *bayespb.Unsubscr
 		}
 	}
 
-	return &bayespb.UnsubscribeReply{}, nil
+	return &apipb.UnsubscribeReply{}, nil
 }
 
 // HandleConnection 处理SSE连接请求
-func (s *BayesSseService) HandleConnection(w http.ResponseWriter, r *http.Request) {
+func (s *SseApiService) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	// 1. 尝试认证（可选）
 	var uid string
 	ctx := r.Context() // 使用请求的context

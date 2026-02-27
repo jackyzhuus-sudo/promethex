@@ -11,8 +11,8 @@ import (
 	"market-backend/internal/conf"
 	"market-backend/internal/data"
 	"market-backend/internal/server"
-	"market-backend/internal/service/bayes_http"
-	"market-backend/internal/service/bayes_sse"
+	"market-backend/internal/service/http_api"
+	"market-backend/internal/service/sse_api"
 	"market-backend/internal/sse"
 
 	"github.com/go-kratos/kratos/v2"
@@ -26,11 +26,11 @@ import (
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, custom *conf.Custom, logger log.Logger) (*kratos.App, func(), error) {
 	dataData := data.NewData(confData, custom, logger)
-	bayesHttpService := bayes_http.NewBayesHttpService(dataData, confData, custom, logger)
+	httpApiService := http_api.NewHttpApiService(dataData, confData, custom, logger)
 	connectionManager := sse.NewConnectionManager(dataData, logger)
-	bayesSseService := bayes_sse.NewBayesSseService(dataData, confData, custom, logger, connectionManager)
+	sseApiService := sse_api.NewSseApiService(dataData, confData, custom, logger, connectionManager)
 	larkAlarm := alarm.NewLarkAlarm(custom, logger)
-	httpServer := server.NewHTTPServer(confServer, custom, confData, bayesHttpService, bayesSseService, logger, dataData, larkAlarm)
+	httpServer := server.NewHTTPServer(confServer, custom, confData, httpApiService, sseApiService, logger, dataData, larkAlarm)
 	app := newApp(logger, httpServer)
 	return app, func() {
 	}, nil

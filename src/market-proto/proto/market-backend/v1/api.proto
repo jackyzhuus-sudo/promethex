@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package bayes.v1;
+package api.v1;
 
 import "google/protobuf/descriptor.proto";
 import "google/api/annotations.proto";
 
-option go_package = "market-backend/api/bayes/v1;v1";
+option go_package = "market-proto/proto/market-backend/v1;v1";
 option java_multiple_files = true;
-option java_package = "dev.kratos.api.bayes.v1";
-option java_outer_classname = "BayesProtoV1";
+option java_package = "dev.kratos.api.v1";
+option java_outer_classname = "ApiProtoV1";
 
 
 extend google.protobuf.MethodOptions {
@@ -39,10 +39,10 @@ enum ErrorCode {
 
 }
 
-service BayesSse {
+service SseApi {
   rpc Subscribe (SubscribeRequest) returns (SubscribeReply) {
     option (google.api.http) = {
-      post: "/bayes/sse/subscribe"
+      post: "/api/v1/sse/subscribe"
       body: "*"
     };
     option (need_auth) = false;
@@ -50,7 +50,7 @@ service BayesSse {
 
   rpc Unsubscribe (UnsubscribeRequest) returns (UnsubscribeReply) {
     option (google.api.http) = {
-      post: "/bayes/sse/unsubscribe"
+      post: "/api/v1/sse/unsubscribe"
       body: "*"
     };
     option (need_auth) = false;
@@ -77,9 +77,9 @@ message UnsubscribeRequest {
 message UnsubscribeReply {
 }
 
-// BayesHttp 服务
+// HttpApi 服务
 // 市场的API接口，包括用户管理、市场交易、基础工具等功能
-service BayesHttp {
+service HttpApi {
   //==============================
   // 用户管理相关API
   //==============================
@@ -88,7 +88,7 @@ service BayesHttp {
   // 没找到用户则自动创建 返回用户uid
   rpc Login (LoginRequest) returns (LoginReply) {
     option (google.api.http) = {
-      post: "/bayes/user/login"
+      post: "/api/v1/user/login"
       body: "*"
     };
     option (need_auth) = true;
@@ -97,7 +97,7 @@ service BayesHttp {
   // 设置用户头像 need_auth = true
   rpc SetAvatar (SetAvatarRequest) returns (SetAvatarReply) {
     option (google.api.http) = {
-      post: "/bayes/user/set-avatar"
+      post: "/api/v1/user/set-avatar"
       body: "*"
     };
     option (need_auth) = true;
@@ -106,7 +106,7 @@ service BayesHttp {
   // 设置用户名称 need_auth = true
   rpc SetName (SetNameRequest) returns (SetNameReply) {
     option (google.api.http) = {
-      post: "/bayes/user/set-name"
+      post: "/api/v1/user/set-name"
       body: "*"
     };
     option (need_auth) = true;
@@ -115,7 +115,7 @@ service BayesHttp {
   // 设置用户描述 need_auth = true
   rpc SetDescription (SetDescriptionRequest) returns (SetDescriptionReply) {
     option (google.api.http) = {
-      post: "/bayes/user/set-description"
+      post: "/api/v1/user/set-description"
       body: "*"
     };
     option (need_auth) = true;
@@ -128,7 +128,7 @@ service BayesHttp {
   // 下单交易 need_auth = true
   rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderReply) {
     option (google.api.http) = {
-      post: "/bayes/market/place-order"
+      post: "/api/v1/market/place-order"
       body: "*"
     };
     option (need_auth) = true;
@@ -137,7 +137,7 @@ service BayesHttp {
   // 领取市场结果 need_auth = true
   rpc ClaimMarketResult (ClaimMarketResultRequest) returns (ClaimMarketResultReply) {
     option (google.api.http) = {
-      post: "/bayes/market/claim-market-result"
+      post: "/api/v1/market/claim-market-result"
       body: "*"
     };
     option (need_auth) = true;
@@ -146,7 +146,7 @@ service BayesHttp {
   // 转账基础代币 need_auth = true
   rpc TransferBaseToken (TransferBaseTokenRequest) returns (TransferBaseTokenReply) {
     option (google.api.http) = {
-      post: "/bayes/market/transfer-base-token"
+      post: "/api/v1/market/transfer-base-token"
       body: "*"
     };
     option (need_auth) = true;
@@ -155,7 +155,7 @@ service BayesHttp {
   // 关注市场 need_auth = true
   rpc FollowMarket (FollowMarketRequest) returns (FollowMarketReply) {
     option (google.api.http) = {
-      post: "/bayes/market/follow-market"
+      post: "/api/v1/market/follow-market"
       body: "*"
     };
     option (need_auth) = true;
@@ -164,7 +164,7 @@ service BayesHttp {
   // 取消关注市场 need_auth = true
   rpc UnfollowMarket (UnfollowMarketRequest) returns (UnfollowMarketReply) {
     option (google.api.http) = {
-      post: "/bayes/market/unfollow-market"
+      post: "/api/v1/market/unfollow-market"
       body: "*"
     };
     option (need_auth) = true;
@@ -177,7 +177,7 @@ service BayesHttp {
   // 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
   rpc UploadFile (UploadFileRequest) returns (UploadFileReply) {
     option (google.api.http) = {
-      post: "/bayes/base/upload-file"
+      post: "/api/v1/base/upload-file"
       body: "*"
     };
     option (need_auth) = true;
@@ -186,7 +186,7 @@ service BayesHttp {
   // 下载文件 need_auth = false
   rpc DownloadFile (DownloadFileRequest) returns (DownloadFileReply) {
     option (google.api.http) = {
-      get: "/bayes/base/download-file"
+      get: "/api/v1/base/download-file"
     };
     option (need_auth) = false;
   }
@@ -194,7 +194,7 @@ service BayesHttp {
   // 发布帖子 need_auth = true
   rpc PublishPost (PublishPostRequest) returns (PublishPostReply) {
     option (google.api.http) = {
-      post: "/bayes/community/publish-post"
+      post: "/api/v1/community/publish-post"
       body: "*"
     };
     option (need_auth) = true;
@@ -203,7 +203,7 @@ service BayesHttp {
   // 发布评论 need_auth = true
   rpc PublishComment (PublishCommentRequest) returns (PublishCommentReply) {
     option (google.api.http) = {
-      post: "/bayes/community/publish-comment"
+      post: "/api/v1/community/publish-comment"
       body: "*"
     };
     option (need_auth) = true;
@@ -212,7 +212,7 @@ service BayesHttp {
   // 点赞 need_auth = true
   rpc LikeContent (LikeContentRequest) returns (LikeContentReply) {
     option (google.api.http) = {
-      post: "/bayes/community/like-content"
+      post: "/api/v1/community/like-content"
       body: "*"
     };
     option (need_auth) = true;
@@ -221,7 +221,7 @@ service BayesHttp {
   // 取消点赞 need_auth = true
   rpc UnlikeContent (UnlikeContentRequest) returns (UnlikeContentReply) {
     option (google.api.http) = {
-      post: "/bayes/community/unlike-content"
+      post: "/api/v1/community/unlike-content"
       body: "*"
     };
     option (need_auth) = true;
@@ -230,7 +230,7 @@ service BayesHttp {
   // 关注用户 need_auth = true
   rpc FollowUser (FollowUserRequest) returns (FollowUserReply) {
     option (google.api.http) = {
-      post: "/bayes/user/follow-user"
+      post: "/api/v1/user/follow-user"
       body: "*"
     };
     option (need_auth) = true;
@@ -239,7 +239,7 @@ service BayesHttp {
   // 取消关注用户 need_auth = true
   rpc UnfollowUser (UnfollowUserRequest) returns (UnfollowUserReply) {
     option (google.api.http) = {
-      post: "/bayes/user/unfollow-user"
+      post: "/api/v1/user/unfollow-user"
       body: "*"
     };
     option (need_auth) = true;
@@ -248,7 +248,7 @@ service BayesHttp {
   // 获取自己关注的市场列表 need_auth = true
   rpc GetFollowMarkets (GetFollowMarketsRequest) returns (GetFollowMarketsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-follow-markets"
+      get: "/api/v1/market/get-follow-markets"
     };
     option (need_auth) = true;
   }
@@ -256,7 +256,7 @@ service BayesHttp {
   // 获取持仓的市场列表（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
   rpc GetHoldingPositionsMarket (GetHoldingPositionsMarketRequest) returns (GetHoldingPositionsMarketReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-holding-positions-market"
+      get: "/api/v1/market/get-holding-positions-market"
     };
     option (need_auth) = false;
   }
@@ -264,7 +264,7 @@ service BayesHttp {
   // 获取热门市场列表 need_auth = false
   rpc GetHotMarkets (GetHotMarketsRequest) returns (GetHotMarketsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-hot-markets"
+      get: "/api/v1/market/get-hot-markets"
     };
     option (need_auth) = false;
   }
@@ -272,7 +272,7 @@ service BayesHttp {
   // 获取市场详情 代币信息 与当前价格 need_auth = false
   rpc GetMarketDetail (GetMarketDetailRequest) returns (GetMarketDetailReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-market-detail"
+      get: "/api/v1/market/get-market-detail"
     };
     option (need_auth) = false;
   }
@@ -280,7 +280,7 @@ service BayesHttp {
   // 获取市场交易记录 need_auth = false
   rpc GetMarketTrades (GetMarketTradesRequest) returns (GetMarketTradesReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-market-trades"
+      get: "/api/v1/market/get-market-trades"
     };
     option (need_auth) = false;
   }
@@ -288,7 +288,7 @@ service BayesHttp {
   // 查看交易记录 可以看自己 也可以看别人 need_auth = false
   rpc GetUserTrades (GetUserTradesRequest) returns (GetUserTradesReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-user-trades"
+      get: "/api/v1/market/get-user-trades"
     };
     option (need_auth) = false;
   }
@@ -296,7 +296,7 @@ service BayesHttp {
   // 获取市场帖子列表 need_auth = false
   rpc GetMarketPosts (GetMarketPostsRequest) returns (GetMarketPostsReply) {
     option (google.api.http) = {
-      get: "/bayes/community/get-market-posts"
+      get: "/api/v1/community/get-market-posts"
     };
     option (need_auth) = false;
   }
@@ -304,7 +304,7 @@ service BayesHttp {
   // 获取评论区 root_uuid为空只获取根评论 root_uuid不为空只获取该根评论下的二级评论(回复) need_auth = false
   rpc GetComments (GetCommentsRequest) returns (GetCommentsReply) {
     option (google.api.http) = {
-      get: "/bayes/community/get-comments"
+      get: "/api/v1/community/get-comments"
     };
     option (need_auth) = false;
   }
@@ -312,7 +312,7 @@ service BayesHttp {
   // 获取用户持仓信息 可以看自己 也可以看别人 need_auth = false
   rpc GetUserPositions (GetUserPositionsRequest) returns (GetUserPositionsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-user-positions"
+      get: "/api/v1/market/get-user-positions"
     };
     option (need_auth) = false;
   }
@@ -320,7 +320,7 @@ service BayesHttp {
   // 获取用户基础信息(可以看自己 也可以看别人) need_auth = false
   rpc GetUserBaseInfo (GetUserBaseInfoRequest) returns (GetUserBaseInfoReply) {
     option (google.api.http) = {
-      get: "/bayes/user/get-user-base-info"
+      get: "/api/v1/user/get-user-base-info"
     };
     option (need_auth) = false;
   }
@@ -328,7 +328,7 @@ service BayesHttp {
   // 获取用户自身的当前资产信息 need_auth = false
   rpc GetUserAssetInfo (GetUserAssetInfoRequest) returns (GetUserAssetInfoReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-user-asset-info"
+      get: "/api/v1/market/get-user-asset-info"
     };
     option (need_auth) = false;
   }
@@ -336,7 +336,7 @@ service BayesHttp {
   // 搜索 支持市场 用户 搜索  need_auth = false
   rpc Search(SearchRequest) returns (SearchReply) {
     option (google.api.http) = {
-      get: "/bayes/base/search"
+      get: "/api/v1/base/search"
     };
     option (need_auth) = false;
   }
@@ -345,7 +345,7 @@ service BayesHttp {
   // 查看用户资产历史变化（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
   rpc GetUserAssetHistory(GetUserAssetHistoryRequest) returns (GetUserAssetHistoryReply) {
     option (google.api.http) = {
-      get: "/bayes/user/get-user-asset-history"
+      get: "/api/v1/user/get-user-asset-history"
     };
     option (need_auth) = false;
   }
@@ -353,7 +353,7 @@ service BayesHttp {
   // 获取市场期权价格历史 need_auth = false
   rpc GetMarketOptionPriceHistory(GetMarketOptionPriceHistoryRequest) returns (GetMarketOptionPriceHistoryReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-market-option-price-history"
+      get: "/api/v1/market/get-market-option-price-history"
     };
     option (need_auth) = false;
   }
@@ -361,7 +361,7 @@ service BayesHttp {
   // 首页获取市场列表 need_auth = false
   rpc GetMarkets(GetMarketsRequest) returns (GetMarketsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-markets"
+      get: "/api/v1/market/get-markets"
     };
     option (need_auth) = false;
   }
@@ -369,7 +369,7 @@ service BayesHttp {
   // 获取标签列表 need_auth = false
   rpc GetTags(GetTagsRequest) returns (GetTagsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-tags"
+      get: "/api/v1/market/get-tags"
     };
     option (need_auth) = false;
   }
@@ -377,7 +377,7 @@ service BayesHttp {
   // 获取市场分类列表 need_auth = false
   rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-categories"
+      get: "/api/v1/market/get-categories"
     };
     option (need_auth) = false;
   }
@@ -386,7 +386,7 @@ service BayesHttp {
   // 获取paymaster数据 need_auth = true
   rpc GetPaymasterData(GetPaymasterDataRequest) returns (GetPaymasterDataReply) {
     option (google.api.http) = {
-      post: "/bayes/market/get-paymaster-data"
+      post: "/api/v1/market/get-paymaster-data"
       body: "*"
     };
     option (need_auth) = true;
@@ -395,7 +395,7 @@ service BayesHttp {
   // 获取用户通知列表 need_auth = true
   rpc GetUserNotifications(GetUserNotificationsRequest) returns (GetUserNotificationsReply) {
     option (google.api.http) = {
-      get: "/bayes/user/get-user-notifications"
+      get: "/api/v1/user/get-user-notifications"
     };
     option (need_auth) = true;
   }
@@ -403,7 +403,7 @@ service BayesHttp {
   // 标记用户的通知为已读 need_auth = true
   rpc MarkNotificationsAsRead(MarkNotificationsAsReadRequest) returns (MarkNotificationsAsReadReply) {
     option (google.api.http) = {
-      post: "/bayes/user/mark-notifications-as-read"
+      post: "/api/v1/user/mark-notifications-as-read"
       body: "*"
     };
     option (need_auth) = true;
@@ -413,7 +413,7 @@ service BayesHttp {
   // 获取邀请用户列表 need_auth = true
   rpc GetInviteUserList(GetInviteUserListRequest) returns (GetInviteUserListReply) {
     option (google.api.http) = {
-      get: "/bayes/user/get-invite-user-list"
+      get: "/api/v1/user/get-invite-user-list"
     };
     option (need_auth) = true;
   }
@@ -421,7 +421,7 @@ service BayesHttp {
   // 获取用户交易记录 need_auth = true
   rpc GetUserTransactions(GetUserTransactionsRequest) returns (GetUserTransactionsReply) {
     option (google.api.http) = {
-      get: "/bayes/user/get-user-transactions"
+      get: "/api/v1/user/get-user-transactions"
     };
     option (need_auth) = true;
   }
@@ -429,7 +429,7 @@ service BayesHttp {
   // 获取基础代币配置 need_auth = false
   rpc GetBaseTokenConfig(GetBaseTokenConfigRequest) returns (GetBaseTokenConfigReply) {
     option (google.api.http) = {
-      get: "/bayes/base/get-base-token-config"
+      get: "/api/v1/base/get-base-token-config"
     };
     option (need_auth) = false;
   }
@@ -437,7 +437,7 @@ service BayesHttp {
   // 获取banner列表 need_auth = false
   rpc GetBanners(GetBannersRequest) returns (GetBannersReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-banners"
+      get: "/api/v1/market/get-banners"
     };
     option (need_auth) = false;
   }
@@ -445,21 +445,21 @@ service BayesHttp {
   // 获取section列表 need_auth = false
   rpc GetSections(GetSectionsRequest) returns (GetSectionsReply) {
     option (google.api.http) = {
-      get: "/bayes/market/get-sections"
+      get: "/api/v1/market/get-sections"
     };
     option (need_auth) = false;
   }
 
   rpc GetTasks(GetTasksRequest) returns (GetTasksReply) {
     option (google.api.http) = {
-      get: "/bayes/task/get-tasks"
+      get: "/api/v1/task/get-tasks"
     };
     option (need_auth) = false;
   }
 
   rpc ClaimTaskReward(ClaimTaskRewardRequest) returns (ClaimTaskRewardReply) {
     option (google.api.http) = {
-      post: "/bayes/task/claim-task-reward"
+      post: "/api/v1/task/claim-task-reward"
       body: "*"
     };
     option (need_auth) = true;
@@ -467,7 +467,7 @@ service BayesHttp {
 
   rpc ShareTaskDone(ShareTaskDoneRequest) returns (ShareTaskDoneReply) {
     option (google.api.http) = {
-      post: "/bayes/task/share-task-done"
+      post: "/api/v1/task/share-task-done"
       body: "*"
     };
     option (need_auth) = true;
@@ -475,7 +475,7 @@ service BayesHttp {
 
   rpc Translate(TranslateRequest) returns (TranslateReply) {
     option (google.api.http) = {
-      post: "/bayes/base/translate"
+      post: "/api/v1/base/translate"
       body: "*"
     };
     option (need_auth) = false;
@@ -483,7 +483,27 @@ service BayesHttp {
 
   rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse) {
     option (google.api.http) = {
-      get: "/bayes/market/get-leaderboard"
+      get: "/api/v1/market/get-leaderboard"
+    };
+    option (need_auth) = false;
+  }
+
+  //==============================
+  // CTF Event 相关 API
+  //==============================
+
+  // 获取 Event 详情（含子市场列表） need_auth = false
+  rpc GetEventDetail(GetEventDetailRequest) returns (GetEventDetailReply) {
+    option (google.api.http) = {
+      get: "/api/v1/market/get-event-detail"
+    };
+    option (need_auth) = false;
+  }
+
+  // 获取 Event 列表（分页） need_auth = false
+  rpc GetEvents(GetEventsRequest) returns (GetEventsReply) {
+    option (google.api.http) = {
+      get: "/api/v1/market/get-events"
     };
     option (need_auth) = false;
   }
@@ -859,6 +879,8 @@ message GetMarketsReply {
       uint32 decimal = 5;
       // 选项合约描述
       string token_description = 6;
+      // ERC1155 position token ID
+      string position_id = 7;
     }
 
     message Post {
@@ -939,8 +961,10 @@ message GetMarketsReply {
     uint32 deadline = 14;
     // 结果选项地址
     string result = 15;
+    // CTF: NegRisk Event ID
+    string event_id = 16;
   }
-  
+
   // 总数量
   uint32 total_count = 1;
   // 市场列表
@@ -1430,6 +1454,8 @@ message GetMarketDetailReply {
     uint32 decimal = 6;
     // 描述
     string description = 7;
+    // ERC1155 position token ID
+    string position_id = 8;
   }
 
   // 市场地址
@@ -1448,7 +1474,7 @@ message GetMarketDetailReply {
   string volume = 7;
   // 精度
   uint32 decimal = 8;
-  // 参与者数量 
+  // 参与者数量
   uint32 participants_count = 9;
   // 结果条件代币地址
   string result_option_address = 10;
@@ -1466,6 +1492,14 @@ message GetMarketDetailReply {
   string base_token_address = 16;
   // 是否已结算
   IsClaim is_claim = 17;
+  // CTF: NegRisk Event ID
+  string event_id = 18;
+  // CTF: conditionId (bytes32 hex)
+  string condition_id = 19;
+  // CTF: questionId (bytes32 hex)
+  string question_id = 20;
+  // CTF: outcome 数量
+  int32 outcome_slot_count = 21;
 }
 
 message GetMarketTradesRequest {
@@ -2117,4 +2151,156 @@ message GetUserTransactionsReply {
 
   uint32 total = 1;
   repeated Transaction transactions = 2;
+}
+
+//==============================
+// CTF Event 相关消息
+//==============================
+
+// Event 状态
+enum EventStatus {
+  EVENT_STATUS_UNSPECIFIED = 0;
+  EVENT_STATUS_ACTIVE = 1;
+  EVENT_STATUS_RESOLVED = 2;
+  EVENT_STATUS_VOIDED = 3;
+  EVENT_STATUS_FROZEN = 4;
+}
+
+// 获取 Event 详情请求
+message GetEventDetailRequest {
+  // event_id (on-chain NegRisk eventId) 或数据库 UUID
+  string id = 1;
+}
+
+// 获取 Event 详情响应
+message GetEventDetailReply {
+  message Market {
+    message Option {
+      // 选项合约地址
+      string address = 1;
+      // 选项名称
+      string name = 2;
+      // 选项符号
+      string symbol = 3;
+      // 选项图片
+      string pic_url = 4;
+      // 精度
+      uint32 decimal = 5;
+      // 选项序号
+      uint32 index = 6;
+      // 当前价格
+      string price = 7;
+      // 选项描述
+      string description = 8;
+      // ERC1155 position token ID
+      string position_id = 9;
+    }
+
+    // 市场地址
+    string address = 1;
+    // 市场名称
+    string name = 2;
+    // 市场图片
+    string pic_url = 3;
+    // 市场描述
+    string description = 4;
+    // 市场状态
+    uint32 status = 5;
+    // 参与者数量
+    uint32 participants_count = 6;
+    // 交易量
+    string volume = 7;
+    // 精度
+    uint32 decimal = 8;
+    // 创建时间
+    uint32 created_at = 9;
+    // 截止时间
+    uint32 deadline = 10;
+    // 结果
+    string result = 11;
+    // CTF conditionId
+    string condition_id = 12;
+    // CTF questionId
+    string question_id = 13;
+    // 选项列表
+    repeated Option options = 14;
+  }
+
+  // 数据库 ID
+  string id = 1;
+  // on-chain NegRisk eventId (bytes32 hex)
+  string event_id = 2;
+  // 标题
+  string title = 3;
+  // outcome 数量
+  int32 outcome_slot_count = 4;
+  // 抵押品地址 (USDC)
+  string collateral = 5;
+  // 状态
+  EventStatus status = 6;
+  // metadata hash
+  string metadata_hash = 7;
+  // 创建时间
+  uint32 created_at = 8;
+  // 更新时间
+  uint32 updated_at = 9;
+  // 子市场列表
+  repeated Market markets = 10;
+}
+
+// 获取 Event 列表请求
+message GetEventsRequest {
+  enum SortType {
+    SORT_TYPE_UNKNOWN = 0;
+    SORT_TYPE_LATEST = 1;
+    SORT_TYPE_VOLUME = 2;
+  }
+  // 状态筛选
+  EventStatus status = 1;
+  // 排序方式
+  SortType sort_type = 2;
+  // 页码
+  uint32 page = 3;
+  // 每页数量
+  uint32 page_size = 4;
+}
+
+// 获取 Event 列表响应
+message GetEventsReply {
+  message EventSummary {
+    message Market {
+      // 市场地址
+      string address = 1;
+      // 市场名称
+      string name = 2;
+      // 市场图片
+      string pic_url = 3;
+      // 市场状态
+      uint32 status = 4;
+      // 交易量
+      string volume = 5;
+      // 参与者数量
+      uint32 participants_count = 6;
+    }
+
+    // 数据库 ID
+    string id = 1;
+    // on-chain eventId
+    string event_id = 2;
+    // 标题
+    string title = 3;
+    // outcome 数量
+    int32 outcome_slot_count = 4;
+    // 状态
+    EventStatus status = 5;
+    // 创建时间
+    uint32 created_at = 6;
+    // 子市场列表
+    repeated Market markets = 7;
+  }
+
+  // 总数量
+  uint32 total = 1;
+  // Event 列表
+  repeated EventSummary events = 2;
 }

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 
 	marketcenterpb "market-proto/proto/market-service/marketcenter/v1"
 	usercenterpb "market-proto/proto/market-service/usercenter/v1"
@@ -86,12 +86,12 @@ func (c *CustomCodec) EncodeResponse(w http.ResponseWriter, r *http.Request, v i
 
 // 检查是否是上传文件的端点
 func (c *CustomCodec) isUploadFileEndpoint(r *http.Request) bool {
-	return strings.Contains(r.URL.Path, "/bayes/base/upload-file")
+	return strings.Contains(r.URL.Path, "/api/v1/base/upload-file")
 }
 
 // 检查是否是下载文件请求
 func (c *CustomCodec) isDownloadFileEndpoint(r *http.Request) bool {
-	return strings.Contains(r.URL.Path, "/bayes/base/download-file")
+	return strings.Contains(r.URL.Path, "/api/v1/base/download-file")
 }
 
 // 解码multipart/form-data格式的请求
@@ -122,7 +122,7 @@ func (c *CustomCodec) decodeMultipartForm(r *http.Request, v interface{}) error 
 	}
 
 	// 处理proto消息
-	if req, ok := v.(*bayespb.UploadFileRequest); ok {
+	if req, ok := v.(*apipb.UploadFileRequest); ok {
 		req.File = fileBytes
 		req.FileName = fileHeader.Filename
 		req.ContentType = contentType
@@ -134,7 +134,7 @@ func (c *CustomCodec) decodeMultipartForm(r *http.Request, v interface{}) error 
 
 // 处理文件下载响应
 func (c *CustomCodec) encodeFileResponse(w http.ResponseWriter, r *http.Request, v interface{}) error {
-	if resp, ok := v.(*bayespb.DownloadFileReply); ok && resp.FileData != nil {
+	if resp, ok := v.(*apipb.DownloadFileReply); ok && resp.FileData != nil {
 		// 设置适当的Content-Type和Content-Disposition
 		// 实际应用中可能需要根据文件类型设置不同的Content-Type
 		w.Header().Set("Content-Type", resp.ContentType)

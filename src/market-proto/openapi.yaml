@@ -6,12 +6,12 @@ info:
     title: ""
     version: 0.0.1
 paths:
-    /bayes/base/download-file:
+    /api/v1/base/download-file:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 下载文件 need_auth = false
-            operationId: BayesHttp_DownloadFile
+            operationId: HttpApi_DownloadFile
             parameters:
                 - name: fileKey
                   in: query
@@ -24,26 +24,26 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.DownloadFileReply'
-    /bayes/base/get-base-token-config:
+                                $ref: '#/components/schemas/api.v1.DownloadFileReply'
+    /api/v1/base/get-base-token-config:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取基础代币配置 need_auth = false
-            operationId: BayesHttp_GetBaseTokenConfig
+            operationId: HttpApi_GetBaseTokenConfig
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetBaseTokenConfigReply'
-    /bayes/base/search:
+                                $ref: '#/components/schemas/api.v1.GetBaseTokenConfigReply'
+    /api/v1/base/search:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 搜索 支持市场 用户 搜索  need_auth = false
-            operationId: BayesHttp_Search
+            operationId: HttpApi_Search
             parameters:
                 - name: keyword
                   in: query
@@ -91,17 +91,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.SearchReply'
-    /bayes/base/translate:
+                                $ref: '#/components/schemas/api.v1.SearchReply'
+    /api/v1/base/translate:
         post:
             tags:
-                - BayesHttp
-            operationId: BayesHttp_Translate
+                - HttpApi
+            operationId: HttpApi_Translate
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.TranslateRequest'
+                            $ref: '#/components/schemas/api.v1.TranslateRequest'
                 required: true
             responses:
                 "200":
@@ -109,18 +109,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.TranslateReply'
-    /bayes/base/upload-file:
+                                $ref: '#/components/schemas/api.v1.TranslateReply'
+    /api/v1/base/upload-file:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
-            operationId: BayesHttp_UploadFile
+            operationId: HttpApi_UploadFile
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.UploadFileRequest'
+                            $ref: '#/components/schemas/api.v1.UploadFileRequest'
                 required: true
             responses:
                 "200":
@@ -128,13 +128,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.UploadFileReply'
-    /bayes/community/get-comments:
+                                $ref: '#/components/schemas/api.v1.UploadFileReply'
+    /api/v1/community/get-comments:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取评论区 root_uuid为空只获取根评论 root_uuid不为空只获取该根评论下的二级评论(回复) need_auth = false
-            operationId: BayesHttp_GetComments
+            operationId: HttpApi_GetComments
             parameters:
                 - name: postUuid
                   in: query
@@ -172,13 +172,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetCommentsReply'
-    /bayes/community/get-market-posts:
+                                $ref: '#/components/schemas/api.v1.GetCommentsReply'
+    /api/v1/community/get-market-posts:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取市场帖子列表 need_auth = false
-            operationId: BayesHttp_GetMarketPosts
+            operationId: HttpApi_GetMarketPosts
             parameters:
                 - name: marketAddress
                   in: query
@@ -207,18 +207,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetMarketPostsReply'
-    /bayes/community/like-content:
+                                $ref: '#/components/schemas/api.v1.GetMarketPostsReply'
+    /api/v1/community/like-content:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 点赞 need_auth = true
-            operationId: BayesHttp_LikeContent
+            operationId: HttpApi_LikeContent
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.LikeContentRequest'
+                            $ref: '#/components/schemas/api.v1.LikeContentRequest'
                 required: true
             responses:
                 "200":
@@ -226,18 +226,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.LikeContentReply'
-    /bayes/community/publish-comment:
+                                $ref: '#/components/schemas/api.v1.LikeContentReply'
+    /api/v1/community/publish-comment:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 发布评论 need_auth = true
-            operationId: BayesHttp_PublishComment
+            operationId: HttpApi_PublishComment
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.PublishCommentRequest'
+                            $ref: '#/components/schemas/api.v1.PublishCommentRequest'
                 required: true
             responses:
                 "200":
@@ -245,18 +245,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.PublishCommentReply'
-    /bayes/community/publish-post:
+                                $ref: '#/components/schemas/api.v1.PublishCommentReply'
+    /api/v1/community/publish-post:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 发布帖子 need_auth = true
-            operationId: BayesHttp_PublishPost
+            operationId: HttpApi_PublishPost
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.PublishPostRequest'
+                            $ref: '#/components/schemas/api.v1.PublishPostRequest'
                 required: true
             responses:
                 "200":
@@ -264,18 +264,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.PublishPostReply'
-    /bayes/community/unlike-content:
+                                $ref: '#/components/schemas/api.v1.PublishPostReply'
+    /api/v1/community/unlike-content:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 取消点赞 need_auth = true
-            operationId: BayesHttp_UnlikeContent
+            operationId: HttpApi_UnlikeContent
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.UnlikeContentRequest'
+                            $ref: '#/components/schemas/api.v1.UnlikeContentRequest'
                 required: true
             responses:
                 "200":
@@ -283,18 +283,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.UnlikeContentReply'
-    /bayes/market/claim-market-result:
+                                $ref: '#/components/schemas/api.v1.UnlikeContentReply'
+    /api/v1/market/claim-market-result:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 领取市场结果 need_auth = true
-            operationId: BayesHttp_ClaimMarketResult
+            operationId: HttpApi_ClaimMarketResult
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.ClaimMarketResultRequest'
+                            $ref: '#/components/schemas/api.v1.ClaimMarketResultRequest'
                 required: true
             responses:
                 "200":
@@ -302,18 +302,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.ClaimMarketResultReply'
-    /bayes/market/follow-market:
+                                $ref: '#/components/schemas/api.v1.ClaimMarketResultReply'
+    /api/v1/market/follow-market:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 关注市场 need_auth = true
-            operationId: BayesHttp_FollowMarket
+            operationId: HttpApi_FollowMarket
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.FollowMarketRequest'
+                            $ref: '#/components/schemas/api.v1.FollowMarketRequest'
                 required: true
             responses:
                 "200":
@@ -321,39 +321,96 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.FollowMarketReply'
-    /bayes/market/get-banners:
+                                $ref: '#/components/schemas/api.v1.FollowMarketReply'
+    /api/v1/market/get-banners:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取banner列表 need_auth = false
-            operationId: BayesHttp_GetBanners
+            operationId: HttpApi_GetBanners
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetBannersReply'
-    /bayes/market/get-categories:
+                                $ref: '#/components/schemas/api.v1.GetBannersReply'
+    /api/v1/market/get-categories:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取市场分类列表 need_auth = false
-            operationId: BayesHttp_GetCategories
+            operationId: HttpApi_GetCategories
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetCategoriesReply'
-    /bayes/market/get-follow-markets:
+                                $ref: '#/components/schemas/api.v1.GetCategoriesReply'
+    /api/v1/market/get-event-detail:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
+            description: 获取 Event 详情（含子市场列表） need_auth = false
+            operationId: HttpApi_GetEventDetail
+            parameters:
+                - name: id
+                  in: query
+                  description: event_id (on-chain NegRisk eventId) 或数据库 UUID
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.GetEventDetailReply'
+    /api/v1/market/get-events:
+        get:
+            tags:
+                - HttpApi
+            description: 获取 Event 列表（分页） need_auth = false
+            operationId: HttpApi_GetEvents
+            parameters:
+                - name: status
+                  in: query
+                  description: 状态筛选
+                  schema:
+                    type: integer
+                    format: enum
+                - name: sortType
+                  in: query
+                  description: 排序方式
+                  schema:
+                    type: integer
+                    format: enum
+                - name: page
+                  in: query
+                  description: 页码
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  description: 每页数量
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.GetEventsReply'
+    /api/v1/market/get-follow-markets:
+        get:
+            tags:
+                - HttpApi
             description: 获取自己关注的市场列表 need_auth = true
-            operationId: BayesHttp_GetFollowMarkets
+            operationId: HttpApi_GetFollowMarkets
             parameters:
                 - name: page
                   in: query
@@ -379,13 +436,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetFollowMarketsReply'
-    /bayes/market/get-holding-positions-market:
+                                $ref: '#/components/schemas/api.v1.GetFollowMarketsReply'
+    /api/v1/market/get-holding-positions-market:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取持仓的市场列表（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
-            operationId: BayesHttp_GetHoldingPositionsMarket
+            operationId: HttpApi_GetHoldingPositionsMarket
             parameters:
                 - name: uid
                   in: query
@@ -416,13 +473,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetHoldingPositionsMarketReply'
-    /bayes/market/get-hot-markets:
+                                $ref: '#/components/schemas/api.v1.GetHoldingPositionsMarketReply'
+    /api/v1/market/get-hot-markets:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取热门市场列表 need_auth = false
-            operationId: BayesHttp_GetHotMarkets
+            operationId: HttpApi_GetHotMarkets
             parameters:
                 - name: baseTokenType
                   in: query
@@ -436,12 +493,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetHotMarketsReply'
-    /bayes/market/get-leaderboard:
+                                $ref: '#/components/schemas/api.v1.GetHotMarketsReply'
+    /api/v1/market/get-leaderboard:
         get:
             tags:
-                - BayesHttp
-            operationId: BayesHttp_GetLeaderboard
+                - HttpApi
+            operationId: HttpApi_GetLeaderboard
             parameters:
                 - name: timeInterval
                   in: query
@@ -478,13 +535,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetLeaderboardResponse'
-    /bayes/market/get-market-detail:
+                                $ref: '#/components/schemas/api.v1.GetLeaderboardResponse'
+    /api/v1/market/get-market-detail:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取市场详情 代币信息 与当前价格 need_auth = false
-            operationId: BayesHttp_GetMarketDetail
+            operationId: HttpApi_GetMarketDetail
             parameters:
                 - name: marketAddress
                   in: query
@@ -496,13 +553,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetMarketDetailReply'
-    /bayes/market/get-market-option-price-history:
+                                $ref: '#/components/schemas/api.v1.GetMarketDetailReply'
+    /api/v1/market/get-market-option-price-history:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取市场期权价格历史 need_auth = false
-            operationId: BayesHttp_GetMarketOptionPriceHistory
+            operationId: HttpApi_GetMarketOptionPriceHistory
             parameters:
                 - name: marketAddress
                   in: query
@@ -521,13 +578,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetMarketOptionPriceHistoryReply'
-    /bayes/market/get-market-trades:
+                                $ref: '#/components/schemas/api.v1.GetMarketOptionPriceHistoryReply'
+    /api/v1/market/get-market-trades:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取市场交易记录 need_auth = false
-            operationId: BayesHttp_GetMarketTrades
+            operationId: HttpApi_GetMarketTrades
             parameters:
                 - name: marketAddress
                   in: query
@@ -552,13 +609,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetMarketTradesReply'
-    /bayes/market/get-markets:
+                                $ref: '#/components/schemas/api.v1.GetMarketTradesReply'
+    /api/v1/market/get-markets:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 首页获取市场列表 need_auth = false
-            operationId: BayesHttp_GetMarkets
+            operationId: HttpApi_GetMarkets
             parameters:
                 - name: uid
                   in: query
@@ -642,18 +699,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetMarketsReply'
-    /bayes/market/get-paymaster-data:
+                                $ref: '#/components/schemas/api.v1.GetMarketsReply'
+    /api/v1/market/get-paymaster-data:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取paymaster数据 need_auth = true
-            operationId: BayesHttp_GetPaymasterData
+            operationId: HttpApi_GetPaymasterData
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.GetPaymasterDataRequest'
+                            $ref: '#/components/schemas/api.v1.GetPaymasterDataRequest'
                 required: true
             responses:
                 "200":
@@ -661,26 +718,26 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetPaymasterDataReply'
-    /bayes/market/get-sections:
+                                $ref: '#/components/schemas/api.v1.GetPaymasterDataReply'
+    /api/v1/market/get-sections:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取section列表 need_auth = false
-            operationId: BayesHttp_GetSections
+            operationId: HttpApi_GetSections
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetSectionsReply'
-    /bayes/market/get-tags:
+                                $ref: '#/components/schemas/api.v1.GetSectionsReply'
+    /api/v1/market/get-tags:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取标签列表 need_auth = false
-            operationId: BayesHttp_GetTags
+            operationId: HttpApi_GetTags
             parameters:
                 - name: page
                   in: query
@@ -700,13 +757,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetTagsReply'
-    /bayes/market/get-user-asset-info:
+                                $ref: '#/components/schemas/api.v1.GetTagsReply'
+    /api/v1/market/get-user-asset-info:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取用户自身的当前资产信息 need_auth = false
-            operationId: BayesHttp_GetUserAssetInfo
+            operationId: HttpApi_GetUserAssetInfo
             parameters:
                 - name: baseTokenType
                   in: query
@@ -725,13 +782,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserAssetInfoReply'
-    /bayes/market/get-user-positions:
+                                $ref: '#/components/schemas/api.v1.GetUserAssetInfoReply'
+    /api/v1/market/get-user-positions:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取用户持仓信息 可以看自己 也可以看别人 need_auth = false
-            operationId: BayesHttp_GetUserPositions
+            operationId: HttpApi_GetUserPositions
             parameters:
                 - name: uid
                   in: query
@@ -772,13 +829,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserPositionsReply'
-    /bayes/market/get-user-trades:
+                                $ref: '#/components/schemas/api.v1.GetUserPositionsReply'
+    /api/v1/market/get-user-trades:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 查看交易记录 可以看自己 也可以看别人 need_auth = false
-            operationId: BayesHttp_GetUserTrades
+            operationId: HttpApi_GetUserTrades
             parameters:
                 - name: marketAddress
                   in: query
@@ -814,18 +871,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserTradesReply'
-    /bayes/market/place-order:
+                                $ref: '#/components/schemas/api.v1.GetUserTradesReply'
+    /api/v1/market/place-order:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 下单交易 need_auth = true
-            operationId: BayesHttp_PlaceOrder
+            operationId: HttpApi_PlaceOrder
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.PlaceOrderRequest'
+                            $ref: '#/components/schemas/api.v1.PlaceOrderRequest'
                 required: true
             responses:
                 "200":
@@ -833,18 +890,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.PlaceOrderReply'
-    /bayes/market/transfer-base-token:
+                                $ref: '#/components/schemas/api.v1.PlaceOrderReply'
+    /api/v1/market/transfer-base-token:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 转账基础代币 need_auth = true
-            operationId: BayesHttp_TransferBaseToken
+            operationId: HttpApi_TransferBaseToken
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.TransferBaseTokenRequest'
+                            $ref: '#/components/schemas/api.v1.TransferBaseTokenRequest'
                 required: true
             responses:
                 "200":
@@ -852,18 +909,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.TransferBaseTokenReply'
-    /bayes/market/unfollow-market:
+                                $ref: '#/components/schemas/api.v1.TransferBaseTokenReply'
+    /api/v1/market/unfollow-market:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 取消关注市场 need_auth = true
-            operationId: BayesHttp_UnfollowMarket
+            operationId: HttpApi_UnfollowMarket
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.UnfollowMarketRequest'
+                            $ref: '#/components/schemas/api.v1.UnfollowMarketRequest'
                 required: true
             responses:
                 "200":
@@ -871,17 +928,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.UnfollowMarketReply'
-    /bayes/sse/subscribe:
+                                $ref: '#/components/schemas/api.v1.UnfollowMarketReply'
+    /api/v1/sse/subscribe:
         post:
             tags:
-                - BayesSse
-            operationId: BayesSse_Subscribe
+                - SseApi
+            operationId: SseApi_Subscribe
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.SubscribeRequest'
+                            $ref: '#/components/schemas/api.v1.SubscribeRequest'
                 required: true
             responses:
                 "200":
@@ -889,17 +946,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.SubscribeReply'
-    /bayes/sse/unsubscribe:
+                                $ref: '#/components/schemas/api.v1.SubscribeReply'
+    /api/v1/sse/unsubscribe:
         post:
             tags:
-                - BayesSse
-            operationId: BayesSse_Unsubscribe
+                - SseApi
+            operationId: SseApi_Unsubscribe
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.UnsubscribeRequest'
+                            $ref: '#/components/schemas/api.v1.UnsubscribeRequest'
                 required: true
             responses:
                 "200":
@@ -907,17 +964,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.UnsubscribeReply'
-    /bayes/task/claim-task-reward:
+                                $ref: '#/components/schemas/api.v1.UnsubscribeReply'
+    /api/v1/task/claim-task-reward:
         post:
             tags:
-                - BayesHttp
-            operationId: BayesHttp_ClaimTaskReward
+                - HttpApi
+            operationId: HttpApi_ClaimTaskReward
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.ClaimTaskRewardRequest'
+                            $ref: '#/components/schemas/api.v1.ClaimTaskRewardRequest'
                 required: true
             responses:
                 "200":
@@ -925,29 +982,29 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.ClaimTaskRewardReply'
-    /bayes/task/get-tasks:
+                                $ref: '#/components/schemas/api.v1.ClaimTaskRewardReply'
+    /api/v1/task/get-tasks:
         get:
             tags:
-                - BayesHttp
-            operationId: BayesHttp_GetTasks
+                - HttpApi
+            operationId: HttpApi_GetTasks
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetTasksReply'
-    /bayes/task/share-task-done:
+                                $ref: '#/components/schemas/api.v1.GetTasksReply'
+    /api/v1/task/share-task-done:
         post:
             tags:
-                - BayesHttp
-            operationId: BayesHttp_ShareTaskDone
+                - HttpApi
+            operationId: HttpApi_ShareTaskDone
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.ShareTaskDoneRequest'
+                            $ref: '#/components/schemas/api.v1.ShareTaskDoneRequest'
                 required: true
             responses:
                 "200":
@@ -955,18 +1012,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.ShareTaskDoneReply'
-    /bayes/user/follow-user:
+                                $ref: '#/components/schemas/api.v1.ShareTaskDoneReply'
+    /api/v1/user/follow-user:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 关注用户 need_auth = true
-            operationId: BayesHttp_FollowUser
+            operationId: HttpApi_FollowUser
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.FollowUserRequest'
+                            $ref: '#/components/schemas/api.v1.FollowUserRequest'
                 required: true
             responses:
                 "200":
@@ -974,13 +1031,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.FollowUserReply'
-    /bayes/user/get-invite-user-list:
+                                $ref: '#/components/schemas/api.v1.FollowUserReply'
+    /api/v1/user/get-invite-user-list:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取邀请用户列表 need_auth = true
-            operationId: BayesHttp_GetInviteUserList
+            operationId: HttpApi_GetInviteUserList
             parameters:
                 - name: page
                   in: query
@@ -1000,13 +1057,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetInviteUserListReply'
-    /bayes/user/get-user-asset-history:
+                                $ref: '#/components/schemas/api.v1.GetInviteUserListReply'
+    /api/v1/user/get-user-asset-history:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 查看用户资产历史变化（ 个人资产页看自己 也能去别人主页看别人 ） need_auth = false
-            operationId: BayesHttp_GetUserAssetHistory
+            operationId: HttpApi_GetUserAssetHistory
             parameters:
                 - name: uid
                   in: query
@@ -1031,13 +1088,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserAssetHistoryReply'
-    /bayes/user/get-user-base-info:
+                                $ref: '#/components/schemas/api.v1.GetUserAssetHistoryReply'
+    /api/v1/user/get-user-base-info:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取用户基础信息(可以看自己 也可以看别人) need_auth = false
-            operationId: BayesHttp_GetUserBaseInfo
+            operationId: HttpApi_GetUserBaseInfo
             parameters:
                 - name: uid
                   in: query
@@ -1086,13 +1143,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserBaseInfoReply'
-    /bayes/user/get-user-notifications:
+                                $ref: '#/components/schemas/api.v1.GetUserBaseInfoReply'
+    /api/v1/user/get-user-notifications:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取用户通知列表 need_auth = true
-            operationId: BayesHttp_GetUserNotifications
+            operationId: HttpApi_GetUserNotifications
             parameters:
                 - name: category
                   in: query
@@ -1130,13 +1187,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserNotificationsReply'
-    /bayes/user/get-user-transactions:
+                                $ref: '#/components/schemas/api.v1.GetUserNotificationsReply'
+    /api/v1/user/get-user-transactions:
         get:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 获取用户交易记录 need_auth = true
-            operationId: BayesHttp_GetUserTransactions
+            operationId: HttpApi_GetUserTransactions
             parameters:
                 - name: page
                   in: query
@@ -1154,20 +1211,20 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.GetUserTransactionsReply'
-    /bayes/user/login:
+                                $ref: '#/components/schemas/api.v1.GetUserTransactionsReply'
+    /api/v1/user/login:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: |-
                 用户登录 每次在登录后调用 需要登录态didtoken need_auth = true
                  没找到用户则自动创建 返回用户uid
-            operationId: BayesHttp_Login
+            operationId: HttpApi_Login
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.LoginRequest'
+                            $ref: '#/components/schemas/api.v1.LoginRequest'
                 required: true
             responses:
                 "200":
@@ -1175,18 +1232,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.LoginReply'
-    /bayes/user/mark-notifications-as-read:
+                                $ref: '#/components/schemas/api.v1.LoginReply'
+    /api/v1/user/mark-notifications-as-read:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 标记用户的通知为已读 need_auth = true
-            operationId: BayesHttp_MarkNotificationsAsRead
+            operationId: HttpApi_MarkNotificationsAsRead
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.MarkNotificationsAsReadRequest'
+                            $ref: '#/components/schemas/api.v1.MarkNotificationsAsReadRequest'
                 required: true
             responses:
                 "200":
@@ -1194,18 +1251,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.MarkNotificationsAsReadReply'
-    /bayes/user/set-avatar:
+                                $ref: '#/components/schemas/api.v1.MarkNotificationsAsReadReply'
+    /api/v1/user/set-avatar:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 设置用户头像 need_auth = true
-            operationId: BayesHttp_SetAvatar
+            operationId: HttpApi_SetAvatar
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.SetAvatarRequest'
+                            $ref: '#/components/schemas/api.v1.SetAvatarRequest'
                 required: true
             responses:
                 "200":
@@ -1213,18 +1270,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.SetAvatarReply'
-    /bayes/user/set-description:
+                                $ref: '#/components/schemas/api.v1.SetAvatarReply'
+    /api/v1/user/set-description:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 设置用户描述 need_auth = true
-            operationId: BayesHttp_SetDescription
+            operationId: HttpApi_SetDescription
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.SetDescriptionRequest'
+                            $ref: '#/components/schemas/api.v1.SetDescriptionRequest'
                 required: true
             responses:
                 "200":
@@ -1232,18 +1289,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.SetDescriptionReply'
-    /bayes/user/set-name:
+                                $ref: '#/components/schemas/api.v1.SetDescriptionReply'
+    /api/v1/user/set-name:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 设置用户名称 need_auth = true
-            operationId: BayesHttp_SetName
+            operationId: HttpApi_SetName
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.SetNameRequest'
+                            $ref: '#/components/schemas/api.v1.SetNameRequest'
                 required: true
             responses:
                 "200":
@@ -1251,18 +1308,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.SetNameReply'
-    /bayes/user/unfollow-user:
+                                $ref: '#/components/schemas/api.v1.SetNameReply'
+    /api/v1/user/unfollow-user:
         post:
             tags:
-                - BayesHttp
+                - HttpApi
             description: 取消关注用户 need_auth = true
-            operationId: BayesHttp_UnfollowUser
+            operationId: HttpApi_UnfollowUser
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/bayes.v1.UnfollowUserRequest'
+                            $ref: '#/components/schemas/api.v1.UnfollowUserRequest'
                 required: true
             responses:
                 "200":
@@ -1270,10 +1327,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/bayes.v1.UnfollowUserReply'
+                                $ref: '#/components/schemas/api.v1.UnfollowUserReply'
 components:
     schemas:
-        bayes.v1.ClaimMarketResultReply:
+        api.v1.ClaimMarketResultReply:
             type: object
             properties:
                 opHash:
@@ -1282,7 +1339,7 @@ components:
                         操作哈希
                          可用于在链上查询交易状态
             description: 领取市场结果响应
-        bayes.v1.ClaimMarketResultRequest:
+        api.v1.ClaimMarketResultRequest:
             type: object
             properties:
                 marketAddress:
@@ -1293,18 +1350,18 @@ components:
                     description: 条件代币合约地址
                 userOperation:
                     allOf:
-                        - $ref: '#/components/schemas/bayes.v1.UserOperation'
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
                     description: 用户操作信息
             description: 领取市场结果请求
-        bayes.v1.ClaimTaskRewardReply:
+        api.v1.ClaimTaskRewardReply:
             type: object
             properties: {}
-        bayes.v1.ClaimTaskRewardRequest:
+        api.v1.ClaimTaskRewardRequest:
             type: object
             properties:
                 taskKey:
                     type: string
-        bayes.v1.Comment_Position:
+        api.v1.Comment_Position:
             type: object
             properties:
                 tokenAddress:
@@ -1329,7 +1386,7 @@ components:
                 tokenDescription:
                     type: string
                     description: 代币描述
-        bayes.v1.Comment_Reply:
+        api.v1.Comment_Reply:
             type: object
             properties:
                 uid:
@@ -1375,7 +1432,7 @@ components:
                 id:
                     type: string
                     description: 回复ID 用于分页
-        bayes.v1.DownloadFileReply:
+        api.v1.DownloadFileReply:
             type: object
             properties:
                 fileData:
@@ -1385,11 +1442,34 @@ components:
                 contentType:
                     type: string
                     description: 文件内容类型
-        bayes.v1.FollowMarketReply:
+        api.v1.EventSummary_Market:
+            type: object
+            properties:
+                address:
+                    type: string
+                    description: 市场地址
+                name:
+                    type: string
+                    description: 市场名称
+                picUrl:
+                    type: string
+                    description: 市场图片
+                status:
+                    type: integer
+                    description: 市场状态
+                    format: uint32
+                volume:
+                    type: string
+                    description: 交易量
+                participantsCount:
+                    type: integer
+                    description: 参与者数量
+                    format: uint32
+        api.v1.FollowMarketReply:
             type: object
             properties: {}
             description: 关注市场响应
-        bayes.v1.FollowMarketRequest:
+        api.v1.FollowMarketRequest:
             type: object
             properties:
                 marketAddress:
@@ -1400,22 +1480,22 @@ components:
             description: |-
                 关注市场请求
                  用户关注特定的市场以接收更新
-        bayes.v1.FollowUserReply:
+        api.v1.FollowUserReply:
             type: object
             properties: {}
-        bayes.v1.FollowUserRequest:
+        api.v1.FollowUserRequest:
             type: object
             properties:
                 followUid:
                     type: string
-        bayes.v1.GetBannersReply:
+        api.v1.GetBannersReply:
             type: object
             properties:
                 banners:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetBannersReply_Banner'
-        bayes.v1.GetBannersReply_Banner:
+                        $ref: '#/components/schemas/api.v1.GetBannersReply_Banner'
+        api.v1.GetBannersReply_Banner:
             type: object
             properties:
                 weight:
@@ -1430,14 +1510,14 @@ components:
                     type: string
                 id:
                     type: string
-        bayes.v1.GetBaseTokenConfigReply:
+        api.v1.GetBaseTokenConfigReply:
             type: object
             properties:
                 baseTokens:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetBaseTokenConfigReply_BaseToken'
-        bayes.v1.GetBaseTokenConfigReply_BaseToken:
+                        $ref: '#/components/schemas/api.v1.GetBaseTokenConfigReply_BaseToken'
+        api.v1.GetBaseTokenConfigReply_BaseToken:
             type: object
             properties:
                 baseTokenType:
@@ -1457,7 +1537,7 @@ components:
                     type: integer
                     description: 代币精度
                     format: uint32
-        bayes.v1.GetCategoriesReply:
+        api.v1.GetCategoriesReply:
             type: object
             properties:
                 total:
@@ -1467,9 +1547,9 @@ components:
                 categories:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetCategoriesReply_Category'
+                        $ref: '#/components/schemas/api.v1.GetCategoriesReply_Category'
                     description: 分类列表
-        bayes.v1.GetCategoriesReply_Category:
+        api.v1.GetCategoriesReply_Category:
             type: object
             properties:
                 id:
@@ -1479,7 +1559,7 @@ components:
                 weight:
                     type: integer
                     format: int32
-        bayes.v1.GetCommentsReply:
+        api.v1.GetCommentsReply:
             type: object
             properties:
                 total:
@@ -1488,8 +1568,8 @@ components:
                 comments:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetCommentsReply_Comment'
-        bayes.v1.GetCommentsReply_Comment:
+                        $ref: '#/components/schemas/api.v1.GetCommentsReply_Comment'
+        api.v1.GetCommentsReply_Comment:
             type: object
             properties:
                 uid:
@@ -1532,12 +1612,12 @@ components:
                 positions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Comment_Position'
+                        $ref: '#/components/schemas/api.v1.Comment_Position'
                     description: 该用户的持仓
                 replies:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Comment_Reply'
+                        $ref: '#/components/schemas/api.v1.Comment_Reply'
                     description: 回复列表
                 repliesTotalCount:
                     type: string
@@ -1545,7 +1625,141 @@ components:
                 id:
                     type: string
                     description: 该评论的id
-        bayes.v1.GetFollowMarketsReply:
+        api.v1.GetEventDetailReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 数据库 ID
+                eventId:
+                    type: string
+                    description: on-chain NegRisk eventId (bytes32 hex)
+                title:
+                    type: string
+                    description: 标题
+                outcomeSlotCount:
+                    type: integer
+                    description: outcome 数量
+                    format: int32
+                collateral:
+                    type: string
+                    description: 抵押品地址 (USDC)
+                status:
+                    type: integer
+                    description: 状态
+                    format: enum
+                metadataHash:
+                    type: string
+                    description: metadata hash
+                createdAt:
+                    type: integer
+                    description: 创建时间
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    description: 更新时间
+                    format: uint32
+                markets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.GetEventDetailReply_Market'
+                    description: 子市场列表
+            description: 获取 Event 详情响应
+        api.v1.GetEventDetailReply_Market:
+            type: object
+            properties:
+                address:
+                    type: string
+                    description: 市场地址
+                name:
+                    type: string
+                    description: 市场名称
+                picUrl:
+                    type: string
+                    description: 市场图片
+                description:
+                    type: string
+                    description: 市场描述
+                status:
+                    type: integer
+                    description: 市场状态
+                    format: uint32
+                participantsCount:
+                    type: integer
+                    description: 参与者数量
+                    format: uint32
+                volume:
+                    type: string
+                    description: 交易量
+                decimal:
+                    type: integer
+                    description: 精度
+                    format: uint32
+                createdAt:
+                    type: integer
+                    description: 创建时间
+                    format: uint32
+                deadline:
+                    type: integer
+                    description: 截止时间
+                    format: uint32
+                result:
+                    type: string
+                    description: 结果
+                conditionId:
+                    type: string
+                    description: CTF conditionId
+                questionId:
+                    type: string
+                    description: CTF questionId
+                options:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.Market_Option'
+                    description: 选项列表
+        api.v1.GetEventsReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    description: 总数量
+                    format: uint32
+                events:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.GetEventsReply_EventSummary'
+                    description: Event 列表
+            description: 获取 Event 列表响应
+        api.v1.GetEventsReply_EventSummary:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 数据库 ID
+                eventId:
+                    type: string
+                    description: on-chain eventId
+                title:
+                    type: string
+                    description: 标题
+                outcomeSlotCount:
+                    type: integer
+                    description: outcome 数量
+                    format: int32
+                status:
+                    type: integer
+                    description: 状态
+                    format: enum
+                createdAt:
+                    type: integer
+                    description: 创建时间
+                    format: uint32
+                markets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.EventSummary_Market'
+                    description: 子市场列表
+        api.v1.GetFollowMarketsReply:
             type: object
             properties:
                 total:
@@ -1555,9 +1769,9 @@ components:
                 marketList:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetFollowMarketsReply_MarketInfo'
+                        $ref: '#/components/schemas/api.v1.GetFollowMarketsReply_MarketInfo'
                     description: 市场列表
-        bayes.v1.GetFollowMarketsReply_MarketInfo:
+        api.v1.GetFollowMarketsReply_MarketInfo:
             type: object
             properties:
                 marketAddress:
@@ -1583,7 +1797,7 @@ components:
                     type: integer
                     description: '基础代币类型 1: points 2: usdc'
                     format: enum
-        bayes.v1.GetHoldingPositionsMarketReply:
+        api.v1.GetHoldingPositionsMarketReply:
             type: object
             properties:
                 total:
@@ -1595,9 +1809,9 @@ components:
                 markets:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetHoldingPositionsMarketReply_Market'
+                        $ref: '#/components/schemas/api.v1.GetHoldingPositionsMarketReply_Market'
                     description: 市场列表
-        bayes.v1.GetHoldingPositionsMarketReply_Market:
+        api.v1.GetHoldingPositionsMarketReply_Market:
             type: object
             properties:
                 name:
@@ -1633,17 +1847,17 @@ components:
                 positions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Market_Position'
+                        $ref: '#/components/schemas/api.v1.Market_Position'
                     description: 用户该市场具体持仓
-        bayes.v1.GetHotMarketsReply:
+        api.v1.GetHotMarketsReply:
             type: object
             properties:
                 marketList:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetHotMarketsReply_MarketInfo'
+                        $ref: '#/components/schemas/api.v1.GetHotMarketsReply_MarketInfo'
                     description: 市场列表
-        bayes.v1.GetHotMarketsReply_MarketInfo:
+        api.v1.GetHotMarketsReply_MarketInfo:
             type: object
             properties:
                 marketAddress:
@@ -1666,7 +1880,7 @@ components:
                     type: integer
                     description: '基础代币类型 1: points 2: usdc'
                     format: enum
-        bayes.v1.GetInviteUserListReply:
+        api.v1.GetInviteUserListReply:
             type: object
             properties:
                 total:
@@ -1675,12 +1889,12 @@ components:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetInviteUserListReply_User'
+                        $ref: '#/components/schemas/api.v1.GetInviteUserListReply_User'
                 totalRewardPoints:
                     type: integer
                     description: 获取的总奖励积分
                     format: uint32
-        bayes.v1.GetInviteUserListReply_User:
+        api.v1.GetInviteUserListReply_User:
             type: object
             properties:
                 uid:
@@ -1703,7 +1917,7 @@ components:
                     type: integer
                     description: 提供的奖励积分
                     format: uint32
-        bayes.v1.GetLeaderboardResponse:
+        api.v1.GetLeaderboardResponse:
             type: object
             properties:
                 total:
@@ -1713,13 +1927,13 @@ components:
                 entries:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetLeaderboardResponse_Entry'
+                        $ref: '#/components/schemas/api.v1.GetLeaderboardResponse_Entry'
                     description: 排行榜列表
                 userOwnEntry:
                     allOf:
-                        - $ref: '#/components/schemas/bayes.v1.GetLeaderboardResponse_Entry'
+                        - $ref: '#/components/schemas/api.v1.GetLeaderboardResponse_Entry'
                     description: 自己的排名
-        bayes.v1.GetLeaderboardResponse_Entry:
+        api.v1.GetLeaderboardResponse_Entry:
             type: object
             properties:
                 uid:
@@ -1742,7 +1956,7 @@ components:
                     type: integer
                     description: 排名
                     format: uint32
-        bayes.v1.GetMarketDetailReply:
+        api.v1.GetMarketDetailReply:
             type: object
             properties:
                 marketAddress:
@@ -1791,7 +2005,7 @@ components:
                 optionList:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetMarketDetailReply_OptionInfo'
+                        $ref: '#/components/schemas/api.v1.GetMarketDetailReply_OptionInfo'
                     description: 条件代币列表
                 baseTokenType:
                     type: integer
@@ -1804,7 +2018,20 @@ components:
                     type: integer
                     description: 是否已结算
                     format: enum
-        bayes.v1.GetMarketDetailReply_OptionInfo:
+                eventId:
+                    type: string
+                    description: 'CTF: NegRisk Event ID'
+                conditionId:
+                    type: string
+                    description: 'CTF: conditionId (bytes32 hex)'
+                questionId:
+                    type: string
+                    description: 'CTF: questionId (bytes32 hex)'
+                outcomeSlotCount:
+                    type: integer
+                    description: 'CTF: outcome 数量'
+                    format: int32
+        api.v1.GetMarketDetailReply_OptionInfo:
             type: object
             properties:
                 optionAddress:
@@ -1829,7 +2056,10 @@ components:
                 description:
                     type: string
                     description: 描述
-        bayes.v1.GetMarketOptionPriceHistoryReply:
+                positionId:
+                    type: string
+                    description: ERC1155 position token ID
+        api.v1.GetMarketOptionPriceHistoryReply:
             type: object
             properties:
                 total:
@@ -1838,8 +2068,8 @@ components:
                 snapshots:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetMarketOptionPriceHistoryReply_OneSnapshot'
-        bayes.v1.GetMarketOptionPriceHistoryReply_OneSnapshot:
+                        $ref: '#/components/schemas/api.v1.GetMarketOptionPriceHistoryReply_OneSnapshot'
+        api.v1.GetMarketOptionPriceHistoryReply_OneSnapshot:
             type: object
             properties:
                 timestamp:
@@ -1848,8 +2078,8 @@ components:
                 tokenPrices:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.OneSnapshot_TokenPrice'
-        bayes.v1.GetMarketPostsReply:
+                        $ref: '#/components/schemas/api.v1.OneSnapshot_TokenPrice'
+        api.v1.GetMarketPostsReply:
             type: object
             properties:
                 total:
@@ -1859,9 +2089,9 @@ components:
                 posts:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetMarketPostsReply_Post'
+                        $ref: '#/components/schemas/api.v1.GetMarketPostsReply_Post'
                     description: 帖子列表
-        bayes.v1.GetMarketPostsReply_Post:
+        api.v1.GetMarketPostsReply_Post:
             type: object
             properties:
                 uuid:
@@ -1898,15 +2128,15 @@ components:
                     description: 是否点赞 1是2否
                     format: uint32
                 userInfo:
-                    $ref: '#/components/schemas/bayes.v1.Post_UserInfo'
+                    $ref: '#/components/schemas/api.v1.Post_UserInfo'
                 positions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Post_Position'
+                        $ref: '#/components/schemas/api.v1.Post_Position'
                 id:
                     type: string
                     description: 帖子ID 用于分页
-        bayes.v1.GetMarketTradesReply:
+        api.v1.GetMarketTradesReply:
             type: object
             properties:
                 total:
@@ -1916,8 +2146,8 @@ components:
                 orders:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetMarketTradesReply_Order'
-        bayes.v1.GetMarketTradesReply_Order:
+                        $ref: '#/components/schemas/api.v1.GetMarketTradesReply_Order'
+        api.v1.GetMarketTradesReply_Order:
             type: object
             properties:
                 uuid:
@@ -1949,8 +2179,8 @@ components:
                     type: string
                     description: 成交价格
                 option:
-                    $ref: '#/components/schemas/bayes.v1.Order_Option'
-        bayes.v1.GetMarketsReply:
+                    $ref: '#/components/schemas/api.v1.Order_Option'
+        api.v1.GetMarketsReply:
             type: object
             properties:
                 totalCount:
@@ -1960,9 +2190,9 @@ components:
                 markets:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetMarketsReply_Market'
+                        $ref: '#/components/schemas/api.v1.GetMarketsReply_Market'
                     description: 市场列表
-        bayes.v1.GetMarketsReply_Market:
+        api.v1.GetMarketsReply_Market:
             type: object
             properties:
                 marketAddress:
@@ -1999,11 +2229,11 @@ components:
                 options:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Market_Option'
+                        $ref: '#/components/schemas/api.v1.Market_Option'
                     description: 市场选项信息
                 post:
                     allOf:
-                        - $ref: '#/components/schemas/bayes.v1.Market_Post'
+                        - $ref: '#/components/schemas/api.v1.Market_Post'
                     description: 市场帖子信息
                 isFollowed:
                     type: integer
@@ -2020,7 +2250,10 @@ components:
                 result:
                     type: string
                     description: 结果选项地址
-        bayes.v1.GetPaymasterDataReply:
+                eventId:
+                    type: string
+                    description: 'CTF: NegRisk Event ID'
+        api.v1.GetPaymasterDataReply:
             type: object
             properties:
                 paymaster:
@@ -2035,19 +2268,19 @@ components:
                     type: string
                 callGasLimit:
                     type: string
-        bayes.v1.GetPaymasterDataRequest:
+        api.v1.GetPaymasterDataRequest:
             type: object
             properties:
                 userOperation:
-                    $ref: '#/components/schemas/bayes.v1.UserOperation'
-        bayes.v1.GetSectionsReply:
+                    $ref: '#/components/schemas/api.v1.UserOperation'
+        api.v1.GetSectionsReply:
             type: object
             properties:
                 sections:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetSectionsReply_Section'
-        bayes.v1.GetSectionsReply_Section:
+                        $ref: '#/components/schemas/api.v1.GetSectionsReply_Section'
+        api.v1.GetSectionsReply_Section:
             type: object
             properties:
                 color:
@@ -2065,8 +2298,8 @@ components:
                 predictions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Section_Prediction'
-        bayes.v1.GetTagsReply:
+                        $ref: '#/components/schemas/api.v1.Section_Prediction'
+        api.v1.GetTagsReply:
             type: object
             properties:
                 total:
@@ -2078,7 +2311,7 @@ components:
                     items:
                         type: string
                     description: 标签列表
-        bayes.v1.GetTasksReply:
+        api.v1.GetTasksReply:
             type: object
             properties:
                 total:
@@ -2087,11 +2320,11 @@ components:
                 tasks:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetTasksReply_Task'
+                        $ref: '#/components/schemas/api.v1.GetTasksReply_Task'
                 totalRewardPoints:
                     type: integer
                     format: uint32
-        bayes.v1.GetTasksReply_Task:
+        api.v1.GetTasksReply_Task:
             type: object
             properties:
                 taskUuid:
@@ -2138,7 +2371,7 @@ components:
                     type: integer
                     description: 交易上链状态 1成功 2失败 3执行中
                     format: uint32
-        bayes.v1.GetUserAssetHistoryReply:
+        api.v1.GetUserAssetHistoryReply:
             type: object
             properties:
                 total:
@@ -2147,7 +2380,7 @@ components:
                 snapshots:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetUserAssetHistoryReply_OneSnapshot'
+                        $ref: '#/components/schemas/api.v1.GetUserAssetHistoryReply_OneSnapshot'
                 baseTokenType:
                     type: integer
                     format: enum
@@ -2155,7 +2388,7 @@ components:
                     type: integer
                     description: 精度
                     format: uint32
-        bayes.v1.GetUserAssetHistoryReply_OneSnapshot:
+        api.v1.GetUserAssetHistoryReply_OneSnapshot:
             type: object
             properties:
                 value:
@@ -2173,7 +2406,7 @@ components:
                 timestamp:
                     type: string
                     description: 时间戳
-        bayes.v1.GetUserAssetInfoReply:
+        api.v1.GetUserAssetInfoReply:
             type: object
             properties:
                 value:
@@ -2199,7 +2432,7 @@ components:
                     type: integer
                     description: pnl排名
                     format: uint32
-        bayes.v1.GetUserBaseInfoReply:
+        api.v1.GetUserBaseInfoReply:
             type: object
             properties:
                 uid:
@@ -2264,7 +2497,7 @@ components:
                     type: integer
                     description: 邀请时间
                     format: uint32
-        bayes.v1.GetUserNotificationsReply:
+        api.v1.GetUserNotificationsReply:
             type: object
             properties:
                 total:
@@ -2273,9 +2506,9 @@ components:
                 notifications:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetUserNotificationsReply_Notification'
+                        $ref: '#/components/schemas/api.v1.GetUserNotificationsReply_Notification'
             description: 获取用户的通知列表 响应
-        bayes.v1.GetUserNotificationsReply_Notification:
+        api.v1.GetUserNotificationsReply_Notification:
             type: object
             properties:
                 uid:
@@ -2306,7 +2539,7 @@ components:
                     type: integer
                     description: 基础代币类型
                     format: enum
-        bayes.v1.GetUserPositionsReply:
+        api.v1.GetUserPositionsReply:
             type: object
             properties:
                 total:
@@ -2315,9 +2548,9 @@ components:
                 positions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetUserPositionsReply_Position'
+                        $ref: '#/components/schemas/api.v1.GetUserPositionsReply_Position'
                     description: 持仓列表
-        bayes.v1.GetUserPositionsReply_Position:
+        api.v1.GetUserPositionsReply_Position:
             type: object
             properties:
                 marketAddress:
@@ -2387,7 +2620,7 @@ components:
                     type: integer
                     description: 非获胜选项 是否点击了领取 1是2否
                     format: uint32
-        bayes.v1.GetUserTradesReply:
+        api.v1.GetUserTradesReply:
             type: object
             properties:
                 total:
@@ -2396,8 +2629,8 @@ components:
                 orders:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetUserTradesReply_Order'
-        bayes.v1.GetUserTradesReply_Order:
+                        $ref: '#/components/schemas/api.v1.GetUserTradesReply_Order'
+        api.v1.GetUserTradesReply_Order:
             type: object
             properties:
                 uuid:
@@ -2423,12 +2656,12 @@ components:
                     type: string
                     description: 成交价格
                 option:
-                    $ref: '#/components/schemas/bayes.v1.Order_Option'
+                    $ref: '#/components/schemas/api.v1.Order_Option'
                 baseTokenType:
                     type: integer
                     description: '基础代币类型 1: points 2: usdc'
                     format: enum
-        bayes.v1.GetUserTransactionsReply:
+        api.v1.GetUserTransactionsReply:
             type: object
             properties:
                 total:
@@ -2437,8 +2670,8 @@ components:
                 transactions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.GetUserTransactionsReply_Transaction'
-        bayes.v1.GetUserTransactionsReply_Transaction:
+                        $ref: '#/components/schemas/api.v1.GetUserTransactionsReply_Transaction'
+        api.v1.GetUserTransactionsReply_Transaction:
             type: object
             properties:
                 uid:
@@ -2480,10 +2713,10 @@ components:
                 txHash:
                     type: string
                     description: 交易hash
-        bayes.v1.LikeContentReply:
+        api.v1.LikeContentReply:
             type: object
             properties: {}
-        bayes.v1.LikeContentRequest:
+        api.v1.LikeContentRequest:
             type: object
             properties:
                 contentUuid:
@@ -2493,7 +2726,7 @@ components:
                     type: integer
                     description: '内容类型 1: post 2: 评论'
                     format: uint32
-        bayes.v1.LoginReply:
+        api.v1.LoginReply:
             type: object
             properties:
                 uid:
@@ -2505,7 +2738,7 @@ components:
             description: |-
                 登录响应
                  返回用户uid
-        bayes.v1.LoginRequest:
+        api.v1.LoginRequest:
             type: object
             properties:
                 address:
@@ -2523,10 +2756,10 @@ components:
             description: |-
                 登录请求
                  其他 eoa_address issuser email 后端通过didtoken 从 magic查询
-        bayes.v1.MarkNotificationsAsReadReply:
+        api.v1.MarkNotificationsAsReadReply:
             type: object
             properties: {}
-        bayes.v1.MarkNotificationsAsReadRequest:
+        api.v1.MarkNotificationsAsReadRequest:
             type: object
             properties:
                 notificationUuids:
@@ -2534,29 +2767,39 @@ components:
                     items:
                         type: string
                     description: 通知uuid列表
-        bayes.v1.Market_Option:
+        api.v1.Market_Option:
             type: object
             properties:
-                tokenAddress:
+                address:
                     type: string
                     description: 选项合约地址
-                tokenName:
+                name:
                     type: string
-                    description: 选项合约名称
-                tokenPicUrl:
+                    description: 选项名称
+                symbol:
                     type: string
-                    description: 选项合约图片key
-                tokenPrice:
+                    description: 选项符号
+                picUrl:
                     type: string
-                    description: 选项合约价格
+                    description: 选项图片
                 decimal:
                     type: integer
                     description: 精度
                     format: uint32
-                tokenDescription:
+                index:
+                    type: integer
+                    description: 选项序号
+                    format: uint32
+                price:
                     type: string
-                    description: 选项合约描述
-        bayes.v1.Market_Position:
+                    description: 当前价格
+                description:
+                    type: string
+                    description: 选项描述
+                positionId:
+                    type: string
+                    description: ERC1155 position token ID
+        api.v1.Market_Position:
             type: object
             properties:
                 tokenAddress:
@@ -2581,7 +2824,7 @@ components:
                 description:
                     type: string
                     description: 代币描述
-        bayes.v1.Market_Post:
+        api.v1.Market_Post:
             type: object
             properties:
                 uuid:
@@ -2616,7 +2859,7 @@ components:
                 positions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.Post_Position'
+                        $ref: '#/components/schemas/api.v1.Post_Position'
                     description: 用户持仓信息
                 isLike:
                     type: integer
@@ -2625,7 +2868,7 @@ components:
                 id:
                     type: string
                     description: 帖子ID 用于分页
-        bayes.v1.OneSnapshot_TokenPrice:
+        api.v1.OneSnapshot_TokenPrice:
             type: object
             properties:
                 tokenAddress:
@@ -2638,7 +2881,7 @@ components:
                     type: integer
                     description: 精度
                     format: uint32
-        bayes.v1.Order_Option:
+        api.v1.Order_Option:
             type: object
             properties:
                 address:
@@ -2676,7 +2919,7 @@ components:
                     type: integer
                     description: 市场参与者数量
                     format: uint32
-        bayes.v1.PlaceOrderReply:
+        api.v1.PlaceOrderReply:
             type: object
             properties:
                 opHash:
@@ -2690,7 +2933,7 @@ components:
             description: |-
                 下单响应
                  返回交易提交后的操作哈希
-        bayes.v1.PlaceOrderRequest:
+        api.v1.PlaceOrderRequest:
             type: object
             properties:
                 marketAddress:
@@ -2728,14 +2971,14 @@ components:
                     description: 交易截止时间
                 userOperation:
                     allOf:
-                        - $ref: '#/components/schemas/bayes.v1.UserOperation'
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
                     description: |-
                         用户操作信息
                          包含交易所需的签名及其他链上操作参数
             description: |-
                 下单请求
                  用于在期权市场上进行交易下单
-        bayes.v1.Post_Position:
+        api.v1.Post_Position:
             type: object
             properties:
                 tokenAddress:
@@ -2757,7 +3000,7 @@ components:
                 tokenDescription:
                     type: string
                     description: 代币描述
-        bayes.v1.Post_UserInfo:
+        api.v1.Post_UserInfo:
             type: object
             properties:
                 uid:
@@ -2766,12 +3009,12 @@ components:
                     type: string
                 userAvatarUrl:
                     type: string
-        bayes.v1.PublishCommentReply:
+        api.v1.PublishCommentReply:
             type: object
             properties:
                 commentUuid:
                     type: string
-        bayes.v1.PublishCommentRequest:
+        api.v1.PublishCommentRequest:
             type: object
             properties:
                 postUuid:
@@ -2785,12 +3028,12 @@ components:
                 content:
                     type: string
                     description: 内容
-        bayes.v1.PublishPostReply:
+        api.v1.PublishPostReply:
             type: object
             properties:
                 postUuid:
                     type: string
-        bayes.v1.PublishPostRequest:
+        api.v1.PublishPostRequest:
             type: object
             properties:
                 marketAddress:
@@ -2802,7 +3045,7 @@ components:
                 content:
                     type: string
                     description: 内容
-        bayes.v1.SearchReply:
+        api.v1.SearchReply:
             type: object
             properties:
                 userTotal:
@@ -2811,15 +3054,15 @@ components:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.SearchReply_User'
+                        $ref: '#/components/schemas/api.v1.SearchReply_User'
                 marketTotal:
                     type: integer
                     format: uint32
                 markets:
                     type: array
                     items:
-                        $ref: '#/components/schemas/bayes.v1.SearchReply_Market'
-        bayes.v1.SearchReply_Market:
+                        $ref: '#/components/schemas/api.v1.SearchReply_Market'
+        api.v1.SearchReply_Market:
             type: object
             properties:
                 address:
@@ -2852,7 +3095,7 @@ components:
                     type: integer
                     description: '基础代币类型 1: points 2: usdc'
                     format: enum
-        bayes.v1.SearchReply_User:
+        api.v1.SearchReply_User:
             type: object
             properties:
                 uid:
@@ -2873,7 +3116,7 @@ components:
                 eoaAddress:
                     type: string
                     description: 用户eoa地址
-        bayes.v1.Section_Prediction:
+        api.v1.Section_Prediction:
             type: object
             properties:
                 prediction:
@@ -2883,11 +3126,11 @@ components:
                     format: int32
                 id:
                     type: string
-        bayes.v1.SetAvatarReply:
+        api.v1.SetAvatarReply:
             type: object
             properties: {}
             description: 设置头像响应
-        bayes.v1.SetAvatarRequest:
+        api.v1.SetAvatarRequest:
             type: object
             properties:
                 avatarUrl:
@@ -2898,11 +3141,11 @@ components:
             description: |-
                 设置头像请求
                  用于更新用户的个人头像
-        bayes.v1.SetDescriptionReply:
+        api.v1.SetDescriptionReply:
             type: object
             properties: {}
             description: 设置描述响应
-        bayes.v1.SetDescriptionRequest:
+        api.v1.SetDescriptionRequest:
             type: object
             properties:
                 description:
@@ -2913,11 +3156,11 @@ components:
             description: |-
                 设置描述请求
                  用于更新用户的个人简介或描述
-        bayes.v1.SetNameReply:
+        api.v1.SetNameReply:
             type: object
             properties: {}
             description: 设置用户名响应
-        bayes.v1.SetNameRequest:
+        api.v1.SetNameRequest:
             type: object
             properties:
                 name:
@@ -2928,16 +3171,16 @@ components:
                 inviteByCode:
                     type: string
             description: 设置用户名和邀请码请求
-        bayes.v1.ShareTaskDoneReply:
+        api.v1.ShareTaskDoneReply:
             type: object
             properties: {}
-        bayes.v1.ShareTaskDoneRequest:
+        api.v1.ShareTaskDoneRequest:
             type: object
             properties: {}
-        bayes.v1.SubscribeReply:
+        api.v1.SubscribeReply:
             type: object
             properties: {}
-        bayes.v1.SubscribeRequest:
+        api.v1.SubscribeRequest:
             type: object
             properties:
                 connectionId:
@@ -2948,7 +3191,7 @@ components:
                     items:
                         type: string
                     description: 必填 订阅的topic名
-        bayes.v1.TransferBaseTokenReply:
+        api.v1.TransferBaseTokenReply:
             type: object
             properties:
                 opHash:
@@ -2956,7 +3199,7 @@ components:
                     description: |-
                         操作哈希
                          可用于在链上查询交易状态
-        bayes.v1.TransferBaseTokenRequest:
+        api.v1.TransferBaseTokenRequest:
             type: object
             properties:
                 toAddress:
@@ -2971,9 +3214,9 @@ components:
                     description: 转账数量
                 userOperation:
                     allOf:
-                        - $ref: '#/components/schemas/bayes.v1.UserOperation'
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
                     description: 用户操作信息
-        bayes.v1.TranslateReply:
+        api.v1.TranslateReply:
             type: object
             properties:
                 translatedText:
@@ -2992,7 +3235,7 @@ components:
                     type: integer
                     description: 使用的token数量
                     format: uint32
-        bayes.v1.TranslateRequest:
+        api.v1.TranslateRequest:
             type: object
             properties:
                 text:
@@ -3004,11 +3247,11 @@ components:
                 targetLang:
                     type: string
                     description: 目标语言
-        bayes.v1.UnfollowMarketReply:
+        api.v1.UnfollowMarketReply:
             type: object
             properties: {}
             description: 取消关注市场响应
-        bayes.v1.UnfollowMarketRequest:
+        api.v1.UnfollowMarketRequest:
             type: object
             properties:
                 marketAddress:
@@ -3019,18 +3262,18 @@ components:
             description: |-
                 取消关注市场请求
                  用户取消关注特定的市场
-        bayes.v1.UnfollowUserReply:
+        api.v1.UnfollowUserReply:
             type: object
             properties: {}
-        bayes.v1.UnfollowUserRequest:
+        api.v1.UnfollowUserRequest:
             type: object
             properties:
                 unfollowUid:
                     type: string
-        bayes.v1.UnlikeContentReply:
+        api.v1.UnlikeContentReply:
             type: object
             properties: {}
-        bayes.v1.UnlikeContentRequest:
+        api.v1.UnlikeContentRequest:
             type: object
             properties:
                 contentUuid:
@@ -3040,10 +3283,10 @@ components:
                     type: integer
                     description: '内容类型 1: post 2: 评论'
                     format: uint32
-        bayes.v1.UnsubscribeReply:
+        api.v1.UnsubscribeReply:
             type: object
             properties: {}
-        bayes.v1.UnsubscribeRequest:
+        api.v1.UnsubscribeRequest:
             type: object
             properties:
                 connectionId:
@@ -3054,7 +3297,7 @@ components:
                     items:
                         type: string
                     description: 必填 取消订阅的topic名
-        bayes.v1.UploadFileReply:
+        api.v1.UploadFileReply:
             type: object
             properties:
                 fileKey:
@@ -3062,7 +3305,7 @@ components:
                     description: |-
                         图片URL
                          上传成功后图片的访问地址
-        bayes.v1.UploadFileRequest:
+        api.v1.UploadFileRequest:
             type: object
             properties:
                 file:
@@ -3078,7 +3321,7 @@ components:
             description: |-
                 上传图片响应
                  返回可访问的图片URL
-        bayes.v1.UserOperation:
+        api.v1.UserOperation:
             type: object
             properties:
                 sender:
@@ -3165,8 +3408,8 @@ components:
                 用户操作信息 (UserOperation 0.7)
                  包含区块链交易所需的完整参数集
 tags:
-    - name: BayesHttp
+    - name: HttpApi
       description: |-
-        BayesHttp 服务
+        HttpApi 服务
          市场的API接口，包括用户管理、市场交易、基础工具等功能
-    - name: BayesSse
+    - name: SseApi

@@ -1,4 +1,4 @@
-package bayes_http
+package http_api
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	marketcenterpb "market-proto/proto/market-service/marketcenter/v1"
 	usercenterpb "market-proto/proto/market-service/usercenter/v1"
 
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 
 	"github.com/go-kratos/kratos/v2/errors"
 )
 
-func (s *BayesHttpService) GetHotMarkets(ctx context.Context, req *bayespb.GetHotMarketsRequest) (*bayespb.GetHotMarketsReply, error) {
+func (s *HttpApiService) GetHotMarkets(ctx context.Context, req *apipb.GetHotMarketsRequest) (*apipb.GetHotMarketsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	hotMarketsRsp, err := s.data.RpcClient.MarketcenterClient.GetHotMarkets(ctx, &marketcenterpb.GetHotMarketsRequest{
 		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
@@ -22,24 +22,24 @@ func (s *BayesHttpService) GetHotMarkets(ctx context.Context, req *bayespb.GetHo
 		c.Log.Errorf("rpc GetHotMarkets failed, err: [%+v]", err)
 		return nil, err
 	}
-	marketList := make([]*bayespb.GetHotMarketsReply_MarketInfo, 0)
+	marketList := make([]*apipb.GetHotMarketsReply_MarketInfo, 0)
 	for _, market := range hotMarketsRsp.Markets {
-		marketInfo := &bayespb.GetHotMarketsReply_MarketInfo{
+		marketInfo := &apipb.GetHotMarketsReply_MarketInfo{
 			MarketName:        market.Name,
 			MarketAddress:     market.Address,
 			MarketPicUrl:      market.PicUrl,
 			MarketDescription: market.Description,
 			MarketStatus:      market.Status,
-			BaseTokenType:     bayespb.BaseTokenType(market.BaseTokenType),
+			BaseTokenType:     apipb.BaseTokenType(market.BaseTokenType),
 		}
 		marketList = append(marketList, marketInfo)
 	}
-	return &bayespb.GetHotMarketsReply{
+	return &apipb.GetHotMarketsReply{
 		MarketList: marketList,
 	}, nil
 }
 
-func (s *BayesHttpService) GetFollowMarkets(ctx context.Context, req *bayespb.GetFollowMarketsRequest) (*bayespb.GetFollowMarketsReply, error) {
+func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFollowMarketsRequest) (*apipb.GetFollowMarketsReply, error) {
 
 	c := util.NewBaseCtx(ctx, s.logger)
 
@@ -57,26 +57,26 @@ func (s *BayesHttpService) GetFollowMarkets(ctx context.Context, req *bayespb.Ge
 		c.Log.Errorf("rpc GetFollowedMarkets failed, err: [%+v]", err)
 		return nil, err
 	}
-	marketList := make([]*bayespb.GetFollowMarketsReply_MarketInfo, 0)
+	marketList := make([]*apipb.GetFollowMarketsReply_MarketInfo, 0)
 	for _, market := range followedMarketsRsp.Markets {
-		marketInfo := &bayespb.GetFollowMarketsReply_MarketInfo{
+		marketInfo := &apipb.GetFollowMarketsReply_MarketInfo{
 			MarketAddress:     market.Address,
 			MarketName:        market.Name,
 			MarketPicUrl:      market.PicUrl,
 			MarketDescription: market.Description,
 			MarketStatus:      market.Status,
 			Deadline:          market.Deadline,
-			BaseTokenType:     bayespb.BaseTokenType(market.BaseTokenType),
+			BaseTokenType:     apipb.BaseTokenType(market.BaseTokenType),
 		}
 		marketList = append(marketList, marketInfo)
 	}
-	return &bayespb.GetFollowMarketsReply{
+	return &apipb.GetFollowMarketsReply{
 		Total:      followedMarketsRsp.Total,
 		MarketList: marketList,
 	}, nil
 }
 
-func (s *BayesHttpService) GetHoldingPositionsMarket(ctx context.Context, req *bayespb.GetHoldingPositionsMarketRequest) (*bayespb.GetHoldingPositionsMarketReply, error) {
+func (s *HttpApiService) GetHoldingPositionsMarket(ctx context.Context, req *apipb.GetHoldingPositionsMarketRequest) (*apipb.GetHoldingPositionsMarketReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	holdingPositionsMarketRsp, err := s.data.RpcClient.MarketcenterClient.GetHoldingPositionsMarkets(ctx, &marketcenterpb.GetHoldingPositionsMarketsRequest{
 		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
@@ -88,9 +88,9 @@ func (s *BayesHttpService) GetHoldingPositionsMarket(ctx context.Context, req *b
 		c.Log.Errorf("rpc GetHoldingPositionsMarket failed, err: [%+v]", err)
 		return nil, err
 	}
-	marketList := make([]*bayespb.GetHoldingPositionsMarketReply_Market, 0)
+	marketList := make([]*apipb.GetHoldingPositionsMarketReply_Market, 0)
 	for _, market := range holdingPositionsMarketRsp.Markets {
-		marketInfo := &bayespb.GetHoldingPositionsMarketReply_Market{
+		marketInfo := &apipb.GetHoldingPositionsMarketReply_Market{
 			Name:                    market.Name,
 			Address:                 market.Address,
 			PicUrl:                  market.PicUrl,
@@ -98,12 +98,12 @@ func (s *BayesHttpService) GetHoldingPositionsMarket(ctx context.Context, req *b
 			Status:                  market.Status,
 			MarketVolume:            market.MarketVolume,
 			MarketParticipantsCount: market.MarketParticipantsCount,
-			BaseTokenType:           bayespb.BaseTokenType(market.BaseTokenType),
+			BaseTokenType:           apipb.BaseTokenType(market.BaseTokenType),
 			UserMarketTotalValue:    market.UserMarketTotalValue,
-			Positions: func() []*bayespb.GetHoldingPositionsMarketReply_Market_Position {
-				positions := make([]*bayespb.GetHoldingPositionsMarketReply_Market_Position, 0)
+			Positions: func() []*apipb.GetHoldingPositionsMarketReply_Market_Position {
+				positions := make([]*apipb.GetHoldingPositionsMarketReply_Market_Position, 0)
 				for _, position := range market.Positions {
-					positions = append(positions, &bayespb.GetHoldingPositionsMarketReply_Market_Position{
+					positions = append(positions, &apipb.GetHoldingPositionsMarketReply_Market_Position{
 						TokenAddress: position.TokenAddress,
 						TokenName:    position.TokenName,
 						Description:  position.TokenDescription,
@@ -118,14 +118,14 @@ func (s *BayesHttpService) GetHoldingPositionsMarket(ctx context.Context, req *b
 		}
 		marketList = append(marketList, marketInfo)
 	}
-	return &bayespb.GetHoldingPositionsMarketReply{
+	return &apipb.GetHoldingPositionsMarketReply{
 		Total:      holdingPositionsMarketRsp.Total,
 		TotalValue: holdingPositionsMarketRsp.TotalValue,
 		Markets:    marketList,
 	}, nil
 }
 
-func (s *BayesHttpService) FollowMarket(ctx context.Context, req *bayespb.FollowMarketRequest) (*bayespb.FollowMarketReply, error) {
+func (s *HttpApiService) FollowMarket(ctx context.Context, req *apipb.FollowMarketRequest) (*apipb.FollowMarketReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -142,10 +142,10 @@ func (s *BayesHttpService) FollowMarket(ctx context.Context, req *bayespb.Follow
 		return nil, err
 	}
 
-	return &bayespb.FollowMarketReply{}, nil
+	return &apipb.FollowMarketReply{}, nil
 }
 
-func (s *BayesHttpService) UnfollowMarket(ctx context.Context, req *bayespb.UnfollowMarketRequest) (*bayespb.UnfollowMarketReply, error) {
+func (s *HttpApiService) UnfollowMarket(ctx context.Context, req *apipb.UnfollowMarketRequest) (*apipb.UnfollowMarketReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -162,10 +162,10 @@ func (s *BayesHttpService) UnfollowMarket(ctx context.Context, req *bayespb.Unfo
 		return nil, err
 	}
 
-	return &bayespb.UnfollowMarketReply{}, nil
+	return &apipb.UnfollowMarketReply{}, nil
 }
 
-func (s *BayesHttpService) GetPaymasterData(ctx context.Context, req *bayespb.GetPaymasterDataRequest) (*bayespb.GetPaymasterDataReply, error) {
+func (s *HttpApiService) GetPaymasterData(ctx context.Context, req *apipb.GetPaymasterDataRequest) (*apipb.GetPaymasterDataReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -196,7 +196,7 @@ func (s *BayesHttpService) GetPaymasterData(ctx context.Context, req *bayespb.Ge
 		return nil, err
 	}
 
-	return &bayespb.GetPaymasterDataReply{
+	return &apipb.GetPaymasterDataReply{
 		Paymaster:                     paymasterDataRsp.Paymaster,
 		PaymasterData:                 paymasterDataRsp.PaymasterData,
 		PaymasterVerificationGasLimit: paymasterDataRsp.PaymasterVerificationGasLimit,
@@ -207,7 +207,7 @@ func (s *BayesHttpService) GetPaymasterData(ctx context.Context, req *bayespb.Ge
 }
 
 // TODO 限流 用户 + 接口维度
-func (s *BayesHttpService) PlaceOrder(ctx context.Context, req *bayespb.PlaceOrderRequest) (*bayespb.PlaceOrderReply, error) {
+func (s *HttpApiService) PlaceOrder(ctx context.Context, req *apipb.PlaceOrderRequest) (*apipb.PlaceOrderReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -247,13 +247,13 @@ func (s *BayesHttpService) PlaceOrder(ctx context.Context, req *bayespb.PlaceOrd
 		return nil, err
 	}
 
-	return &bayespb.PlaceOrderReply{
+	return &apipb.PlaceOrderReply{
 		OpHash:    placeOrderRsp.OpHash,
 		OrderUuid: placeOrderRsp.OrderUuid,
 	}, nil
 }
 
-func (s *BayesHttpService) ClaimMarketResult(ctx context.Context, req *bayespb.ClaimMarketResultRequest) (*bayespb.ClaimMarketResultReply, error) {
+func (s *HttpApiService) ClaimMarketResult(ctx context.Context, req *apipb.ClaimMarketResultRequest) (*apipb.ClaimMarketResultReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -288,12 +288,12 @@ func (s *BayesHttpService) ClaimMarketResult(ctx context.Context, req *bayespb.C
 		return nil, err
 	}
 
-	return &bayespb.ClaimMarketResultReply{
+	return &apipb.ClaimMarketResultReply{
 		OpHash: claimMarketResultRsp.OpHash,
 	}, nil
 }
 
-func (s *BayesHttpService) TransferBaseToken(ctx context.Context, req *bayespb.TransferBaseTokenRequest) (*bayespb.TransferBaseTokenReply, error) {
+func (s *HttpApiService) TransferBaseToken(ctx context.Context, req *apipb.TransferBaseTokenRequest) (*apipb.TransferBaseTokenReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -329,16 +329,16 @@ func (s *BayesHttpService) TransferBaseToken(ctx context.Context, req *bayespb.T
 		return nil, err
 	}
 
-	return &bayespb.TransferBaseTokenReply{
+	return &apipb.TransferBaseTokenReply{
 		OpHash: TransferBaseTokenRsp.OpHash,
 	}, nil
 }
 
-func (s *BayesHttpService) GetMarketTrades(ctx context.Context, req *bayespb.GetMarketTradesRequest) (*bayespb.GetMarketTradesReply, error) {
+func (s *HttpApiService) GetMarketTrades(ctx context.Context, req *apipb.GetMarketTradesRequest) (*apipb.GetMarketTradesReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
-	rsp := &bayespb.GetMarketTradesReply{
+	rsp := &apipb.GetMarketTradesReply{
 		Total:  0,
-		Orders: make([]*bayespb.GetMarketTradesReply_Order, 0),
+		Orders: make([]*apipb.GetMarketTradesReply_Order, 0),
 	}
 
 	GetMarketTradesRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketTrades(ctx, &marketcenterpb.GetMarketTradesRequest{
@@ -372,7 +372,7 @@ func (s *BayesHttpService) GetMarketTrades(ctx context.Context, req *bayespb.Get
 	}
 
 	for _, order := range GetMarketTradesRsp.Orders {
-		orderInfo := &bayespb.GetMarketTradesReply_Order{
+		orderInfo := &apipb.GetMarketTradesReply_Order{
 			Uuid:          order.Uuid,
 			Uid:           order.Uid,
 			Side:          order.Side,
@@ -382,7 +382,7 @@ func (s *BayesHttpService) GetMarketTrades(ctx context.Context, req *bayespb.Get
 			DealPrice:     order.DealPrice,
 		}
 		if order.Option != nil {
-			orderInfo.Option = &bayespb.GetMarketTradesReply_Order_Option{
+			orderInfo.Option = &apipb.GetMarketTradesReply_Order_Option{
 				Address:     order.Option.Address,
 				Name:        order.Option.Name,
 				Description: order.Option.Description,
@@ -403,7 +403,7 @@ func (s *BayesHttpService) GetMarketTrades(ctx context.Context, req *bayespb.Get
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetUserTrades(ctx context.Context, req *bayespb.GetUserTradesRequest) (*bayespb.GetUserTradesReply, error) {
+func (s *HttpApiService) GetUserTrades(ctx context.Context, req *apipb.GetUserTradesRequest) (*apipb.GetUserTradesReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := req.Uid
 	if uid == "" {
@@ -421,9 +421,9 @@ func (s *BayesHttpService) GetUserTrades(ctx context.Context, req *bayespb.GetUs
 		return nil, err
 	}
 
-	rspTrades := make([]*bayespb.GetUserTradesReply_Order, 0)
+	rspTrades := make([]*apipb.GetUserTradesReply_Order, 0)
 	for _, trade := range GetUserTradesRsp.Orders {
-		one := &bayespb.GetUserTradesReply_Order{
+		one := &apipb.GetUserTradesReply_Order{
 			Uuid:          trade.Uuid,
 			Uid:           trade.Uid,
 			Side:          trade.Side,
@@ -431,10 +431,10 @@ func (s *BayesHttpService) GetUserTrades(ctx context.Context, req *bayespb.GetUs
 			ReceiveAmount: trade.ReceiveAmount,
 			Timestamp:     trade.Timestamp,
 			DealPrice:     trade.DealPrice,
-			BaseTokenType: bayespb.BaseTokenType(trade.BaseTokenType),
+			BaseTokenType: apipb.BaseTokenType(trade.BaseTokenType),
 		}
 		if trade.Option != nil {
-			one.Option = &bayespb.GetUserTradesReply_Order_Option{
+			one.Option = &apipb.GetUserTradesReply_Order_Option{
 				Address:           trade.Option.Address,
 				Name:              trade.Option.Name,
 				Description:       trade.Option.Description,
@@ -451,13 +451,13 @@ func (s *BayesHttpService) GetUserTrades(ctx context.Context, req *bayespb.GetUs
 		rspTrades = append(rspTrades, one)
 	}
 
-	return &bayespb.GetUserTradesReply{
+	return &apipb.GetUserTradesReply{
 		Total:  GetUserTradesRsp.Total,
 		Orders: rspTrades,
 	}, nil
 }
 
-func (s *BayesHttpService) GetMarketDetail(ctx context.Context, req *bayespb.GetMarketDetailRequest) (*bayespb.GetMarketDetailReply, error) {
+func (s *HttpApiService) GetMarketDetail(ctx context.Context, req *apipb.GetMarketDetailRequest) (*apipb.GetMarketDetailReply, error) {
 
 	c := util.NewBaseCtx(ctx, s.logger)
 
@@ -474,7 +474,7 @@ func (s *BayesHttpService) GetMarketDetail(ctx context.Context, req *bayespb.Get
 		return nil, errors.NotFound("NOT_FOUND", "market not found")
 	}
 
-	return &bayespb.GetMarketDetailReply{
+	return &apipb.GetMarketDetailReply{
 		MarketAddress:       GetMarketDetailRsp.Address,
 		MarketName:          GetMarketDetailRsp.Name,
 		MarketPicUrl:        GetMarketDetailRsp.PicUrl,
@@ -486,15 +486,19 @@ func (s *BayesHttpService) GetMarketDetail(ctx context.Context, req *bayespb.Get
 		Rule:                GetMarketDetailRsp.Rules,
 		Deadline:            uint64(GetMarketDetailRsp.Deadline),
 		RuleFileKey:         GetMarketDetailRsp.RulesFileUrl,
-		MarketStatus:        bayespb.GetMarketDetailReply_MaketStatus(GetMarketDetailRsp.Status),
-		IsFollowed:          bayespb.IsFollowed(GetMarketDetailRsp.IsFollowed),
-		IsClaim:             bayespb.IsClaim(GetMarketDetailRsp.IsClaim),
-		BaseTokenType:       bayespb.BaseTokenType(GetMarketDetailRsp.BaseTokenType),
+		MarketStatus:        apipb.GetMarketDetailReply_MaketStatus(GetMarketDetailRsp.Status),
+		IsFollowed:          apipb.IsFollowed(GetMarketDetailRsp.IsFollowed),
+		IsClaim:             apipb.IsClaim(GetMarketDetailRsp.IsClaim),
+		BaseTokenType:       apipb.BaseTokenType(GetMarketDetailRsp.BaseTokenType),
 		BaseTokenAddress:    GetMarketDetailRsp.BaseTokenAddress,
-		OptionList: func() []*bayespb.GetMarketDetailReply_OptionInfo {
-			optionList := make([]*bayespb.GetMarketDetailReply_OptionInfo, 0)
+		EventId:             GetMarketDetailRsp.EventId,
+		ConditionId:         GetMarketDetailRsp.ConditionId,
+		QuestionId:          GetMarketDetailRsp.QuestionId,
+		OutcomeSlotCount:    GetMarketDetailRsp.OutcomeSlotCount,
+		OptionList: func() []*apipb.GetMarketDetailReply_OptionInfo {
+			optionList := make([]*apipb.GetMarketDetailReply_OptionInfo, 0)
 			for _, option := range GetMarketDetailRsp.Options {
-				optionList = append(optionList, &bayespb.GetMarketDetailReply_OptionInfo{
+				optionList = append(optionList, &apipb.GetMarketDetailReply_OptionInfo{
 					OptionAddress: option.Address,
 					OptionName:    option.Name,
 					OptionSymbol:  option.Symbol,
@@ -502,6 +506,7 @@ func (s *BayesHttpService) GetMarketDetail(ctx context.Context, req *bayespb.Get
 					Price:         option.Price,
 					Decimal:       option.Decimal,
 					Description:   option.Description,
+					PositionId:    option.PositionId,
 				})
 			}
 			return optionList
@@ -509,7 +514,7 @@ func (s *BayesHttpService) GetMarketDetail(ctx context.Context, req *bayespb.Get
 	}, nil
 }
 
-func (s *BayesHttpService) GetUserPositions(ctx context.Context, req *bayespb.GetUserPositionsRequest) (*bayespb.GetUserPositionsReply, error) {
+func (s *HttpApiService) GetUserPositions(ctx context.Context, req *apipb.GetUserPositionsRequest) (*apipb.GetUserPositionsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	uid := req.Uid
@@ -529,15 +534,15 @@ func (s *BayesHttpService) GetUserPositions(ctx context.Context, req *bayespb.Ge
 		c.Log.Errorf("rpc GetUserPositions failed, err: [%+v]", err)
 		return nil, err
 	}
-	rspPositions := make([]*bayespb.GetUserPositionsReply_Position, 0)
+	rspPositions := make([]*apipb.GetUserPositionsReply_Position, 0)
 	for _, position := range GetUserPositionsRsp.Positions {
-		rspPositions = append(rspPositions, &bayespb.GetUserPositionsReply_Position{
+		rspPositions = append(rspPositions, &apipb.GetUserPositionsReply_Position{
 			MarketAddress:     position.MarketAddress,
 			MarketName:        position.MarketName,
 			MarketDescription: position.MarketDescription,
 			MarketPicUrl:      position.MarketPicUrl,
 			OptionAddress:     position.OptionAddress,
-			BaseTokenType:     bayespb.BaseTokenType(position.BaseTokenType),
+			BaseTokenType:     apipb.BaseTokenType(position.BaseTokenType),
 			OptionName:        position.OptionName,
 			OptionDecimal:     position.OptionDecimal,
 			OptionSymbol:      position.OptionSymbol,
@@ -555,13 +560,13 @@ func (s *BayesHttpService) GetUserPositions(ctx context.Context, req *bayespb.Ge
 			IsClaimed:         position.IsClaimed,
 		})
 	}
-	return &bayespb.GetUserPositionsReply{
+	return &apipb.GetUserPositionsReply{
 		Total:     GetUserPositionsRsp.Total,
 		Positions: rspPositions,
 	}, nil
 }
 
-func (s *BayesHttpService) GetUserAssetHistory(ctx context.Context, req *bayespb.GetUserAssetHistoryRequest) (*bayespb.GetUserAssetHistoryReply, error) {
+func (s *HttpApiService) GetUserAssetHistory(ctx context.Context, req *apipb.GetUserAssetHistoryRequest) (*apipb.GetUserAssetHistoryReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	GetUserAssetHistoryRsp, err := s.data.RpcClient.MarketcenterClient.GetUserAssetHistory(ctx, &marketcenterpb.GetUserAssetHistoryRequest{
 		Uid:           req.Uid,
@@ -573,9 +578,9 @@ func (s *BayesHttpService) GetUserAssetHistory(ctx context.Context, req *bayespb
 		return nil, err
 	}
 
-	rspSnapshots := make([]*bayespb.GetUserAssetHistoryReply_OneSnapshot, 0)
+	rspSnapshots := make([]*apipb.GetUserAssetHistoryReply_OneSnapshot, 0)
 	for _, snapshot := range GetUserAssetHistoryRsp.Snapshots {
-		rspSnapshots = append(rspSnapshots, &bayespb.GetUserAssetHistoryReply_OneSnapshot{
+		rspSnapshots = append(rspSnapshots, &apipb.GetUserAssetHistoryReply_OneSnapshot{
 			Value:     snapshot.Value,
 			Balance:   snapshot.Balance,
 			Portfolio: snapshot.Portfolio,
@@ -583,14 +588,14 @@ func (s *BayesHttpService) GetUserAssetHistory(ctx context.Context, req *bayespb
 			Timestamp: snapshot.Timestamp,
 		})
 	}
-	return &bayespb.GetUserAssetHistoryReply{
+	return &apipb.GetUserAssetHistoryReply{
 		Total:         GetUserAssetHistoryRsp.Total,
 		Snapshots:     rspSnapshots,
-		BaseTokenType: bayespb.BaseTokenType(GetUserAssetHistoryRsp.BaseTokenType),
+		BaseTokenType: apipb.BaseTokenType(GetUserAssetHistoryRsp.BaseTokenType),
 		Decimal:       uint32(GetUserAssetHistoryRsp.Decimal),
 	}, nil
 }
-func (s *BayesHttpService) GetMarketOptionPriceHistory(ctx context.Context, req *bayespb.GetMarketOptionPriceHistoryRequest) (*bayespb.GetMarketOptionPriceHistoryReply, error) {
+func (s *HttpApiService) GetMarketOptionPriceHistory(ctx context.Context, req *apipb.GetMarketOptionPriceHistoryRequest) (*apipb.GetMarketOptionPriceHistoryReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	GetMarketOptionPriceHistoryRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketOptionPriceHistory(ctx, &marketcenterpb.GetMarketOptionPriceHistoryRequest{
 		MarketAddress: req.MarketAddress,
@@ -601,14 +606,14 @@ func (s *BayesHttpService) GetMarketOptionPriceHistory(ctx context.Context, req 
 		return nil, err
 	}
 
-	rspSnapshots := make([]*bayespb.GetMarketOptionPriceHistoryReply_OneSnapshot, 0)
+	rspSnapshots := make([]*apipb.GetMarketOptionPriceHistoryReply_OneSnapshot, 0)
 	for _, snapshot := range GetMarketOptionPriceHistoryRsp.Snapshots {
-		rspSnapshots = append(rspSnapshots, &bayespb.GetMarketOptionPriceHistoryReply_OneSnapshot{
+		rspSnapshots = append(rspSnapshots, &apipb.GetMarketOptionPriceHistoryReply_OneSnapshot{
 			Timestamp: snapshot.Timestamp,
-			TokenPrices: func() []*bayespb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice {
-				tokenPrices := make([]*bayespb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice, 0)
+			TokenPrices: func() []*apipb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice {
+				tokenPrices := make([]*apipb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice, 0)
 				for _, tokenPrice := range snapshot.TokenPrices {
-					tokenPrices = append(tokenPrices, &bayespb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice{
+					tokenPrices = append(tokenPrices, &apipb.GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice{
 						TokenAddress: tokenPrice.TokenAddress,
 						Price:        tokenPrice.Price,
 						Decimal:      tokenPrice.Decimal,
@@ -618,13 +623,13 @@ func (s *BayesHttpService) GetMarketOptionPriceHistory(ctx context.Context, req 
 			}(),
 		})
 	}
-	return &bayespb.GetMarketOptionPriceHistoryReply{
+	return &apipb.GetMarketOptionPriceHistoryReply{
 		Total:     GetMarketOptionPriceHistoryRsp.Total,
 		Snapshots: rspSnapshots,
 	}, nil
 }
 
-func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarketsRequest) (*bayespb.GetMarketsReply, error) {
+func (s *HttpApiService) GetMarkets(ctx context.Context, req *apipb.GetMarketsRequest) (*apipb.GetMarketsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	uid := req.Uid
@@ -632,9 +637,9 @@ func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarke
 		uid = util.GetUidFromCtx(ctx)
 	}
 
-	rsp := &bayespb.GetMarketsReply{
+	rsp := &apipb.GetMarketsReply{
 		TotalCount: 0,
-		Markets:    make([]*bayespb.GetMarketsReply_Market, 0),
+		Markets:    make([]*apipb.GetMarketsReply_Market, 0),
 	}
 
 	// 1. 分页查询市场
@@ -720,7 +725,7 @@ func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarke
 	}
 
 	for _, market := range GetMarketsRsp.Markets {
-		marketInfo := &bayespb.GetMarketsReply_Market{
+		marketInfo := &apipb.GetMarketsReply_Market{
 			MarketAddress:     market.Address,
 			MarketName:        market.Name,
 			MarketPicUrl:      market.PicUrl,
@@ -728,28 +733,30 @@ func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarke
 			MarketStatus:      market.Status,
 			MarketVolume:      market.Volume,
 			ParticipantsCount: market.ParticipantsCount,
-			IsFollowed:        bayespb.IsFollowed(market.IsFollowed),
+			IsFollowed:        apipb.IsFollowed(market.IsFollowed),
 			MarketDecimal:     uint32(market.Decimal),
 			Result:            market.Result,
 			CreatedAt:         uint32(market.CreatedAt),
 			Deadline:          uint32(market.Deadline),
-			Options:           make([]*bayespb.GetMarketsReply_Market_Option, 0),
+			Options:           make([]*apipb.GetMarketsReply_Market_Option, 0),
 			BaseTokenType:     uint32(market.BaseTokenType),
+			EventId:           market.EventId,
 		}
 
 		for _, option := range market.Options {
-			marketInfo.Options = append(marketInfo.Options, &bayespb.GetMarketsReply_Market_Option{
+			marketInfo.Options = append(marketInfo.Options, &apipb.GetMarketsReply_Market_Option{
 				TokenAddress:     option.Address,
 				TokenName:        option.Name,
 				TokenPicUrl:      option.PicUrl,
 				TokenPrice:       option.Price,
 				Decimal:          option.Decimal,
 				TokenDescription: option.Description,
+				PositionId:       option.PositionId,
 			})
 		}
 
 		if post, ok := markAddressToPostMap[market.Address]; ok {
-			marketInfo.Post = &bayespb.GetMarketsReply_Market_Post{
+			marketInfo.Post = &apipb.GetMarketsReply_Market_Post{
 				Uuid:          post.PostUuid,
 				Uid:           post.Uid,
 				UserName:      post.UserName,
@@ -759,15 +766,15 @@ func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarke
 				LikeCount:     uint32(post.LikeCount),
 				CommentCount:  uint32(post.CommentCount),
 				Timestamp:     uint64(post.CreatedAt),
-				Positions:     make([]*bayespb.GetMarketsReply_Market_Post_Position, 0),
-				IsLike:        bayespb.GetMarketsReply_IsLike(post.IsLike),
+				Positions:     make([]*apipb.GetMarketsReply_Market_Post_Position, 0),
+				IsLike:        apipb.GetMarketsReply_IsLike(post.IsLike),
 				Id:            int64(post.Id),
 			}
 
 			key := fmt.Sprintf("%s:%s", post.Uid, market.Address)
 			if userPosition, ok := uidAndMarketAddressToUserPositionMap[key]; ok {
 				for _, position := range userPosition.Positions {
-					oneRspPosition := &bayespb.GetMarketsReply_Market_Post_Position{
+					oneRspPosition := &apipb.GetMarketsReply_Market_Post_Position{
 						TokenAddress: position.OptionAddress,
 						Balance:      position.Amount,
 						Decimal:      position.Decimal,
@@ -789,7 +796,7 @@ func (s *BayesHttpService) GetMarkets(ctx context.Context, req *bayespb.GetMarke
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetTags(ctx context.Context, req *bayespb.GetTagsRequest) (*bayespb.GetTagsReply, error) {
+func (s *HttpApiService) GetTags(ctx context.Context, req *apipb.GetTagsRequest) (*apipb.GetTagsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetMarketTagsRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketTags(ctx, &marketcenterpb.GetMarketTagsRequest{
@@ -801,13 +808,13 @@ func (s *BayesHttpService) GetTags(ctx context.Context, req *bayespb.GetTagsRequ
 		return nil, err
 	}
 
-	return &bayespb.GetTagsReply{
+	return &apipb.GetTagsReply{
 		Total: GetMarketTagsRsp.Total,
 		Tags:  GetMarketTagsRsp.Tags,
 	}, nil
 }
 
-func (s *BayesHttpService) GetUserAssetInfo(ctx context.Context, req *bayespb.GetUserAssetInfoRequest) (*bayespb.GetUserAssetInfoReply, error) {
+func (s *HttpApiService) GetUserAssetInfo(ctx context.Context, req *apipb.GetUserAssetInfoRequest) (*apipb.GetUserAssetInfoReply, error) {
 
 	c := util.NewBaseCtx(ctx, s.logger)
 
@@ -820,7 +827,7 @@ func (s *BayesHttpService) GetUserAssetInfo(ctx context.Context, req *bayespb.Ge
 		return nil, err
 	}
 
-	return &bayespb.GetUserAssetInfoReply{
+	return &apipb.GetUserAssetInfoReply{
 		Balance:   GetUserAssetInfoRsp.Balance,
 		Portfolio: GetUserAssetInfoRsp.Portfolio,
 		Pnl:       GetUserAssetInfoRsp.Pnl,
@@ -831,7 +838,7 @@ func (s *BayesHttpService) GetUserAssetInfo(ctx context.Context, req *bayespb.Ge
 	}, nil
 }
 
-func (s *BayesHttpService) GetCategories(ctx context.Context, req *bayespb.GetCategoriesRequest) (*bayespb.GetCategoriesReply, error) {
+func (s *HttpApiService) GetCategories(ctx context.Context, req *apipb.GetCategoriesRequest) (*apipb.GetCategoriesReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetCategoriesRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketCategories(ctx, &marketcenterpb.GetMarketCategoriesRequest{
@@ -842,12 +849,12 @@ func (s *BayesHttpService) GetCategories(ctx context.Context, req *bayespb.GetCa
 		return nil, err
 	}
 
-	return &bayespb.GetCategoriesReply{
+	return &apipb.GetCategoriesReply{
 		Total: GetCategoriesRsp.Total,
-		Categories: func() []*bayespb.GetCategoriesReply_Category {
-			categories := make([]*bayespb.GetCategoriesReply_Category, 0, len(GetCategoriesRsp.Categories))
+		Categories: func() []*apipb.GetCategoriesReply_Category {
+			categories := make([]*apipb.GetCategoriesReply_Category, 0, len(GetCategoriesRsp.Categories))
 			for _, category := range GetCategoriesRsp.Categories {
-				categories = append(categories, &bayespb.GetCategoriesReply_Category{
+				categories = append(categories, &apipb.GetCategoriesReply_Category{
 					Id:     category.Id,
 					Name:   category.Name,
 					Weight: category.Weight,
@@ -858,7 +865,7 @@ func (s *BayesHttpService) GetCategories(ctx context.Context, req *bayespb.GetCa
 	}, nil
 }
 
-func (s *BayesHttpService) GetUserTransactions(ctx context.Context, req *bayespb.GetUserTransactionsRequest) (*bayespb.GetUserTransactionsReply, error) {
+func (s *HttpApiService) GetUserTransactions(ctx context.Context, req *apipb.GetUserTransactionsRequest) (*apipb.GetUserTransactionsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	uid := util.GetUidFromCtx(ctx)
@@ -877,17 +884,17 @@ func (s *BayesHttpService) GetUserTransactions(ctx context.Context, req *bayespb
 		return nil, err
 	}
 
-	transactions := make([]*bayespb.GetUserTransactionsReply_Transaction, 0, len(GetUserTransactionsRsp.Transactions))
+	transactions := make([]*apipb.GetUserTransactionsReply_Transaction, 0, len(GetUserTransactionsRsp.Transactions))
 	for _, transaction := range GetUserTransactionsRsp.Transactions {
-		tx := &bayespb.GetUserTransactionsReply_Transaction{
+		tx := &apipb.GetUserTransactionsReply_Transaction{
 			Uid:           transaction.Uid,
 			Amount:        transaction.Amount,
 			Timestamp:     transaction.Timestamp,
-			BaseTokenType: bayespb.BaseTokenType(transaction.BaseTokenType),
+			BaseTokenType: apipb.BaseTokenType(transaction.BaseTokenType),
 			TokenAddress:  transaction.TokenAddress,
 			Side:          uint32(transaction.Side),
 			Decimal:       uint32(transaction.Decimal),
-			Type:          bayespb.TxType(transaction.Type),
+			Type:          apipb.TxType(transaction.Type),
 			Status:        uint32(transaction.Status),
 			BizDataJson:   string(transaction.BizData),
 			TxHash:        transaction.TxHash,
@@ -895,13 +902,13 @@ func (s *BayesHttpService) GetUserTransactions(ctx context.Context, req *bayespb
 		transactions = append(transactions, tx)
 	}
 
-	return &bayespb.GetUserTransactionsReply{
+	return &apipb.GetUserTransactionsReply{
 		Total:        uint32(GetUserTransactionsRsp.Total),
 		Transactions: transactions,
 	}, nil
 }
 
-func (s *BayesHttpService) GetBanners(ctx context.Context, req *bayespb.GetBannersRequest) (*bayespb.GetBannersReply, error) {
+func (s *HttpApiService) GetBanners(ctx context.Context, req *apipb.GetBannersRequest) (*apipb.GetBannersReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetBannersRsp, err := s.data.RpcClient.MarketcenterClient.GetBanners(ctx, &marketcenterpb.GetBannersRequest{
@@ -912,9 +919,9 @@ func (s *BayesHttpService) GetBanners(ctx context.Context, req *bayespb.GetBanne
 		return nil, err
 	}
 
-	rsp := &bayespb.GetBannersReply{}
+	rsp := &apipb.GetBannersReply{}
 	for _, banner := range GetBannersRsp.Banners {
-		rsp.Banners = append(rsp.Banners, &bayespb.GetBannersReply_Banner{
+		rsp.Banners = append(rsp.Banners, &apipb.GetBannersReply_Banner{
 			Id:     banner.Id,
 			Weight: banner.Weight,
 			Image:  banner.Image,
@@ -926,7 +933,7 @@ func (s *BayesHttpService) GetBanners(ctx context.Context, req *bayespb.GetBanne
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetSections(ctx context.Context, req *bayespb.GetSectionsRequest) (*bayespb.GetSectionsReply, error) {
+func (s *HttpApiService) GetSections(ctx context.Context, req *apipb.GetSectionsRequest) (*apipb.GetSectionsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetSectionsRsp, err := s.data.RpcClient.MarketcenterClient.GetSections(ctx, &marketcenterpb.GetSectionsRequest{
@@ -937,19 +944,19 @@ func (s *BayesHttpService) GetSections(ctx context.Context, req *bayespb.GetSect
 		return nil, err
 	}
 
-	rsp := &bayespb.GetSectionsReply{}
+	rsp := &apipb.GetSectionsReply{}
 	for _, section := range GetSectionsRsp.Sections {
-		oneSection := &bayespb.GetSectionsReply_Section{
+		oneSection := &apipb.GetSectionsReply_Section{
 			Weight:      section.Weight,
 			Color:       section.Color,
 			Title:       section.Title,
 			Id:          section.Id,
 			Type:        int32(section.Type),
-			Predictions: make([]*bayespb.GetSectionsReply_Section_Prediction, 0),
+			Predictions: make([]*apipb.GetSectionsReply_Section_Prediction, 0),
 		}
 
 		for _, prediction := range section.Predictions {
-			oneSection.Predictions = append(oneSection.Predictions, &bayespb.GetSectionsReply_Section_Prediction{
+			oneSection.Predictions = append(oneSection.Predictions, &apipb.GetSectionsReply_Section_Prediction{
 				Id:         prediction.Id,
 				Weight:     prediction.Weight,
 				Prediction: prediction.Prediction,
@@ -961,11 +968,11 @@ func (s *BayesHttpService) GetSections(ctx context.Context, req *bayespb.GetSect
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetLeaderboard(ctx context.Context, req *bayespb.GetLeaderboardRequest) (*bayespb.GetLeaderboardResponse, error) {
+func (s *HttpApiService) GetLeaderboard(ctx context.Context, req *apipb.GetLeaderboardRequest) (*apipb.GetLeaderboardResponse, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
-	rsp := &bayespb.GetLeaderboardResponse{
+	rsp := &apipb.GetLeaderboardResponse{
 		Total:   0,
-		Entries: make([]*bayespb.GetLeaderboardResponse_Entry, 0),
+		Entries: make([]*apipb.GetLeaderboardResponse_Entry, 0),
 	}
 
 	uid := req.Uid
@@ -1008,7 +1015,7 @@ func (s *BayesHttpService) GetLeaderboard(ctx context.Context, req *bayespb.GetL
 	}
 
 	for _, entry := range GetLeaderboardRsp.Entries {
-		oneEntry := &bayespb.GetLeaderboardResponse_Entry{
+		oneEntry := &apipb.GetLeaderboardResponse_Entry{
 			Uid:     entry.Uid,
 			Score:   entry.Score,
 			Decimal: entry.Decimal,
@@ -1022,7 +1029,7 @@ func (s *BayesHttpService) GetLeaderboard(ctx context.Context, req *bayespb.GetL
 	}
 
 	if GetLeaderboardRsp.UserOwnEntry != nil {
-		rsp.UserOwnEntry = &bayespb.GetLeaderboardResponse_Entry{
+		rsp.UserOwnEntry = &apipb.GetLeaderboardResponse_Entry{
 			Uid:     GetLeaderboardRsp.UserOwnEntry.Uid,
 			Score:   GetLeaderboardRsp.UserOwnEntry.Score,
 			Decimal: GetLeaderboardRsp.UserOwnEntry.Decimal,
@@ -1035,6 +1042,121 @@ func (s *BayesHttpService) GetLeaderboard(ctx context.Context, req *bayespb.GetL
 	}
 
 	rsp.Total = uint32(GetLeaderboardRsp.Total)
+
+	return rsp, nil
+}
+
+func (s *HttpApiService) GetEventDetail(ctx context.Context, req *apipb.GetEventDetailRequest) (*apipb.GetEventDetailReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+
+	getEventRsp, err := s.data.RpcClient.MarketcenterClient.GetEvent(ctx, &marketcenterpb.GetEventRequest{
+		Id: req.Id,
+	})
+	if err != nil {
+		c.Log.Errorf("rpc GetEvent failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	event := getEventRsp.Event
+	if event == nil {
+		return nil, errors.NotFound("NOT_FOUND", "event not found")
+	}
+
+	rsp := &apipb.GetEventDetailReply{
+		Id:               fmt.Sprintf("%d", event.CreatedAt), // use event db id from upstream
+		EventId:          event.EventId,
+		Title:            event.Title,
+		OutcomeSlotCount: event.OutcomeSlotCount,
+		Collateral:       event.Collateral,
+		Status:           apipb.EventStatus(event.Status),
+		MetadataHash:     event.MetadataHash,
+		CreatedAt:        event.CreatedAt,
+		UpdatedAt:        event.UpdatedAt,
+		Markets:          make([]*apipb.GetEventDetailReply_Market, 0, len(event.Markets)),
+	}
+
+	// 使用 upstream 返回的 id 字段
+	if event.Id != "" {
+		rsp.Id = event.Id
+	}
+
+	for _, market := range event.Markets {
+		m := &apipb.GetEventDetailReply_Market{
+			Address:           market.Address,
+			Name:              market.Name,
+			PicUrl:            market.PicUrl,
+			Description:       market.Description,
+			Status:            market.Status,
+			ParticipantsCount: market.ParticipantsCount,
+			Volume:            market.Volume,
+			Decimal:           market.Decimal,
+			CreatedAt:         market.CreatedAt,
+			Deadline:          market.Deadline,
+			Result:            market.Result,
+			ConditionId:       market.ConditionId,
+			QuestionId:        market.QuestionId,
+			Options:           make([]*apipb.GetEventDetailReply_Market_Option, 0, len(market.Options)),
+		}
+		for _, option := range market.Options {
+			m.Options = append(m.Options, &apipb.GetEventDetailReply_Market_Option{
+				Address:    option.Address,
+				Name:       option.Name,
+				Symbol:     option.Symbol,
+				PicUrl:     option.PicUrl,
+				Decimal:    option.Decimal,
+				Index:      option.Index,
+				Price:      option.Price,
+				Description: option.Description,
+				PositionId: option.PositionId,
+			})
+		}
+		rsp.Markets = append(rsp.Markets, m)
+	}
+
+	return rsp, nil
+}
+
+func (s *HttpApiService) GetEvents(ctx context.Context, req *apipb.GetEventsRequest) (*apipb.GetEventsReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+
+	listEventsRsp, err := s.data.RpcClient.MarketcenterClient.ListEvents(ctx, &marketcenterpb.ListEventsRequest{
+		Status:   marketcenterpb.EventStatus(req.Status),
+		SortType: marketcenterpb.ListEventsRequest_SortType(req.SortType),
+		Page:     req.Page,
+		PageSize: req.PageSize,
+	})
+	if err != nil {
+		c.Log.Errorf("rpc ListEvents failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	rsp := &apipb.GetEventsReply{
+		Total:  listEventsRsp.Total,
+		Events: make([]*apipb.GetEventsReply_EventSummary, 0, len(listEventsRsp.Events)),
+	}
+
+	for _, event := range listEventsRsp.Events {
+		summary := &apipb.GetEventsReply_EventSummary{
+			Id:               event.Id,
+			EventId:          event.EventId,
+			Title:            event.Title,
+			OutcomeSlotCount: event.OutcomeSlotCount,
+			Status:           apipb.EventStatus(event.Status),
+			CreatedAt:        event.CreatedAt,
+			Markets:          make([]*apipb.GetEventsReply_EventSummary_Market, 0, len(event.Markets)),
+		}
+		for _, market := range event.Markets {
+			summary.Markets = append(summary.Markets, &apipb.GetEventsReply_EventSummary_Market{
+				Address:           market.Address,
+				Name:              market.Name,
+				PicUrl:            market.PicUrl,
+				Status:            market.Status,
+				Volume:            market.Volume,
+				ParticipantsCount: market.ParticipantsCount,
+			})
+		}
+		rsp.Events = append(rsp.Events, summary)
+	}
 
 	return rsp, nil
 }

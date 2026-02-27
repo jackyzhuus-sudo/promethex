@@ -1,4 +1,4 @@
-package bayes_http
+package http_api
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"market-backend/internal/base_err"
 	"market-backend/internal/pkg/util"
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 	"strings"
 	"time"
 
@@ -27,11 +27,11 @@ const (
 	translateCacheTTL    = 7 * 24 * time.Hour
 )
 
-func (s *BayesHttpService) Translate(ctx context.Context, req *bayespb.TranslateRequest) (*bayespb.TranslateReply, error) {
+func (s *HttpApiService) Translate(ctx context.Context, req *apipb.TranslateRequest) (*apipb.TranslateReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	// 参数验证
 	if err := s.validateTranslateRequest(req); err != nil {
-		return nil, errors.New(int(bayespb.ErrorCode_PARAM), "PARAMS ERROR", err.Error())
+		return nil, errors.New(int(apipb.ErrorCode_PARAM), "PARAMS ERROR", err.Error())
 	}
 
 	// 生成缓存键
@@ -46,7 +46,7 @@ func (s *BayesHttpService) Translate(ctx context.Context, req *bayespb.Translate
 
 	if cacheData.TranslatedText != "" {
 		c.Log.Infof("翻译缓存命中: %s -> %s", req.Text[:min(50, len(req.Text))], cacheData.TranslatedText[:min(50, len(cacheData.TranslatedText))])
-		return &bayespb.TranslateReply{
+		return &apipb.TranslateReply{
 			TranslatedText: cacheData.TranslatedText,
 			SourceLang:     cacheData.SourceLang,
 			TargetLang:     cacheData.TargetLang,
@@ -58,13 +58,13 @@ func (s *BayesHttpService) Translate(ctx context.Context, req *bayespb.Translate
 	// 缓存未命中，调用OpenAI翻译
 	translatedText, tokensUsed, err := s.data.OpenAIClient.TranslateByOpenAI(c, req.Text, req.SourceLang, req.TargetLang)
 	if err != nil {
-		return nil, errors.New(int(bayespb.ErrorCode_OPENAI), "OPENAI ERROR", err.Error())
+		return nil, errors.New(int(apipb.ErrorCode_OPENAI), "OPENAI ERROR", err.Error())
 	}
 	c.Log.Infof("translatedText: %s", translatedText)
 
 	translatedText = strings.TrimSpace(translatedText)
 	if translatedText == "" {
-		return nil, errors.New(int(bayespb.ErrorCode_OPENAI), "OPENAI ERROR", "translated text is empty")
+		return nil, errors.New(int(apipb.ErrorCode_OPENAI), "OPENAI ERROR", "translated text is empty")
 	}
 
 	// 检测或使用提供的源语言
@@ -74,7 +74,7 @@ func (s *BayesHttpService) Translate(ctx context.Context, req *bayespb.Translate
 	}
 
 	// 构造响应
-	resp := &bayespb.TranslateReply{
+	resp := &apipb.TranslateReply{
 		TranslatedText: translatedText,
 		SourceLang:     sourceLang,
 		TargetLang:     req.TargetLang,
@@ -102,12 +102,12 @@ func (s *BayesHttpService) Translate(ctx context.Context, req *bayespb.Translate
 }
 
 // GetSupportedLanguages 获取支持的语言列表
-func (s *BayesHttpService) GetSupportedLanguages() map[string]string {
+func (s *HttpApiService) GetSupportedLanguages() map[string]string {
 	return s.data.OpenAIClient.GetSupportedLanguages()
 }
 
 // validateTranslateRequest 验证翻译请求
-func (s *BayesHttpService) validateTranslateRequest(req *bayespb.TranslateRequest) error {
+func (s *HttpApiService) validateTranslateRequest(req *apipb.TranslateRequest) error {
 	text := strings.TrimSpace(req.Text)
 	if text == "" {
 		return fmt.Errorf("text is empty")
@@ -141,7 +141,7 @@ func (s *BayesHttpService) validateTranslateRequest(req *bayespb.TranslateReques
 }
 
 // generateTranslateCacheKey 生成翻译缓存键
-func generateTranslateCacheKey(req *bayespb.TranslateRequest) string {
+func generateTranslateCacheKey(req *apipb.TranslateRequest) string {
 	// 标准化输入
 	text := strings.TrimSpace(req.Text)
 	sourceLang := strings.ToLower(strings.TrimSpace(req.SourceLang))

@@ -1,11 +1,11 @@
 package service
 
 import (
-	"market-backend/internal/service/bayes_http"
-	"market-backend/internal/service/bayes_sse"
+	"market-backend/internal/service/http_api"
+	"market-backend/internal/service/sse_api"
 
 	"github.com/google/wire"
 )
 
 // ProviderSet is service providers.
-var ProviderSet = wire.NewSet(bayes_http.NewBayesHttpService, bayes_sse.NewBayesSseService)
+var ProviderSet = wire.NewSet(http_api.NewHttpApiService, sse_api.NewSseApiService)

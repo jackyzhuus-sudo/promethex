@@ -63,7 +63,7 @@ func Auth(cfgData *conf.Data, cfgCustom *conf.Custom, logger log.Logger, data *d
 			}
 
 			needAuthFlag := needAuth(tr.Operation())
-			isLoginOp := tr.Operation() == "/bayes.v1.BayesHttp/Login"
+			isLoginOp := tr.Operation() == "/api.v1.HttpApi/Login"
 
 			authHeader := tr.RequestHeader().Get("Authorization")
 
@@ -233,7 +233,7 @@ func GrpcPathToProtoMethod(grpcPath string) string {
 	}
 
 	// 格式应该是 "{package}.{service}/{method}"
-	servicePath := parts[0] // 例如 "bayes.v1.BayesHttp"
+	servicePath := parts[0] // 例如 "api.v1.HttpApi"
 	method := parts[1]      // 例如 "Login"
 
 	// 组合成 protoreflect 需要的格式: "{package}.{service}.{method}"

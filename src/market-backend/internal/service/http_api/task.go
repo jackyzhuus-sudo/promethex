@@ -1,14 +1,14 @@
-package bayes_http
+package http_api
 
 import (
 	"context"
 	"market-backend/internal/pkg/util"
 
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 	usercenterpb "market-proto/proto/market-service/usercenter/v1"
 )
 
-func (s *BayesHttpService) GetTasks(ctx context.Context, req *bayespb.GetTasksRequest) (*bayespb.GetTasksReply, error) {
+func (s *HttpApiService) GetTasks(ctx context.Context, req *apipb.GetTasksRequest) (*apipb.GetTasksReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	GetTasksRsp, err := s.data.RpcClient.UsercenterClient.GetTasks(ctx, &usercenterpb.GetTasksRequest{
@@ -20,16 +20,16 @@ func (s *BayesHttpService) GetTasks(ctx context.Context, req *bayespb.GetTasksRe
 		return nil, err
 	}
 	if len(GetTasksRsp.Tasks) == 0 {
-		return &bayespb.GetTasksReply{}, nil
+		return &apipb.GetTasksReply{}, nil
 	}
 
-	rsp := &bayespb.GetTasksReply{
+	rsp := &apipb.GetTasksReply{
 		TotalRewardPoints: GetTasksRsp.TotalRewardPoints,
 		Total:             GetTasksRsp.Total,
-		Tasks:             []*bayespb.GetTasksReply_Task{},
+		Tasks:             []*apipb.GetTasksReply_Task{},
 	}
 	for _, task := range GetTasksRsp.Tasks {
-		rsp.Tasks = append(rsp.Tasks, &bayespb.GetTasksReply_Task{
+		rsp.Tasks = append(rsp.Tasks, &apipb.GetTasksReply_Task{
 			TaskUuid:     task.TaskUuid,
 			TaskKey:      task.TaskKey,
 			Name:         task.Name,
@@ -49,7 +49,7 @@ func (s *BayesHttpService) GetTasks(ctx context.Context, req *bayespb.GetTasksRe
 	return rsp, nil
 }
 
-func (s *BayesHttpService) ClaimTaskReward(ctx context.Context, req *bayespb.ClaimTaskRewardRequest) (*bayespb.ClaimTaskRewardReply, error) {
+func (s *HttpApiService) ClaimTaskReward(ctx context.Context, req *apipb.ClaimTaskRewardRequest) (*apipb.ClaimTaskRewardReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	_, err := s.data.RpcClient.UsercenterClient.ClaimTaskReward(ctx, &usercenterpb.ClaimTaskRewardRequest{
@@ -60,10 +60,10 @@ func (s *BayesHttpService) ClaimTaskReward(ctx context.Context, req *bayespb.Cla
 		c.Log.Errorf("ClaimTaskReward rpc failed: %v", err)
 		return nil, err
 	}
-	return &bayespb.ClaimTaskRewardReply{}, nil
+	return &apipb.ClaimTaskRewardReply{}, nil
 }
 
-func (s *BayesHttpService) ShareTaskDone(ctx context.Context, req *bayespb.ShareTaskDoneRequest) (*bayespb.ShareTaskDoneReply, error) {
+func (s *HttpApiService) ShareTaskDone(ctx context.Context, req *apipb.ShareTaskDoneRequest) (*apipb.ShareTaskDoneReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	_, err := s.data.RpcClient.UsercenterClient.TaskDone(ctx, &usercenterpb.TaskDoneRequest{
@@ -74,5 +74,5 @@ func (s *BayesHttpService) ShareTaskDone(ctx context.Context, req *bayespb.Share
 		c.Log.Errorf("TaskDone rpc failed: %v", err)
 		return nil, err
 	}
-	return &bayespb.ShareTaskDoneReply{}, nil
+	return &apipb.ShareTaskDoneReply{}, nil
 }

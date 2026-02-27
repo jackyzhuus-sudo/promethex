@@ -1,4 +1,4 @@
-package bayes_http
+package http_api
 
 import (
 	"context"
@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 
 	"github.com/go-kratos/kratos/v2/errors"
 )
 
-func (s *BayesHttpService) Login(ctx context.Context, req *bayespb.LoginRequest) (*bayespb.LoginReply, error) {
+func (s *HttpApiService) Login(ctx context.Context, req *apipb.LoginRequest) (*apipb.LoginReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	did := util.GetDidFromCtx(ctx)
 	if did == "" {
@@ -40,7 +40,7 @@ func (s *BayesHttpService) Login(ctx context.Context, req *bayespb.LoginRequest)
 	}
 	// 已注册 暂时不做什么 后续可以换token 记录用户每日登录任务等
 	if GetUserInfoRsp.Uid != "" {
-		return &bayespb.LoginReply{
+		return &apipb.LoginReply{
 			Uid:       GetUserInfoRsp.Uid,
 			IsNewUser: false,
 		}, nil
@@ -102,13 +102,13 @@ func (s *BayesHttpService) Login(ctx context.Context, req *bayespb.LoginRequest)
 		return nil, err
 	}
 
-	return &bayespb.LoginReply{
+	return &apipb.LoginReply{
 		Uid:       createUserResp.Uid,
 		IsNewUser: true,
 	}, nil
 }
 
-func (s *BayesHttpService) SetAvatar(ctx context.Context, req *bayespb.SetAvatarRequest) (*bayespb.SetAvatarReply, error) {
+func (s *HttpApiService) SetAvatar(ctx context.Context, req *apipb.SetAvatarRequest) (*apipb.SetAvatarReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -127,10 +127,10 @@ func (s *BayesHttpService) SetAvatar(ctx context.Context, req *bayespb.SetAvatar
 		return nil, err
 	}
 
-	return &bayespb.SetAvatarReply{}, nil
+	return &apipb.SetAvatarReply{}, nil
 }
 
-func (s *BayesHttpService) SetName(ctx context.Context, req *bayespb.SetNameRequest) (*bayespb.SetNameReply, error) {
+func (s *HttpApiService) SetName(ctx context.Context, req *apipb.SetNameRequest) (*apipb.SetNameReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -150,10 +150,10 @@ func (s *BayesHttpService) SetName(ctx context.Context, req *bayespb.SetNameRequ
 		return nil, err
 	}
 
-	return &bayespb.SetNameReply{}, nil
+	return &apipb.SetNameReply{}, nil
 }
 
-func (s *BayesHttpService) SetDescription(ctx context.Context, req *bayespb.SetDescriptionRequest) (*bayespb.SetDescriptionReply, error) {
+func (s *HttpApiService) SetDescription(ctx context.Context, req *apipb.SetDescriptionRequest) (*apipb.SetDescriptionReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -172,10 +172,10 @@ func (s *BayesHttpService) SetDescription(ctx context.Context, req *bayespb.SetD
 		return nil, err
 	}
 
-	return &bayespb.SetDescriptionReply{}, nil
+	return &apipb.SetDescriptionReply{}, nil
 }
 
-func (s *BayesHttpService) UploadFile(ctx context.Context, req *bayespb.UploadFileRequest) (*bayespb.UploadFileReply, error) {
+func (s *HttpApiService) UploadFile(ctx context.Context, req *apipb.UploadFileRequest) (*apipb.UploadFileReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	c.Log.Debugf("upload file start")
 	fileData := req.File
@@ -190,12 +190,12 @@ func (s *BayesHttpService) UploadFile(ctx context.Context, req *bayespb.UploadFi
 		return nil, err
 	}
 
-	return &bayespb.UploadFileReply{
+	return &apipb.UploadFileReply{
 		FileKey: uploadFileToBizBucketS3Resp.FileUrl,
 	}, nil
 }
 
-func (s *BayesHttpService) DownloadFile(ctx context.Context, req *bayespb.DownloadFileRequest) (*bayespb.DownloadFileReply, error) {
+func (s *HttpApiService) DownloadFile(ctx context.Context, req *apipb.DownloadFileRequest) (*apipb.DownloadFileReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	c.Log.Debugf("download file start")
 	fileKey := req.FileKey
@@ -208,13 +208,13 @@ func (s *BayesHttpService) DownloadFile(ctx context.Context, req *bayespb.Downlo
 		return nil, err
 	}
 
-	return &bayespb.DownloadFileReply{
+	return &apipb.DownloadFileReply{
 		FileData:    downloadFileFromBizBucketS3Resp.FileData,
 		ContentType: downloadFileFromBizBucketS3Resp.ContentType,
 	}, nil
 }
 
-func (s *BayesHttpService) FollowUser(ctx context.Context, req *bayespb.FollowUserRequest) (*bayespb.FollowUserReply, error) {
+func (s *HttpApiService) FollowUser(ctx context.Context, req *apipb.FollowUserRequest) (*apipb.FollowUserReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -231,10 +231,10 @@ func (s *BayesHttpService) FollowUser(ctx context.Context, req *bayespb.FollowUs
 		return nil, err
 	}
 
-	return &bayespb.FollowUserReply{}, nil
+	return &apipb.FollowUserReply{}, nil
 }
 
-func (s *BayesHttpService) UnfollowUser(ctx context.Context, req *bayespb.UnfollowUserRequest) (*bayespb.UnfollowUserReply, error) {
+func (s *HttpApiService) UnfollowUser(ctx context.Context, req *apipb.UnfollowUserRequest) (*apipb.UnfollowUserReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -251,10 +251,10 @@ func (s *BayesHttpService) UnfollowUser(ctx context.Context, req *bayespb.Unfoll
 		return nil, err
 	}
 
-	return &bayespb.UnfollowUserReply{}, nil
+	return &apipb.UnfollowUserReply{}, nil
 }
 
-func (s *BayesHttpService) GetUserBaseInfo(ctx context.Context, req *bayespb.GetUserBaseInfoRequest) (*bayespb.GetUserBaseInfoReply, error) {
+func (s *HttpApiService) GetUserBaseInfo(ctx context.Context, req *apipb.GetUserBaseInfoRequest) (*apipb.GetUserBaseInfoReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	GetUserBaseInfoRsp, err := s.data.RpcClient.UsercenterClient.GetUserInfo(ctx, &usercenterpb.GetUserInfoRequest{
@@ -276,7 +276,7 @@ func (s *BayesHttpService) GetUserBaseInfo(ctx context.Context, req *bayespb.Get
 		return nil, errors.NotFound("NOT_FOUND", "user not found")
 	}
 
-	rsp := &bayespb.GetUserBaseInfoReply{
+	rsp := &apipb.GetUserBaseInfoReply{
 		Uid:        GetUserBaseInfoRsp.Uid,
 		Email:      GetUserBaseInfoRsp.Email,
 		EoaAddress: GetUserBaseInfoRsp.EoaAddress,
@@ -292,7 +292,7 @@ func (s *BayesHttpService) GetUserBaseInfo(ctx context.Context, req *bayespb.Get
 		PostCount:    GetUserBaseInfoRsp.PostCount,
 		CommentCount: GetUserBaseInfoRsp.CommentCount,
 		LikeCount:    GetUserBaseInfoRsp.LikeCount,
-		IsFollowed:   bayespb.IsFollowed(GetUserBaseInfoRsp.IsFollow),
+		IsFollowed:   apipb.IsFollowed(GetUserBaseInfoRsp.IsFollow),
 
 		FollowerCount:  GetUserBaseInfoRsp.FollowerCount,
 		FollowingCount: GetUserBaseInfoRsp.FollowingCount,
@@ -305,18 +305,18 @@ func (s *BayesHttpService) GetUserBaseInfo(ctx context.Context, req *bayespb.Get
 	return rsp, nil
 }
 
-func (s *BayesHttpService) Search(ctx context.Context, req *bayespb.SearchRequest) (*bayespb.SearchReply, error) {
+func (s *HttpApiService) Search(ctx context.Context, req *apipb.SearchRequest) (*apipb.SearchReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	req.Keyword = strings.TrimSpace(req.Keyword)
 	if req.Keyword == "" {
 		return nil, pkg.ErrParam
 	}
 
-	reply := &bayespb.SearchReply{
-		Users:   make([]*bayespb.SearchReply_User, 0),
-		Markets: make([]*bayespb.SearchReply_Market, 0),
+	reply := &apipb.SearchReply{
+		Users:   make([]*apipb.SearchReply_User, 0),
+		Markets: make([]*apipb.SearchReply_Market, 0),
 	}
-	if req.SearchType == bayespb.SearchRequest_SEARCH_TYPE_UNSPECIFIED || req.SearchType == bayespb.SearchRequest_SEARCH_TYPE_MARKET {
+	if req.SearchType == apipb.SearchRequest_SEARCH_TYPE_UNSPECIFIED || req.SearchType == apipb.SearchRequest_SEARCH_TYPE_MARKET {
 		SearchMarketRsp, err := s.data.RpcClient.MarketcenterClient.SearchMarket(ctx, &marketcenterpb.SearchMarketRequest{
 			Keyword:  req.Keyword,
 			Page:     req.MarketPage,
@@ -327,7 +327,7 @@ func (s *BayesHttpService) Search(ctx context.Context, req *bayespb.SearchReques
 			return nil, err
 		}
 		for _, market := range SearchMarketRsp.Markets {
-			reply.Markets = append(reply.Markets, &bayespb.SearchReply_Market{
+			reply.Markets = append(reply.Markets, &apipb.SearchReply_Market{
 				Address:           market.Address,
 				Name:              market.Name,
 				PicUrl:            market.PicUrl,
@@ -340,7 +340,7 @@ func (s *BayesHttpService) Search(ctx context.Context, req *bayespb.SearchReques
 		}
 		reply.MarketTotal = SearchMarketRsp.Total
 	}
-	if req.SearchType == bayespb.SearchRequest_SEARCH_TYPE_UNSPECIFIED || req.SearchType == bayespb.SearchRequest_SEARCH_TYPE_USER {
+	if req.SearchType == apipb.SearchRequest_SEARCH_TYPE_UNSPECIFIED || req.SearchType == apipb.SearchRequest_SEARCH_TYPE_USER {
 		SearchUserRsp, err := s.data.RpcClient.UsercenterClient.SearchUser(ctx, &usercenterpb.SearchUserRequest{
 			Keyword:  req.Keyword,
 			Page:     req.UserPage,
@@ -351,7 +351,7 @@ func (s *BayesHttpService) Search(ctx context.Context, req *bayespb.SearchReques
 			return nil, err
 		}
 		for _, user := range SearchUserRsp.Users {
-			reply.Users = append(reply.Users, &bayespb.SearchReply_User{
+			reply.Users = append(reply.Users, &apipb.SearchReply_User{
 				Uid:        user.Uid,
 				Name:       user.Name,
 				Avatar:     user.Avatar,
@@ -365,15 +365,15 @@ func (s *BayesHttpService) Search(ctx context.Context, req *bayespb.SearchReques
 	return reply, nil
 }
 
-func (s *BayesHttpService) GetUserNotifications(ctx context.Context, req *bayespb.GetUserNotificationsRequest) (*bayespb.GetUserNotificationsReply, error) {
+func (s *HttpApiService) GetUserNotifications(ctx context.Context, req *apipb.GetUserNotificationsRequest) (*apipb.GetUserNotificationsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
 		return nil, pkg.ErrParam
 	}
 
-	rsp := &bayespb.GetUserNotificationsReply{
-		Notifications: make([]*bayespb.GetUserNotificationsReply_Notification, 0),
+	rsp := &apipb.GetUserNotificationsReply{
+		Notifications: make([]*apipb.GetUserNotificationsReply_Notification, 0),
 	}
 	GetUserNotificationsRsp, err := s.data.RpcClient.UsercenterClient.GetUserNotifications(ctx, &usercenterpb.GetUserNotificationsRequest{
 		Uid:           uid,
@@ -390,7 +390,7 @@ func (s *BayesHttpService) GetUserNotifications(ctx context.Context, req *bayesp
 	}
 
 	for _, notification := range GetUserNotificationsRsp.Notifications {
-		rsp.Notifications = append(rsp.Notifications, &bayespb.GetUserNotificationsReply_Notification{
+		rsp.Notifications = append(rsp.Notifications, &apipb.GetUserNotificationsReply_Notification{
 			Uid:       notification.Uid,
 			Uuid:      notification.Uuid,
 			Type:      notification.Type,
@@ -404,7 +404,7 @@ func (s *BayesHttpService) GetUserNotifications(ctx context.Context, req *bayesp
 	return rsp, nil
 }
 
-func (s *BayesHttpService) MarkNotificationsAsRead(ctx context.Context, req *bayespb.MarkNotificationsAsReadRequest) (*bayespb.MarkNotificationsAsReadReply, error) {
+func (s *HttpApiService) MarkNotificationsAsRead(ctx context.Context, req *apipb.MarkNotificationsAsReadRequest) (*apipb.MarkNotificationsAsReadReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -418,10 +418,10 @@ func (s *BayesHttpService) MarkNotificationsAsRead(ctx context.Context, req *bay
 		c.Log.Errorf("rpc mark notifications as read failed, err: [%+v]", err)
 		return nil, err
 	}
-	return &bayespb.MarkNotificationsAsReadReply{}, nil
+	return &apipb.MarkNotificationsAsReadReply{}, nil
 }
 
-func (s *BayesHttpService) GetInviteUserList(ctx context.Context, req *bayespb.GetInviteUserListRequest) (*bayespb.GetInviteUserListReply, error) {
+func (s *HttpApiService) GetInviteUserList(ctx context.Context, req *apipb.GetInviteUserListRequest) (*apipb.GetInviteUserListReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -436,11 +436,11 @@ func (s *BayesHttpService) GetInviteUserList(ctx context.Context, req *bayespb.G
 		c.Log.Errorf("rpc get invite user list failed, err: [%+v]", err)
 		return nil, err
 	}
-	rsp := &bayespb.GetInviteUserListReply{
-		Users: make([]*bayespb.GetInviteUserListReply_User, 0),
+	rsp := &apipb.GetInviteUserListReply{
+		Users: make([]*apipb.GetInviteUserListReply_User, 0),
 	}
 	for _, user := range GetInviteUserListRsp.Users {
-		rsp.Users = append(rsp.Users, &bayespb.GetInviteUserListReply_User{
+		rsp.Users = append(rsp.Users, &apipb.GetInviteUserListReply_User{
 			Uid:          user.Uid,
 			Name:         user.Name,
 			Avatar:       user.Avatar,
@@ -456,19 +456,19 @@ func (s *BayesHttpService) GetInviteUserList(ctx context.Context, req *bayespb.G
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetBaseTokenConfig(ctx context.Context, req *bayespb.GetBaseTokenConfigRequest) (*bayespb.GetBaseTokenConfigReply, error) {
+func (s *HttpApiService) GetBaseTokenConfig(ctx context.Context, req *apipb.GetBaseTokenConfigRequest) (*apipb.GetBaseTokenConfigReply, error) {
 
-	rsp := &bayespb.GetBaseTokenConfigReply{
-		BaseTokens: make([]*bayespb.GetBaseTokenConfigReply_BaseToken, 0),
+	rsp := &apipb.GetBaseTokenConfigReply{
+		BaseTokens: make([]*apipb.GetBaseTokenConfigReply_BaseToken, 0),
 	}
-	rsp.BaseTokens = append(rsp.BaseTokens, &bayespb.GetBaseTokenConfigReply_BaseToken{
+	rsp.BaseTokens = append(rsp.BaseTokens, &apipb.GetBaseTokenConfigReply_BaseToken{
 		BaseTokenType:     1,
 		BaseTokenName:     s.custom.AssetTokens.Points.Name,
 		BaseTokenSymbol:   s.custom.AssetTokens.Points.Symbol,
 		BaseTokenAddress:  s.custom.AssetTokens.Points.Address,
 		BaseTokenDecimals: s.custom.AssetTokens.Points.Decimals,
 	})
-	rsp.BaseTokens = append(rsp.BaseTokens, &bayespb.GetBaseTokenConfigReply_BaseToken{
+	rsp.BaseTokens = append(rsp.BaseTokens, &apipb.GetBaseTokenConfigReply_BaseToken{
 		BaseTokenType:     2,
 		BaseTokenName:     s.custom.AssetTokens.Usdc.Name,
 		BaseTokenSymbol:   s.custom.AssetTokens.Usdc.Symbol,

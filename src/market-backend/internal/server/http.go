@@ -6,10 +6,11 @@ import (
 	"market-backend/internal/conf"
 	"market-backend/internal/data"
 	"market-backend/internal/pkg/middleware"
-	"market-backend/internal/service/bayes_http"
-	"market-backend/internal/service/bayes_sse"
-	bayespb "market-proto/proto/market-backend/v1"
+	"market-backend/internal/service/http_api"
+	"market-backend/internal/service/sse_api"
+	apipb "market-proto/proto/market-backend/v1"
 	netHttp "net/http"
+	"strings"
 	"time"
 
 	"github.com/go-kratos/aegis/ratelimit/bbr"
@@ -20,8 +21,22 @@ import (
 	"github.com/gorilla/handlers"
 )
 
+// legacyPathRewrite creates an HTTP filter that rewrites legacy /bayes/* paths to /api/v1/*
+// This ensures backward compatibility with existing clients during migration.
+func legacyPathRewrite(next netHttp.Handler) netHttp.Handler {
+	return netHttp.HandlerFunc(func(w netHttp.ResponseWriter, r *netHttp.Request) {
+		if strings.HasPrefix(r.URL.Path, "/bayes/") {
+			r.URL.Path = "/api/v1/" + strings.TrimPrefix(r.URL.Path, "/bayes/")
+			if r.URL.RawPath != "" {
+				r.URL.RawPath = "/api/v1/" + strings.TrimPrefix(r.URL.RawPath, "/bayes/")
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, bayesHttpService *bayes_http.BayesHttpService, bayesSseService *bayes_sse.BayesSseService, logger log.Logger, data *data.Data, larkAlarm *alarm.LarkAlarm) *http.Server {
+func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, httpApiService *http_api.HttpApiService, sseApiService *sse_api.SseApiService, logger log.Logger, data *data.Data, larkAlarm *alarm.LarkAlarm) *http.Server {
 	// 创建自定义编解码器
 	codec := middleware.NewCustomCodec()
 
@@ -43,12 +58,17 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, b
 		http.ErrorEncoder(middleware.ErrorEncoder()),
 	}
 
-	opts = append(opts, http.Filter(handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}),
-		handlers.AllowedMethods([]string{"GET", "POST"}),
-		handlers.AllowedHeaders([]string{"Content-Type", "Authorization", "sentry-trace", "baggage"}),
-		handlers.AllowCredentials(),
-	)))
+	// Legacy path rewrite + CORS: combined in single Filter call
+	// (Kratos http.Filter replaces previous filters, so they must be in one call)
+	opts = append(opts, http.Filter(
+		legacyPathRewrite,
+		handlers.CORS(
+			handlers.AllowedOrigins([]string{"*"}),
+			handlers.AllowedMethods([]string{"GET", "POST"}),
+			handlers.AllowedHeaders([]string{"Content-Type", "Authorization", "sentry-trace", "baggage"}),
+			handlers.AllowCredentials(),
+		),
+	))
 	if c.Http.Network != "" {
 		opts = append(opts, http.Network(c.Http.Network))
 	}
@@ -61,11 +81,11 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, b
 	srv := http.NewServer(opts...)
 
 	// 注册protobuf生成的路由
-	bayespb.RegisterBayesHttpHTTPServer(srv, bayesHttpService)
-	bayespb.RegisterBayesSseHTTPServer(srv, bayesSseService)
+	apipb.RegisterHttpApiHTTPServer(srv, httpApiService)
+	apipb.RegisterSseApiHTTPServer(srv, sseApiService)
 
 	// SSE 连接使用自定义处理器，只接受 POST 请求，设置较长的超时时间
-	srv.HandleFunc("/bayes/sse/connect", func(w netHttp.ResponseWriter, r *netHttp.Request) {
+	srv.HandleFunc("/api/v1/sse/connect", func(w netHttp.ResponseWriter, r *netHttp.Request) {
 		// 只允许 POST 方法
 		if r.Method != netHttp.MethodPost {
 			netHttp.Error(w, "Method not allowed", netHttp.StatusMethodNotAllowed)
@@ -77,7 +97,7 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, b
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 		defer cancel()
 		r = r.WithContext(ctx)
-		bayesSseService.HandleConnection(w, r)
+		sseApiService.HandleConnection(w, r)
 	})
 
 	return srv

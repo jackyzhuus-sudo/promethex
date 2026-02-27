@@ -1,15 +1,15 @@
-package bayes_http
+package http_api
 
 import (
 	"context"
 	"market-backend/internal/pkg"
 	"market-backend/internal/pkg/util"
-	bayespb "market-proto/proto/market-backend/v1"
+	apipb "market-proto/proto/market-backend/v1"
 	marketcenterpb "market-proto/proto/market-service/marketcenter/v1"
 	usercenterpb "market-proto/proto/market-service/usercenter/v1"
 )
 
-func (s *BayesHttpService) PublishPost(ctx context.Context, req *bayespb.PublishPostRequest) (*bayespb.PublishPostReply, error) {
+func (s *HttpApiService) PublishPost(ctx context.Context, req *apipb.PublishPostRequest) (*apipb.PublishPostReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -27,10 +27,10 @@ func (s *BayesHttpService) PublishPost(ctx context.Context, req *bayespb.Publish
 		return nil, err
 	}
 
-	return &bayespb.PublishPostReply{PostUuid: PublishPostRsp.PostUuid}, nil
+	return &apipb.PublishPostReply{PostUuid: PublishPostRsp.PostUuid}, nil
 }
 
-func (s *BayesHttpService) PublishComment(ctx context.Context, req *bayespb.PublishCommentRequest) (*bayespb.PublishCommentReply, error) {
+func (s *HttpApiService) PublishComment(ctx context.Context, req *apipb.PublishCommentRequest) (*apipb.PublishCommentReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -49,10 +49,10 @@ func (s *BayesHttpService) PublishComment(ctx context.Context, req *bayespb.Publ
 		return nil, err
 	}
 
-	return &bayespb.PublishCommentReply{CommentUuid: PublishCommentRsp.CommentUuid}, nil
+	return &apipb.PublishCommentReply{CommentUuid: PublishCommentRsp.CommentUuid}, nil
 }
 
-func (s *BayesHttpService) LikeContent(ctx context.Context, req *bayespb.LikeContentRequest) (*bayespb.LikeContentReply, error) {
+func (s *HttpApiService) LikeContent(ctx context.Context, req *apipb.LikeContentRequest) (*apipb.LikeContentReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -70,10 +70,10 @@ func (s *BayesHttpService) LikeContent(ctx context.Context, req *bayespb.LikeCon
 		return nil, err
 	}
 
-	return &bayespb.LikeContentReply{}, nil
+	return &apipb.LikeContentReply{}, nil
 }
 
-func (s *BayesHttpService) UnlikeContent(ctx context.Context, req *bayespb.UnlikeContentRequest) (*bayespb.UnlikeContentReply, error) {
+func (s *HttpApiService) UnlikeContent(ctx context.Context, req *apipb.UnlikeContentRequest) (*apipb.UnlikeContentReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	uid := util.GetUidFromCtx(ctx)
 	if uid == "" {
@@ -91,10 +91,10 @@ func (s *BayesHttpService) UnlikeContent(ctx context.Context, req *bayespb.Unlik
 		return nil, err
 	}
 
-	return &bayespb.UnlikeContentReply{}, nil
+	return &apipb.UnlikeContentReply{}, nil
 }
 
-func (s *BayesHttpService) GetMarketPosts(ctx context.Context, req *bayespb.GetMarketPostsRequest) (*bayespb.GetMarketPostsReply, error) {
+func (s *HttpApiService) GetMarketPosts(ctx context.Context, req *apipb.GetMarketPostsRequest) (*apipb.GetMarketPostsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	GetMarketPostsAndPublishersRsp, err := s.data.RpcClient.UsercenterClient.GetMarketPostsAndPublishers(ctx, &usercenterpb.GetMarketPostsAndPublishersRequest{
 		Uid:           util.GetUidFromCtx(ctx),
@@ -108,7 +108,7 @@ func (s *BayesHttpService) GetMarketPosts(ctx context.Context, req *bayespb.GetM
 		return nil, err
 	}
 	if len(GetMarketPostsAndPublishersRsp.Posts) == 0 {
-		return &bayespb.GetMarketPostsReply{}, nil
+		return &apipb.GetMarketPostsReply{}, nil
 	}
 
 	uidList := make([]string, 0)
@@ -130,10 +130,10 @@ func (s *BayesHttpService) GetMarketPosts(ctx context.Context, req *bayespb.GetM
 		uidToUserTokenBalancesMap[userPositions.Uid] = userPositions.Positions
 	}
 
-	rsp := &bayespb.GetMarketPostsReply{Total: uint32(GetMarketPostsAndPublishersRsp.Total), Posts: make([]*bayespb.GetMarketPostsReply_Post, 0)}
+	rsp := &apipb.GetMarketPostsReply{Total: uint32(GetMarketPostsAndPublishersRsp.Total), Posts: make([]*apipb.GetMarketPostsReply_Post, 0)}
 
 	for _, post := range GetMarketPostsAndPublishersRsp.Posts {
-		onePost := &bayespb.GetMarketPostsReply_Post{
+		onePost := &apipb.GetMarketPostsReply_Post{
 			Uuid:          post.Uuid,
 			Uid:           post.Uid,
 			UserName:      post.UserName,
@@ -147,9 +147,9 @@ func (s *BayesHttpService) GetMarketPosts(ctx context.Context, req *bayespb.GetM
 			Id:            int64(post.Id),
 		}
 		if userTokenBalances, ok := uidToUserTokenBalancesMap[post.Uid]; ok {
-			onePost.Positions = make([]*bayespb.GetMarketPostsReply_Post_Position, 0)
+			onePost.Positions = make([]*apipb.GetMarketPostsReply_Post_Position, 0)
 			for _, userTokenBalance := range userTokenBalances {
-				onePost.Positions = append(onePost.Positions, &bayespb.GetMarketPostsReply_Post_Position{
+				onePost.Positions = append(onePost.Positions, &apipb.GetMarketPostsReply_Post_Position{
 					TokenAddress:     userTokenBalance.TokenAddress,
 					TokenName:        userTokenBalance.TokenName,
 					TokenPicUrl:      userTokenBalance.TokenPicUrl,
@@ -164,7 +164,7 @@ func (s *BayesHttpService) GetMarketPosts(ctx context.Context, req *bayespb.GetM
 	return rsp, nil
 }
 
-func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetCommentsRequest) (*bayespb.GetCommentsReply, error) {
+func (s *HttpApiService) GetComments(ctx context.Context, req *apipb.GetCommentsRequest) (*apipb.GetCommentsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	// 获取评论 用户信息
 	GetCommentsRsp, err := s.data.RpcClient.UsercenterClient.GetComments(ctx, &usercenterpb.GetCommentsRequest{
@@ -181,7 +181,7 @@ func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetComm
 	}
 
 	if len(GetCommentsRsp.Comments) == 0 {
-		return &bayespb.GetCommentsReply{}, nil
+		return &apipb.GetCommentsReply{}, nil
 	}
 
 	rootUuids := make([]string, 0)
@@ -231,9 +231,9 @@ func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetComm
 		uidToUserTokenBalancesMap[userPositions.Uid] = userPositions.Positions
 	}
 
-	rspComments := make([]*bayespb.GetCommentsReply_Comment, 0)
+	rspComments := make([]*apipb.GetCommentsReply_Comment, 0)
 	for _, comment := range GetCommentsRsp.Comments {
-		oneComment := &bayespb.GetCommentsReply_Comment{
+		oneComment := &apipb.GetCommentsReply_Comment{
 			Uid:                 comment.Uid,
 			UserName:            comment.UserName,
 			UserAvatarUrl:       comment.UserAvatarUrl,
@@ -242,18 +242,18 @@ func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetComm
 			Content:             comment.Content,
 			LikeCount:           int64(comment.LikeCount),
 			Timestamp:           comment.CreatedAt,
-			IsLike:              bayespb.GetCommentsReply_IsLike(comment.IsLike),
+			IsLike:              apipb.GetCommentsReply_IsLike(comment.IsLike),
 			ParentUserName:      comment.ParentUserName,
 			ParentUserAvatarUrl: comment.ParentUserAvatarUrl,
-			Replies:             make([]*bayespb.GetCommentsReply_Comment_Reply, 0),
+			Replies:             make([]*apipb.GetCommentsReply_Comment_Reply, 0),
 			Id:                  int64(comment.Id),
 			Uuid:                comment.Uuid,
 		}
 
 		if userTokenBalances, ok := uidToUserTokenBalancesMap[comment.Uid]; ok {
-			oneComment.Positions = make([]*bayespb.GetCommentsReply_Comment_Position, 0)
+			oneComment.Positions = make([]*apipb.GetCommentsReply_Comment_Position, 0)
 			for _, userTokenBalance := range userTokenBalances {
-				oneComment.Positions = append(oneComment.Positions, &bayespb.GetCommentsReply_Comment_Position{
+				oneComment.Positions = append(oneComment.Positions, &apipb.GetCommentsReply_Comment_Position{
 					TokenAddress:     userTokenBalance.TokenAddress,
 					TokenName:        userTokenBalance.TokenName,
 					TokenPicUrl:      userTokenBalance.TokenPicUrl,
@@ -270,13 +270,13 @@ func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetComm
 			for _, oneCommmentAndReply := range commentAndReplys {
 				oneComment.RepliesTotalCount = oneCommmentAndReply.Total
 				for _, reply := range oneCommmentAndReply.Replies {
-					oneComment.Replies = append(oneComment.Replies, &bayespb.GetCommentsReply_Comment_Reply{
+					oneComment.Replies = append(oneComment.Replies, &apipb.GetCommentsReply_Comment_Reply{
 						Uid:                 reply.Uid,
 						UserName:            reply.UserName,
 						UserAvatarUrl:       reply.UserAvatarUrl,
 						Content:             reply.Content,
 						LikeCount:           reply.LikeCount,
-						IsLike:              bayespb.GetCommentsReply_IsLike(reply.IsLike),
+						IsLike:              apipb.GetCommentsReply_IsLike(reply.IsLike),
 						ParentUserName:      reply.ParentUserName,
 						ParentUserAvatarUrl: reply.ParentUserAvatarUrl,
 						CreatedAt:           reply.CreatedAt,
@@ -291,5 +291,5 @@ func (s *BayesHttpService) GetComments(ctx context.Context, req *bayespb.GetComm
 		}
 		rspComments = append(rspComments, oneComment)
 	}
-	return &bayespb.GetCommentsReply{Total: int32(GetCommentsRsp.Total), Comments: rspComments}, nil
+	return &apipb.GetCommentsReply{Total: int32(GetCommentsRsp.Total), Comments: rspComments}, nil
 }
