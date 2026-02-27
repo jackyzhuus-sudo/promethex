@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	marketcenter "market-proto/proto/market-service/marketcenter/v1"
 	marketcenterPb "market-proto/proto/market-service/marketcenter/v1"
 	assetBiz "market-service/internal/biz/asset"
@@ -2325,9 +2326,13 @@ func (s *MarketService) GetEvent(ctx context.Context, req *marketcenter.GetEvent
 	c := common.NewBaseCtx(ctx, s.log)
 
 	query := &marketBiz.PredictionEventQuery{}
-	// 支持按 UUID ID 或 event_id 查询
 	if req.Id != "" {
-		query.EventId = req.Id
+		// 纯数字 → 按数据库 ID 查询；否则按 on-chain event_id 查询
+		if dbId, parseErr := strconv.ParseUint(req.Id, 10, 64); parseErr == nil {
+			query.DbId = uint(dbId)
+		} else {
+			query.EventId = req.Id
+		}
 	}
 
 	event, err := s.marketHandler.GetEvent(c, query)

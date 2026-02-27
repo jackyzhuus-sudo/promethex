@@ -1188,21 +1188,16 @@ func (h *MarketHandler) ListEvents(ctx common.Ctx, eventQuery *PredictionEventQu
 		return events, total, nil
 	}
 
-	// 收集所有 event_id 用于批量查询子市场
+	// 收集所有 event_id，一次批量查询所有子市场
 	eventIds := make([]string, 0, len(events))
 	for _, e := range events {
 		eventIds = append(eventIds, e.EventId)
 	}
 
-	// 查询所有相关市场
-	allMarkets := make([]*MarketEntity, 0)
-	for _, eid := range eventIds {
-		markets, err := h.marketRepo.GetMarkets(ctx, &MarketQuery{EventId: eid})
-		if err != nil {
-			ctx.Log.Errorf("ListEvents GetMarkets error for eventId %s: %+v", eid, err)
-			continue
-		}
-		allMarkets = append(allMarkets, markets...)
+	allMarkets, err := h.marketRepo.GetMarkets(ctx, &MarketQuery{EventIds: eventIds})
+	if err != nil {
+		ctx.Log.Errorf("ListEvents GetMarkets error: %+v", err)
+		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
 	}
 
 	// 预加载 options
@@ -1238,6 +1233,16 @@ func (h *MarketHandler) ListEvents(ctx common.Ctx, eventQuery *PredictionEventQu
 }
 
 func (h *MarketHandler) CreateEvent(ctx common.Ctx, entity *PredictionEventEntity) error {
+	// 唯一性校验：先检查 event_id 是否已存在
+	existing, err := h.eventRepo.GetEvent(ctx, &PredictionEventQuery{EventId: entity.EventId})
+	if err != nil {
+		ctx.Log.Errorf("CreateEvent check existence error: %+v", err)
+		return errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
+	if existing != nil && existing.Id > 0 {
+		return errors.New(int(marketcenterPb.ErrorCode_EVENT_ALREADY_EXISTS), "EVENT_ALREADY_EXISTS", "event with this event_id already exists")
+	}
+
 	if err := h.eventRepo.CreateEvent(ctx, entity); err != nil {
 		ctx.Log.Errorf("CreateEvent error: %+v", err)
 		return errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())

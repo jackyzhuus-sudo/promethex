@@ -41,7 +41,8 @@ enum ErrorCode {
   PLACE_ORDER_TOO_QUICK = 114102;
 
   // - event
-  EVENT_NOT_FOUND       = 115101;
+  EVENT_NOT_FOUND        = 115101;
+  EVENT_ALREADY_EXISTS   = 115102;
 }
 
 // Marketcenter服务定义

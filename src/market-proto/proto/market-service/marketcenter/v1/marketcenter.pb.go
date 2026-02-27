@@ -47,7 +47,8 @@ const (
 	ErrorCode_INVALID_USER_OPERATION ErrorCode = 114101
 	ErrorCode_PLACE_ORDER_TOO_QUICK  ErrorCode = 114102
 	// - event
-	ErrorCode_EVENT_NOT_FOUND ErrorCode = 115101
+	ErrorCode_EVENT_NOT_FOUND      ErrorCode = 115101
+	ErrorCode_EVENT_ALREADY_EXISTS ErrorCode = 115102
 )
 
 // Enum value maps for ErrorCode.
@@ -70,6 +71,7 @@ var (
 		114101: "INVALID_USER_OPERATION",
 		114102: "PLACE_ORDER_TOO_QUICK",
 		115101: "EVENT_NOT_FOUND",
+		115102: "EVENT_ALREADY_EXISTS",
 	}
 	ErrorCode_value = map[string]int32{
 		"ERROR_CODE_UNSPECIFIED":  0,
@@ -89,6 +91,7 @@ var (
 		"INVALID_USER_OPERATION":  114101,
 		"PLACE_ORDER_TOO_QUICK":   114102,
 		"EVENT_NOT_FOUND":         115101,
+		"EVENT_ALREADY_EXISTS":    115102,
 	}
 )
 
@@ -13381,7 +13384,7 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"collateral\x12#\n" +
 	"\rmetadata_hash\x18\x05 \x01(\tR\fmetadataHash\"%\n" +
 	"\x13CreateEventResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id*\xe3\x02\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id*\xff\x02\n" +
 	"\tErrorCode\x12\x1a\n" +
 	"\x16ERROR_CODE_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\x05PARAM\x10\x95\xdc\x06\x12\x0f\n" +
@@ -13399,7 +13402,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x17FOLLOW_MARKET_TOO_QUICK\x10\xd0\xf3\x06\x12\x1c\n" +
 	"\x16INVALID_USER_OPERATION\x10\xb5\xfb\x06\x12\x1b\n" +
 	"\x15PLACE_ORDER_TOO_QUICK\x10\xb6\xfb\x06\x12\x15\n" +
-	"\x0fEVENT_NOT_FOUND\x10\x9d\x83\a*`\n" +
+	"\x0fEVENT_NOT_FOUND\x10\x9d\x83\a\x12\x1a\n" +
+	"\x14EVENT_ALREADY_EXISTS\x10\x9e\x83\a*`\n" +
 	"\fMarketIsShow\x12\x1e\n" +
 	"\x1aMARKET_IS_SHOW_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13MARKET_IS_SHOW_SHOW\x10\x01\x12\x17\n" +
