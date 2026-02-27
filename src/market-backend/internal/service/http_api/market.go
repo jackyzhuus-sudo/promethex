@@ -1062,22 +1062,28 @@ func (s *HttpApiService) GetEventDetail(ctx context.Context, req *apipb.GetEvent
 		return nil, errors.NotFound("NOT_FOUND", "event not found")
 	}
 
+	// Id 优先使用 upstream 返回的 db id，fallback 到链上 eventId
+	eventId := event.Id
+	if eventId == "" {
+		eventId = event.EventId
+	}
+
+	eventStatus := apipb.EventStatus(event.Status)
+	if eventStatus < apipb.EventStatus_EVENT_STATUS_UNSPECIFIED || eventStatus > apipb.EventStatus_EVENT_STATUS_FROZEN {
+		eventStatus = apipb.EventStatus_EVENT_STATUS_UNSPECIFIED
+	}
+
 	rsp := &apipb.GetEventDetailReply{
-		Id:               fmt.Sprintf("%d", event.CreatedAt), // use event db id from upstream
+		Id:               eventId,
 		EventId:          event.EventId,
 		Title:            event.Title,
 		OutcomeSlotCount: event.OutcomeSlotCount,
 		Collateral:       event.Collateral,
-		Status:           apipb.EventStatus(event.Status),
+		Status:           eventStatus,
 		MetadataHash:     event.MetadataHash,
 		CreatedAt:        event.CreatedAt,
 		UpdatedAt:        event.UpdatedAt,
 		Markets:          make([]*apipb.GetEventDetailReply_Market, 0, len(event.Markets)),
-	}
-
-	// 使用 upstream 返回的 id 字段
-	if event.Id != "" {
-		rsp.Id = event.Id
 	}
 
 	for _, market := range event.Markets {
@@ -1136,12 +1142,16 @@ func (s *HttpApiService) GetEvents(ctx context.Context, req *apipb.GetEventsRequ
 	}
 
 	for _, event := range listEventsRsp.Events {
+		evtStatus := apipb.EventStatus(event.Status)
+		if evtStatus < apipb.EventStatus_EVENT_STATUS_UNSPECIFIED || evtStatus > apipb.EventStatus_EVENT_STATUS_FROZEN {
+			evtStatus = apipb.EventStatus_EVENT_STATUS_UNSPECIFIED
+		}
 		summary := &apipb.GetEventsReply_EventSummary{
 			Id:               event.Id,
 			EventId:          event.EventId,
 			Title:            event.Title,
 			OutcomeSlotCount: event.OutcomeSlotCount,
-			Status:           apipb.EventStatus(event.Status),
+			Status:           evtStatus,
 			CreatedAt:        event.CreatedAt,
 			Markets:          make([]*apipb.GetEventsReply_EventSummary_Market, 0, len(event.Markets)),
 		}
