@@ -726,8 +726,6 @@ message GetBaseTokenConfigRequest {
 
 message GetBaseTokenConfigReply {
   message BaseToken {
-    // 代币类型 1: points 2: usdc
-    uint32 base_token_type = 1;
     // 代币名称
     string base_token_name = 2;
     // 代币符号
@@ -798,7 +796,7 @@ message GetUserNotificationsReply {
     // 时间
     int64 created_at = 7;
     // 基础代币类型
-    BaseTokenType base_token_type = 8;
+    string base_token_address = 8;
   }
   uint32 total = 1;
   repeated Notification notifications = 2;
@@ -877,7 +875,7 @@ message GetMarketsRequest {
   // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
   SortType sort_type = 3;
   // 基础代币类型（可选）1: points 2: usdc
-  BaseTokenType base_token_type = 4;
+  string base_token_address = 4;
   // 市场状态（可选）
   uint32 status = 5;
   // 页码
@@ -994,8 +992,8 @@ message GetMarketsReply {
     uint32 market_decimal = 7;  
     // 市场交易人数
     uint32 participants_count = 8;
-    // 基础代币类型 1: points 2: usdc
-    uint32 base_token_type = 9;
+    // 基础代币地址
+    string base_token_address = 9;
     // 市场选项信息
     repeated Option options = 10;
     // 市场帖子信息
@@ -1154,8 +1152,8 @@ message ClaimMarketResultReply {
 message TransferBaseTokenRequest {
   // 接收地址
   string to_address = 1;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 2;
+ 
+  string base_token_address = 2;
   // 转账数量
   string amount = 3;
   // 用户操作信息
@@ -1355,8 +1353,8 @@ message GetFollowMarketsRequest {
   uint32 page = 1;
   // 每页数量
   uint32 page_size = 2;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 3;
+ 
+  string base_token_address = 3;
 }
 
 message GetFollowMarketsReply {
@@ -1373,8 +1371,8 @@ message GetFollowMarketsReply {
     uint32 market_status = 5;
     // 市场截止时间
     int64 deadline = 6;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 7;
+   
+    string base_token_address = 7;
   }
   // 总页数
   uint32 total = 1;
@@ -1385,8 +1383,8 @@ message GetFollowMarketsReply {
 message GetHoldingPositionsMarketRequest {
   // 查看的用户uid
   string uid = 1;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 2;
+ 
+  string base_token_address = 2;
   // 页码
   uint32 page = 3;
   // 每页数量
@@ -1425,8 +1423,8 @@ message GetHoldingPositionsMarketReply {
     string market_volume = 6;
     // 市场参与者数量
     uint32 market_participants_count = 7;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 8;
+   
+    string base_token_address = 8;
     // 用户该市场的总持仓价值
     string user_market_total_value = 9;
     // 用户该市场具体持仓
@@ -1440,8 +1438,8 @@ message GetHoldingPositionsMarketReply {
 }
 
 message GetHotMarketsRequest {
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 1;
+ 
+  string base_token_address = 1;
 }
 
 message GetHotMarketsReply {
@@ -1456,8 +1454,8 @@ message GetHotMarketsReply {
     string market_description = 4;
     // 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
     uint32 market_status = 5;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 6;
+   
+    string base_token_address = 6;
   }
   // 市场列表
   repeated MarketInfo market_list = 1;
@@ -1535,8 +1533,6 @@ message GetMarketDetailReply {
   IsFollowed is_followed = 13;
   // 条件代币列表
   repeated OptionInfo option_list = 14;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 15;
   // 基础代币地址
   string base_token_address = 16;
   // 是否已结算
@@ -1796,11 +1792,6 @@ message UnfollowUserReply {
 
 
 
-enum BaseTokenType {
-  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
-  BASE_TOKEN_TYPE_POINTS = 1;
-  BASE_TOKEN_TYPE_USDC = 2;
-}
 
 message GetUserPositionsRequest {
   // 用户uid
@@ -1812,7 +1803,7 @@ message GetUserPositionsRequest {
   // 市场地址(可选)
   string market_address = 4;
   // 基础代币类型(可选) 1: points 2: usdc
-  BaseTokenType base_token_type = 5;
+  string base_token_address = 5;
   // 条件代币地址(可选)
   string option_address = 6;
 }
@@ -1829,8 +1820,8 @@ message GetUserPositionsReply {
     string market_pic_url = 4;
     // 条件代币地址
     string option_address = 5;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 6;
+   
+    string base_token_address = 6;
     // 条件代币名称
     string option_name = 7;
     // 条件代币描述
@@ -1876,8 +1867,8 @@ message GetUserTradesRequest {
   uint32 page_size = 3;
   // 查看的用户uid
   string uid = 4;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 5;
+ 
+  string base_token_address = 5;
 }
 
 message GetUserTradesReply {
@@ -1923,8 +1914,8 @@ message GetUserTradesReply {
     string deal_price = 7; 
 
     Option option = 8;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 9;
+   
+    string base_token_address = 9;
   }
   uint32 total = 1;
   repeated Order orders = 2;
@@ -1943,8 +1934,8 @@ message GetUserBaseInfoRequest {
   string issuer = 5;
   // 用户名称
   string name = 6;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 7;
+ 
+  string base_token_address = 7;
   // 邀请码
   string invite_code = 8;
 }
@@ -1994,8 +1985,8 @@ message GetUserBaseInfoReply {
 }
 
 message GetUserAssetInfoRequest {
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 1;
+ 
+  string base_token_address = 1;
   // 用户uid
   string uid = 2;
 }
@@ -2035,8 +2026,8 @@ message SearchRequest {
   uint32 user_page = 5;
   // 每页数量
   uint32 user_page_size = 6;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 7;
+ 
+  string base_token_address = 7;
 }
 
 message SearchReply {
@@ -2057,8 +2048,8 @@ message SearchReply {
     string volume = 7;
     // 市场截止时间
     uint64 deadline = 8;
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 9;
+   
+    string base_token_address = 9;
   }
   message User {
     // 用户ID
@@ -2092,8 +2083,8 @@ message GetUserAssetHistoryRequest {
   }
   // 查看的用户uid
   string uid = 1;
-  // 基础代币类型 1: points 2: usdc
-  BaseTokenType base_token_type = 2;
+ 
+  string base_token_address = 2;
   // 时间间隔 1: 7d  2: 1m  3: 3m   4: all
   TimeInterval time_interval = 3;
 }
@@ -2113,7 +2104,7 @@ message GetUserAssetHistoryReply {
   }
   uint32 total = 1;
   repeated OneSnapshot snapshots = 2;
-  BaseTokenType base_token_type = 3;
+  string base_token_address = 3;
   // 精度
   uint32 decimal = 4;
 }
@@ -2177,8 +2168,8 @@ message GetUserTransactionsReply {
     uint32 timestamp = 2;
     // 方向 1 转入base token  2 转出base token
     uint32 side = 3; 
-    // 基础代币类型 1: points 2: usdc
-    BaseTokenType base_token_type = 4;
+   
+    string base_token_address = 4;
     // 代币地址
     string token_address = 5;
     // 代币精度

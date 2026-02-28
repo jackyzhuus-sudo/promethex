@@ -217,12 +217,7 @@ func (p *QueryPriceProcessor) processMarketsPage(ctx com.Ctx, page, pageSize uin
 					}
 					return 6
 				}()
-				oneOptionPrice.BaseTokenType = func() rpc.BaseTokenType {
-					if marketInfo.BaseTokenType == rpc.BaseTokenType_BASE_TOKEN_TYPE_USDC {
-						return rpc.BaseTokenType_BASE_TOKEN_TYPE_USDC
-					}
-					return rpc.BaseTokenType_BASE_TOKEN_TYPE_POINTS
-				}()
+				oneOptionPrice.BaseTokenAddress = marketInfo.BaseTokenAddress
 			}
 
 			updateReq.OptionPrices = append(updateReq.OptionPrices, oneOptionPrice)

@@ -20,7 +20,7 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 )
 
-func (s *BayesService) CreateUser(ctx context.Context, req *usercenter.CreateUserRequest) (*usercenter.CreateUserReply, error) {
+func (s *MarketService) CreateUser(ctx context.Context, req *usercenter.CreateUserRequest) (*usercenter.CreateUserReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	userEntity, err := s.userHandler.CreateUser(c, &userBiz.UserEntity{
 		Email:         req.Email,
@@ -58,7 +58,7 @@ func (s *BayesService) CreateUser(ctx context.Context, req *usercenter.CreateUse
 	return &usercenter.CreateUserReply{Uid: userEntity.UID}, nil
 }
 
-func (s *BayesService) GetUserInfo(ctx context.Context, req *usercenter.GetUserInfoRequest) (*usercenter.GetUserInfoReply, error) {
+func (s *MarketService) GetUserInfo(ctx context.Context, req *usercenter.GetUserInfoRequest) (*usercenter.GetUserInfoReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	userEntity, err := s.userHandler.GetUserInfo(c, &userBiz.UserQuery{
 		Address:    req.Address,
@@ -135,7 +135,7 @@ func (s *BayesService) GetUserInfo(ctx context.Context, req *usercenter.GetUserI
 	}, nil
 }
 
-func (s *BayesService) SetUserInfo(ctx context.Context, req *usercenter.SetUserInfoRequest) (*usercenter.SetUserInfoReply, error) {
+func (s *MarketService) SetUserInfo(ctx context.Context, req *usercenter.SetUserInfoRequest) (*usercenter.SetUserInfoReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	inviter, err := s.userHandler.UpdateUser(c, &userBiz.UserEntity{
 		UID:         req.Uid,
@@ -176,7 +176,7 @@ func (s *BayesService) SetUserInfo(ctx context.Context, req *usercenter.SetUserI
 	return &usercenter.SetUserInfoReply{}, nil
 }
 
-func (s *BayesService) PublishPost(ctx context.Context, req *usercenter.PublishPostRequest) (*usercenter.PublishPostReply, error) {
+func (s *MarketService) PublishPost(ctx context.Context, req *usercenter.PublishPostRequest) (*usercenter.PublishPostReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	marketEntity, err := s.marketHandler.GetMarket(c, &marketBiz.MarketQuery{
 		Address: req.MarketAddress,
@@ -201,7 +201,7 @@ func (s *BayesService) PublishPost(ctx context.Context, req *usercenter.PublishP
 
 }
 
-func (s *BayesService) PublishComment(ctx context.Context, req *usercenter.PublishCommentRequest) (*usercenter.PublishCommentReply, error) {
+func (s *MarketService) PublishComment(ctx context.Context, req *usercenter.PublishCommentRequest) (*usercenter.PublishCommentReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	commentUuid, notifyUid, marketAddress, err := s.communityHandler.PublishComment(c, &communityBiz.CommentEntity{
@@ -302,7 +302,7 @@ func (s *BayesService) PublishComment(ctx context.Context, req *usercenter.Publi
 			Type:          userBiz.NotificationTypeReceiveComment,
 			Category:      uint8(userBiz.NotificationCategoryCommunity),
 			Status:        userBiz.NotificationStatusUnRead,
-			BaseTokenType: uint8(marketEntity.TokenType),
+			BaseTokenAddress: marketEntity.BaseTokenAddress,
 		})
 		if err != nil {
 			newCtx.Log.Errorf("async generate comment notification GenerateNewUserNotification error: %+v", err)
@@ -312,7 +312,7 @@ func (s *BayesService) PublishComment(ctx context.Context, req *usercenter.Publi
 	return &usercenter.PublishCommentReply{CommentUuid: commentUuid}, nil
 }
 
-func (s *BayesService) UpdateLikeContentStatus(ctx context.Context, req *usercenter.UpdateLikeContentStatusRequest) (*usercenter.UpdateLikeContentStatusReply, error) {
+func (s *MarketService) UpdateLikeContentStatus(ctx context.Context, req *usercenter.UpdateLikeContentStatusRequest) (*usercenter.UpdateLikeContentStatusReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	notifyUid, err := s.communityHandler.UpdateLikeContentStatus(c, &communityBiz.UserLikeEntity{
@@ -386,7 +386,7 @@ func (s *BayesService) UpdateLikeContentStatus(ctx context.Context, req *usercen
 	return &usercenter.UpdateLikeContentStatusReply{}, nil
 }
 
-func (s *BayesService) UploadFileToBizBucketS3(ctx context.Context, req *usercenter.UploadFileToBizBucketS3Request) (*usercenter.UploadFileToBizBucketS3Reply, error) {
+func (s *MarketService) UploadFileToBizBucketS3(ctx context.Context, req *usercenter.UploadFileToBizBucketS3Request) (*usercenter.UploadFileToBizBucketS3Reply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	key, err := s.userHandler.UploadFileToBizBucketS3(c, req.FileData, req.Biz)
@@ -396,7 +396,7 @@ func (s *BayesService) UploadFileToBizBucketS3(ctx context.Context, req *usercen
 	return &usercenter.UploadFileToBizBucketS3Reply{FileUrl: key}, nil
 }
 
-func (s *BayesService) DownloadFileFromBizBucketS3(ctx context.Context, req *usercenter.DownloadFileFromBizBucketS3Request) (*usercenter.DownloadFileFromBizBucketS3Reply, error) {
+func (s *MarketService) DownloadFileFromBizBucketS3(ctx context.Context, req *usercenter.DownloadFileFromBizBucketS3Request) (*usercenter.DownloadFileFromBizBucketS3Reply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	fileData, contentType, err := s.userHandler.DownloadFileFromS3(c, req.FileUrl)
@@ -406,7 +406,7 @@ func (s *BayesService) DownloadFileFromBizBucketS3(ctx context.Context, req *use
 	return &usercenter.DownloadFileFromBizBucketS3Reply{FileData: fileData, ContentType: contentType}, nil
 }
 
-func (s *BayesService) GetUserInfosByUids(ctx context.Context, req *usercenter.GetUserInfosByUidsRequest) (*usercenter.GetUserInfosByUidsReply, error) {
+func (s *MarketService) GetUserInfosByUids(ctx context.Context, req *usercenter.GetUserInfosByUidsRequest) (*usercenter.GetUserInfosByUidsReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	userEntities, err := s.userHandler.GetUsersInfo(c, &userBiz.UserQuery{
@@ -436,7 +436,7 @@ func (s *BayesService) GetUserInfosByUids(ctx context.Context, req *usercenter.G
 	return rsp, nil
 }
 
-func (s *BayesService) GetMarketPostsAndPublishers(ctx context.Context, req *usercenter.GetMarketPostsAndPublishersRequest) (*usercenter.GetMarketPostsAndPublishersResponse, error) {
+func (s *MarketService) GetMarketPostsAndPublishers(ctx context.Context, req *usercenter.GetMarketPostsAndPublishersRequest) (*usercenter.GetMarketPostsAndPublishersResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -537,7 +537,7 @@ func (s *BayesService) GetMarketPostsAndPublishers(ctx context.Context, req *use
 	return rsp, nil
 }
 
-func (s *BayesService) BatchGetCommentReplysAndUsers(ctx context.Context, req *usercenter.BatchGetCommentReplysAndUsersRequest) (*usercenter.BatchGetCommentReplysAndUsersResponse, error) {
+func (s *MarketService) BatchGetCommentReplysAndUsers(ctx context.Context, req *usercenter.BatchGetCommentReplysAndUsersRequest) (*usercenter.BatchGetCommentReplysAndUsersResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	rsp := &usercenter.BatchGetCommentReplysAndUsersResponse{
@@ -626,7 +626,7 @@ func (s *BayesService) BatchGetCommentReplysAndUsers(ctx context.Context, req *u
 	return rsp, nil
 }
 
-func (s *BayesService) GetComments(ctx context.Context, req *usercenter.GetCommentsRequest) (*usercenter.GetCommentsResponse, error) {
+func (s *MarketService) GetComments(ctx context.Context, req *usercenter.GetCommentsRequest) (*usercenter.GetCommentsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.LastId <= 0 && req.Page <= 0 {
@@ -752,7 +752,7 @@ func (s *BayesService) GetComments(ctx context.Context, req *usercenter.GetComme
 	}, nil
 }
 
-func (s *BayesService) UpdateFollowStatus(ctx context.Context, req *usercenter.UpdateFollowStatusRequest) (*usercenter.UpdateFollowStatusReply, error) {
+func (s *MarketService) UpdateFollowStatus(ctx context.Context, req *usercenter.UpdateFollowStatusRequest) (*usercenter.UpdateFollowStatusReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	err := s.userHandler.UpdateUserFollowStatus(c, &userBiz.UserFollowEntity{
 		UID:       req.Uid,
@@ -805,7 +805,7 @@ func (s *BayesService) UpdateFollowStatus(ctx context.Context, req *usercenter.U
 	return &usercenter.UpdateFollowStatusReply{}, nil
 }
 
-func (s *BayesService) SearchUser(ctx context.Context, req *usercenter.SearchUserRequest) (*usercenter.SearchUserResponse, error) {
+func (s *MarketService) SearchUser(ctx context.Context, req *usercenter.SearchUserRequest) (*usercenter.SearchUserResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -845,7 +845,7 @@ func (s *BayesService) SearchUser(ctx context.Context, req *usercenter.SearchUse
 	return rsp, nil
 }
 
-func (s *BayesService) GetUsersInfoByAddresses(ctx context.Context, req *usercenter.GetUsersInfoByAddressesRequest) (*usercenter.GetUsersInfoByAddressesReply, error) {
+func (s *MarketService) GetUsersInfoByAddresses(ctx context.Context, req *usercenter.GetUsersInfoByAddressesRequest) (*usercenter.GetUsersInfoByAddressesReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	userEntities, err := s.userHandler.GetUsersInfo(c, &userBiz.UserQuery{
@@ -870,7 +870,7 @@ func (s *BayesService) GetUsersInfoByAddresses(ctx context.Context, req *usercen
 	return rsp, nil
 }
 
-func (s *BayesService) BatchGetMarketPostAndPublisher(ctx context.Context, req *usercenter.BatchGetMarketPostAndPublisherRequest) (*usercenter.BatchGetMarketPostAndPublisherResponse, error) {
+func (s *MarketService) BatchGetMarketPostAndPublisher(ctx context.Context, req *usercenter.BatchGetMarketPostAndPublisherRequest) (*usercenter.BatchGetMarketPostAndPublisherResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	rsp := &usercenter.BatchGetMarketPostAndPublisherResponse{
@@ -925,7 +925,7 @@ func (s *BayesService) BatchGetMarketPostAndPublisher(ctx context.Context, req *
 	return rsp, nil
 }
 
-func (s *BayesService) GetUserNotifications(ctx context.Context, req *usercenter.GetUserNotificationsRequest) (*usercenter.GetUserNotificationsResponse, error) {
+func (s *MarketService) GetUserNotifications(ctx context.Context, req *usercenter.GetUserNotificationsRequest) (*usercenter.GetUserNotificationsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	if req.Page <= 0 {
@@ -945,7 +945,7 @@ func (s *BayesService) GetUserNotifications(ctx context.Context, req *usercenter
 		Category:      uint8(req.Category),
 		Type:          uint8(req.Type),
 		Status:        uint8(req.Status),
-		BaseTokenType: uint8(req.BaseTokenType),
+		BaseTokenAddress: req.BaseTokenAddress,
 		BaseQuery: base.BaseQuery{
 			Order:  "id desc",
 			Limit:  int32(req.PageSize),
@@ -970,7 +970,7 @@ func (s *BayesService) GetUserNotifications(ctx context.Context, req *usercenter
 	return rsp, nil
 }
 
-func (s *BayesService) MarkNotificationsAsRead(ctx context.Context, req *usercenter.MarkNotificationsAsReadRequest) (*usercenter.MarkNotificationsAsReadResponse, error) {
+func (s *MarketService) MarkNotificationsAsRead(ctx context.Context, req *usercenter.MarkNotificationsAsReadRequest) (*usercenter.MarkNotificationsAsReadResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	err := s.userHandler.UpdateNotificationsToRead(c, req.Uid, req.NotificationUuids)
 	if err != nil {
@@ -979,7 +979,7 @@ func (s *BayesService) MarkNotificationsAsRead(ctx context.Context, req *usercen
 	return &usercenter.MarkNotificationsAsReadResponse{}, nil
 }
 
-func (s BayesService) GetInviteUserList(ctx context.Context, req *usercenter.GetInviteUserListRequest) (*usercenter.GetInviteUserListReply, error) {
+func (s *MarketService) GetInviteUserList(ctx context.Context, req *usercenter.GetInviteUserListRequest) (*usercenter.GetInviteUserListReply, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 	rsp := &usercenter.GetInviteUserListReply{
 		Users: make([]*usercenter.GetInviteUserListReply_User, 0),
@@ -1032,7 +1032,7 @@ func (s BayesService) GetInviteUserList(ctx context.Context, req *usercenter.Get
 	return rsp, nil
 }
 
-func (s *BayesService) GetTasks(ctx context.Context, req *usercenter.GetTasksRequest) (*usercenter.GetTasksResponse, error) {
+func (s *MarketService) GetTasks(ctx context.Context, req *usercenter.GetTasksRequest) (*usercenter.GetTasksResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	taskEntities, total, err := s.taskHandler.GetTasksWithTotal(c, &taskBiz.TaskQuery{
@@ -1101,7 +1101,14 @@ func (s *BayesService) GetTasks(ctx context.Context, req *usercenter.GetTasksReq
 	}
 
 	// 将积分除以精度，得到真实的积分数量
-	realPoints := taskRewardPoints.Shift(-int32(s.confCustom.AssetTokens.Points.Decimals))
+	var pointsDecimals uint32
+	for _, token := range s.confCustom.AssetTokens {
+		if token.Symbol == "POINTS" || token.Name == "Points" {
+			pointsDecimals = token.Decimals
+			break
+		}
+	}
+	realPoints := taskRewardPoints.Shift(-int32(pointsDecimals))
 
 	rspTasks := make([]*usercenter.GetTasksResponse_Task, 0)
 	for _, taskEntity := range taskEntities {
@@ -1157,7 +1164,7 @@ func (s *BayesService) GetTasks(ctx context.Context, req *usercenter.GetTasksReq
 	}, nil
 }
 
-func (s *BayesService) ClaimTaskReward(ctx context.Context, req *usercenter.ClaimTaskRewardRequest) (*usercenter.ClaimTaskRewardResponse, error) {
+func (s *MarketService) ClaimTaskReward(ctx context.Context, req *usercenter.ClaimTaskRewardRequest) (*usercenter.ClaimTaskRewardResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	msg, err := s.taskHandler.ClaimTaskReward(c, req.Uid, req.TaskKey)
@@ -1174,7 +1181,7 @@ func (s *BayesService) ClaimTaskReward(ctx context.Context, req *usercenter.Clai
 	return &usercenter.ClaimTaskRewardResponse{}, nil
 }
 
-func (s *BayesService) TaskDone(ctx context.Context, req *usercenter.TaskDoneRequest) (*usercenter.TaskDoneResponse, error) {
+func (s *MarketService) TaskDone(ctx context.Context, req *usercenter.TaskDoneRequest) (*usercenter.TaskDoneResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
 	err := s.taskHandler.TaskDone(c, req.Uid, req.TaskKey)

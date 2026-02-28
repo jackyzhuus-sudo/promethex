@@ -34,14 +34,22 @@ func newS3Client(c *conf.Data) *S3Client {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	var s3Opts []func(*s3.Options)
+	if c.S3.Endpoint != "" {
+		s3Opts = append(s3Opts, func(o *s3.Options) {
+			o.BaseEndpoint = &c.S3.Endpoint
+			o.UsePathStyle = c.S3.UsePathStyle
+		})
+	}
+
 	cli := &S3Client{
 		BucketBiz:   c.S3.BizBucket,
 		BucketAdmin: c.S3.AdminBucket,
 		Region:      c.S3.Region,
-		s3Cli:       s3.NewFromConfig(cfg),
+		s3Cli:       s3.NewFromConfig(cfg, s3Opts...),
 	}
 
-	// TODO check s3 client init success or not
 	return cli
 }
 

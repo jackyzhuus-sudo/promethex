@@ -80,7 +80,7 @@ func (h *TradesMonthlyLeaderboardHandler) processUserTradeMessage(ctx common.Ctx
 		userTradeStreamMsg.UID, userTradeStreamMsg)
 
 	monthStr := util.GetMonthStartTimeStr(userTradeStreamMsg.Timestamp)
-	leaderboardKey := fmt.Sprintf(assetBiz.TradesMonthlyLeaderboard, userTradeStreamMsg.BaseTokenType, monthStr)
+	leaderboardKey := fmt.Sprintf(assetBiz.TradesMonthlyLeaderboard, userTradeStreamMsg.BaseTokenAddress, monthStr)
 	err = h.assetBiz.UpdateLeaderboard(ctx, leaderboardKey, userTradeStreamMsg.UID, 1.0)
 	if err != nil {
 		ctx.Log.Errorf("failed to update trades all time leaderboard: %w", err)

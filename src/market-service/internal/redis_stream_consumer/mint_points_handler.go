@@ -84,10 +84,23 @@ func (h *MintPointsHandler) ProcessMessage(ctx common.Ctx, streamKey string, msg
 	}
 }
 
-// 以下是从原MintPointsConsumer中提取的业务逻辑方法，保持完全不变
+// findPointsToken returns the Points token address and config from the AssetTokens map.
+func (h *MintPointsHandler) findPointsToken() (string, *conf.Custom_AssetToken) {
+	for addr, token := range h.confCustom.AssetTokens {
+		if token.Symbol == "POINTS" || token.Name == "Points" {
+			return addr, token
+		}
+	}
+	return "", nil
+}
 
 // processMessage 处理单条消息
 func (h *MintPointsHandler) processNewUserMessage(ctx common.Ctx, msg redis.XMessage) error {
+	pointsAddr, pointsToken := h.findPointsToken()
+	if pointsToken == nil {
+		return fmt.Errorf("points token not found in config")
+	}
+
 	// 解析消息
 	newUserEntity := &userBiz.UserEntity{}
 	err := newUserEntity.ParseNewUserMessage(msg)
@@ -99,7 +112,7 @@ func (h *MintPointsHandler) processNewUserMessage(ctx common.Ctx, msg redis.XMes
 		newUserEntity.UID, newUserEntity)
 
 	amount := new(big.Int).SetInt64(int64(h.confCustom.NewUserPoints))
-	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(h.confCustom.AssetTokens.Points.Decimals)), nil)
+	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(pointsToken.Decimals)), nil)
 	finalAmount := new(big.Int).Mul(amount, multiplier)
 
 	// 幂等检查
@@ -122,15 +135,15 @@ func (h *MintPointsHandler) processNewUserMessage(ctx common.Ctx, msg redis.XMes
 	}
 
 	userMintPointsEntity := &assetBiz.UserMintPointsEntity{
-		UUID:           util.GenerateUUID(),
-		UID:            newUserEntity.UID,
-		TokenAddress:   h.confCustom.AssetTokens.Points.Address,
-		BaseTokenType:  assetBiz.BaseTokenTypePoints,
-		Amount:         decimal.NewFromBigInt(finalAmount, 0),
-		Status:         assetBiz.UserMintPointsStatusPending,
-		EventProcessed: assetBiz.ProcessedNo,
-		Source:         assetBiz.UserMintPointsSourceNewUser,
-		TxHash:         txHash,
+		UUID:             util.GenerateUUID(),
+		UID:              newUserEntity.UID,
+		TokenAddress:     pointsAddr,
+		BaseTokenAddress: pointsAddr,
+		Amount:           decimal.NewFromBigInt(finalAmount, 0),
+		Status:           assetBiz.UserMintPointsStatusPending,
+		EventProcessed:   assetBiz.ProcessedNo,
+		Source:           assetBiz.UserMintPointsSourceNewUser,
+		TxHash:           txHash,
 		// InviteUID:      newUserEntity.InviteUID,
 	}
 
@@ -157,22 +170,22 @@ func (h *MintPointsHandler) processNewUserMessage(ctx common.Ctx, msg redis.XMes
 
 		// 生成mint_points通知
 		bizData, err := json.Marshal(&userBiz.InitPointsNotificationEntity{
-			PointAddress: h.confCustom.AssetTokens.Points.Address,
+			PointAddress: pointsAddr,
 			Amount:       finalAmount.String(),
-			Decimal:      int32(h.confCustom.AssetTokens.Points.Decimals),
+			Decimal:      int32(pointsToken.Decimals),
 		})
 		if err != nil {
 			ctx.Log.Errorf("marshal user notification entity error", err)
 			return
 		}
 		if err = h.userBiz.GenerateNewUserNotification(ctx, &userBiz.UserNotificationEntity{
-			UID:           newUserEntity.UID,
-			UUID:          util.GenerateUUID(),
-			Type:          userBiz.NotificationTypeReceiveInitPoints,
-			BizJson:       json.RawMessage(bizData),
-			Status:        userBiz.NotificationStatusUnRead,
-			Category:      userBiz.NotificationCategoryTrade,
-			BaseTokenType: assetBiz.BaseTokenTypePoints,
+			UID:              newUserEntity.UID,
+			UUID:             util.GenerateUUID(),
+			Type:             userBiz.NotificationTypeReceiveInitPoints,
+			BizJson:          json.RawMessage(bizData),
+			Status:           userBiz.NotificationStatusUnRead,
+			Category:         userBiz.NotificationCategoryTrade,
+			BaseTokenAddress: pointsAddr,
 		}); err != nil {
 			ctx.Log.Errorf("create init points notification error", "error", err)
 		}
@@ -185,6 +198,11 @@ func (h *MintPointsHandler) processNewUserMessage(ctx common.Ctx, msg redis.XMes
 }
 
 func (h *MintPointsHandler) processBindInviteRelationMessage(ctx common.Ctx, msg redis.XMessage) error {
+	pointsAddr, pointsToken := h.findPointsToken()
+	if pointsToken == nil {
+		return fmt.Errorf("points token not found in config")
+	}
+
 	bindInviteRelationEntity := &userBiz.BindInviteRelationStreamMsg{}
 	err := bindInviteRelationEntity.ParseBindInviteRelationMessage(msg)
 	if err != nil {
@@ -195,7 +213,7 @@ func (h *MintPointsHandler) processBindInviteRelationMessage(ctx common.Ctx, msg
 		bindInviteRelationEntity.InviterUID, bindInviteRelationEntity.InviteeUID)
 
 	amount := new(big.Int).SetInt64(int64(h.confCustom.NewUserPoints))
-	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(h.confCustom.AssetTokens.Points.Decimals)), nil)
+	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(pointsToken.Decimals)), nil)
 	finalAmount := new(big.Int).Mul(amount, multiplier)
 
 	// 幂等检查
@@ -232,17 +250,17 @@ func (h *MintPointsHandler) processBindInviteRelationMessage(ctx common.Ctx, msg
 	}
 
 	userMintPointsEntity := &assetBiz.UserMintPointsEntity{
-		UUID:           util.GenerateUUID(),
-		UID:            inviter.UID,
-		TokenAddress:   h.confCustom.AssetTokens.Points.Address,
-		BaseTokenType:  assetBiz.BaseTokenTypePoints,
-		Amount:         decimal.NewFromBigInt(finalAmount, 0),
-		Status:         assetBiz.UserMintPointsStatusPending,
-		Source:         assetBiz.UserMintPointsSourceInvite,
-		TxHash:         txHash,
-		OpHash:         "",
-		EventProcessed: assetBiz.ProcessedNo,
-		InviteUID:      bindInviteRelationEntity.InviteeUID,
+		UUID:             util.GenerateUUID(),
+		UID:              inviter.UID,
+		TokenAddress:     pointsAddr,
+		BaseTokenAddress: pointsAddr,
+		Amount:           decimal.NewFromBigInt(finalAmount, 0),
+		Status:           assetBiz.UserMintPointsStatusPending,
+		Source:           assetBiz.UserMintPointsSourceInvite,
+		TxHash:           txHash,
+		OpHash:           "",
+		EventProcessed:   assetBiz.ProcessedNo,
+		InviteUID:        bindInviteRelationEntity.InviteeUID,
 	}
 
 	success, err := h.assetBiz.WaitMintPointsReceipt(ctx, txHash, userMintPointsEntity)
@@ -297,13 +315,13 @@ func (h *MintPointsHandler) processBindInviteRelationMessage(ctx common.Ctx, msg
 			return
 		}
 		if err = h.userBiz.GenerateNewUserNotification(ctx, &userBiz.UserNotificationEntity{
-			UID:           bindInviteRelationEntity.InviterUID,
-			UUID:          util.GenerateUUID(),
-			Type:          userBiz.NotificationTypeMintInvitePoints,
-			BizJson:       json.RawMessage(bizData),
-			Status:        userBiz.NotificationStatusUnRead,
-			Category:      userBiz.NotificationCategoryTrade,
-			BaseTokenType: assetBiz.BaseTokenTypePoints,
+			UID:              bindInviteRelationEntity.InviterUID,
+			UUID:             util.GenerateUUID(),
+			Type:             userBiz.NotificationTypeMintInvitePoints,
+			BizJson:          json.RawMessage(bizData),
+			Status:           userBiz.NotificationStatusUnRead,
+			Category:         userBiz.NotificationCategoryTrade,
+			BaseTokenAddress: pointsAddr,
 		}); err != nil {
 			ctx.Log.Errorf("create mint invite points notification error", "error", err)
 		}
@@ -316,6 +334,11 @@ func (h *MintPointsHandler) processBindInviteRelationMessage(ctx common.Ctx, msg
 }
 
 func (h *MintPointsHandler) processClaimTaskRewardMessage(ctx common.Ctx, msg redis.XMessage) error {
+	pointsAddr, pointsToken := h.findPointsToken()
+	if pointsToken == nil {
+		return fmt.Errorf("points token not found in config")
+	}
+
 	claimTaskRewardEntity := &userBiz.ClaimTaskRewardStreamMsg{}
 	err := claimTaskRewardEntity.ParseClaimTaskRewardMessage(msg)
 	if err != nil {
@@ -326,7 +349,7 @@ func (h *MintPointsHandler) processClaimTaskRewardMessage(ctx common.Ctx, msg re
 		claimTaskRewardEntity.UID, claimTaskRewardEntity.TaskKey, claimTaskRewardEntity.Reward)
 
 	amount := new(big.Int).SetInt64(int64(claimTaskRewardEntity.Reward))
-	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(h.confCustom.AssetTokens.Points.Decimals)), nil)
+	multiplier := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(pointsToken.Decimals)), nil)
 	finalAmount := new(big.Int).Mul(amount, multiplier)
 
 	// 幂等检查
@@ -373,17 +396,17 @@ func (h *MintPointsHandler) processClaimTaskRewardMessage(ctx common.Ctx, msg re
 	}
 
 	userMintPointsEntity := &assetBiz.UserMintPointsEntity{
-		UUID:           util.GenerateUUID(),
-		UID:            user.UID,
-		TokenAddress:   h.confCustom.AssetTokens.Points.Address,
-		BaseTokenType:  assetBiz.BaseTokenTypePoints,
-		Amount:         decimal.NewFromBigInt(finalAmount, 0),
-		Status:         assetBiz.UserMintPointsStatusPending,
-		Source:         assetBiz.UserMintPointsSourceTaskClaim,
-		TxHash:         txHash,
-		OpHash:         "",
-		EventProcessed: assetBiz.ProcessedNo,
-		UserTaskUUID:   userTaskEntity.UUID,
+		UUID:             util.GenerateUUID(),
+		UID:              user.UID,
+		TokenAddress:     pointsAddr,
+		BaseTokenAddress: pointsAddr,
+		Amount:           decimal.NewFromBigInt(finalAmount, 0),
+		Status:           assetBiz.UserMintPointsStatusPending,
+		Source:           assetBiz.UserMintPointsSourceTaskClaim,
+		TxHash:           txHash,
+		OpHash:           "",
+		EventProcessed:   assetBiz.ProcessedNo,
+		UserTaskUUID:     userTaskEntity.UUID,
 	}
 
 	success, err := h.assetBiz.WaitMintPointsReceipt(ctx, txHash, userMintPointsEntity)
@@ -435,13 +458,13 @@ func (h *MintPointsHandler) processClaimTaskRewardMessage(ctx common.Ctx, msg re
 			return
 		}
 		if err = h.userBiz.GenerateNewUserNotification(ctx, &userBiz.UserNotificationEntity{
-			UID:           user.UID,
-			UUID:          util.GenerateUUID(),
-			Type:          userBiz.NotificationTypeClaimTaskMintPoints,
-			BizJson:       json.RawMessage(bizData),
-			Status:        userBiz.NotificationStatusUnRead,
-			Category:      userBiz.NotificationCategoryTrade,
-			BaseTokenType: assetBiz.BaseTokenTypePoints,
+			UID:              user.UID,
+			UUID:             util.GenerateUUID(),
+			Type:             userBiz.NotificationTypeClaimTaskMintPoints,
+			BizJson:          json.RawMessage(bizData),
+			Status:           userBiz.NotificationStatusUnRead,
+			Category:         userBiz.NotificationCategoryTrade,
+			BaseTokenAddress: pointsAddr,
 		}); err != nil {
 			ctx.Log.Errorf("create claim task reward notification error", "error", err)
 		}

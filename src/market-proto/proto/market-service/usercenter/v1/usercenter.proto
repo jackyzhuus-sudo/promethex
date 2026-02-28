@@ -240,15 +240,10 @@ message GetUserNotificationsRequest {
   uint32 type = 4;
   uint32 page = 5;
   uint32 page_size = 6;
-  BaseTokenType base_token_type = 7;
+  string base_token_address = 7;
 }
 
 
-enum BaseTokenType {
-  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
-  BASE_TOKEN_TYPE_POINTS = 1;
-  BASE_TOKEN_TYPE_USDC = 2;
-}
 
 message GetUserNotificationsResponse {
   message Notification {
@@ -259,7 +254,7 @@ message GetUserNotificationsResponse {
     uint32 status = 5;
     string biz_json = 6; // 具体业务数据json
     int64 created_at = 7;
-    BaseTokenType base_token_type = 8;
+    string base_token_address = 8;
   }
   uint32 total = 1;
   repeated Notification notifications = 2;

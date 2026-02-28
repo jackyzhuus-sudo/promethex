@@ -118,7 +118,7 @@ func (h *PnlDailyLeaderboardHandler) processUserTradeMessage(ctx common.Ctx, msg
 	realizedPnl := sellPrice.Sub(userTokenBalance.AvgBuyPrice).Mul(amountIn).Div(decimal.New(1, int32(userTokenBalance.Decimal)))
 
 	dayStr := util.GetDayStartTimeStr(userTradeStreamMsg.Timestamp)
-	leaderboardKey := fmt.Sprintf(assetBiz.PnlDailyLeaderboard, userTradeStreamMsg.BaseTokenType, dayStr)
+	leaderboardKey := fmt.Sprintf(assetBiz.PnlDailyLeaderboard, userTradeStreamMsg.BaseTokenAddress, dayStr)
 	err = h.assetBiz.UpdateLeaderboard(ctx, leaderboardKey, userTradeStreamMsg.UID, realizedPnl.InexactFloat64())
 	if err != nil {
 		ctx.Log.Errorf("failed to update pnl daily leaderboard: %w", err)

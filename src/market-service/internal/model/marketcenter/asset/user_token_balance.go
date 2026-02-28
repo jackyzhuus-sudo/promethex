@@ -18,7 +18,7 @@ type UserTokenBalance struct {
 	Decimal       uint8           `gorm:"column:decimal;type:smallint;not null;default:6" comment:"精度"`
 	BlockNumber   uint64          `gorm:"column:block_number;type:bigint;not null;default:0" comment:"区块高度"`
 	Type          uint8           `gorm:"column:type;type:smallint;not null;default:1" comment:"类型 1资产代币 2条件代币"`
-	BaseTokenType uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"如果是条件代币 对应的基础代币类型 1: points 2: usdc"`
+	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 	AvgBuyPrice   decimal.Decimal `gorm:"column:avg_buy_price;type:NUMERIC;not null;default:0" comment:"平均买入价格"`
 	Status        uint8           `gorm:"column:status;type:smallint;not null;default:1" comment:"状态 1持仓中 2已结束获胜选项 3已结束非获胜选项"`
 	IsClaimed     uint8           `gorm:"column:is_claimed;type:smallint;not null;default:2" comment:"非获胜选项 是否已领取 1是 2否"`
@@ -38,7 +38,7 @@ func (u *UserTokenBalance) ToEntity() *assetBiz.UserTokenBalanceEntity {
 		Decimal:       u.Decimal,
 		BlockNumber:   u.BlockNumber,
 		Type:          u.Type,
-		BaseTokenType: u.BaseTokenType,
+		BaseTokenAddress: u.BaseTokenAddress,
 		AvgBuyPrice:   u.AvgBuyPrice,
 		Status:        u.Status,
 		IsClaimed:     u.IsClaimed,
@@ -52,7 +52,7 @@ func (u *UserTokenBalance) FromEntity(entity *assetBiz.UserTokenBalanceEntity) {
 	u.Balance = entity.Balance
 	u.BlockNumber = entity.BlockNumber
 	u.Type = entity.Type
-	u.BaseTokenType = entity.BaseTokenType
+	u.BaseTokenAddress = entity.BaseTokenAddress
 	u.Decimal = entity.Decimal
 	u.ID = entity.Id
 	u.CreatedAt = entity.CreatedAt

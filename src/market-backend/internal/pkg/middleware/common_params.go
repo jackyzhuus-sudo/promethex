@@ -4,7 +4,6 @@ import (
 	"context"
 	"market-backend/internal/pkg/util"
 	"net"
-	"strconv"
 	"strings"
 
 	kratosHttp "github.com/go-kratos/kratos/v2/transport/http"
@@ -164,25 +163,12 @@ func detectDeviceType(userAgent string) string {
 
 // extractURLParams 从URL参数中提取额外信息
 func extractURLParams(ctx context.Context, tr transport.Transporter) context.Context {
-	log.Infof("start extractURLParams")
-
-	// 尝试获取 HTTP 传输的具体实现
 	if httpTr, ok := tr.(kratosHttp.Transporter); ok {
-		log.Infof("ok1: got http transport")
-
 		req := httpTr.Request()
 		queryParams := req.URL.Query()
-		if baseTokenType := queryParams.Get("baseTokenType"); baseTokenType != "" {
-			log.Infof("ok3: baseTokenType=%s", baseTokenType)
-			var baseToken int
-			baseToken, err := strconv.Atoi(baseTokenType)
-			if err != nil {
-				baseToken = 0
-			}
-			ctx = context.WithValue(ctx, util.BaseTokenKey, baseToken)
+		if addr := queryParams.Get("baseTokenAddress"); addr != "" {
+			ctx = context.WithValue(ctx, util.BaseTokenAddressKey, strings.ToLower(addr))
 		}
 	}
-
-	log.Infof("end extractURLParams")
 	return ctx
 }

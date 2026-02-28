@@ -16,7 +16,7 @@ import (
 func (s *HttpApiService) GetHotMarkets(ctx context.Context, req *apipb.GetHotMarketsRequest) (*apipb.GetHotMarketsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	hotMarketsRsp, err := s.data.RpcClient.MarketcenterClient.GetHotMarkets(ctx, &marketcenterpb.GetHotMarketsRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetHotMarkets failed, err: [%+v]", err)
@@ -30,7 +30,7 @@ func (s *HttpApiService) GetHotMarkets(ctx context.Context, req *apipb.GetHotMar
 			MarketPicUrl:      market.PicUrl,
 			MarketDescription: market.Description,
 			MarketStatus:      market.Status,
-			BaseTokenType:     apipb.BaseTokenType(market.BaseTokenType),
+			BaseTokenAddress: market.BaseTokenAddress,
 		}
 		marketList = append(marketList, marketInfo)
 	}
@@ -51,7 +51,7 @@ func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFol
 		Uid:           uid,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetFollowedMarkets failed, err: [%+v]", err)
@@ -66,7 +66,7 @@ func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFol
 			MarketDescription: market.Description,
 			MarketStatus:      market.Status,
 			Deadline:          market.Deadline,
-			BaseTokenType:     apipb.BaseTokenType(market.BaseTokenType),
+			BaseTokenAddress: market.BaseTokenAddress,
 		}
 		marketList = append(marketList, marketInfo)
 	}
@@ -79,7 +79,7 @@ func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFol
 func (s *HttpApiService) GetHoldingPositionsMarket(ctx context.Context, req *apipb.GetHoldingPositionsMarketRequest) (*apipb.GetHoldingPositionsMarketReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	holdingPositionsMarketRsp, err := s.data.RpcClient.MarketcenterClient.GetHoldingPositionsMarkets(ctx, &marketcenterpb.GetHoldingPositionsMarketsRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 		Uid:           req.Uid,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
@@ -98,7 +98,7 @@ func (s *HttpApiService) GetHoldingPositionsMarket(ctx context.Context, req *api
 			Status:                  market.Status,
 			MarketVolume:            market.MarketVolume,
 			MarketParticipantsCount: market.MarketParticipantsCount,
-			BaseTokenType:           apipb.BaseTokenType(market.BaseTokenType),
+			BaseTokenAddress: market.BaseTokenAddress,
 			UserMarketTotalValue:    market.UserMarketTotalValue,
 			Positions: func() []*apipb.GetHoldingPositionsMarketReply_Market_Position {
 				positions := make([]*apipb.GetHoldingPositionsMarketReply_Market_Position, 0)
@@ -302,7 +302,7 @@ func (s *HttpApiService) TransferBaseToken(ctx context.Context, req *apipb.Trans
 
 	TransferBaseTokenRsp, err := s.data.RpcClient.MarketcenterClient.TransferBaseToken(ctx, &marketcenterpb.TransferBaseTokenRequest{
 		Uid:           uid,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 		Amount:        req.Amount,
 		ToAddress:     req.ToAddress, // 接收地址
 		UserOperation: &marketcenterpb.UserOperation{
@@ -414,7 +414,7 @@ func (s *HttpApiService) GetUserTrades(ctx context.Context, req *apipb.GetUserTr
 		MarketAddress: req.MarketAddress,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetUserTrades failed, err: [%+v]", err)
@@ -431,7 +431,7 @@ func (s *HttpApiService) GetUserTrades(ctx context.Context, req *apipb.GetUserTr
 			ReceiveAmount: trade.ReceiveAmount,
 			Timestamp:     trade.Timestamp,
 			DealPrice:     trade.DealPrice,
-			BaseTokenType: apipb.BaseTokenType(trade.BaseTokenType),
+			BaseTokenAddress: trade.BaseTokenAddress,
 		}
 		if trade.Option != nil {
 			one.Option = &apipb.GetUserTradesReply_Order_Option{
@@ -489,7 +489,6 @@ func (s *HttpApiService) GetMarketDetail(ctx context.Context, req *apipb.GetMark
 		MarketStatus:        apipb.GetMarketDetailReply_MaketStatus(GetMarketDetailRsp.Status),
 		IsFollowed:          apipb.IsFollowed(GetMarketDetailRsp.IsFollowed),
 		IsClaim:             apipb.IsClaim(GetMarketDetailRsp.IsClaim),
-		BaseTokenType:       apipb.BaseTokenType(GetMarketDetailRsp.BaseTokenType),
 		BaseTokenAddress:    GetMarketDetailRsp.BaseTokenAddress,
 		EventId:             GetMarketDetailRsp.EventId,
 		ConditionId:         GetMarketDetailRsp.ConditionId,
@@ -525,7 +524,7 @@ func (s *HttpApiService) GetUserPositions(ctx context.Context, req *apipb.GetUse
 	GetUserPositionsRsp, err := s.data.RpcClient.MarketcenterClient.GetUserPositions(ctx, &marketcenterpb.GetUserPositionsRequest{
 		Uid:           uid,
 		MarketAddress: req.MarketAddress,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 		Page:          req.Page,
 		PageSize:      req.PageSize,
 		OptionAddress: req.OptionAddress,
@@ -542,7 +541,7 @@ func (s *HttpApiService) GetUserPositions(ctx context.Context, req *apipb.GetUse
 			MarketDescription: position.MarketDescription,
 			MarketPicUrl:      position.MarketPicUrl,
 			OptionAddress:     position.OptionAddress,
-			BaseTokenType:     apipb.BaseTokenType(position.BaseTokenType),
+			BaseTokenAddress: position.BaseTokenAddress,
 			OptionName:        position.OptionName,
 			OptionDecimal:     position.OptionDecimal,
 			OptionSymbol:      position.OptionSymbol,
@@ -570,7 +569,7 @@ func (s *HttpApiService) GetUserAssetHistory(ctx context.Context, req *apipb.Get
 	c := util.NewBaseCtx(ctx, s.logger)
 	GetUserAssetHistoryRsp, err := s.data.RpcClient.MarketcenterClient.GetUserAssetHistory(ctx, &marketcenterpb.GetUserAssetHistoryRequest{
 		Uid:           req.Uid,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 		TimeInterval:  marketcenterpb.GetUserAssetHistoryRequest_TimeInterval(req.TimeInterval),
 	})
 	if err != nil {
@@ -591,7 +590,7 @@ func (s *HttpApiService) GetUserAssetHistory(ctx context.Context, req *apipb.Get
 	return &apipb.GetUserAssetHistoryReply{
 		Total:         GetUserAssetHistoryRsp.Total,
 		Snapshots:     rspSnapshots,
-		BaseTokenType: apipb.BaseTokenType(GetUserAssetHistoryRsp.BaseTokenType),
+		BaseTokenAddress: GetUserAssetHistoryRsp.BaseTokenAddress,
 		Decimal:       uint32(GetUserAssetHistoryRsp.Decimal),
 	}, nil
 }
@@ -648,7 +647,7 @@ func (s *HttpApiService) GetMarkets(ctx context.Context, req *apipb.GetMarketsRe
 		Tag:               req.Tag,
 		SortType:          marketcenterpb.GetMarketsAndOptionsInfoRequest_SortType(req.SortType),
 		HotWords:          req.HotWords,
-		BaseTokenType:     marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress:  util.GetBaseTokenAddressFromCtx(ctx),
 		Page:              req.Page,
 		PageSize:          req.PageSize,
 		Status:            1,
@@ -739,7 +738,7 @@ func (s *HttpApiService) GetMarkets(ctx context.Context, req *apipb.GetMarketsRe
 			CreatedAt:         uint32(market.CreatedAt),
 			Deadline:          uint32(market.Deadline),
 			Options:           make([]*apipb.GetMarketsReply_Market_Option, 0),
-			BaseTokenType:     uint32(market.BaseTokenType),
+			BaseTokenAddress: market.BaseTokenAddress,
 			EventId:           market.EventId,
 		}
 
@@ -820,7 +819,7 @@ func (s *HttpApiService) GetUserAssetInfo(ctx context.Context, req *apipb.GetUse
 
 	GetUserAssetInfoRsp, err := s.data.RpcClient.MarketcenterClient.GetUserLatestAssetValue(ctx, &marketcenterpb.GetUserLatestAssetValueRequest{
 		Uid:           req.Uid,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetUserLatestAssetValue failed, err: [%+v]", err)
@@ -842,7 +841,7 @@ func (s *HttpApiService) GetCategories(ctx context.Context, req *apipb.GetCatego
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetCategoriesRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketCategories(ctx, &marketcenterpb.GetMarketCategoriesRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetMarketCategories failed, err: [%+v]", err)
@@ -877,7 +876,7 @@ func (s *HttpApiService) GetUserTransactions(ctx context.Context, req *apipb.Get
 		Uid:           uid,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetUserTransactions failed, err: [%+v]", err)
@@ -890,7 +889,7 @@ func (s *HttpApiService) GetUserTransactions(ctx context.Context, req *apipb.Get
 			Uid:           transaction.Uid,
 			Amount:        transaction.Amount,
 			Timestamp:     transaction.Timestamp,
-			BaseTokenType: apipb.BaseTokenType(transaction.BaseTokenType),
+			BaseTokenAddress: transaction.BaseTokenAddress,
 			TokenAddress:  transaction.TokenAddress,
 			Side:          uint32(transaction.Side),
 			Decimal:       uint32(transaction.Decimal),
@@ -912,7 +911,7 @@ func (s *HttpApiService) GetBanners(ctx context.Context, req *apipb.GetBannersRe
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetBannersRsp, err := s.data.RpcClient.MarketcenterClient.GetBanners(ctx, &marketcenterpb.GetBannersRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetBanners failed, err: [%+v]", err)
@@ -937,7 +936,7 @@ func (s *HttpApiService) GetSections(ctx context.Context, req *apipb.GetSections
 	c := util.NewBaseCtx(ctx, s.logger)
 
 	GetSectionsRsp, err := s.data.RpcClient.MarketcenterClient.GetSections(ctx, &marketcenterpb.GetSectionsRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc GetSections failed, err: [%+v]", err)
@@ -977,7 +976,7 @@ func (s *HttpApiService) GetLeaderboard(ctx context.Context, req *apipb.GetLeade
 
 	uid := req.Uid
 	GetLeaderboardRsp, err := s.data.RpcClient.MarketcenterClient.GetLeaderboard(ctx, &marketcenterpb.GetLeaderboardRequest{
-		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
+		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
 		Uid:           req.Uid,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
@@ -1360,3 +1359,5 @@ func (s *HttpApiService) GetSwapPrice(ctx context.Context, req *apipb.GetSwapPri
 		Fee:            priceRsp.Fee,
 	}, nil
 }
+
+

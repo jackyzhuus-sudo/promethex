@@ -835,7 +835,7 @@ func (r *AssetRepo) UpdateUserMarketPositionIncrease(ctx common.Ctx, userMarketP
 	}).Error
 }
 
-func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenType uint8, timeRange string) ([]*assetBiz.UserAssetValueEntity, error) {
+func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenAddress string, timeRange string) ([]*assetBiz.UserAssetValueEntity, error) {
 	now := time.Now()
 	var fromTime time.Time
 	var interval string
@@ -855,7 +855,7 @@ func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenTyp
 	case "all":
 		if err := db.Model(&assetModel.UserAssetValue{}).
 			Where("uid = ?", uid).
-			Where("base_token_type = ?", baseTokenType).
+			Where("base_token_address = ?", baseTokenAddress).
 			Order("time ASC").
 			Limit(1).
 			Pluck("time", &fromTime).Error; err != nil {
@@ -899,10 +899,10 @@ func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenTyp
                     PARTITION BY date_trunc($1, time)
                     ORDER BY time DESC
                 ) as pnl,
-                FIRST_VALUE(base_token_type) OVER (
+                FIRST_VALUE(base_token_address) OVER (
                     PARTITION BY date_trunc($1, time)
                     ORDER BY time DESC
-                ) as base_token_type,
+                ) as base_token_address,
                 FIRST_VALUE(asset_address) OVER (
                     PARTITION BY date_trunc($1, time)
                     ORDER BY time DESC
@@ -911,7 +911,7 @@ func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenTyp
             WHERE uid = $2
                 AND time >= $3
                 AND time <= $4
-				AND base_token_type = $5
+				AND base_token_address = $5
         )
         SELECT DISTINCT
             timestamp as time,
@@ -921,13 +921,13 @@ func (r *AssetRepo) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenTyp
             balance,
             portfolio,
             pnl,
-            base_token_type
+            base_token_address
         FROM sample_times
         ORDER BY timestamp
     `
 
 	var result []*assetModel.UserAssetValue
-	err := db.Raw(query, interval, uid, fromTime, now, baseTokenType).Scan(&result).Error
+	err := db.Raw(query, interval, uid, fromTime, now, baseTokenAddress).Scan(&result).Error
 	if err != nil {
 		ctx.Log.Errorf("GetUserAssetHistory query failed: %v", err)
 		return nil, err
@@ -1071,7 +1071,7 @@ func (r *AssetRepo) UpdateUserMarketPositionStatus(ctx common.Ctx, marketAddress
 func (r *AssetRepo) GetUserTotalValue(ctx common.Ctx, query *assetBiz.UserTokenBalanceQuery) (decimal.Decimal, error) {
 	db := common.GetDB(ctx.Ctx, r.GetDb())
 	uid := query.UID
-	baseTokenType := query.BaseTokenType
+	baseTokenAddress := query.BaseTokenAddress
 
 	// 计算用户所有持仓的总价值
 	var totalValue decimal.Decimal
@@ -1084,8 +1084,8 @@ func (r *AssetRepo) GetUserTotalValue(ctx common.Ctx, query *assetBiz.UserTokenB
 			ORDER BY block_time DESC
 			LIMIT 1
 		) latest_prices ON true
-		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_type = %d AND utb.status != %d AND utb.balance > 0
-	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenType, assetBiz.UserTokenBalanceStatusEndLose)
+		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_address = '%s' AND utb.status != %d AND utb.balance > 0
+	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenAddress, assetBiz.UserTokenBalanceStatusEndLose)
 
 	if err := db.Raw(totalValueQuery).Scan(&totalValue).Error; err != nil {
 		ctx.Log.Errorf("GetUserMarketPositionsByValue total value query failed: %v", err)
@@ -1101,7 +1101,7 @@ func (r *AssetRepo) GetUserMarketPositionsByValue(ctx common.Ctx, query *assetBi
 	uid := query.UID
 	offset := query.Offset
 	limit := query.Limit
-	baseTokenType := query.BaseTokenType
+	baseTokenAddress := query.BaseTokenAddress
 
 	marketValues := make([]*assetBiz.MarketValue, 0)
 	// 1. 首先获取符合条件的市场总数
@@ -1114,8 +1114,8 @@ func (r *AssetRepo) GetUserMarketPositionsByValue(ctx common.Ctx, query *assetBi
 			WHERE token_address = utb.token_address
 			LIMIT 1
 		) has_price ON true
-		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_type = %d AND utb.balance > 0 AND utb.status != %d
-	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenType, assetBiz.UserTokenBalanceStatusEndLose)
+		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_address = '%s' AND utb.balance > 0 AND utb.status != %d
+	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenAddress, assetBiz.UserTokenBalanceStatusEndLose)
 
 	if err := db.Raw(countQuery).Scan(&totalCount).Error; err != nil {
 		ctx.Log.Errorf("GetUserMarketPositionsByValue count query failed: %v", err)
@@ -1137,11 +1137,11 @@ func (r *AssetRepo) GetUserMarketPositionsByValue(ctx common.Ctx, query *assetBi
 			ORDER BY block_time DESC
 			LIMIT 1
 		) latest_prices ON true
-		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_type = %d AND utb.balance > 0 AND utb.status != %d
+		WHERE utb.uid = '%s' AND utb.type = %d AND utb.base_token_address = '%s' AND utb.balance > 0 AND utb.status != %d
 		GROUP BY utb.market_address
 		ORDER BY total_value DESC
 		LIMIT %d OFFSET %d
-	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenType, assetBiz.UserTokenBalanceStatusEndLose,
+	`, uid, assetBiz.TypeUserTokenBalanceOption, baseTokenAddress, assetBiz.UserTokenBalanceStatusEndLose,
 		limit, offset)
 
 	if err := db.Raw(valueQuery).Scan(&marketValues).Error; err != nil {

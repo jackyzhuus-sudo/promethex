@@ -29,14 +29,12 @@ data:
 custom:
   lark_webhook_key: ""       # 飞书告警 Webhook Key
   lark_enabled: false        # 是否启用飞书告警
-  asset_tokens:
-    points:
-      address: ""                                         # Points 代币地址
+  asset_tokens:                                              # key = lowercase hex address
+    "0x...points_address...":
       name: Points                                        # 代币名称
       symbol: POINTS                                      # 代币符号
       decimals: 18                                        # 小数位数
-    usdc:
-      address: ""                                        # USDC 代币地址
-      name: USD Coin                                     # 代币名称
-      symbol: USDC                                       # 代币符号
-      decimals: 6                                        # 小数位数
+    "0x...usdc_address...":
+      name: USD Coin                                      # 代币名称
+      symbol: USDC                                        # 代币符号
+      decimals: 6                                         # 小数位数

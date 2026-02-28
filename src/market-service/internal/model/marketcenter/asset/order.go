@@ -28,7 +28,7 @@ type Order struct {
 	OpHash           string          `gorm:"column:op_hash;type:varchar(66);not null;default:''" comment:"userOp hash"`
 	Deadline         time.Time       `gorm:"column:deadline;type:TIMESTAMPTZ;not null;default:0" comment:"截止时间"`
 	Pnl              decimal.Decimal `gorm:"column:pnl;type:NUMERIC;not null;default:0" comment:"卖出实现的盈亏 买入不填为0"`
-	BaseTokenType    uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
+	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 }
 
 func (o *Order) ToEntity() *assetBiz.OrderEntity {
@@ -51,7 +51,7 @@ func (o *Order) ToEntity() *assetBiz.OrderEntity {
 		Status:           o.Status,
 		EventProcessed:   o.EventProcessed,
 		Pnl:              o.Pnl,
-		BaseTokenType:    o.BaseTokenType,
+		BaseTokenAddress: o.BaseTokenAddress,
 		TxHash:           o.TxHash,
 		OpHash:           o.OpHash,
 		Deadline:         o.Deadline,
@@ -75,7 +75,7 @@ func (o *Order) FromEntity(entity *assetBiz.OrderEntity) {
 	o.TxHash = entity.TxHash
 	o.OpHash = entity.OpHash
 	o.Deadline = entity.Deadline
-	o.BaseTokenType = entity.BaseTokenType
+	o.BaseTokenAddress = entity.BaseTokenAddress
 	o.ID = entity.Id
 	o.CreatedAt = entity.CreatedAt
 	o.UpdatedAt = entity.UpdatedAt

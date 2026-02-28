@@ -47,7 +47,7 @@ type UserNewNotificationMsgData struct {
 
 type UserAssetChangedMsgData struct {
 	Uid           string `json:"uid"`
-	BaseTokenType uint8  `json:"base_token_type"`
+	BaseTokenAddress string `json:"base_token_address"`
 }
 
 type MarketNewTradesMsgData struct {

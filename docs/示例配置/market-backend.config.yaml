@@ -45,14 +45,12 @@ custom:
   need_auth: false                  # 是否开启鉴权（true 需要校验 Privy JWT）
   lark_webhook_key: ""              # 飞书告警 Webhook Key
   lark_enabled: false               # 是否启用飞书告警
-  asset_tokens:
-    points:
-      address: "0x934E616cA9538397E3f9a12895C40ea2E8C45E48" # Points 代币地址（示例）
+  asset_tokens:                                             # key = lowercase hex address
+    "0x...points_address...":
       name: Points                                        # 代币名称
       symbol: POINTS                                      # 代币符号
       decimals: 18                                        # 小数位数
-    usdc:
-      address: "0x934E616cA9538397E3f9a12895C40ea2E8C45E48" # USDC 代币地址（示例）
-      name: USD Coin                                     # 代币名称
-      symbol: USDC                                       # 代币符号
-      decimals: 6                                        # 小数位数
+    "0x...usdc_address...":
+      name: USD Coin                                      # 代币名称
+      symbol: USDC                                        # 代币符号
+      decimals: 6                                         # 小数位数

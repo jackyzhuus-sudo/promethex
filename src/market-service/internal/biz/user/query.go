@@ -41,7 +41,7 @@ type UserNotificationQuery struct {
 	UID             string   // 用户ID
 	Status          uint8    // 状态
 	BizJsonPostUuid string   // 业务数据post_uuid
-	BaseTokenType   uint8    // 代币类型
+	BaseTokenAddress string   // 代币地址
 }
 
 func (query *UserNotificationQuery) Condition(db *gorm.DB, total *int64) *gorm.DB {
@@ -66,8 +66,8 @@ func (query *UserNotificationQuery) Condition(db *gorm.DB, total *int64) *gorm.D
 	if query.BizJsonPostUuid != "" {
 		db = db.Where("biz_json->>'post_uuid' = ?", query.BizJsonPostUuid)
 	}
-	if query.BaseTokenType != 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	return query.BaseQuery.Condition(db, total)
 }

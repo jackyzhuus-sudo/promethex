@@ -15,9 +15,9 @@ import (
 )
 
 // ProviderSet is service providers.
-var ProviderSet = wire.NewSet(NewBayesService)
+var ProviderSet = wire.NewSet(NewMarketService)
 
-type BayesService struct {
+type MarketService struct {
 	usercenter.UnimplementedUsercenterServer
 	marketcenter.UnimplementedMarketcenterServer
 	confCustom *conf.Custom
@@ -31,6 +31,6 @@ type BayesService struct {
 	log           log.Logger
 }
 
-func NewBayesService(userHandler *userBiz.UserHandler, marketHandler *marketBiz.MarketHandler, taskHandler *taskBiz.TaskHandler, assetHandler *assetBiz.AssetHandler, communityHandler *communityBiz.CommunityHandler, confCustom *conf.Custom, logger log.Logger) *BayesService {
-	return &BayesService{userHandler: userHandler, marketHandler: marketHandler, taskHandler: taskHandler, assetHandler: assetHandler, communityHandler: communityHandler, confCustom: confCustom, log: logger}
+func NewMarketService(userHandler *userBiz.UserHandler, marketHandler *marketBiz.MarketHandler, taskHandler *taskBiz.TaskHandler, assetHandler *assetBiz.AssetHandler, communityHandler *communityBiz.CommunityHandler, confCustom *conf.Custom, logger log.Logger) *MarketService {
+	return &MarketService{userHandler: userHandler, marketHandler: marketHandler, taskHandler: taskHandler, assetHandler: assetHandler, communityHandler: communityHandler, confCustom: confCustom, log: logger}
 }

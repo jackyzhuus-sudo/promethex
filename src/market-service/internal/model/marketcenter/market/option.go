@@ -18,7 +18,7 @@ type Option struct {
 	Weight        uint32 `gorm:"column:weight;type:integer;not null;default:0" comment:"权重"`
 	Index         uint32 `gorm:"column:index;type:integer;not null;default:0" comment:"在市场的条件中的排序索引"`
 	PicUrl        string `gorm:"column:pic_url;type:varchar(256);not null;default:''" comment:"图片url"`
-	BaseTokenType uint8  `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
+	BaseTokenAddress string `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 	PositionId    string `gorm:"column:position_id;type:varchar(78);not null;default:''" comment:"ERC1155 token ID"`
 }
 
@@ -38,7 +38,7 @@ func (o *Option) ToEntity() *marketBiz.OptionEntity {
 		Weight:        o.Weight,
 		Index:         o.Index,
 		PicUrl:        o.PicUrl,
-		BaseTokenType: o.BaseTokenType,
+		BaseTokenAddress: o.BaseTokenAddress,
 		PositionId:    o.PositionId,
 	}
 }
@@ -53,7 +53,7 @@ func (o *Option) FromEntity(entity *marketBiz.OptionEntity) {
 	o.Weight = entity.Weight
 	o.Index = entity.Index
 	o.PicUrl = entity.PicUrl
-	o.BaseTokenType = entity.BaseTokenType
+	o.BaseTokenAddress = entity.BaseTokenAddress
 	o.PositionId = entity.PositionId
 	o.ID = entity.Id
 	o.CreatedAt = entity.CreatedAt

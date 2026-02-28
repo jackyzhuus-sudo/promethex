@@ -65,6 +65,8 @@ message Data {
     string admin_bucket = 4;
     string region = 5;
     string tenant_slug = 6;  // ADR-008: S3 key prefix (default: arb-sepolia-usdc)
+    string endpoint = 7;     // Custom S3 endpoint (for MinIO, leave empty for AWS)
+    bool use_path_style = 8; // Use path-style addressing (required for MinIO)
   }
 
   message Rpc {
@@ -83,20 +85,14 @@ message Data {
 }
 
 message Custom {
-  message AssetTokens {
-    message token {
-      string address = 1;
-      string name = 2;
-      string symbol = 3;
-      uint32 decimals = 4;
-    }
-
-    token points = 1;
-    token usdc = 2;
+  message AssetToken {
+    string address = 1;
+    string name = 2;
+    string symbol = 3;
+    uint32 decimals = 4;
   }
 
-
-  AssetTokens asset_tokens = 1;
+  map<string, AssetToken> asset_tokens = 1;  // key = lowercase hex address
   uint32 new_user_points = 2;
   string chain = 3;
   string lark_webhook_key = 4;

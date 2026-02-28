@@ -17,7 +17,7 @@ type OptionTokenPrice struct {
 	BlockNumber   uint64          `gorm:"column:block_number;type:bigint;uniqueIndex:idx_token_address_block_number;not null;default:0" comment:"区块高度"`
 	Price         decimal.Decimal `gorm:"column:price;type:NUMERIC;not null;default:0" comment:"代币价格"`
 	Decimals      uint8           `gorm:"column:decimals;type:smallint;not null;default:0" comment:"代币小数位"`
-	BaseTokenType uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
+	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 }
 
 func (o *OptionTokenPrice) ToEntity() *marketBiz.OptionTokenPriceEntity {
@@ -26,7 +26,7 @@ func (o *OptionTokenPrice) ToEntity() *marketBiz.OptionTokenPriceEntity {
 		Price:         o.Price,
 		BlockNumber:   o.BlockNumber,
 		BlockTime:     o.BlockTime,
-		BaseTokenType: o.BaseTokenType,
+		BaseTokenAddress: o.BaseTokenAddress,
 		Decimals:      o.Decimals,
 		BaseEntity: base.BaseEntity{
 			Id:        o.ID,
@@ -41,7 +41,7 @@ func (o *OptionTokenPrice) FromEntity(entity *marketBiz.OptionTokenPriceEntity) 
 	o.Price = entity.Price
 	o.BlockNumber = entity.BlockNumber
 	o.BlockTime = entity.BlockTime
-	o.BaseTokenType = entity.BaseTokenType
+	o.BaseTokenAddress = entity.BaseTokenAddress
 	o.Decimals = entity.Decimals
 	o.ID = entity.Id
 	o.CreatedAt = entity.CreatedAt

@@ -13,7 +13,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, bayesService *service.BayesService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, marketService *service.MarketService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -32,7 +32,7 @@ func NewGRPCServer(c *conf.Server, bayesService *service.BayesService, logger lo
 	}
 
 	srv := grpc.NewServer(opts...)
-	usercenter.RegisterUsercenterServer(srv, bayesService)
-	marketcenter.RegisterMarketcenterServer(srv, bayesService)
+	usercenter.RegisterUsercenterServer(srv, marketService)
+	marketcenter.RegisterMarketcenterServer(srv, marketService)
 	return srv
 }

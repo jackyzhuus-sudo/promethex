@@ -18,7 +18,7 @@ type UserTokenBalanceQuery struct {
 	TokenAddress      string          // 代币地址
 	TokenAddressList  []string        // 代币地址列表
 	Type              uint8           // 类型
-	BaseTokenType     uint8           // 基础代币类型
+	BaseTokenAddress  string          // 基础代币地址
 	NoZero            bool            // 不等于0
 	Status            uint8           // 状态
 	StatusIn          []uint8         // 状态列表
@@ -30,9 +30,9 @@ type UserTokenBalanceQuery struct {
 type UserAssetValueQuery struct {
 	base.BaseQuery
 	UID           string    // 用户ID
-	AssetAddress  string    // 资产地址
-	BaseTokenType uint8     // 基础代币类型
-	StartTime     time.Time // 开始时间
+	AssetAddress     string    // 资产地址
+	BaseTokenAddress string    // 基础代币地址
+	StartTime        time.Time // 开始时间
 	EndTime       time.Time // 结束时间
 }
 
@@ -40,8 +40,8 @@ type UserAssetValueQuery struct {
 type UserMarketPositionQuery struct {
 	base.BaseQuery
 	UID           string // 用户ID
-	MarketAddress string // 市场地址
-	BaseTokenType uint8  // 基础代币类型
+	MarketAddress    string // 市场地址
+	BaseTokenAddress string // 基础代币地址
 }
 
 // OrderQuery 订单查询结构体
@@ -49,9 +49,9 @@ type OrderQuery struct {
 	base.BaseQuery
 	UID            string // 用户ID
 	MarketAddress  string // 市场地址
-	OptionAddress  string // 条件代币地址
-	BaseTokenType  uint8  // 基础代币类型
-	Status         uint8  // 订单状态
+	OptionAddress    string // 条件代币地址
+	BaseTokenAddress string // 基础代币地址
+	Status           uint8  // 订单状态
 	Side           uint8  // 交易方向
 	UUID           string // 订单唯一标识
 	EventProcessed uint8  // 事件是否处理过
@@ -67,8 +67,8 @@ type SendTxQuery struct {
 	TxHash        string // 交易哈希
 	Chain         string // 链名称
 	Status        uint8  // 交易状态
-	Type          uint8  // 交易类型
-	BaseTokenType uint8  // 基础代币类型
+	Type             uint8  // 交易类型
+	BaseTokenAddress string // 基础代币地址
 }
 
 // UserClaimResultQuery 用户申领结果查询结构体
@@ -78,9 +78,9 @@ type UserClaimResultQuery struct {
 	UID            string // 用户ID
 	TxHash         string // 交易哈希
 	OpHash         string // 操作哈希
-	Status         uint8  // 状态
-	BaseType       uint8  // 基础类型
-	MarketAddress  string // 市场地址
+	Status           uint8  // 状态
+	BaseTokenAddress string // 基础代币地址
+	MarketAddress    string // 市场地址
 	OptionAddress  string // 条件代币地址
 	EventProcessed uint8  // 事件是否处理过
 	TxHashList     []string
@@ -163,8 +163,8 @@ func (query *UserClaimResultQuery) Condition(db *gorm.DB, total *int64) *gorm.DB
 	if query.Status > 0 {
 		db = db.Where("status = ?", query.Status)
 	}
-	if query.BaseType > 0 {
-		db = db.Where("base_type = ?", query.BaseType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	if query.MarketAddress != "" {
 		db = db.Where("market_address = ?", query.MarketAddress)
@@ -198,8 +198,8 @@ func (query *SendTxQuery) Condition(db *gorm.DB, total *int64) *gorm.DB {
 	if query.Type > 0 {
 		db = db.Where("type = ?", query.Type)
 	}
-	if query.BaseTokenType > 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	return query.BaseQuery.Condition(db, total)
 }
@@ -215,8 +215,8 @@ func (query *OrderQuery) Condition(db *gorm.DB, total *int64) *gorm.DB {
 	if query.OptionAddress != "" {
 		db = db.Where("option_address = ?", query.OptionAddress)
 	}
-	if query.BaseTokenType > 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	if query.Status > 0 {
 		db = db.Where("status = ?", query.Status)
@@ -265,8 +265,8 @@ func (query *UserTokenBalanceQuery) Condition(db *gorm.DB, total *int64) *gorm.D
 	if query.Type > 0 {
 		db = db.Where("type = ?", query.Type)
 	}
-	if query.BaseTokenType > 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	if query.NoZero {
 		db = db.Where("balance > ?", 0)
@@ -294,8 +294,8 @@ func (query *UserAssetValueQuery) Condition(db *gorm.DB, total *int64) *gorm.DB 
 	if query.AssetAddress != "" {
 		db = db.Where("asset_address = ?", query.AssetAddress)
 	}
-	if query.BaseTokenType > 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	if !query.StartTime.IsZero() {
 		db = db.Where("time >= ?", query.StartTime)
@@ -314,8 +314,8 @@ func (query *UserMarketPositionQuery) Condition(db *gorm.DB, total *int64) *gorm
 	if query.MarketAddress != "" {
 		db = db.Where("market_address = ?", query.MarketAddress)
 	}
-	if query.BaseTokenType > 0 {
-		db = db.Where("base_token_type = ?", query.BaseTokenType)
+	if query.BaseTokenAddress != "" {
+		db = db.Where("base_token_address = ?", query.BaseTokenAddress)
 	}
 	return query.BaseQuery.Condition(db, total)
 }

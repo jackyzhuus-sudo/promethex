@@ -20,7 +20,7 @@ type SendTx struct {
 	Source        uint8           `gorm:"column:source;type:smallint;not null;default:0" comment:"1 交易buy 2 交易sell 3 结算claim 4 积分mint 5 邀请积分mint 6 转入deposit 7 转出withdraw 8 任务积分mint"`
 	Type          uint8           `gorm:"column:type;type:smallint;not null;default:0" comment:"1使用userOperation上链(帮用户上链) 2一般交易"`
 	UserOperation json.RawMessage `gorm:"column:user_operation;type:jsonb;not null;default:'{}'" comment:"userOperation"`
-	BaseTokenType uint8           `gorm:"column:base_token_type;type:smallint;not null;default:0" comment:"1 points 2 usdc"`
+	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 }
 
 func (s *SendTx) ToEntity() *assetBiz.SendTxEntity {
@@ -49,7 +49,7 @@ func (s *SendTx) ToEntity() *assetBiz.SendTxEntity {
 			}
 			return userOperation
 		}(),
-		BaseTokenType: s.BaseTokenType,
+		BaseTokenAddress: s.BaseTokenAddress,
 	}
 }
 
@@ -73,7 +73,7 @@ func (s *SendTx) FromEntity(entity *assetBiz.SendTxEntity) {
 		}
 		return jsonData
 	}()
-	s.BaseTokenType = entity.BaseTokenType
+	s.BaseTokenAddress = entity.BaseTokenAddress
 }
 
 // TableName 指定表名

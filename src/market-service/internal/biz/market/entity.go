@@ -12,9 +12,6 @@ var (
 	MarketShow = uint8(1)
 	MarketHide = uint8(2)
 
-	BaseTokenTypePoints = uint8(1)
-	BaseTokenTypeUsdc   = uint8(2)
-
 	UserMarketFollowStatusActive   = uint8(1)
 	UserMarketFollowStatusInactive = uint8(2)
 
@@ -44,7 +41,7 @@ type MarketEntity struct {
 	TxHash            string          `json:"tx_hash"`
 	Name              string          `json:"name"`
 	Fee               uint32          `json:"fee"`
-	TokenType         uint8           `json:"token_type"`
+	BaseTokenAddress  string          `json:"base_token_address"`
 	OracleAddress     string          `json:"oracle_address"`
 	InitLiquidity     decimal.Decimal `json:"init_liquidity"`
 	PicUrl            string          `json:"pic_url"`
@@ -83,15 +80,15 @@ type UserMarketFollowEntity struct {
 	base.BaseEntity
 	UID           string `json:"uid"`
 	MarketAddress string `json:"market_address"`
-	BaseTokenType uint8  `json:"base_token_type"`
-	Status        uint8  `json:"status"`
+	BaseTokenAddress string `json:"base_token_address"`
+	Status           uint8  `json:"status"`
 }
 
 type OptionEntity struct {
 	base.BaseEntity
-	MarketAddress string `json:"market_address"`
-	BaseTokenType uint8  `json:"base_token_type"`
-	Address       string `json:"address"`
+	MarketAddress    string `json:"market_address"`
+	BaseTokenAddress string `json:"base_token_address"`
+	Address          string `json:"address"`
 	Name          string `json:"name"`
 	Symbol        string `json:"symbol"`
 	Description   string `json:"description"`
@@ -108,9 +105,9 @@ type OptionTokenPriceEntity struct {
 	TokenAddress  string          `json:"token_address"`
 	Price         decimal.Decimal `json:"price"`
 	BlockNumber   uint64          `json:"block_number"`
-	BlockTime     time.Time       `json:"block_time"`
-	BaseTokenType uint8           `json:"base_token_type"`
-	Decimals      uint8           `json:"decimals"`
+	BlockTime        time.Time       `json:"block_time"`
+	BaseTokenAddress string          `json:"base_token_address"`
+	Decimals         uint8           `json:"decimals"`
 }
 
 // PredictionEventEntity 表示一个 NegRisk Event

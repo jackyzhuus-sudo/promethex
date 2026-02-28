@@ -79,7 +79,7 @@ type UserNotificationEntity struct {
 	Category      uint8           `json:"category"`
 	BizJson       json.RawMessage `json:"biz_json"`
 	Status        uint8           `json:"status"`
-	BaseTokenType uint8           `json:"base_token_type"`
+	BaseTokenAddress string          `json:"base_token_address"`
 }
 
 // 初始积分通知 type=1
@@ -113,7 +113,6 @@ type TradeNotificationEntity struct {
 	OptionDesc       string `json:"optionDesc"`       // 选项描述
 	OptionPicUrl     string `json:"optionPicUrl"`     // 选项图片
 	BaseTokenAddress string `json:"baseTokenAddress"` // 基础代币地址
-	BaseTokenType    uint8  `json:"baseTokenType"`    // 基础代币类型
 	Decimal          int32  `json:"decimal"`          // 基础代币精度
 
 	AmountIn  string `json:"amountIn"`
@@ -219,9 +218,9 @@ type UserTradeStreamMsg struct {
 	AmountIn      string `json:"amount_in"`
 	AmountOut     string `json:"amount_out"`
 	Price         string `json:"price"`
-	Timestamp     int64  `json:"timestamp"`
-	BaseTokenType uint8  `json:"base_token_type"`
-	OpHash        string `json:"op_hash"`
+	Timestamp        int64  `json:"timestamp"`
+	BaseTokenAddress string `json:"base_token_address"`
+	OpHash           string `json:"op_hash"`
 	TxHash        string `json:"tx_hash"`
 }
 

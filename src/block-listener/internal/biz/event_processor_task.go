@@ -864,7 +864,7 @@ func (p *EventProcessor) handlePredictionCTFMarketEvent(
 		ChainData:     chainData,
 		UserInfoMap:   userInfoMap,
 		BlockTime:     blockTime,
-		BaseTokenType: p.getBaseTokenType(marketInfo),
+		BaseTokenAddress: marketInfo.BaseTokenAddress,
 		OptionPrices:  p.buildOptionPrices(ctx, marketInfo, chainData, eventLog.BlockNumber),
 	}
 
@@ -878,17 +878,10 @@ type EventParams struct {
 	ChainData     *ChainData
 	UserInfoMap   map[string]*usercenterPb.GetUsersInfoByAddressesReply_User
 	BlockTime     uint64
-	BaseTokenType marketcenterPb.BaseTokenType
+	BaseTokenAddress string
 	OptionPrices  []*marketcenterPb.UpdateOptionPrice
 }
 
-// getBaseTokenType 获取基础代币类型
-func (p *EventProcessor) getBaseTokenType(marketInfo *marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market) marketcenterPb.BaseTokenType {
-	if marketInfo.BaseTokenType == marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_USDC {
-		return marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_USDC
-	}
-	return marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
-}
 
 // buildOptionPrices 构建选项价格列表
 func (p *EventProcessor) buildOptionPrices(
@@ -936,7 +929,7 @@ func (p *EventProcessor) routeCTFEvent(ctx com.Ctx, predictionCTFEvent interface
 			BlockNumber:   params.EventLog.BlockNumber,
 			BlockTime:     params.BlockTime,
 			OptionPrices:  params.OptionPrices,
-			BaseTokenType: params.BaseTokenType,
+			BaseTokenAddress: params.BaseTokenAddress,
 		})
 		if err != nil {
 			ctx.Log.Errorf("ProcessCTFMarketResolvedEvent failed: %v", err)
@@ -961,7 +954,7 @@ func (p *EventProcessor) routeCTFEvent(ctx com.Ctx, predictionCTFEvent interface
 			BlockNumber:   params.EventLog.BlockNumber,
 			BlockTime:     params.BlockTime,
 			OptionPrices:  params.OptionPrices,
-			BaseTokenType: params.BaseTokenType,
+			BaseTokenAddress: params.BaseTokenAddress,
 		})
 		if err != nil {
 			ctx.Log.Errorf("ProcessCTFLiquidityEvent(Added) failed: %v", err)
@@ -991,7 +984,7 @@ func (p *EventProcessor) routeCTFEvent(ctx com.Ctx, predictionCTFEvent interface
 			BlockNumber:     params.EventLog.BlockNumber,
 			BlockTime:       params.BlockTime,
 			OptionPrices:    params.OptionPrices,
-			BaseTokenType:   params.BaseTokenType,
+			BaseTokenAddress:        params.BaseTokenAddress,
 		})
 		if err != nil {
 			ctx.Log.Errorf("ProcessCTFLiquidityEvent(Removed) failed: %v", err)
@@ -1022,7 +1015,7 @@ func (p *EventProcessor) updatePricesOnly(ctx com.Ctx, params *EventParams) erro
 			OptionAddress: oneOptionPrice.Address,
 			Price:         oneOptionPrice.Price,
 			Decimal:       oneOptionPrice.Decimal,
-			BaseTokenType: params.BaseTokenType,
+			BaseTokenAddress: params.BaseTokenAddress,
 			BlockTime:     params.BlockTime,
 			BlockNumber:   params.EventLog.BlockNumber,
 		}
@@ -1089,7 +1082,7 @@ func (p *EventProcessor) handleDepositEvent(ctx com.Ctx, event *contract.Deposit
 		AmountIn:               event.AmountIn.String(),
 		AmountOut:              event.AmountOut.String(),
 		OptionPrices:           params.OptionPrices,
-		BaseTokenType:          params.BaseTokenType,
+		BaseTokenAddress:          params.BaseTokenAddress,
 		Decimal:                decimal,
 		BlockTime:              params.BlockTime,
 		Side:                   marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest_SIDE_DEPOSIT,
@@ -1133,7 +1126,7 @@ func (p *EventProcessor) handleWithdrawEvent(ctx com.Ctx, event *contract.Withdr
 		AmountIn:               event.AmountIn.String(),
 		AmountOut:              event.AmountOut.String(),
 		OptionPrices:           params.OptionPrices,
-		BaseTokenType:          params.BaseTokenType,
+		BaseTokenAddress:          params.BaseTokenAddress,
 		Decimal:                decimal,
 		BlockTime:              params.BlockTime,
 		Side:                   marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest_SIDE_WITHDRAW,
@@ -1160,7 +1153,7 @@ func (p *EventProcessor) handleSwapEvent(ctx com.Ctx, event *contract.SwappedEve
 		TxHash:        params.EventLog.TxHash,
 		BlockNumber:   params.EventLog.BlockNumber,
 		OptionPrices:  params.OptionPrices,
-		BaseTokenType: params.BaseTokenType,
+		BaseTokenAddress: params.BaseTokenAddress,
 		BlockTime:     params.BlockTime,
 	})
 

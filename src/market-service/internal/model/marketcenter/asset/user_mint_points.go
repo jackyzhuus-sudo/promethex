@@ -13,7 +13,7 @@ type UserMintPoints struct {
 	UUID           string          `gorm:"column:uuid;type:varchar(36);uniqueIndex:idx_uuid;not null;" comment:"唯一标识"`
 	UID            string          `gorm:"column:uid;type:varchar(24);not null;" comment:"用户ID"`
 	TokenAddress   string          `gorm:"column:token_address;type:varchar(42);not null;" comment:"市场地址"`
-	BaseTokenType  uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
+	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
 	Amount         decimal.Decimal `gorm:"column:amount;type:NUMERIC;not null;default:0" comment:"数量"`
 	Status         uint8           `gorm:"column:status;type:smallint;not null;default:3" comment:"1成功2失败3执行中"`
 	Source         uint8           `gorm:"column:source;type:smallint;not null;default:0" comment:"1: 初始mint  2: 邀请mint 3: 任务mint"`
@@ -38,7 +38,7 @@ func (u *UserMintPoints) ToEntity() *assetBiz.UserMintPointsEntity {
 		UUID:           u.UUID,
 		UID:            u.UID,
 		TokenAddress:   u.TokenAddress,
-		BaseTokenType:  u.BaseTokenType,
+		BaseTokenAddress: u.BaseTokenAddress,
 		Amount:         u.Amount,
 		Status:         u.Status,
 		EventProcessed: u.EventProcessed,
@@ -54,7 +54,7 @@ func (u *UserMintPoints) FromEntity(entity *assetBiz.UserMintPointsEntity) {
 	u.UUID = entity.UUID
 	u.UID = entity.UID
 	u.TokenAddress = entity.TokenAddress
-	u.BaseTokenType = entity.BaseTokenType
+	u.BaseTokenAddress = entity.BaseTokenAddress
 	u.Amount = entity.Amount
 	u.Status = entity.Status
 	u.EventProcessed = entity.EventProcessed

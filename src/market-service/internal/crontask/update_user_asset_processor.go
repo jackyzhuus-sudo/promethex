@@ -94,40 +94,31 @@ func (p *UpdateUserAssetProcessor) processUserAssets(c common.Ctx, users []*user
 		return nil
 	}
 
-	userPointsAssetValues := make([]*assetBiz.UserAssetValueEntity, 0, len(users))
-	userUsdcAssetValues := make([]*assetBiz.UserAssetValueEntity, 0, len(users))
-	for _, user := range users {
-		// 计算points资产
-		pointsAssetValue, err := p.assetHandler.CalculateUserAssetValue(c, user.UID, p.confCustom.AssetTokens.Points.Address, assetBiz.BaseTokenTypePoints)
-		if err != nil {
-			c.Log.Errorf("CalculateUserAssetValue for points failed, uid: %s, err: %v", user.UID, err)
-			return err
-		}
-		userPointsAssetValues = append(userPointsAssetValues, pointsAssetValue)
+	// 按 token 地址分组收集资产快照
+	assetValuesByToken := make(map[string][]*assetBiz.UserAssetValueEntity)
+	for addr := range p.confCustom.AssetTokens {
+		assetValuesByToken[addr] = make([]*assetBiz.UserAssetValueEntity, 0, len(users))
+	}
 
-		// 计算usdc资产
-		usdcAssetValue, err := p.assetHandler.CalculateUserAssetValue(c, user.UID, p.confCustom.AssetTokens.Usdc.Address, assetBiz.BaseTokenTypeUsdc)
-		if err != nil {
-			c.Log.Errorf("CalculateUserAssetValue for usdc failed, uid: %s, err: %v", user.UID, err)
-			return err
+	for _, user := range users {
+		for addr, token := range p.confCustom.AssetTokens {
+			assetValue, err := p.assetHandler.CalculateUserAssetValue(c, user.UID, token.Address, addr)
+			if err != nil {
+				c.Log.Errorf("CalculateUserAssetValue failed, uid: %s, addr: %s, err: %v", user.UID, addr, err)
+				return err
+			}
+			assetValuesByToken[addr] = append(assetValuesByToken[addr], assetValue)
 		}
-		userUsdcAssetValues = append(userUsdcAssetValues, usdcAssetValue)
 	}
 
 	// 批量创建/更新用户资产记录
-	if len(userPointsAssetValues) > 0 {
-		err := p.assetHandler.BatchCreateUserAssetValue(c, userPointsAssetValues)
-		if err != nil {
-			c.Log.Errorf("BatchCreateUserAssetValue failed, err: %v", err)
-			return err
-		}
-	}
-
-	if len(userUsdcAssetValues) > 0 {
-		err := p.assetHandler.BatchCreateUserAssetValue(c, userUsdcAssetValues)
-		if err != nil {
-			c.Log.Errorf("BatchCreateUserAssetValue failed, err: %v", err)
-			return err
+	for addr, values := range assetValuesByToken {
+		if len(values) > 0 {
+			err := p.assetHandler.BatchCreateUserAssetValue(c, values)
+			if err != nil {
+				c.Log.Errorf("BatchCreateUserAssetValue failed, addr: %s, err: %v", addr, err)
+				return err
+			}
 		}
 	}
 

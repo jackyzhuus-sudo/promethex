@@ -204,55 +204,6 @@ func (IsClaim) EnumDescriptor() ([]byte, []int) {
 	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{2}
 }
 
-type BaseTokenType int32
-
-const (
-	BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED BaseTokenType = 0
-	BaseTokenType_BASE_TOKEN_TYPE_POINTS      BaseTokenType = 1
-	BaseTokenType_BASE_TOKEN_TYPE_USDC        BaseTokenType = 2
-)
-
-// Enum value maps for BaseTokenType.
-var (
-	BaseTokenType_name = map[int32]string{
-		0: "BASE_TOKEN_TYPE_UNSPECIFIED",
-		1: "BASE_TOKEN_TYPE_POINTS",
-		2: "BASE_TOKEN_TYPE_USDC",
-	}
-	BaseTokenType_value = map[string]int32{
-		"BASE_TOKEN_TYPE_UNSPECIFIED": 0,
-		"BASE_TOKEN_TYPE_POINTS":      1,
-		"BASE_TOKEN_TYPE_USDC":        2,
-	}
-)
-
-func (x BaseTokenType) Enum() *BaseTokenType {
-	p := new(BaseTokenType)
-	*p = x
-	return p
-}
-
-func (x BaseTokenType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (BaseTokenType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[3].Descriptor()
-}
-
-func (BaseTokenType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[3]
-}
-
-func (x BaseTokenType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use BaseTokenType.Descriptor instead.
-func (BaseTokenType) EnumDescriptor() ([]byte, []int) {
-	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{3}
-}
-
 // 交易类型枚举
 type TxType int32
 
@@ -302,11 +253,11 @@ func (x TxType) String() string {
 }
 
 func (TxType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[4].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[3].Descriptor()
 }
 
 func (TxType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[4]
+	return &file_market_backend_v1_api_proto_enumTypes[3]
 }
 
 func (x TxType) Number() protoreflect.EnumNumber {
@@ -315,7 +266,7 @@ func (x TxType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TxType.Descriptor instead.
 func (TxType) EnumDescriptor() ([]byte, []int) {
-	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{4}
+	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{3}
 }
 
 // Event 状态
@@ -358,11 +309,11 @@ func (x EventStatus) String() string {
 }
 
 func (EventStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[5].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[4].Descriptor()
 }
 
 func (EventStatus) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[5]
+	return &file_market_backend_v1_api_proto_enumTypes[4]
 }
 
 func (x EventStatus) Number() protoreflect.EnumNumber {
@@ -371,7 +322,7 @@ func (x EventStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EventStatus.Descriptor instead.
 func (EventStatus) EnumDescriptor() ([]byte, []int) {
-	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{5}
+	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{4}
 }
 
 type GetLeaderboardRequest_TimeInterval int32
@@ -413,11 +364,11 @@ func (x GetLeaderboardRequest_TimeInterval) String() string {
 }
 
 func (GetLeaderboardRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[6].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[5].Descriptor()
 }
 
 func (GetLeaderboardRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[6]
+	return &file_market_backend_v1_api_proto_enumTypes[5]
 }
 
 func (x GetLeaderboardRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -465,11 +416,11 @@ func (x GetLeaderboardRequest_SortType) String() string {
 }
 
 func (GetLeaderboardRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[7].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[6].Descriptor()
 }
 
 func (GetLeaderboardRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[7]
+	return &file_market_backend_v1_api_proto_enumTypes[6]
 }
 
 func (x GetLeaderboardRequest_SortType) Number() protoreflect.EnumNumber {
@@ -526,11 +477,11 @@ func (x GetMarketsRequest_SortType) String() string {
 }
 
 func (GetMarketsRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[8].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[7].Descriptor()
 }
 
 func (GetMarketsRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[8]
+	return &file_market_backend_v1_api_proto_enumTypes[7]
 }
 
 func (x GetMarketsRequest_SortType) Number() protoreflect.EnumNumber {
@@ -575,11 +526,11 @@ func (x GetMarketsReply_IsLike) String() string {
 }
 
 func (GetMarketsReply_IsLike) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[9].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[8].Descriptor()
 }
 
 func (GetMarketsReply_IsLike) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[9]
+	return &file_market_backend_v1_api_proto_enumTypes[8]
 }
 
 func (x GetMarketsReply_IsLike) Number() protoreflect.EnumNumber {
@@ -630,11 +581,11 @@ func (x GetMarketDetailReply_MaketStatus) String() string {
 }
 
 func (GetMarketDetailReply_MaketStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[10].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[9].Descriptor()
 }
 
 func (GetMarketDetailReply_MaketStatus) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[10]
+	return &file_market_backend_v1_api_proto_enumTypes[9]
 }
 
 func (x GetMarketDetailReply_MaketStatus) Number() protoreflect.EnumNumber {
@@ -679,11 +630,11 @@ func (x GetCommentsReply_IsLike) String() string {
 }
 
 func (GetCommentsReply_IsLike) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[11].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[10].Descriptor()
 }
 
 func (GetCommentsReply_IsLike) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[11]
+	return &file_market_backend_v1_api_proto_enumTypes[10]
 }
 
 func (x GetCommentsReply_IsLike) Number() protoreflect.EnumNumber {
@@ -728,11 +679,11 @@ func (x SearchRequest_SearchType) String() string {
 }
 
 func (SearchRequest_SearchType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[12].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[11].Descriptor()
 }
 
 func (SearchRequest_SearchType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[12]
+	return &file_market_backend_v1_api_proto_enumTypes[11]
 }
 
 func (x SearchRequest_SearchType) Number() protoreflect.EnumNumber {
@@ -783,11 +734,11 @@ func (x GetUserAssetHistoryRequest_TimeInterval) String() string {
 }
 
 func (GetUserAssetHistoryRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[13].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[12].Descriptor()
 }
 
 func (GetUserAssetHistoryRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[13]
+	return &file_market_backend_v1_api_proto_enumTypes[12]
 }
 
 func (x GetUserAssetHistoryRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -841,11 +792,11 @@ func (x GetMarketOptionPriceHistoryRequest_TimeInterval) String() string {
 }
 
 func (GetMarketOptionPriceHistoryRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[14].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[13].Descriptor()
 }
 
 func (GetMarketOptionPriceHistoryRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[14]
+	return &file_market_backend_v1_api_proto_enumTypes[13]
 }
 
 func (x GetMarketOptionPriceHistoryRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -890,11 +841,11 @@ func (x GetEventsRequest_SortType) String() string {
 }
 
 func (GetEventsRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_backend_v1_api_proto_enumTypes[15].Descriptor()
+	return file_market_backend_v1_api_proto_enumTypes[14].Descriptor()
 }
 
 func (GetEventsRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_backend_v1_api_proto_enumTypes[15]
+	return &file_market_backend_v1_api_proto_enumTypes[14]
 }
 
 func (x GetEventsRequest_SortType) Number() protoreflect.EnumNumber {
@@ -2527,7 +2478,7 @@ type GetMarketsRequest struct {
 	// 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
 	SortType GetMarketsRequest_SortType `protobuf:"varint,3,opt,name=sort_type,json=sortType,proto3,enum=api.v1.GetMarketsRequest_SortType" json:"sort_type,omitempty"`
 	// 基础代币类型（可选）1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 市场状态（可选）
 	Status uint32 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	// 页码
@@ -2602,11 +2553,11 @@ func (x *GetMarketsRequest) GetSortType() GetMarketsRequest_SortType {
 	return GetMarketsRequest_SORT_TYPE_UNKNOWN
 }
 
-func (x *GetMarketsRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetMarketsRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetMarketsRequest) GetStatus() uint32 {
@@ -3414,9 +3365,8 @@ func (x *ClaimMarketResultReply) GetOpHash() string {
 type TransferBaseTokenRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 接收地址
-	ToAddress string `protobuf:"bytes,1,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	ToAddress        string `protobuf:"bytes,1,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 转账数量
 	Amount string `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	// 用户操作信息
@@ -3462,11 +3412,11 @@ func (x *TransferBaseTokenRequest) GetToAddress() string {
 	return ""
 }
 
-func (x *TransferBaseTokenRequest) GetBaseTokenType() BaseTokenType {
+func (x *TransferBaseTokenRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *TransferBaseTokenRequest) GetAmount() string {
@@ -4514,11 +4464,10 @@ type GetFollowMarketsRequest struct {
 	// 页码
 	Page uint32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// 每页数量
-	PageSize uint32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,3,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	PageSize         uint32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,3,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetFollowMarketsRequest) Reset() {
@@ -4565,11 +4514,11 @@ func (x *GetFollowMarketsRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetFollowMarketsRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetFollowMarketsRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetFollowMarketsReply struct {
@@ -4629,9 +4578,8 @@ func (x *GetFollowMarketsReply) GetMarketList() []*GetFollowMarketsReply_MarketI
 type GetHoldingPositionsMarketRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 查看的用户uid
-	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Uid              string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 页码
 	Page uint32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
 	// 每页数量
@@ -4677,11 +4625,11 @@ func (x *GetHoldingPositionsMarketRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetHoldingPositionsMarketRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetHoldingPositionsMarketRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetHoldingPositionsMarketRequest) GetPage() uint32 {
@@ -4761,11 +4709,10 @@ func (x *GetHoldingPositionsMarketReply) GetMarkets() []*GetHoldingPositionsMark
 }
 
 type GetHotMarketsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	BaseTokenAddress string                 `protobuf:"bytes,1,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetHotMarketsRequest) Reset() {
@@ -4798,11 +4745,11 @@ func (*GetHotMarketsRequest) Descriptor() ([]byte, []int) {
 	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{69}
 }
 
-func (x *GetHotMarketsRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetHotMarketsRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetHotMarketsReply struct {
@@ -4924,8 +4871,6 @@ type GetMarketDetailReply struct {
 	IsFollowed IsFollowed `protobuf:"varint,13,opt,name=is_followed,json=isFollowed,proto3,enum=api.v1.IsFollowed" json:"is_followed,omitempty"`
 	// 条件代币列表
 	OptionList []*GetMarketDetailReply_OptionInfo `protobuf:"bytes,14,rep,name=option_list,json=optionList,proto3" json:"option_list,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,15,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
 	// 基础代币地址
 	BaseTokenAddress string `protobuf:"bytes,16,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 是否已结算
@@ -5068,13 +5013,6 @@ func (x *GetMarketDetailReply) GetOptionList() []*GetMarketDetailReply_OptionInf
 		return x.OptionList
 	}
 	return nil
-}
-
-func (x *GetMarketDetailReply) GetBaseTokenType() BaseTokenType {
-	if x != nil {
-		return x.BaseTokenType
-	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetMarketDetailReply) GetBaseTokenAddress() string {
@@ -5675,7 +5613,7 @@ type GetUserPositionsRequest struct {
 	// 市场地址(可选)
 	MarketAddress string `protobuf:"bytes,4,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
 	// 基础代币类型(可选) 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,5,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,5,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 条件代币地址(可选)
 	OptionAddress string `protobuf:"bytes,6,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5740,11 +5678,11 @@ func (x *GetUserPositionsRequest) GetMarketAddress() string {
 	return ""
 }
 
-func (x *GetUserPositionsRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetUserPositionsRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserPositionsRequest) GetOptionAddress() string {
@@ -5816,11 +5754,10 @@ type GetUserTradesRequest struct {
 	// 每页数量
 	PageSize uint32 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	// 查看的用户uid
-	Uid string `protobuf:"bytes,4,opt,name=uid,proto3" json:"uid,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,5,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Uid              string `protobuf:"bytes,4,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,5,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetUserTradesRequest) Reset() {
@@ -5881,11 +5818,11 @@ func (x *GetUserTradesRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetUserTradesRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetUserTradesRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetUserTradesReply struct {
@@ -5953,9 +5890,8 @@ type GetUserBaseInfoRequest struct {
 	// 身份发行者
 	Issuer string `protobuf:"bytes,5,opt,name=issuer,proto3" json:"issuer,omitempty"`
 	// 用户名称
-	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,7,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Name             string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,7,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 邀请码
 	InviteCode    string `protobuf:"bytes,8,opt,name=invite_code,json=inviteCode,proto3" json:"invite_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6034,11 +5970,11 @@ func (x *GetUserBaseInfoRequest) GetName() string {
 	return ""
 }
 
-func (x *GetUserBaseInfoRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetUserBaseInfoRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserBaseInfoRequest) GetInviteCode() string {
@@ -6265,9 +6201,8 @@ func (x *GetUserBaseInfoReply) GetInviteAt() uint32 {
 }
 
 type GetUserAssetInfoRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	BaseTokenAddress string                 `protobuf:"bytes,1,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 用户uid
 	Uid           string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6304,11 +6239,11 @@ func (*GetUserAssetInfoRequest) Descriptor() ([]byte, []int) {
 	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{89}
 }
 
-func (x *GetUserAssetInfoRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetUserAssetInfoRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserAssetInfoRequest) GetUid() string {
@@ -6429,11 +6364,10 @@ type SearchRequest struct {
 	// 页码
 	UserPage uint32 `protobuf:"varint,5,opt,name=user_page,json=userPage,proto3" json:"user_page,omitempty"`
 	// 每页数量
-	UserPageSize uint32 `protobuf:"varint,6,opt,name=user_page_size,json=userPageSize,proto3" json:"user_page_size,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,7,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	UserPageSize     uint32 `protobuf:"varint,6,opt,name=user_page_size,json=userPageSize,proto3" json:"user_page_size,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,7,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *SearchRequest) Reset() {
@@ -6508,11 +6442,11 @@ func (x *SearchRequest) GetUserPageSize() uint32 {
 	return 0
 }
 
-func (x *SearchRequest) GetBaseTokenType() BaseTokenType {
+func (x *SearchRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type SearchReply struct {
@@ -6586,9 +6520,8 @@ func (x *SearchReply) GetMarkets() []*SearchReply_Market {
 type GetUserAssetHistoryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 查看的用户uid
-	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Uid              string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 时间间隔 1: 7d  2: 1m  3: 3m   4: all
 	TimeInterval  GetUserAssetHistoryRequest_TimeInterval `protobuf:"varint,3,opt,name=time_interval,json=timeInterval,proto3,enum=api.v1.GetUserAssetHistoryRequest_TimeInterval" json:"time_interval,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6632,11 +6565,11 @@ func (x *GetUserAssetHistoryRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetUserAssetHistoryRequest) GetBaseTokenType() BaseTokenType {
+func (x *GetUserAssetHistoryRequest) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserAssetHistoryRequest) GetTimeInterval() GetUserAssetHistoryRequest_TimeInterval {
@@ -6647,10 +6580,10 @@ func (x *GetUserAssetHistoryRequest) GetTimeInterval() GetUserAssetHistoryReques
 }
 
 type GetUserAssetHistoryReply struct {
-	state         protoimpl.MessageState                  `protogen:"open.v1"`
-	Total         uint32                                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Snapshots     []*GetUserAssetHistoryReply_OneSnapshot `protobuf:"bytes,2,rep,name=snapshots,proto3" json:"snapshots,omitempty"`
-	BaseTokenType BaseTokenType                           `protobuf:"varint,3,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	state            protoimpl.MessageState                  `protogen:"open.v1"`
+	Total            uint32                                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Snapshots        []*GetUserAssetHistoryReply_OneSnapshot `protobuf:"bytes,2,rep,name=snapshots,proto3" json:"snapshots,omitempty"`
+	BaseTokenAddress string                                  `protobuf:"bytes,3,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 精度
 	Decimal       uint32 `protobuf:"varint,4,opt,name=decimal,proto3" json:"decimal,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6701,11 +6634,11 @@ func (x *GetUserAssetHistoryReply) GetSnapshots() []*GetUserAssetHistoryReply_On
 	return nil
 }
 
-func (x *GetUserAssetHistoryReply) GetBaseTokenType() BaseTokenType {
+func (x *GetUserAssetHistoryReply) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserAssetHistoryReply) GetDecimal() uint32 {
@@ -8308,8 +8241,6 @@ func (x *GetSectionsReply_Section_Prediction) GetId() string {
 
 type GetBaseTokenConfigReply_BaseToken struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 代币类型 1: points 2: usdc
-	BaseTokenType uint32 `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3" json:"base_token_type,omitempty"`
 	// 代币名称
 	BaseTokenName string `protobuf:"bytes,2,opt,name=base_token_name,json=baseTokenName,proto3" json:"base_token_name,omitempty"`
 	// 代币符号
@@ -8350,13 +8281,6 @@ func (x *GetBaseTokenConfigReply_BaseToken) ProtoReflect() protoreflect.Message 
 // Deprecated: Use GetBaseTokenConfigReply_BaseToken.ProtoReflect.Descriptor instead.
 func (*GetBaseTokenConfigReply_BaseToken) Descriptor() ([]byte, []int) {
 	return file_market_backend_v1_api_proto_rawDescGZIP(), []int{19, 0}
-}
-
-func (x *GetBaseTokenConfigReply_BaseToken) GetBaseTokenType() uint32 {
-	if x != nil {
-		return x.BaseTokenType
-	}
-	return 0
 }
 
 func (x *GetBaseTokenConfigReply_BaseToken) GetBaseTokenName() string {
@@ -8505,9 +8429,9 @@ type GetUserNotificationsReply_Notification struct {
 	// 时间
 	CreatedAt int64 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// 基础代币类型
-	BaseTokenType BaseTokenType `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	BaseTokenAddress string `protobuf:"bytes,8,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetUserNotificationsReply_Notification) Reset() {
@@ -8589,11 +8513,11 @@ func (x *GetUserNotificationsReply_Notification) GetCreatedAt() int64 {
 	return 0
 }
 
-func (x *GetUserNotificationsReply_Notification) GetBaseTokenType() BaseTokenType {
+func (x *GetUserNotificationsReply_Notification) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetCategoriesReply_Category struct {
@@ -8674,8 +8598,8 @@ type GetMarketsReply_Market struct {
 	MarketDecimal uint32 `protobuf:"varint,7,opt,name=market_decimal,json=marketDecimal,proto3" json:"market_decimal,omitempty"`
 	// 市场交易人数
 	ParticipantsCount uint32 `protobuf:"varint,8,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType uint32 `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3" json:"base_token_type,omitempty"`
+	// 基础代币地址
+	BaseTokenAddress string `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 市场选项信息
 	Options []*GetMarketsReply_Market_Option `protobuf:"bytes,10,rep,name=options,proto3" json:"options,omitempty"`
 	// 市场帖子信息
@@ -8780,11 +8704,11 @@ func (x *GetMarketsReply_Market) GetParticipantsCount() uint32 {
 	return 0
 }
 
-func (x *GetMarketsReply_Market) GetBaseTokenType() uint32 {
+func (x *GetMarketsReply_Market) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return 0
+	return ""
 }
 
 func (x *GetMarketsReply_Market) GetOptions() []*GetMarketsReply_Market_Option {
@@ -9242,11 +9166,10 @@ type GetFollowMarketsReply_MarketInfo struct {
 	// 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
 	MarketStatus uint32 `protobuf:"varint,5,opt,name=market_status,json=marketStatus,proto3" json:"market_status,omitempty"`
 	// 市场截止时间
-	Deadline int64 `protobuf:"varint,6,opt,name=deadline,proto3" json:"deadline,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,7,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Deadline         int64  `protobuf:"varint,6,opt,name=deadline,proto3" json:"deadline,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,7,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetFollowMarketsReply_MarketInfo) Reset() {
@@ -9321,11 +9244,11 @@ func (x *GetFollowMarketsReply_MarketInfo) GetDeadline() int64 {
 	return 0
 }
 
-func (x *GetFollowMarketsReply_MarketInfo) GetBaseTokenType() BaseTokenType {
+func (x *GetFollowMarketsReply_MarketInfo) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetHoldingPositionsMarketReply_Market struct {
@@ -9344,8 +9267,7 @@ type GetHoldingPositionsMarketReply_Market struct {
 	MarketVolume string `protobuf:"bytes,6,opt,name=market_volume,json=marketVolume,proto3" json:"market_volume,omitempty"`
 	// 市场参与者数量
 	MarketParticipantsCount uint32 `protobuf:"varint,7,opt,name=market_participants_count,json=marketParticipantsCount,proto3" json:"market_participants_count,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	BaseTokenAddress        string `protobuf:"bytes,8,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 用户该市场的总持仓价值
 	UserMarketTotalValue string `protobuf:"bytes,9,opt,name=user_market_total_value,json=userMarketTotalValue,proto3" json:"user_market_total_value,omitempty"`
 	// 用户该市场具体持仓
@@ -9433,11 +9355,11 @@ func (x *GetHoldingPositionsMarketReply_Market) GetMarketParticipantsCount() uin
 	return 0
 }
 
-func (x *GetHoldingPositionsMarketReply_Market) GetBaseTokenType() BaseTokenType {
+func (x *GetHoldingPositionsMarketReply_Market) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetHoldingPositionsMarketReply_Market) GetUserMarketTotalValue() string {
@@ -9564,11 +9486,10 @@ type GetHotMarketsReply_MarketInfo struct {
 	// 市场描述
 	MarketDescription string `protobuf:"bytes,4,opt,name=market_description,json=marketDescription,proto3" json:"market_description,omitempty"`
 	// 市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束
-	MarketStatus uint32 `protobuf:"varint,5,opt,name=market_status,json=marketStatus,proto3" json:"market_status,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	MarketStatus     uint32 `protobuf:"varint,5,opt,name=market_status,json=marketStatus,proto3" json:"market_status,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetHotMarketsReply_MarketInfo) Reset() {
@@ -9636,11 +9557,11 @@ func (x *GetHotMarketsReply_MarketInfo) GetMarketStatus() uint32 {
 	return 0
 }
 
-func (x *GetHotMarketsReply_MarketInfo) GetBaseTokenType() BaseTokenType {
+func (x *GetHotMarketsReply_MarketInfo) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetMarketDetailReply_OptionInfo struct {
@@ -10719,9 +10640,8 @@ type GetUserPositionsReply_Position struct {
 	// 市场图片key
 	MarketPicUrl string `protobuf:"bytes,4,opt,name=market_pic_url,json=marketPicUrl,proto3" json:"market_pic_url,omitempty"`
 	// 条件代币地址
-	OptionAddress string `protobuf:"bytes,5,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	OptionAddress    string `protobuf:"bytes,5,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 条件代币名称
 	OptionName string `protobuf:"bytes,7,opt,name=option_name,json=optionName,proto3" json:"option_name,omitempty"`
 	// 条件代币描述
@@ -10821,11 +10741,11 @@ func (x *GetUserPositionsReply_Position) GetOptionAddress() string {
 	return ""
 }
 
-func (x *GetUserPositionsReply_Position) GetBaseTokenType() BaseTokenType {
+func (x *GetUserPositionsReply_Position) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserPositionsReply_Position) GetOptionName() string {
@@ -10948,12 +10868,11 @@ type GetUserTradesReply_Order struct {
 	// 交易时间
 	Timestamp uint64 `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	// 成交价格
-	DealPrice string                           `protobuf:"bytes,7,opt,name=deal_price,json=dealPrice,proto3" json:"deal_price,omitempty"`
-	Option    *GetUserTradesReply_Order_Option `protobuf:"bytes,8,opt,name=option,proto3" json:"option,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	DealPrice        string                           `protobuf:"bytes,7,opt,name=deal_price,json=dealPrice,proto3" json:"deal_price,omitempty"`
+	Option           *GetUserTradesReply_Order_Option `protobuf:"bytes,8,opt,name=option,proto3" json:"option,omitempty"`
+	BaseTokenAddress string                           `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetUserTradesReply_Order) Reset() {
@@ -11042,11 +10961,11 @@ func (x *GetUserTradesReply_Order) GetOption() *GetUserTradesReply_Order_Option 
 	return nil
 }
 
-func (x *GetUserTradesReply_Order) GetBaseTokenType() BaseTokenType {
+func (x *GetUserTradesReply_Order) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type GetUserTradesReply_Order_Option struct {
@@ -11201,11 +11120,10 @@ type SearchReply_Market struct {
 	// 市场历史成交量
 	Volume string `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
 	// 市场截止时间
-	Deadline uint64 `protobuf:"varint,8,opt,name=deadline,proto3" json:"deadline,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Deadline         uint64 `protobuf:"varint,8,opt,name=deadline,proto3" json:"deadline,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *SearchReply_Market) Reset() {
@@ -11294,11 +11212,11 @@ func (x *SearchReply_Market) GetDeadline() uint64 {
 	return 0
 }
 
-func (x *SearchReply_Market) GetBaseTokenType() BaseTokenType {
+func (x *SearchReply_Market) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 type SearchReply_User struct {
@@ -11595,9 +11513,8 @@ type GetUserTransactionsReply_Transaction struct {
 	// 交易时间
 	Timestamp uint32 `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	// 方向 1 转入base token  2 转出base token
-	Side uint32 `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"`
-	// 基础代币类型 1: points 2: usdc
-	BaseTokenType BaseTokenType `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=api.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Side             uint32 `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"`
+	BaseTokenAddress string `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
 	// 代币地址
 	TokenAddress string `protobuf:"bytes,5,opt,name=token_address,json=tokenAddress,proto3" json:"token_address,omitempty"`
 	// 代币精度
@@ -11667,11 +11584,11 @@ func (x *GetUserTransactionsReply_Transaction) GetSide() uint32 {
 	return 0
 }
 
-func (x *GetUserTransactionsReply_Transaction) GetBaseTokenType() BaseTokenType {
+func (x *GetUserTransactionsReply_Transaction) GetBaseTokenAddress() string {
 	if x != nil {
-		return x.BaseTokenType
+		return x.BaseTokenAddress
 	}
-	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *GetUserTransactionsReply_Transaction) GetTokenAddress() string {
@@ -12316,12 +12233,11 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"prediction\x12\x16\n" +
 	"\x06weight\x18\x02 \x01(\x05R\x06weight\x12\x0e\n" +
 	"\x02id\x18\x03 \x01(\tR\x02id\"\x1b\n" +
-	"\x19GetBaseTokenConfigRequest\"\xcd\x02\n" +
+	"\x19GetBaseTokenConfigRequest\"\xa5\x02\n" +
 	"\x17GetBaseTokenConfigReply\x12J\n" +
 	"\vbase_tokens\x18\x01 \x03(\v2).api.v1.GetBaseTokenConfigReply.BaseTokenR\n" +
-	"baseTokens\x1a\xe5\x01\n" +
+	"baseTokens\x1a\xbd\x01\n" +
 	"\tBaseToken\x12&\n" +
-	"\x0fbase_token_type\x18\x01 \x01(\rR\rbaseTokenType\x12&\n" +
 	"\x0fbase_token_name\x18\x02 \x01(\tR\rbaseTokenName\x12*\n" +
 	"\x11base_token_symbol\x18\x03 \x01(\tR\x0fbaseTokenSymbol\x12,\n" +
 	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12.\n" +
@@ -12348,10 +12264,10 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\rR\x06status\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\rR\x04type\x12\x12\n" +
 	"\x04page\x18\x04 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x05 \x01(\rR\bpageSize\"\xff\x02\n" +
+	"\tpage_size\x18\x05 \x01(\rR\bpageSize\"\xee\x02\n" +
 	"\x19GetUserNotificationsReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12T\n" +
-	"\rnotifications\x18\x02 \x03(\v2..api.v1.GetUserNotificationsReply.NotificationR\rnotifications\x1a\xf5\x01\n" +
+	"\rnotifications\x18\x02 \x03(\v2..api.v1.GetUserNotificationsReply.NotificationR\rnotifications\x1a\xe4\x01\n" +
 	"\fNotification\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
@@ -12360,8 +12276,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x19\n" +
 	"\bbiz_json\x18\x06 \x01(\tR\abizJson\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\a \x01(\x03R\tcreatedAt\x12=\n" +
-	"\x0fbase_token_type\x18\b \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"O\n" +
+	"created_at\x18\a \x01(\x03R\tcreatedAt\x12,\n" +
+	"\x12base_token_address\x18\b \x01(\tR\x10baseTokenAddress\"O\n" +
 	"\x1eMarkNotificationsAsReadRequest\x12-\n" +
 	"\x12notification_uuids\x18\x01 \x03(\tR\x11notificationUuids\"\x1e\n" +
 	"\x1cMarkNotificationsAsReadReply\"W\n" +
@@ -12389,12 +12305,12 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\bCategory\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06weight\x18\x03 \x01(\x05R\x06weight\"\x9a\x05\n" +
+	"\x06weight\x18\x03 \x01(\x05R\x06weight\"\x89\x05\n" +
 	"\x11GetMarketsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x10\n" +
 	"\x03tag\x18\x02 \x01(\tR\x03tag\x12?\n" +
-	"\tsort_type\x18\x03 \x01(\x0e2\".api.v1.GetMarketsRequest.SortTypeR\bsortType\x12=\n" +
-	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
+	"\tsort_type\x18\x03 \x01(\x0e2\".api.v1.GetMarketsRequest.SortTypeR\bsortType\x12,\n" +
+	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x12\n" +
 	"\x04page\x18\x06 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\a \x01(\rR\bpageSize\x12\x1b\n" +
@@ -12415,11 +12331,11 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x16SORT_TYPE_PARTICIPANTS\x10\x03\x12\x14\n" +
 	"\x10SORT_TYPE_OLDEST\x10\x04\x12\x18\n" +
 	"\x14SORT_TYPE_SIMILARITY\x10\x05\x12\x15\n" +
-	"\x11SORT_TYPE_EXPIRED\x10\x06\"\x89\x0e\n" +
+	"\x11SORT_TYPE_EXPIRED\x10\x06\"\x8f\x0e\n" +
 	"\x0fGetMarketsReply\x12\x1f\n" +
 	"\vtotal_count\x18\x01 \x01(\rR\n" +
 	"totalCount\x128\n" +
-	"\amarkets\x18\x02 \x03(\v2\x1e.api.v1.GetMarketsReply.MarketR\amarkets\x1a\xda\f\n" +
+	"\amarkets\x18\x02 \x03(\v2\x1e.api.v1.GetMarketsReply.MarketR\amarkets\x1a\xe0\f\n" +
 	"\x06Market\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
@@ -12429,8 +12345,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\rmarket_status\x18\x05 \x01(\rR\fmarketStatus\x12#\n" +
 	"\rmarket_volume\x18\x06 \x01(\tR\fmarketVolume\x12%\n" +
 	"\x0emarket_decimal\x18\a \x01(\rR\rmarketDecimal\x12-\n" +
-	"\x12participants_count\x18\b \x01(\rR\x11participantsCount\x12&\n" +
-	"\x0fbase_token_type\x18\t \x01(\rR\rbaseTokenType\x12?\n" +
+	"\x12participants_count\x18\b \x01(\rR\x11participantsCount\x12,\n" +
+	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x12?\n" +
 	"\aoptions\x18\n" +
 	" \x03(\v2%.api.v1.GetMarketsReply.Market.OptionR\aoptions\x127\n" +
 	"\x04post\x18\v \x01(\v2#.api.v1.GetMarketsReply.Market.PostR\x04post\x123\n" +
@@ -12523,11 +12439,11 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x0eoption_address\x18\x02 \x01(\tR\roptionAddress\x12<\n" +
 	"\x0euser_operation\x18\x03 \x01(\v2\x15.api.v1.UserOperationR\ruserOperation\"1\n" +
 	"\x16ClaimMarketResultReply\x12\x17\n" +
-	"\aop_hash\x18\x01 \x01(\tR\x06opHash\"\xce\x01\n" +
+	"\aop_hash\x18\x01 \x01(\tR\x06opHash\"\xbd\x01\n" +
 	"\x18TransferBaseTokenRequest\x12\x1d\n" +
 	"\n" +
-	"to_address\x18\x01 \x01(\tR\ttoAddress\x12=\n" +
-	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
+	"to_address\x18\x01 \x01(\tR\ttoAddress\x12,\n" +
+	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\tR\x06amount\x12<\n" +
 	"\x0euser_operation\x18\x04 \x01(\v2\x15.api.v1.UserOperationR\ruserOperation\"1\n" +
 	"\x16TransferBaseTokenReply\x12\x17\n" +
@@ -12588,15 +12504,15 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\bfile_key\x18\x01 \x01(\tR\afileKey\"S\n" +
 	"\x11DownloadFileReply\x12\x1b\n" +
 	"\tfile_data\x18\x01 \x01(\fR\bfileData\x12!\n" +
-	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\"\x89\x01\n" +
+	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\"x\n" +
 	"\x17GetFollowMarketsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\rR\bpageSize\x12=\n" +
-	"\x0fbase_token_type\x18\x03 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"\xa4\x03\n" +
+	"\tpage_size\x18\x02 \x01(\rR\bpageSize\x12,\n" +
+	"\x12base_token_address\x18\x03 \x01(\tR\x10baseTokenAddress\"\x93\x03\n" +
 	"\x15GetFollowMarketsReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12I\n" +
 	"\vmarket_list\x18\x02 \x03(\v2(.api.v1.GetFollowMarketsReply.MarketInfoR\n" +
-	"marketList\x1a\xa9\x02\n" +
+	"marketList\x1a\x98\x02\n" +
 	"\n" +
 	"MarketInfo\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
@@ -12605,18 +12521,18 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x0emarket_pic_url\x18\x03 \x01(\tR\fmarketPicUrl\x12-\n" +
 	"\x12market_description\x18\x04 \x01(\tR\x11marketDescription\x12#\n" +
 	"\rmarket_status\x18\x05 \x01(\rR\fmarketStatus\x12\x1a\n" +
-	"\bdeadline\x18\x06 \x01(\x03R\bdeadline\x12=\n" +
-	"\x0fbase_token_type\x18\a \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"\xa4\x01\n" +
+	"\bdeadline\x18\x06 \x01(\x03R\bdeadline\x12,\n" +
+	"\x12base_token_address\x18\a \x01(\tR\x10baseTokenAddress\"\x93\x01\n" +
 	" GetHoldingPositionsMarketRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12=\n" +
-	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x12\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
+	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\rR\bpageSize\"\xc7\x06\n" +
+	"\tpage_size\x18\x04 \x01(\rR\bpageSize\"\xb6\x06\n" +
 	"\x1eGetHoldingPositionsMarketReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\x1f\n" +
 	"\vtotal_value\x18\x02 \x01(\tR\n" +
 	"totalValue\x12G\n" +
-	"\amarkets\x18\x03 \x03(\v2-.api.v1.GetHoldingPositionsMarketReply.MarketR\amarkets\x1a\xa4\x05\n" +
+	"\amarkets\x18\x03 \x03(\v2-.api.v1.GetHoldingPositionsMarketReply.MarketR\amarkets\x1a\x93\x05\n" +
 	"\x06Market\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x17\n" +
@@ -12624,8 +12540,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12#\n" +
 	"\rmarket_volume\x18\x06 \x01(\tR\fmarketVolume\x12:\n" +
-	"\x19market_participants_count\x18\a \x01(\rR\x17marketParticipantsCount\x12=\n" +
-	"\x0fbase_token_type\x18\b \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x125\n" +
+	"\x19market_participants_count\x18\a \x01(\rR\x17marketParticipantsCount\x12,\n" +
+	"\x12base_token_address\x18\b \x01(\tR\x10baseTokenAddress\x125\n" +
 	"\x17user_market_total_value\x18\t \x01(\tR\x14userMarketTotalValue\x12T\n" +
 	"\tpositions\x18\n" +
 	" \x03(\v26.api.v1.GetHoldingPositionsMarketReply.Market.PositionR\tpositions\x1a\xeb\x01\n" +
@@ -12637,12 +12553,12 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\rtoken_pic_url\x18\x04 \x01(\tR\vtokenPicUrl\x12\x18\n" +
 	"\abalance\x18\x05 \x01(\tR\abalance\x12\x18\n" +
 	"\adecimal\x18\x06 \x01(\rR\adecimal\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\"U\n" +
-	"\x14GetHotMarketsRequest\x12=\n" +
-	"\x0fbase_token_type\x18\x01 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"\xec\x02\n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\"D\n" +
+	"\x14GetHotMarketsRequest\x12,\n" +
+	"\x12base_token_address\x18\x01 \x01(\tR\x10baseTokenAddress\"\xdb\x02\n" +
 	"\x12GetHotMarketsReply\x12F\n" +
 	"\vmarket_list\x18\x01 \x03(\v2%.api.v1.GetHotMarketsReply.MarketInfoR\n" +
-	"marketList\x1a\x8d\x02\n" +
+	"marketList\x1a\xfc\x01\n" +
 	"\n" +
 	"MarketInfo\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
@@ -12650,11 +12566,10 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"marketName\x12$\n" +
 	"\x0emarket_pic_url\x18\x03 \x01(\tR\fmarketPicUrl\x12-\n" +
 	"\x12market_description\x18\x04 \x01(\tR\x11marketDescription\x12#\n" +
-	"\rmarket_status\x18\x05 \x01(\rR\fmarketStatus\x12=\n" +
-	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"?\n" +
+	"\rmarket_status\x18\x05 \x01(\rR\fmarketStatus\x12,\n" +
+	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\"?\n" +
 	"\x16GetMarketDetailRequest\x12%\n" +
-	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\"\xbc\n" +
-	"\n" +
+	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\"\xfd\t\n" +
 	"\x14GetMarketDetailReply\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
@@ -12673,8 +12588,7 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\vis_followed\x18\r \x01(\x0e2\x12.api.v1.IsFollowedR\n" +
 	"isFollowed\x12H\n" +
 	"\voption_list\x18\x0e \x03(\v2'.api.v1.GetMarketDetailReply.OptionInfoR\n" +
-	"optionList\x12=\n" +
-	"\x0fbase_token_type\x18\x0f \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12,\n" +
+	"optionList\x12,\n" +
 	"\x12base_token_address\x18\x10 \x01(\tR\x10baseTokenAddress\x12*\n" +
 	"\bis_claim\x18\x11 \x01(\x0e2\x0f.api.v1.IsClaimR\aisClaim\x12\x19\n" +
 	"\bevent_id\x18\x12 \x01(\tR\aeventId\x12!\n" +
@@ -12833,25 +12747,25 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x0fFollowUserReply\"8\n" +
 	"\x13UnfollowUserRequest\x12!\n" +
 	"\funfollow_uid\x18\x01 \x01(\tR\vunfollowUid\"\x13\n" +
-	"\x11UnfollowUserReply\"\xe9\x01\n" +
+	"\x11UnfollowUserReply\"\xd8\x01\n" +
 	"\x17GetUserPositionsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12%\n" +
-	"\x0emarket_address\x18\x04 \x01(\tR\rmarketAddress\x12=\n" +
-	"\x0fbase_token_type\x18\x05 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12%\n" +
-	"\x0eoption_address\x18\x06 \x01(\tR\roptionAddress\"\xe1\x06\n" +
+	"\x0emarket_address\x18\x04 \x01(\tR\rmarketAddress\x12,\n" +
+	"\x12base_token_address\x18\x05 \x01(\tR\x10baseTokenAddress\x12%\n" +
+	"\x0eoption_address\x18\x06 \x01(\tR\roptionAddress\"\xd0\x06\n" +
 	"\x15GetUserPositionsReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12D\n" +
-	"\tpositions\x18\x03 \x03(\v2&.api.v1.GetUserPositionsReply.PositionR\tpositions\x1a\xeb\x05\n" +
+	"\tpositions\x18\x03 \x03(\v2&.api.v1.GetUserPositionsReply.PositionR\tpositions\x1a\xda\x05\n" +
 	"\bPosition\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
 	"marketName\x12-\n" +
 	"\x12market_description\x18\x03 \x01(\tR\x11marketDescription\x12$\n" +
 	"\x0emarket_pic_url\x18\x04 \x01(\tR\fmarketPicUrl\x12%\n" +
-	"\x0eoption_address\x18\x05 \x01(\tR\roptionAddress\x12=\n" +
-	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x1f\n" +
+	"\x0eoption_address\x18\x05 \x01(\tR\roptionAddress\x12,\n" +
+	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\x12\x1f\n" +
 	"\voption_name\x18\a \x01(\tR\n" +
 	"optionName\x12-\n" +
 	"\x12option_description\x18\b \x01(\tR\x11optionDescription\x12%\n" +
@@ -12870,16 +12784,16 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x06status\x18\x13 \x01(\rR\x06status\x12\x1a\n" +
 	"\bdeadline\x18\x14 \x01(\x03R\bdeadline\x12\x1d\n" +
 	"\n" +
-	"is_claimed\x18\x15 \x01(\rR\tisClaimed\"\xbf\x01\n" +
+	"is_claimed\x18\x15 \x01(\rR\tisClaimed\"\xae\x01\n" +
 	"\x14GetUserTradesRequest\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12\x10\n" +
-	"\x03uid\x18\x04 \x01(\tR\x03uid\x12=\n" +
-	"\x0fbase_token_type\x18\x05 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"\x96\x06\n" +
+	"\x03uid\x18\x04 \x01(\tR\x03uid\x12,\n" +
+	"\x12base_token_address\x18\x05 \x01(\tR\x10baseTokenAddress\"\x85\x06\n" +
 	"\x12GetUserTradesReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x128\n" +
-	"\x06orders\x18\x02 \x03(\v2 .api.v1.GetUserTradesReply.OrderR\x06orders\x1a\xaf\x05\n" +
+	"\x06orders\x18\x02 \x03(\v2 .api.v1.GetUserTradesReply.OrderR\x06orders\x1a\x9e\x05\n" +
 	"\x05Order\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\x12\x12\n" +
@@ -12889,8 +12803,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\ttimestamp\x18\x06 \x01(\x04R\ttimestamp\x12\x1d\n" +
 	"\n" +
 	"deal_price\x18\a \x01(\tR\tdealPrice\x12?\n" +
-	"\x06option\x18\b \x01(\v2'.api.v1.GetUserTradesReply.Order.OptionR\x06option\x12=\n" +
-	"\x0fbase_token_type\x18\t \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x1a\xef\x02\n" +
+	"\x06option\x18\b \x01(\v2'.api.v1.GetUserTradesReply.Order.OptionR\x06option\x12,\n" +
+	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x1a\xef\x02\n" +
 	"\x06Option\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -12904,7 +12818,7 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x0emarket_pic_url\x18\t \x01(\tR\fmarketPicUrl\x12-\n" +
 	"\x12market_description\x18\n" +
 	" \x01(\tR\x11marketDescription\x12-\n" +
-	"\x12participants_count\x18\v \x01(\rR\x11participantsCount\"\x87\x02\n" +
+	"\x12participants_count\x18\v \x01(\rR\x11participantsCount\"\xf6\x01\n" +
 	"\x16GetUserBaseInfoRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1f\n" +
@@ -12912,8 +12826,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"eoaAddress\x12\x18\n" +
 	"\aaddress\x18\x04 \x01(\tR\aaddress\x12\x16\n" +
 	"\x06issuer\x18\x05 \x01(\tR\x06issuer\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12=\n" +
-	"\x0fbase_token_type\x18\a \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x1f\n" +
+	"\x04name\x18\x06 \x01(\tR\x04name\x12,\n" +
+	"\x12base_token_address\x18\a \x01(\tR\x10baseTokenAddress\x12\x1f\n" +
 	"\vinvite_code\x18\b \x01(\tR\n" +
 	"inviteCode\"\x89\x05\n" +
 	"\x14GetUserBaseInfoReply\x12\x10\n" +
@@ -12944,9 +12858,9 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x0ffollowing_count\x18\x11 \x01(\x03R\x0efollowingCount\x12$\n" +
 	"\x0einvite_by_code\x18\x12 \x01(\tR\finviteByCode\x12*\n" +
 	"\x11inviter_user_name\x18\x13 \x01(\tR\x0finviterUserName\x12\x1b\n" +
-	"\tinvite_at\x18\x14 \x01(\rR\binviteAt\"j\n" +
-	"\x17GetUserAssetInfoRequest\x12=\n" +
-	"\x0fbase_token_type\x18\x01 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x10\n" +
+	"\tinvite_at\x18\x14 \x01(\rR\binviteAt\"Y\n" +
+	"\x17GetUserAssetInfoRequest\x12,\n" +
+	"\x12base_token_address\x18\x01 \x01(\tR\x10baseTokenAddress\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\"\xc4\x01\n" +
 	"\x15GetUserAssetInfoReply\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12\x18\n" +
@@ -12955,7 +12869,7 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x03pnl\x18\x04 \x01(\tR\x03pnl\x12\x18\n" +
 	"\adecimal\x18\x05 \x01(\rR\adecimal\x12\x16\n" +
 	"\x06volume\x18\x06 \x01(\tR\x06volume\x12\x19\n" +
-	"\bpnl_rank\x18\a \x01(\rR\apnlRank\"\x92\x03\n" +
+	"\bpnl_rank\x18\a \x01(\rR\apnlRank\"\x81\x03\n" +
 	"\rSearchRequest\x12\x18\n" +
 	"\akeyword\x18\x01 \x01(\tR\akeyword\x12A\n" +
 	"\vsearch_type\x18\x02 \x01(\x0e2 .api.v1.SearchRequest.SearchTypeR\n" +
@@ -12964,19 +12878,19 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"marketPage\x12(\n" +
 	"\x10market_page_size\x18\x04 \x01(\rR\x0emarketPageSize\x12\x1b\n" +
 	"\tuser_page\x18\x05 \x01(\rR\buserPage\x12$\n" +
-	"\x0euser_page_size\x18\x06 \x01(\rR\fuserPageSize\x12=\n" +
-	"\x0fbase_token_type\x18\a \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\"W\n" +
+	"\x0euser_page_size\x18\x06 \x01(\rR\fuserPageSize\x12,\n" +
+	"\x12base_token_address\x18\a \x01(\tR\x10baseTokenAddress\"W\n" +
 	"\n" +
 	"SearchType\x12\x1b\n" +
 	"\x17SEARCH_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12SEARCH_TYPE_MARKET\x10\x01\x12\x14\n" +
-	"\x10SEARCH_TYPE_USER\x10\x02\"\xf9\x04\n" +
+	"\x10SEARCH_TYPE_USER\x10\x02\"\xe8\x04\n" +
 	"\vSearchReply\x12\x1d\n" +
 	"\n" +
 	"user_total\x18\x01 \x01(\rR\tuserTotal\x12.\n" +
 	"\x05users\x18\x02 \x03(\v2\x18.api.v1.SearchReply.UserR\x05users\x12!\n" +
 	"\fmarket_total\x18\x03 \x01(\rR\vmarketTotal\x124\n" +
-	"\amarkets\x18\x04 \x03(\v2\x1a.api.v1.SearchReply.MarketR\amarkets\x1a\xab\x02\n" +
+	"\amarkets\x18\x04 \x03(\v2\x1a.api.v1.SearchReply.MarketR\amarkets\x1a\x9a\x02\n" +
 	"\x06Market\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -12985,8 +12899,8 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12-\n" +
 	"\x12participants_count\x18\x06 \x01(\rR\x11participantsCount\x12\x16\n" +
 	"\x06volume\x18\a \x01(\tR\x06volume\x12\x1a\n" +
-	"\bdeadline\x18\b \x01(\x04R\bdeadline\x12=\n" +
-	"\x0fbase_token_type\x18\t \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x1a\x93\x01\n" +
+	"\bdeadline\x18\b \x01(\x04R\bdeadline\x12,\n" +
+	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x1a\x93\x01\n" +
 	"\x04User\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
@@ -12994,21 +12908,21 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\x04desc\x18\x04 \x01(\tR\x04desc\x12\x18\n" +
 	"\aaddress\x18\x05 \x01(\tR\aaddress\x12\x1f\n" +
 	"\veoa_address\x18\x06 \x01(\tR\n" +
-	"eoaAddress\"\xcc\x02\n" +
+	"eoaAddress\"\xbb\x02\n" +
 	"\x1aGetUserAssetHistoryRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12=\n" +
-	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12T\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
+	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12T\n" +
 	"\rtime_interval\x18\x03 \x01(\x0e2/.api.v1.GetUserAssetHistoryRequest.TimeIntervalR\ftimeInterval\"\x86\x01\n" +
 	"\fTimeInterval\x12\x1d\n" +
 	"\x19TIME_INTERVAL_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10TIME_INTERVAL_7D\x10\x01\x12\x14\n" +
 	"\x10TIME_INTERVAL_1M\x10\x02\x12\x14\n" +
 	"\x10TIME_INTERVAL_3M\x10\x03\x12\x15\n" +
-	"\x11TIME_INTERVAL_ALL\x10\x04\"\xe3\x02\n" +
+	"\x11TIME_INTERVAL_ALL\x10\x04\"\xd2\x02\n" +
 	"\x18GetUserAssetHistoryReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12J\n" +
-	"\tsnapshots\x18\x02 \x03(\v2,.api.v1.GetUserAssetHistoryReply.OneSnapshotR\tsnapshots\x12=\n" +
-	"\x0fbase_token_type\x18\x03 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12\x18\n" +
+	"\tsnapshots\x18\x02 \x03(\v2,.api.v1.GetUserAssetHistoryReply.OneSnapshotR\tsnapshots\x12,\n" +
+	"\x12base_token_address\x18\x03 \x01(\tR\x10baseTokenAddress\x12\x18\n" +
 	"\adecimal\x18\x04 \x01(\rR\adecimal\x1a\x8b\x01\n" +
 	"\vOneSnapshot\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12\x18\n" +
@@ -13039,15 +12953,15 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\adecimal\x18\x03 \x01(\rR\adecimal\"M\n" +
 	"\x1aGetUserTransactionsRequest\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\rR\bpageSize\"\xe5\x03\n" +
+	"\tpage_size\x18\x03 \x01(\rR\bpageSize\"\xd4\x03\n" +
 	"\x18GetUserTransactionsReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12P\n" +
-	"\ftransactions\x18\x02 \x03(\v2,.api.v1.GetUserTransactionsReply.TransactionR\ftransactions\x1a\xe0\x02\n" +
+	"\ftransactions\x18\x02 \x03(\v2,.api.v1.GetUserTransactionsReply.TransactionR\ftransactions\x1a\xcf\x02\n" +
 	"\vTransaction\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x1c\n" +
 	"\ttimestamp\x18\x02 \x01(\rR\ttimestamp\x12\x12\n" +
-	"\x04side\x18\x03 \x01(\rR\x04side\x12=\n" +
-	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x15.api.v1.BaseTokenTypeR\rbaseTokenType\x12#\n" +
+	"\x04side\x18\x03 \x01(\rR\x04side\x12,\n" +
+	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12#\n" +
 	"\rtoken_address\x18\x05 \x01(\tR\ftokenAddress\x12\x18\n" +
 	"\adecimal\x18\x06 \x01(\rR\adecimal\x12\x16\n" +
 	"\x06amount\x18\a \x01(\tR\x06amount\x12\"\n" +
@@ -13193,11 +13107,7 @@ const file_market_backend_v1_api_proto_rawDesc = "" +
 	"\aIsClaim\x12\x14\n" +
 	"\x10IS_CLAIM_UNKNOWN\x10\x00\x12\x10\n" +
 	"\fIS_CLAIM_YES\x10\x01\x12\x0f\n" +
-	"\vIS_CLAIM_NO\x10\x02*f\n" +
-	"\rBaseTokenType\x12\x1f\n" +
-	"\x1bBASE_TOKEN_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16BASE_TOKEN_TYPE_POINTS\x10\x01\x12\x18\n" +
-	"\x14BASE_TOKEN_TYPE_USDC\x10\x02*\xbb\x01\n" +
+	"\vIS_CLAIM_NO\x10\x02*\xbb\x01\n" +
 	"\x06TxType\x12\x17\n" +
 	"\x13TX_TYPE_UNSPECIFIED\x10\x00\x12\x0f\n" +
 	"\vTX_TYPE_BUY\x10\x01\x12\x10\n" +
@@ -13292,387 +13202,365 @@ func file_market_backend_v1_api_proto_rawDescGZIP() []byte {
 	return file_market_backend_v1_api_proto_rawDescData
 }
 
-var file_market_backend_v1_api_proto_enumTypes = make([]protoimpl.EnumInfo, 16)
+var file_market_backend_v1_api_proto_enumTypes = make([]protoimpl.EnumInfo, 15)
 var file_market_backend_v1_api_proto_msgTypes = make([]protoimpl.MessageInfo, 153)
 var file_market_backend_v1_api_proto_goTypes = []any{
 	(ErrorCode)(0),                                                  // 0: api.v1.ErrorCode
 	(IsFollowed)(0),                                                 // 1: api.v1.IsFollowed
 	(IsClaim)(0),                                                    // 2: api.v1.IsClaim
-	(BaseTokenType)(0),                                              // 3: api.v1.BaseTokenType
-	(TxType)(0),                                                     // 4: api.v1.TxType
-	(EventStatus)(0),                                                // 5: api.v1.EventStatus
-	(GetLeaderboardRequest_TimeInterval)(0),                         // 6: api.v1.GetLeaderboardRequest.TimeInterval
-	(GetLeaderboardRequest_SortType)(0),                             // 7: api.v1.GetLeaderboardRequest.SortType
-	(GetMarketsRequest_SortType)(0),                                 // 8: api.v1.GetMarketsRequest.SortType
-	(GetMarketsReply_IsLike)(0),                                     // 9: api.v1.GetMarketsReply.IsLike
-	(GetMarketDetailReply_MaketStatus)(0),                           // 10: api.v1.GetMarketDetailReply.MaketStatus
-	(GetCommentsReply_IsLike)(0),                                    // 11: api.v1.GetCommentsReply.IsLike
-	(SearchRequest_SearchType)(0),                                   // 12: api.v1.SearchRequest.SearchType
-	(GetUserAssetHistoryRequest_TimeInterval)(0),                    // 13: api.v1.GetUserAssetHistoryRequest.TimeInterval
-	(GetMarketOptionPriceHistoryRequest_TimeInterval)(0),            // 14: api.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
-	(GetEventsRequest_SortType)(0),                                  // 15: api.v1.GetEventsRequest.SortType
-	(*SubscribeRequest)(nil),                                        // 16: api.v1.SubscribeRequest
-	(*SubscribeReply)(nil),                                          // 17: api.v1.SubscribeReply
-	(*UnsubscribeRequest)(nil),                                      // 18: api.v1.UnsubscribeRequest
-	(*UnsubscribeReply)(nil),                                        // 19: api.v1.UnsubscribeReply
-	(*GetLeaderboardRequest)(nil),                                   // 20: api.v1.GetLeaderboardRequest
-	(*GetLeaderboardResponse)(nil),                                  // 21: api.v1.GetLeaderboardResponse
-	(*TranslateRequest)(nil),                                        // 22: api.v1.TranslateRequest
-	(*TranslateReply)(nil),                                          // 23: api.v1.TranslateReply
-	(*ShareTaskDoneRequest)(nil),                                    // 24: api.v1.ShareTaskDoneRequest
-	(*ShareTaskDoneReply)(nil),                                      // 25: api.v1.ShareTaskDoneReply
-	(*ClaimTaskRewardRequest)(nil),                                  // 26: api.v1.ClaimTaskRewardRequest
-	(*ClaimTaskRewardReply)(nil),                                    // 27: api.v1.ClaimTaskRewardReply
-	(*GetTasksRequest)(nil),                                         // 28: api.v1.GetTasksRequest
-	(*GetTasksReply)(nil),                                           // 29: api.v1.GetTasksReply
-	(*GetBannersRequest)(nil),                                       // 30: api.v1.GetBannersRequest
-	(*GetBannersReply)(nil),                                         // 31: api.v1.GetBannersReply
-	(*GetSectionsRequest)(nil),                                      // 32: api.v1.GetSectionsRequest
-	(*GetSectionsReply)(nil),                                        // 33: api.v1.GetSectionsReply
-	(*GetBaseTokenConfigRequest)(nil),                               // 34: api.v1.GetBaseTokenConfigRequest
-	(*GetBaseTokenConfigReply)(nil),                                 // 35: api.v1.GetBaseTokenConfigReply
-	(*GetInviteUserListRequest)(nil),                                // 36: api.v1.GetInviteUserListRequest
-	(*GetInviteUserListReply)(nil),                                  // 37: api.v1.GetInviteUserListReply
-	(*GetUserNotificationsRequest)(nil),                             // 38: api.v1.GetUserNotificationsRequest
-	(*GetUserNotificationsReply)(nil),                               // 39: api.v1.GetUserNotificationsReply
-	(*MarkNotificationsAsReadRequest)(nil),                          // 40: api.v1.MarkNotificationsAsReadRequest
-	(*MarkNotificationsAsReadReply)(nil),                            // 41: api.v1.MarkNotificationsAsReadReply
-	(*GetPaymasterDataRequest)(nil),                                 // 42: api.v1.GetPaymasterDataRequest
-	(*GetPaymasterDataReply)(nil),                                   // 43: api.v1.GetPaymasterDataReply
-	(*GetTagsRequest)(nil),                                          // 44: api.v1.GetTagsRequest
-	(*GetTagsReply)(nil),                                            // 45: api.v1.GetTagsReply
-	(*GetCategoriesRequest)(nil),                                    // 46: api.v1.GetCategoriesRequest
-	(*GetCategoriesReply)(nil),                                      // 47: api.v1.GetCategoriesReply
-	(*GetMarketsRequest)(nil),                                       // 48: api.v1.GetMarketsRequest
-	(*GetMarketsReply)(nil),                                         // 49: api.v1.GetMarketsReply
-	(*LoginRequest)(nil),                                            // 50: api.v1.LoginRequest
-	(*LoginReply)(nil),                                              // 51: api.v1.LoginReply
-	(*SetAvatarRequest)(nil),                                        // 52: api.v1.SetAvatarRequest
-	(*SetAvatarReply)(nil),                                          // 53: api.v1.SetAvatarReply
-	(*SetNameRequest)(nil),                                          // 54: api.v1.SetNameRequest
-	(*SetNameReply)(nil),                                            // 55: api.v1.SetNameReply
-	(*SetDescriptionRequest)(nil),                                   // 56: api.v1.SetDescriptionRequest
-	(*SetDescriptionReply)(nil),                                     // 57: api.v1.SetDescriptionReply
-	(*PlaceOrderRequest)(nil),                                       // 58: api.v1.PlaceOrderRequest
-	(*PlaceOrderReply)(nil),                                         // 59: api.v1.PlaceOrderReply
-	(*ClaimMarketResultRequest)(nil),                                // 60: api.v1.ClaimMarketResultRequest
-	(*ClaimMarketResultReply)(nil),                                  // 61: api.v1.ClaimMarketResultReply
-	(*TransferBaseTokenRequest)(nil),                                // 62: api.v1.TransferBaseTokenRequest
-	(*TransferBaseTokenReply)(nil),                                  // 63: api.v1.TransferBaseTokenReply
-	(*FollowMarketRequest)(nil),                                     // 64: api.v1.FollowMarketRequest
-	(*FollowMarketReply)(nil),                                       // 65: api.v1.FollowMarketReply
-	(*UnfollowMarketRequest)(nil),                                   // 66: api.v1.UnfollowMarketRequest
-	(*UnfollowMarketReply)(nil),                                     // 67: api.v1.UnfollowMarketReply
-	(*UploadFileRequest)(nil),                                       // 68: api.v1.UploadFileRequest
-	(*UploadFileReply)(nil),                                         // 69: api.v1.UploadFileReply
-	(*UserOperation)(nil),                                           // 70: api.v1.UserOperation
-	(*PublishPostRequest)(nil),                                      // 71: api.v1.PublishPostRequest
-	(*PublishPostReply)(nil),                                        // 72: api.v1.PublishPostReply
-	(*PublishCommentRequest)(nil),                                   // 73: api.v1.PublishCommentRequest
-	(*PublishCommentReply)(nil),                                     // 74: api.v1.PublishCommentReply
-	(*LikeContentRequest)(nil),                                      // 75: api.v1.LikeContentRequest
-	(*LikeContentReply)(nil),                                        // 76: api.v1.LikeContentReply
-	(*UnlikeContentRequest)(nil),                                    // 77: api.v1.UnlikeContentRequest
-	(*UnlikeContentReply)(nil),                                      // 78: api.v1.UnlikeContentReply
-	(*DownloadFileRequest)(nil),                                     // 79: api.v1.DownloadFileRequest
-	(*DownloadFileReply)(nil),                                       // 80: api.v1.DownloadFileReply
-	(*GetFollowMarketsRequest)(nil),                                 // 81: api.v1.GetFollowMarketsRequest
-	(*GetFollowMarketsReply)(nil),                                   // 82: api.v1.GetFollowMarketsReply
-	(*GetHoldingPositionsMarketRequest)(nil),                        // 83: api.v1.GetHoldingPositionsMarketRequest
-	(*GetHoldingPositionsMarketReply)(nil),                          // 84: api.v1.GetHoldingPositionsMarketReply
-	(*GetHotMarketsRequest)(nil),                                    // 85: api.v1.GetHotMarketsRequest
-	(*GetHotMarketsReply)(nil),                                      // 86: api.v1.GetHotMarketsReply
-	(*GetMarketDetailRequest)(nil),                                  // 87: api.v1.GetMarketDetailRequest
-	(*GetMarketDetailReply)(nil),                                    // 88: api.v1.GetMarketDetailReply
-	(*GetMarketTradesRequest)(nil),                                  // 89: api.v1.GetMarketTradesRequest
-	(*GetMarketTradesReply)(nil),                                    // 90: api.v1.GetMarketTradesReply
-	(*GetMarketPostsRequest)(nil),                                   // 91: api.v1.GetMarketPostsRequest
-	(*GetMarketPostsReply)(nil),                                     // 92: api.v1.GetMarketPostsReply
-	(*GetCommentsRequest)(nil),                                      // 93: api.v1.GetCommentsRequest
-	(*GetCommentsReply)(nil),                                        // 94: api.v1.GetCommentsReply
-	(*FollowUserRequest)(nil),                                       // 95: api.v1.FollowUserRequest
-	(*FollowUserReply)(nil),                                         // 96: api.v1.FollowUserReply
-	(*UnfollowUserRequest)(nil),                                     // 97: api.v1.UnfollowUserRequest
-	(*UnfollowUserReply)(nil),                                       // 98: api.v1.UnfollowUserReply
-	(*GetUserPositionsRequest)(nil),                                 // 99: api.v1.GetUserPositionsRequest
-	(*GetUserPositionsReply)(nil),                                   // 100: api.v1.GetUserPositionsReply
-	(*GetUserTradesRequest)(nil),                                    // 101: api.v1.GetUserTradesRequest
-	(*GetUserTradesReply)(nil),                                      // 102: api.v1.GetUserTradesReply
-	(*GetUserBaseInfoRequest)(nil),                                  // 103: api.v1.GetUserBaseInfoRequest
-	(*GetUserBaseInfoReply)(nil),                                    // 104: api.v1.GetUserBaseInfoReply
-	(*GetUserAssetInfoRequest)(nil),                                 // 105: api.v1.GetUserAssetInfoRequest
-	(*GetUserAssetInfoReply)(nil),                                   // 106: api.v1.GetUserAssetInfoReply
-	(*SearchRequest)(nil),                                           // 107: api.v1.SearchRequest
-	(*SearchReply)(nil),                                             // 108: api.v1.SearchReply
-	(*GetUserAssetHistoryRequest)(nil),                              // 109: api.v1.GetUserAssetHistoryRequest
-	(*GetUserAssetHistoryReply)(nil),                                // 110: api.v1.GetUserAssetHistoryReply
-	(*GetMarketOptionPriceHistoryRequest)(nil),                      // 111: api.v1.GetMarketOptionPriceHistoryRequest
-	(*GetMarketOptionPriceHistoryReply)(nil),                        // 112: api.v1.GetMarketOptionPriceHistoryReply
-	(*GetUserTransactionsRequest)(nil),                              // 113: api.v1.GetUserTransactionsRequest
-	(*GetUserTransactionsReply)(nil),                                // 114: api.v1.GetUserTransactionsReply
-	(*GetEventDetailRequest)(nil),                                   // 115: api.v1.GetEventDetailRequest
-	(*GetEventDetailReply)(nil),                                     // 116: api.v1.GetEventDetailReply
-	(*GetEventsRequest)(nil),                                        // 117: api.v1.GetEventsRequest
-	(*GetEventsReply)(nil),                                          // 118: api.v1.GetEventsReply
-	(*SwapRequest)(nil),                                             // 119: api.v1.SwapRequest
-	(*SwapReply)(nil),                                               // 120: api.v1.SwapReply
-	(*DepositLiquidityRequest)(nil),                                 // 121: api.v1.DepositLiquidityRequest
-	(*DepositLiquidityReply)(nil),                                   // 122: api.v1.DepositLiquidityReply
-	(*WithdrawLiquidityRequest)(nil),                                // 123: api.v1.WithdrawLiquidityRequest
-	(*WithdrawLiquidityReply)(nil),                                  // 124: api.v1.WithdrawLiquidityReply
-	(*RedeemPositionRequest)(nil),                                   // 125: api.v1.RedeemPositionRequest
-	(*RedeemPositionReply)(nil),                                     // 126: api.v1.RedeemPositionReply
-	(*GetSwapPriceRequest)(nil),                                     // 127: api.v1.GetSwapPriceRequest
-	(*GetSwapPriceReply)(nil),                                       // 128: api.v1.GetSwapPriceReply
-	(*GetLeaderboardResponse_Entry)(nil),                            // 129: api.v1.GetLeaderboardResponse.Entry
-	(*GetTasksReply_Task)(nil),                                      // 130: api.v1.GetTasksReply.Task
-	(*GetBannersReply_Banner)(nil),                                  // 131: api.v1.GetBannersReply.Banner
-	(*GetSectionsReply_Section)(nil),                                // 132: api.v1.GetSectionsReply.Section
-	(*GetSectionsReply_Section_Prediction)(nil),                     // 133: api.v1.GetSectionsReply.Section.Prediction
-	(*GetBaseTokenConfigReply_BaseToken)(nil),                       // 134: api.v1.GetBaseTokenConfigReply.BaseToken
-	(*GetInviteUserListReply_User)(nil),                             // 135: api.v1.GetInviteUserListReply.User
-	(*GetUserNotificationsReply_Notification)(nil),                  // 136: api.v1.GetUserNotificationsReply.Notification
-	(*GetCategoriesReply_Category)(nil),                             // 137: api.v1.GetCategoriesReply.Category
-	(*GetMarketsReply_Market)(nil),                                  // 138: api.v1.GetMarketsReply.Market
-	(*GetMarketsReply_Market_Option)(nil),                           // 139: api.v1.GetMarketsReply.Market.Option
-	(*GetMarketsReply_Market_Post)(nil),                             // 140: api.v1.GetMarketsReply.Market.Post
-	(*GetMarketsReply_Market_Post_UserInfo)(nil),                    // 141: api.v1.GetMarketsReply.Market.Post.UserInfo
-	(*GetMarketsReply_Market_Post_Position)(nil),                    // 142: api.v1.GetMarketsReply.Market.Post.Position
-	(*GetFollowMarketsReply_MarketInfo)(nil),                        // 143: api.v1.GetFollowMarketsReply.MarketInfo
-	(*GetHoldingPositionsMarketReply_Market)(nil),                   // 144: api.v1.GetHoldingPositionsMarketReply.Market
-	(*GetHoldingPositionsMarketReply_Market_Position)(nil),          // 145: api.v1.GetHoldingPositionsMarketReply.Market.Position
-	(*GetHotMarketsReply_MarketInfo)(nil),                           // 146: api.v1.GetHotMarketsReply.MarketInfo
-	(*GetMarketDetailReply_OptionInfo)(nil),                         // 147: api.v1.GetMarketDetailReply.OptionInfo
-	(*GetMarketTradesReply_Order)(nil),                              // 148: api.v1.GetMarketTradesReply.Order
-	(*GetMarketTradesReply_Order_Option)(nil),                       // 149: api.v1.GetMarketTradesReply.Order.Option
-	(*GetMarketPostsReply_Post)(nil),                                // 150: api.v1.GetMarketPostsReply.Post
-	(*GetMarketPostsReply_Post_UserInfo)(nil),                       // 151: api.v1.GetMarketPostsReply.Post.UserInfo
-	(*GetMarketPostsReply_Post_Position)(nil),                       // 152: api.v1.GetMarketPostsReply.Post.Position
-	(*GetCommentsReply_Comment)(nil),                                // 153: api.v1.GetCommentsReply.Comment
-	(*GetCommentsReply_Comment_Position)(nil),                       // 154: api.v1.GetCommentsReply.Comment.Position
-	(*GetCommentsReply_Comment_Reply)(nil),                          // 155: api.v1.GetCommentsReply.Comment.Reply
-	(*GetUserPositionsReply_Position)(nil),                          // 156: api.v1.GetUserPositionsReply.Position
-	(*GetUserTradesReply_Order)(nil),                                // 157: api.v1.GetUserTradesReply.Order
-	(*GetUserTradesReply_Order_Option)(nil),                         // 158: api.v1.GetUserTradesReply.Order.Option
-	(*SearchReply_Market)(nil),                                      // 159: api.v1.SearchReply.Market
-	(*SearchReply_User)(nil),                                        // 160: api.v1.SearchReply.User
-	(*GetUserAssetHistoryReply_OneSnapshot)(nil),                    // 161: api.v1.GetUserAssetHistoryReply.OneSnapshot
-	(*GetMarketOptionPriceHistoryReply_OneSnapshot)(nil),            // 162: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot
-	(*GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice)(nil), // 163: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.TokenPrice
-	(*GetUserTransactionsReply_Transaction)(nil),                    // 164: api.v1.GetUserTransactionsReply.Transaction
-	(*GetEventDetailReply_Market)(nil),                              // 165: api.v1.GetEventDetailReply.Market
-	(*GetEventDetailReply_Market_Option)(nil),                       // 166: api.v1.GetEventDetailReply.Market.Option
-	(*GetEventsReply_EventSummary)(nil),                             // 167: api.v1.GetEventsReply.EventSummary
-	(*GetEventsReply_EventSummary_Market)(nil),                      // 168: api.v1.GetEventsReply.EventSummary.Market
-	(*descriptorpb.MethodOptions)(nil),                              // 169: google.protobuf.MethodOptions
+	(TxType)(0),                                                     // 3: api.v1.TxType
+	(EventStatus)(0),                                                // 4: api.v1.EventStatus
+	(GetLeaderboardRequest_TimeInterval)(0),                         // 5: api.v1.GetLeaderboardRequest.TimeInterval
+	(GetLeaderboardRequest_SortType)(0),                             // 6: api.v1.GetLeaderboardRequest.SortType
+	(GetMarketsRequest_SortType)(0),                                 // 7: api.v1.GetMarketsRequest.SortType
+	(GetMarketsReply_IsLike)(0),                                     // 8: api.v1.GetMarketsReply.IsLike
+	(GetMarketDetailReply_MaketStatus)(0),                           // 9: api.v1.GetMarketDetailReply.MaketStatus
+	(GetCommentsReply_IsLike)(0),                                    // 10: api.v1.GetCommentsReply.IsLike
+	(SearchRequest_SearchType)(0),                                   // 11: api.v1.SearchRequest.SearchType
+	(GetUserAssetHistoryRequest_TimeInterval)(0),                    // 12: api.v1.GetUserAssetHistoryRequest.TimeInterval
+	(GetMarketOptionPriceHistoryRequest_TimeInterval)(0),            // 13: api.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
+	(GetEventsRequest_SortType)(0),                                  // 14: api.v1.GetEventsRequest.SortType
+	(*SubscribeRequest)(nil),                                        // 15: api.v1.SubscribeRequest
+	(*SubscribeReply)(nil),                                          // 16: api.v1.SubscribeReply
+	(*UnsubscribeRequest)(nil),                                      // 17: api.v1.UnsubscribeRequest
+	(*UnsubscribeReply)(nil),                                        // 18: api.v1.UnsubscribeReply
+	(*GetLeaderboardRequest)(nil),                                   // 19: api.v1.GetLeaderboardRequest
+	(*GetLeaderboardResponse)(nil),                                  // 20: api.v1.GetLeaderboardResponse
+	(*TranslateRequest)(nil),                                        // 21: api.v1.TranslateRequest
+	(*TranslateReply)(nil),                                          // 22: api.v1.TranslateReply
+	(*ShareTaskDoneRequest)(nil),                                    // 23: api.v1.ShareTaskDoneRequest
+	(*ShareTaskDoneReply)(nil),                                      // 24: api.v1.ShareTaskDoneReply
+	(*ClaimTaskRewardRequest)(nil),                                  // 25: api.v1.ClaimTaskRewardRequest
+	(*ClaimTaskRewardReply)(nil),                                    // 26: api.v1.ClaimTaskRewardReply
+	(*GetTasksRequest)(nil),                                         // 27: api.v1.GetTasksRequest
+	(*GetTasksReply)(nil),                                           // 28: api.v1.GetTasksReply
+	(*GetBannersRequest)(nil),                                       // 29: api.v1.GetBannersRequest
+	(*GetBannersReply)(nil),                                         // 30: api.v1.GetBannersReply
+	(*GetSectionsRequest)(nil),                                      // 31: api.v1.GetSectionsRequest
+	(*GetSectionsReply)(nil),                                        // 32: api.v1.GetSectionsReply
+	(*GetBaseTokenConfigRequest)(nil),                               // 33: api.v1.GetBaseTokenConfigRequest
+	(*GetBaseTokenConfigReply)(nil),                                 // 34: api.v1.GetBaseTokenConfigReply
+	(*GetInviteUserListRequest)(nil),                                // 35: api.v1.GetInviteUserListRequest
+	(*GetInviteUserListReply)(nil),                                  // 36: api.v1.GetInviteUserListReply
+	(*GetUserNotificationsRequest)(nil),                             // 37: api.v1.GetUserNotificationsRequest
+	(*GetUserNotificationsReply)(nil),                               // 38: api.v1.GetUserNotificationsReply
+	(*MarkNotificationsAsReadRequest)(nil),                          // 39: api.v1.MarkNotificationsAsReadRequest
+	(*MarkNotificationsAsReadReply)(nil),                            // 40: api.v1.MarkNotificationsAsReadReply
+	(*GetPaymasterDataRequest)(nil),                                 // 41: api.v1.GetPaymasterDataRequest
+	(*GetPaymasterDataReply)(nil),                                   // 42: api.v1.GetPaymasterDataReply
+	(*GetTagsRequest)(nil),                                          // 43: api.v1.GetTagsRequest
+	(*GetTagsReply)(nil),                                            // 44: api.v1.GetTagsReply
+	(*GetCategoriesRequest)(nil),                                    // 45: api.v1.GetCategoriesRequest
+	(*GetCategoriesReply)(nil),                                      // 46: api.v1.GetCategoriesReply
+	(*GetMarketsRequest)(nil),                                       // 47: api.v1.GetMarketsRequest
+	(*GetMarketsReply)(nil),                                         // 48: api.v1.GetMarketsReply
+	(*LoginRequest)(nil),                                            // 49: api.v1.LoginRequest
+	(*LoginReply)(nil),                                              // 50: api.v1.LoginReply
+	(*SetAvatarRequest)(nil),                                        // 51: api.v1.SetAvatarRequest
+	(*SetAvatarReply)(nil),                                          // 52: api.v1.SetAvatarReply
+	(*SetNameRequest)(nil),                                          // 53: api.v1.SetNameRequest
+	(*SetNameReply)(nil),                                            // 54: api.v1.SetNameReply
+	(*SetDescriptionRequest)(nil),                                   // 55: api.v1.SetDescriptionRequest
+	(*SetDescriptionReply)(nil),                                     // 56: api.v1.SetDescriptionReply
+	(*PlaceOrderRequest)(nil),                                       // 57: api.v1.PlaceOrderRequest
+	(*PlaceOrderReply)(nil),                                         // 58: api.v1.PlaceOrderReply
+	(*ClaimMarketResultRequest)(nil),                                // 59: api.v1.ClaimMarketResultRequest
+	(*ClaimMarketResultReply)(nil),                                  // 60: api.v1.ClaimMarketResultReply
+	(*TransferBaseTokenRequest)(nil),                                // 61: api.v1.TransferBaseTokenRequest
+	(*TransferBaseTokenReply)(nil),                                  // 62: api.v1.TransferBaseTokenReply
+	(*FollowMarketRequest)(nil),                                     // 63: api.v1.FollowMarketRequest
+	(*FollowMarketReply)(nil),                                       // 64: api.v1.FollowMarketReply
+	(*UnfollowMarketRequest)(nil),                                   // 65: api.v1.UnfollowMarketRequest
+	(*UnfollowMarketReply)(nil),                                     // 66: api.v1.UnfollowMarketReply
+	(*UploadFileRequest)(nil),                                       // 67: api.v1.UploadFileRequest
+	(*UploadFileReply)(nil),                                         // 68: api.v1.UploadFileReply
+	(*UserOperation)(nil),                                           // 69: api.v1.UserOperation
+	(*PublishPostRequest)(nil),                                      // 70: api.v1.PublishPostRequest
+	(*PublishPostReply)(nil),                                        // 71: api.v1.PublishPostReply
+	(*PublishCommentRequest)(nil),                                   // 72: api.v1.PublishCommentRequest
+	(*PublishCommentReply)(nil),                                     // 73: api.v1.PublishCommentReply
+	(*LikeContentRequest)(nil),                                      // 74: api.v1.LikeContentRequest
+	(*LikeContentReply)(nil),                                        // 75: api.v1.LikeContentReply
+	(*UnlikeContentRequest)(nil),                                    // 76: api.v1.UnlikeContentRequest
+	(*UnlikeContentReply)(nil),                                      // 77: api.v1.UnlikeContentReply
+	(*DownloadFileRequest)(nil),                                     // 78: api.v1.DownloadFileRequest
+	(*DownloadFileReply)(nil),                                       // 79: api.v1.DownloadFileReply
+	(*GetFollowMarketsRequest)(nil),                                 // 80: api.v1.GetFollowMarketsRequest
+	(*GetFollowMarketsReply)(nil),                                   // 81: api.v1.GetFollowMarketsReply
+	(*GetHoldingPositionsMarketRequest)(nil),                        // 82: api.v1.GetHoldingPositionsMarketRequest
+	(*GetHoldingPositionsMarketReply)(nil),                          // 83: api.v1.GetHoldingPositionsMarketReply
+	(*GetHotMarketsRequest)(nil),                                    // 84: api.v1.GetHotMarketsRequest
+	(*GetHotMarketsReply)(nil),                                      // 85: api.v1.GetHotMarketsReply
+	(*GetMarketDetailRequest)(nil),                                  // 86: api.v1.GetMarketDetailRequest
+	(*GetMarketDetailReply)(nil),                                    // 87: api.v1.GetMarketDetailReply
+	(*GetMarketTradesRequest)(nil),                                  // 88: api.v1.GetMarketTradesRequest
+	(*GetMarketTradesReply)(nil),                                    // 89: api.v1.GetMarketTradesReply
+	(*GetMarketPostsRequest)(nil),                                   // 90: api.v1.GetMarketPostsRequest
+	(*GetMarketPostsReply)(nil),                                     // 91: api.v1.GetMarketPostsReply
+	(*GetCommentsRequest)(nil),                                      // 92: api.v1.GetCommentsRequest
+	(*GetCommentsReply)(nil),                                        // 93: api.v1.GetCommentsReply
+	(*FollowUserRequest)(nil),                                       // 94: api.v1.FollowUserRequest
+	(*FollowUserReply)(nil),                                         // 95: api.v1.FollowUserReply
+	(*UnfollowUserRequest)(nil),                                     // 96: api.v1.UnfollowUserRequest
+	(*UnfollowUserReply)(nil),                                       // 97: api.v1.UnfollowUserReply
+	(*GetUserPositionsRequest)(nil),                                 // 98: api.v1.GetUserPositionsRequest
+	(*GetUserPositionsReply)(nil),                                   // 99: api.v1.GetUserPositionsReply
+	(*GetUserTradesRequest)(nil),                                    // 100: api.v1.GetUserTradesRequest
+	(*GetUserTradesReply)(nil),                                      // 101: api.v1.GetUserTradesReply
+	(*GetUserBaseInfoRequest)(nil),                                  // 102: api.v1.GetUserBaseInfoRequest
+	(*GetUserBaseInfoReply)(nil),                                    // 103: api.v1.GetUserBaseInfoReply
+	(*GetUserAssetInfoRequest)(nil),                                 // 104: api.v1.GetUserAssetInfoRequest
+	(*GetUserAssetInfoReply)(nil),                                   // 105: api.v1.GetUserAssetInfoReply
+	(*SearchRequest)(nil),                                           // 106: api.v1.SearchRequest
+	(*SearchReply)(nil),                                             // 107: api.v1.SearchReply
+	(*GetUserAssetHistoryRequest)(nil),                              // 108: api.v1.GetUserAssetHistoryRequest
+	(*GetUserAssetHistoryReply)(nil),                                // 109: api.v1.GetUserAssetHistoryReply
+	(*GetMarketOptionPriceHistoryRequest)(nil),                      // 110: api.v1.GetMarketOptionPriceHistoryRequest
+	(*GetMarketOptionPriceHistoryReply)(nil),                        // 111: api.v1.GetMarketOptionPriceHistoryReply
+	(*GetUserTransactionsRequest)(nil),                              // 112: api.v1.GetUserTransactionsRequest
+	(*GetUserTransactionsReply)(nil),                                // 113: api.v1.GetUserTransactionsReply
+	(*GetEventDetailRequest)(nil),                                   // 114: api.v1.GetEventDetailRequest
+	(*GetEventDetailReply)(nil),                                     // 115: api.v1.GetEventDetailReply
+	(*GetEventsRequest)(nil),                                        // 116: api.v1.GetEventsRequest
+	(*GetEventsReply)(nil),                                          // 117: api.v1.GetEventsReply
+	(*SwapRequest)(nil),                                             // 118: api.v1.SwapRequest
+	(*SwapReply)(nil),                                               // 119: api.v1.SwapReply
+	(*DepositLiquidityRequest)(nil),                                 // 120: api.v1.DepositLiquidityRequest
+	(*DepositLiquidityReply)(nil),                                   // 121: api.v1.DepositLiquidityReply
+	(*WithdrawLiquidityRequest)(nil),                                // 122: api.v1.WithdrawLiquidityRequest
+	(*WithdrawLiquidityReply)(nil),                                  // 123: api.v1.WithdrawLiquidityReply
+	(*RedeemPositionRequest)(nil),                                   // 124: api.v1.RedeemPositionRequest
+	(*RedeemPositionReply)(nil),                                     // 125: api.v1.RedeemPositionReply
+	(*GetSwapPriceRequest)(nil),                                     // 126: api.v1.GetSwapPriceRequest
+	(*GetSwapPriceReply)(nil),                                       // 127: api.v1.GetSwapPriceReply
+	(*GetLeaderboardResponse_Entry)(nil),                            // 128: api.v1.GetLeaderboardResponse.Entry
+	(*GetTasksReply_Task)(nil),                                      // 129: api.v1.GetTasksReply.Task
+	(*GetBannersReply_Banner)(nil),                                  // 130: api.v1.GetBannersReply.Banner
+	(*GetSectionsReply_Section)(nil),                                // 131: api.v1.GetSectionsReply.Section
+	(*GetSectionsReply_Section_Prediction)(nil),                     // 132: api.v1.GetSectionsReply.Section.Prediction
+	(*GetBaseTokenConfigReply_BaseToken)(nil),                       // 133: api.v1.GetBaseTokenConfigReply.BaseToken
+	(*GetInviteUserListReply_User)(nil),                             // 134: api.v1.GetInviteUserListReply.User
+	(*GetUserNotificationsReply_Notification)(nil),                  // 135: api.v1.GetUserNotificationsReply.Notification
+	(*GetCategoriesReply_Category)(nil),                             // 136: api.v1.GetCategoriesReply.Category
+	(*GetMarketsReply_Market)(nil),                                  // 137: api.v1.GetMarketsReply.Market
+	(*GetMarketsReply_Market_Option)(nil),                           // 138: api.v1.GetMarketsReply.Market.Option
+	(*GetMarketsReply_Market_Post)(nil),                             // 139: api.v1.GetMarketsReply.Market.Post
+	(*GetMarketsReply_Market_Post_UserInfo)(nil),                    // 140: api.v1.GetMarketsReply.Market.Post.UserInfo
+	(*GetMarketsReply_Market_Post_Position)(nil),                    // 141: api.v1.GetMarketsReply.Market.Post.Position
+	(*GetFollowMarketsReply_MarketInfo)(nil),                        // 142: api.v1.GetFollowMarketsReply.MarketInfo
+	(*GetHoldingPositionsMarketReply_Market)(nil),                   // 143: api.v1.GetHoldingPositionsMarketReply.Market
+	(*GetHoldingPositionsMarketReply_Market_Position)(nil),          // 144: api.v1.GetHoldingPositionsMarketReply.Market.Position
+	(*GetHotMarketsReply_MarketInfo)(nil),                           // 145: api.v1.GetHotMarketsReply.MarketInfo
+	(*GetMarketDetailReply_OptionInfo)(nil),                         // 146: api.v1.GetMarketDetailReply.OptionInfo
+	(*GetMarketTradesReply_Order)(nil),                              // 147: api.v1.GetMarketTradesReply.Order
+	(*GetMarketTradesReply_Order_Option)(nil),                       // 148: api.v1.GetMarketTradesReply.Order.Option
+	(*GetMarketPostsReply_Post)(nil),                                // 149: api.v1.GetMarketPostsReply.Post
+	(*GetMarketPostsReply_Post_UserInfo)(nil),                       // 150: api.v1.GetMarketPostsReply.Post.UserInfo
+	(*GetMarketPostsReply_Post_Position)(nil),                       // 151: api.v1.GetMarketPostsReply.Post.Position
+	(*GetCommentsReply_Comment)(nil),                                // 152: api.v1.GetCommentsReply.Comment
+	(*GetCommentsReply_Comment_Position)(nil),                       // 153: api.v1.GetCommentsReply.Comment.Position
+	(*GetCommentsReply_Comment_Reply)(nil),                          // 154: api.v1.GetCommentsReply.Comment.Reply
+	(*GetUserPositionsReply_Position)(nil),                          // 155: api.v1.GetUserPositionsReply.Position
+	(*GetUserTradesReply_Order)(nil),                                // 156: api.v1.GetUserTradesReply.Order
+	(*GetUserTradesReply_Order_Option)(nil),                         // 157: api.v1.GetUserTradesReply.Order.Option
+	(*SearchReply_Market)(nil),                                      // 158: api.v1.SearchReply.Market
+	(*SearchReply_User)(nil),                                        // 159: api.v1.SearchReply.User
+	(*GetUserAssetHistoryReply_OneSnapshot)(nil),                    // 160: api.v1.GetUserAssetHistoryReply.OneSnapshot
+	(*GetMarketOptionPriceHistoryReply_OneSnapshot)(nil),            // 161: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot
+	(*GetMarketOptionPriceHistoryReply_OneSnapshot_TokenPrice)(nil), // 162: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.TokenPrice
+	(*GetUserTransactionsReply_Transaction)(nil),                    // 163: api.v1.GetUserTransactionsReply.Transaction
+	(*GetEventDetailReply_Market)(nil),                              // 164: api.v1.GetEventDetailReply.Market
+	(*GetEventDetailReply_Market_Option)(nil),                       // 165: api.v1.GetEventDetailReply.Market.Option
+	(*GetEventsReply_EventSummary)(nil),                             // 166: api.v1.GetEventsReply.EventSummary
+	(*GetEventsReply_EventSummary_Market)(nil),                      // 167: api.v1.GetEventsReply.EventSummary.Market
+	(*descriptorpb.MethodOptions)(nil),                              // 168: google.protobuf.MethodOptions
 }
 var file_market_backend_v1_api_proto_depIdxs = []int32{
-	6,   // 0: api.v1.GetLeaderboardRequest.time_interval:type_name -> api.v1.GetLeaderboardRequest.TimeInterval
-	7,   // 1: api.v1.GetLeaderboardRequest.sort_type:type_name -> api.v1.GetLeaderboardRequest.SortType
-	129, // 2: api.v1.GetLeaderboardResponse.entries:type_name -> api.v1.GetLeaderboardResponse.Entry
-	129, // 3: api.v1.GetLeaderboardResponse.user_own_entry:type_name -> api.v1.GetLeaderboardResponse.Entry
-	130, // 4: api.v1.GetTasksReply.tasks:type_name -> api.v1.GetTasksReply.Task
-	131, // 5: api.v1.GetBannersReply.banners:type_name -> api.v1.GetBannersReply.Banner
-	132, // 6: api.v1.GetSectionsReply.sections:type_name -> api.v1.GetSectionsReply.Section
-	134, // 7: api.v1.GetBaseTokenConfigReply.base_tokens:type_name -> api.v1.GetBaseTokenConfigReply.BaseToken
-	135, // 8: api.v1.GetInviteUserListReply.users:type_name -> api.v1.GetInviteUserListReply.User
-	136, // 9: api.v1.GetUserNotificationsReply.notifications:type_name -> api.v1.GetUserNotificationsReply.Notification
-	70,  // 10: api.v1.GetPaymasterDataRequest.user_operation:type_name -> api.v1.UserOperation
-	137, // 11: api.v1.GetCategoriesReply.categories:type_name -> api.v1.GetCategoriesReply.Category
-	8,   // 12: api.v1.GetMarketsRequest.sort_type:type_name -> api.v1.GetMarketsRequest.SortType
-	3,   // 13: api.v1.GetMarketsRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	138, // 14: api.v1.GetMarketsReply.markets:type_name -> api.v1.GetMarketsReply.Market
-	70,  // 15: api.v1.PlaceOrderRequest.user_operation:type_name -> api.v1.UserOperation
-	70,  // 16: api.v1.ClaimMarketResultRequest.user_operation:type_name -> api.v1.UserOperation
-	3,   // 17: api.v1.TransferBaseTokenRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	70,  // 18: api.v1.TransferBaseTokenRequest.user_operation:type_name -> api.v1.UserOperation
-	3,   // 19: api.v1.GetFollowMarketsRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	143, // 20: api.v1.GetFollowMarketsReply.market_list:type_name -> api.v1.GetFollowMarketsReply.MarketInfo
-	3,   // 21: api.v1.GetHoldingPositionsMarketRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	144, // 22: api.v1.GetHoldingPositionsMarketReply.markets:type_name -> api.v1.GetHoldingPositionsMarketReply.Market
-	3,   // 23: api.v1.GetHotMarketsRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	146, // 24: api.v1.GetHotMarketsReply.market_list:type_name -> api.v1.GetHotMarketsReply.MarketInfo
-	10,  // 25: api.v1.GetMarketDetailReply.market_status:type_name -> api.v1.GetMarketDetailReply.MaketStatus
-	1,   // 26: api.v1.GetMarketDetailReply.is_followed:type_name -> api.v1.IsFollowed
-	147, // 27: api.v1.GetMarketDetailReply.option_list:type_name -> api.v1.GetMarketDetailReply.OptionInfo
-	3,   // 28: api.v1.GetMarketDetailReply.base_token_type:type_name -> api.v1.BaseTokenType
-	2,   // 29: api.v1.GetMarketDetailReply.is_claim:type_name -> api.v1.IsClaim
-	148, // 30: api.v1.GetMarketTradesReply.orders:type_name -> api.v1.GetMarketTradesReply.Order
-	150, // 31: api.v1.GetMarketPostsReply.posts:type_name -> api.v1.GetMarketPostsReply.Post
-	153, // 32: api.v1.GetCommentsReply.comments:type_name -> api.v1.GetCommentsReply.Comment
-	3,   // 33: api.v1.GetUserPositionsRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	156, // 34: api.v1.GetUserPositionsReply.positions:type_name -> api.v1.GetUserPositionsReply.Position
-	3,   // 35: api.v1.GetUserTradesRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	157, // 36: api.v1.GetUserTradesReply.orders:type_name -> api.v1.GetUserTradesReply.Order
-	3,   // 37: api.v1.GetUserBaseInfoRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	1,   // 38: api.v1.GetUserBaseInfoReply.is_followed:type_name -> api.v1.IsFollowed
-	3,   // 39: api.v1.GetUserAssetInfoRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	12,  // 40: api.v1.SearchRequest.search_type:type_name -> api.v1.SearchRequest.SearchType
-	3,   // 41: api.v1.SearchRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	160, // 42: api.v1.SearchReply.users:type_name -> api.v1.SearchReply.User
-	159, // 43: api.v1.SearchReply.markets:type_name -> api.v1.SearchReply.Market
-	3,   // 44: api.v1.GetUserAssetHistoryRequest.base_token_type:type_name -> api.v1.BaseTokenType
-	13,  // 45: api.v1.GetUserAssetHistoryRequest.time_interval:type_name -> api.v1.GetUserAssetHistoryRequest.TimeInterval
-	161, // 46: api.v1.GetUserAssetHistoryReply.snapshots:type_name -> api.v1.GetUserAssetHistoryReply.OneSnapshot
-	3,   // 47: api.v1.GetUserAssetHistoryReply.base_token_type:type_name -> api.v1.BaseTokenType
-	14,  // 48: api.v1.GetMarketOptionPriceHistoryRequest.time_interval:type_name -> api.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
-	162, // 49: api.v1.GetMarketOptionPriceHistoryReply.snapshots:type_name -> api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot
-	164, // 50: api.v1.GetUserTransactionsReply.transactions:type_name -> api.v1.GetUserTransactionsReply.Transaction
-	5,   // 51: api.v1.GetEventDetailReply.status:type_name -> api.v1.EventStatus
-	165, // 52: api.v1.GetEventDetailReply.markets:type_name -> api.v1.GetEventDetailReply.Market
-	5,   // 53: api.v1.GetEventsRequest.status:type_name -> api.v1.EventStatus
-	15,  // 54: api.v1.GetEventsRequest.sort_type:type_name -> api.v1.GetEventsRequest.SortType
-	167, // 55: api.v1.GetEventsReply.events:type_name -> api.v1.GetEventsReply.EventSummary
-	70,  // 56: api.v1.SwapRequest.user_operation:type_name -> api.v1.UserOperation
-	70,  // 57: api.v1.DepositLiquidityRequest.user_operation:type_name -> api.v1.UserOperation
-	70,  // 58: api.v1.WithdrawLiquidityRequest.user_operation:type_name -> api.v1.UserOperation
-	70,  // 59: api.v1.RedeemPositionRequest.user_operation:type_name -> api.v1.UserOperation
-	133, // 60: api.v1.GetSectionsReply.Section.predictions:type_name -> api.v1.GetSectionsReply.Section.Prediction
-	3,   // 61: api.v1.GetUserNotificationsReply.Notification.base_token_type:type_name -> api.v1.BaseTokenType
-	139, // 62: api.v1.GetMarketsReply.Market.options:type_name -> api.v1.GetMarketsReply.Market.Option
-	140, // 63: api.v1.GetMarketsReply.Market.post:type_name -> api.v1.GetMarketsReply.Market.Post
-	1,   // 64: api.v1.GetMarketsReply.Market.is_followed:type_name -> api.v1.IsFollowed
-	142, // 65: api.v1.GetMarketsReply.Market.Post.positions:type_name -> api.v1.GetMarketsReply.Market.Post.Position
-	9,   // 66: api.v1.GetMarketsReply.Market.Post.is_like:type_name -> api.v1.GetMarketsReply.IsLike
-	3,   // 67: api.v1.GetFollowMarketsReply.MarketInfo.base_token_type:type_name -> api.v1.BaseTokenType
-	3,   // 68: api.v1.GetHoldingPositionsMarketReply.Market.base_token_type:type_name -> api.v1.BaseTokenType
-	145, // 69: api.v1.GetHoldingPositionsMarketReply.Market.positions:type_name -> api.v1.GetHoldingPositionsMarketReply.Market.Position
-	3,   // 70: api.v1.GetHotMarketsReply.MarketInfo.base_token_type:type_name -> api.v1.BaseTokenType
-	149, // 71: api.v1.GetMarketTradesReply.Order.option:type_name -> api.v1.GetMarketTradesReply.Order.Option
-	151, // 72: api.v1.GetMarketPostsReply.Post.user_info:type_name -> api.v1.GetMarketPostsReply.Post.UserInfo
-	152, // 73: api.v1.GetMarketPostsReply.Post.positions:type_name -> api.v1.GetMarketPostsReply.Post.Position
-	11,  // 74: api.v1.GetCommentsReply.Comment.is_like:type_name -> api.v1.GetCommentsReply.IsLike
-	154, // 75: api.v1.GetCommentsReply.Comment.positions:type_name -> api.v1.GetCommentsReply.Comment.Position
-	155, // 76: api.v1.GetCommentsReply.Comment.replies:type_name -> api.v1.GetCommentsReply.Comment.Reply
-	11,  // 77: api.v1.GetCommentsReply.Comment.Reply.is_like:type_name -> api.v1.GetCommentsReply.IsLike
-	3,   // 78: api.v1.GetUserPositionsReply.Position.base_token_type:type_name -> api.v1.BaseTokenType
-	158, // 79: api.v1.GetUserTradesReply.Order.option:type_name -> api.v1.GetUserTradesReply.Order.Option
-	3,   // 80: api.v1.GetUserTradesReply.Order.base_token_type:type_name -> api.v1.BaseTokenType
-	3,   // 81: api.v1.SearchReply.Market.base_token_type:type_name -> api.v1.BaseTokenType
-	163, // 82: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.token_prices:type_name -> api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.TokenPrice
-	3,   // 83: api.v1.GetUserTransactionsReply.Transaction.base_token_type:type_name -> api.v1.BaseTokenType
-	4,   // 84: api.v1.GetUserTransactionsReply.Transaction.type:type_name -> api.v1.TxType
-	166, // 85: api.v1.GetEventDetailReply.Market.options:type_name -> api.v1.GetEventDetailReply.Market.Option
-	5,   // 86: api.v1.GetEventsReply.EventSummary.status:type_name -> api.v1.EventStatus
-	168, // 87: api.v1.GetEventsReply.EventSummary.markets:type_name -> api.v1.GetEventsReply.EventSummary.Market
-	169, // 88: api.v1.need_auth:extendee -> google.protobuf.MethodOptions
-	16,  // 89: api.v1.SseApi.Subscribe:input_type -> api.v1.SubscribeRequest
-	18,  // 90: api.v1.SseApi.Unsubscribe:input_type -> api.v1.UnsubscribeRequest
-	50,  // 91: api.v1.HttpApi.Login:input_type -> api.v1.LoginRequest
-	52,  // 92: api.v1.HttpApi.SetAvatar:input_type -> api.v1.SetAvatarRequest
-	54,  // 93: api.v1.HttpApi.SetName:input_type -> api.v1.SetNameRequest
-	56,  // 94: api.v1.HttpApi.SetDescription:input_type -> api.v1.SetDescriptionRequest
-	58,  // 95: api.v1.HttpApi.PlaceOrder:input_type -> api.v1.PlaceOrderRequest
-	60,  // 96: api.v1.HttpApi.ClaimMarketResult:input_type -> api.v1.ClaimMarketResultRequest
-	62,  // 97: api.v1.HttpApi.TransferBaseToken:input_type -> api.v1.TransferBaseTokenRequest
-	64,  // 98: api.v1.HttpApi.FollowMarket:input_type -> api.v1.FollowMarketRequest
-	66,  // 99: api.v1.HttpApi.UnfollowMarket:input_type -> api.v1.UnfollowMarketRequest
-	119, // 100: api.v1.HttpApi.Swap:input_type -> api.v1.SwapRequest
-	121, // 101: api.v1.HttpApi.DepositLiquidity:input_type -> api.v1.DepositLiquidityRequest
-	123, // 102: api.v1.HttpApi.WithdrawLiquidity:input_type -> api.v1.WithdrawLiquidityRequest
-	125, // 103: api.v1.HttpApi.RedeemPosition:input_type -> api.v1.RedeemPositionRequest
-	127, // 104: api.v1.HttpApi.GetSwapPrice:input_type -> api.v1.GetSwapPriceRequest
-	68,  // 105: api.v1.HttpApi.UploadFile:input_type -> api.v1.UploadFileRequest
-	79,  // 106: api.v1.HttpApi.DownloadFile:input_type -> api.v1.DownloadFileRequest
-	71,  // 107: api.v1.HttpApi.PublishPost:input_type -> api.v1.PublishPostRequest
-	73,  // 108: api.v1.HttpApi.PublishComment:input_type -> api.v1.PublishCommentRequest
-	75,  // 109: api.v1.HttpApi.LikeContent:input_type -> api.v1.LikeContentRequest
-	77,  // 110: api.v1.HttpApi.UnlikeContent:input_type -> api.v1.UnlikeContentRequest
-	95,  // 111: api.v1.HttpApi.FollowUser:input_type -> api.v1.FollowUserRequest
-	97,  // 112: api.v1.HttpApi.UnfollowUser:input_type -> api.v1.UnfollowUserRequest
-	81,  // 113: api.v1.HttpApi.GetFollowMarkets:input_type -> api.v1.GetFollowMarketsRequest
-	83,  // 114: api.v1.HttpApi.GetHoldingPositionsMarket:input_type -> api.v1.GetHoldingPositionsMarketRequest
-	85,  // 115: api.v1.HttpApi.GetHotMarkets:input_type -> api.v1.GetHotMarketsRequest
-	87,  // 116: api.v1.HttpApi.GetMarketDetail:input_type -> api.v1.GetMarketDetailRequest
-	89,  // 117: api.v1.HttpApi.GetMarketTrades:input_type -> api.v1.GetMarketTradesRequest
-	101, // 118: api.v1.HttpApi.GetUserTrades:input_type -> api.v1.GetUserTradesRequest
-	91,  // 119: api.v1.HttpApi.GetMarketPosts:input_type -> api.v1.GetMarketPostsRequest
-	93,  // 120: api.v1.HttpApi.GetComments:input_type -> api.v1.GetCommentsRequest
-	99,  // 121: api.v1.HttpApi.GetUserPositions:input_type -> api.v1.GetUserPositionsRequest
-	103, // 122: api.v1.HttpApi.GetUserBaseInfo:input_type -> api.v1.GetUserBaseInfoRequest
-	105, // 123: api.v1.HttpApi.GetUserAssetInfo:input_type -> api.v1.GetUserAssetInfoRequest
-	107, // 124: api.v1.HttpApi.Search:input_type -> api.v1.SearchRequest
-	109, // 125: api.v1.HttpApi.GetUserAssetHistory:input_type -> api.v1.GetUserAssetHistoryRequest
-	111, // 126: api.v1.HttpApi.GetMarketOptionPriceHistory:input_type -> api.v1.GetMarketOptionPriceHistoryRequest
-	48,  // 127: api.v1.HttpApi.GetMarkets:input_type -> api.v1.GetMarketsRequest
-	44,  // 128: api.v1.HttpApi.GetTags:input_type -> api.v1.GetTagsRequest
-	46,  // 129: api.v1.HttpApi.GetCategories:input_type -> api.v1.GetCategoriesRequest
-	42,  // 130: api.v1.HttpApi.GetPaymasterData:input_type -> api.v1.GetPaymasterDataRequest
-	38,  // 131: api.v1.HttpApi.GetUserNotifications:input_type -> api.v1.GetUserNotificationsRequest
-	40,  // 132: api.v1.HttpApi.MarkNotificationsAsRead:input_type -> api.v1.MarkNotificationsAsReadRequest
-	36,  // 133: api.v1.HttpApi.GetInviteUserList:input_type -> api.v1.GetInviteUserListRequest
-	113, // 134: api.v1.HttpApi.GetUserTransactions:input_type -> api.v1.GetUserTransactionsRequest
-	34,  // 135: api.v1.HttpApi.GetBaseTokenConfig:input_type -> api.v1.GetBaseTokenConfigRequest
-	30,  // 136: api.v1.HttpApi.GetBanners:input_type -> api.v1.GetBannersRequest
-	32,  // 137: api.v1.HttpApi.GetSections:input_type -> api.v1.GetSectionsRequest
-	28,  // 138: api.v1.HttpApi.GetTasks:input_type -> api.v1.GetTasksRequest
-	26,  // 139: api.v1.HttpApi.ClaimTaskReward:input_type -> api.v1.ClaimTaskRewardRequest
-	24,  // 140: api.v1.HttpApi.ShareTaskDone:input_type -> api.v1.ShareTaskDoneRequest
-	22,  // 141: api.v1.HttpApi.Translate:input_type -> api.v1.TranslateRequest
-	20,  // 142: api.v1.HttpApi.GetLeaderboard:input_type -> api.v1.GetLeaderboardRequest
-	115, // 143: api.v1.HttpApi.GetEventDetail:input_type -> api.v1.GetEventDetailRequest
-	117, // 144: api.v1.HttpApi.GetEvents:input_type -> api.v1.GetEventsRequest
-	17,  // 145: api.v1.SseApi.Subscribe:output_type -> api.v1.SubscribeReply
-	19,  // 146: api.v1.SseApi.Unsubscribe:output_type -> api.v1.UnsubscribeReply
-	51,  // 147: api.v1.HttpApi.Login:output_type -> api.v1.LoginReply
-	53,  // 148: api.v1.HttpApi.SetAvatar:output_type -> api.v1.SetAvatarReply
-	55,  // 149: api.v1.HttpApi.SetName:output_type -> api.v1.SetNameReply
-	57,  // 150: api.v1.HttpApi.SetDescription:output_type -> api.v1.SetDescriptionReply
-	59,  // 151: api.v1.HttpApi.PlaceOrder:output_type -> api.v1.PlaceOrderReply
-	61,  // 152: api.v1.HttpApi.ClaimMarketResult:output_type -> api.v1.ClaimMarketResultReply
-	63,  // 153: api.v1.HttpApi.TransferBaseToken:output_type -> api.v1.TransferBaseTokenReply
-	65,  // 154: api.v1.HttpApi.FollowMarket:output_type -> api.v1.FollowMarketReply
-	67,  // 155: api.v1.HttpApi.UnfollowMarket:output_type -> api.v1.UnfollowMarketReply
-	120, // 156: api.v1.HttpApi.Swap:output_type -> api.v1.SwapReply
-	122, // 157: api.v1.HttpApi.DepositLiquidity:output_type -> api.v1.DepositLiquidityReply
-	124, // 158: api.v1.HttpApi.WithdrawLiquidity:output_type -> api.v1.WithdrawLiquidityReply
-	126, // 159: api.v1.HttpApi.RedeemPosition:output_type -> api.v1.RedeemPositionReply
-	128, // 160: api.v1.HttpApi.GetSwapPrice:output_type -> api.v1.GetSwapPriceReply
-	69,  // 161: api.v1.HttpApi.UploadFile:output_type -> api.v1.UploadFileReply
-	80,  // 162: api.v1.HttpApi.DownloadFile:output_type -> api.v1.DownloadFileReply
-	72,  // 163: api.v1.HttpApi.PublishPost:output_type -> api.v1.PublishPostReply
-	74,  // 164: api.v1.HttpApi.PublishComment:output_type -> api.v1.PublishCommentReply
-	76,  // 165: api.v1.HttpApi.LikeContent:output_type -> api.v1.LikeContentReply
-	78,  // 166: api.v1.HttpApi.UnlikeContent:output_type -> api.v1.UnlikeContentReply
-	96,  // 167: api.v1.HttpApi.FollowUser:output_type -> api.v1.FollowUserReply
-	98,  // 168: api.v1.HttpApi.UnfollowUser:output_type -> api.v1.UnfollowUserReply
-	82,  // 169: api.v1.HttpApi.GetFollowMarkets:output_type -> api.v1.GetFollowMarketsReply
-	84,  // 170: api.v1.HttpApi.GetHoldingPositionsMarket:output_type -> api.v1.GetHoldingPositionsMarketReply
-	86,  // 171: api.v1.HttpApi.GetHotMarkets:output_type -> api.v1.GetHotMarketsReply
-	88,  // 172: api.v1.HttpApi.GetMarketDetail:output_type -> api.v1.GetMarketDetailReply
-	90,  // 173: api.v1.HttpApi.GetMarketTrades:output_type -> api.v1.GetMarketTradesReply
-	102, // 174: api.v1.HttpApi.GetUserTrades:output_type -> api.v1.GetUserTradesReply
-	92,  // 175: api.v1.HttpApi.GetMarketPosts:output_type -> api.v1.GetMarketPostsReply
-	94,  // 176: api.v1.HttpApi.GetComments:output_type -> api.v1.GetCommentsReply
-	100, // 177: api.v1.HttpApi.GetUserPositions:output_type -> api.v1.GetUserPositionsReply
-	104, // 178: api.v1.HttpApi.GetUserBaseInfo:output_type -> api.v1.GetUserBaseInfoReply
-	106, // 179: api.v1.HttpApi.GetUserAssetInfo:output_type -> api.v1.GetUserAssetInfoReply
-	108, // 180: api.v1.HttpApi.Search:output_type -> api.v1.SearchReply
-	110, // 181: api.v1.HttpApi.GetUserAssetHistory:output_type -> api.v1.GetUserAssetHistoryReply
-	112, // 182: api.v1.HttpApi.GetMarketOptionPriceHistory:output_type -> api.v1.GetMarketOptionPriceHistoryReply
-	49,  // 183: api.v1.HttpApi.GetMarkets:output_type -> api.v1.GetMarketsReply
-	45,  // 184: api.v1.HttpApi.GetTags:output_type -> api.v1.GetTagsReply
-	47,  // 185: api.v1.HttpApi.GetCategories:output_type -> api.v1.GetCategoriesReply
-	43,  // 186: api.v1.HttpApi.GetPaymasterData:output_type -> api.v1.GetPaymasterDataReply
-	39,  // 187: api.v1.HttpApi.GetUserNotifications:output_type -> api.v1.GetUserNotificationsReply
-	41,  // 188: api.v1.HttpApi.MarkNotificationsAsRead:output_type -> api.v1.MarkNotificationsAsReadReply
-	37,  // 189: api.v1.HttpApi.GetInviteUserList:output_type -> api.v1.GetInviteUserListReply
-	114, // 190: api.v1.HttpApi.GetUserTransactions:output_type -> api.v1.GetUserTransactionsReply
-	35,  // 191: api.v1.HttpApi.GetBaseTokenConfig:output_type -> api.v1.GetBaseTokenConfigReply
-	31,  // 192: api.v1.HttpApi.GetBanners:output_type -> api.v1.GetBannersReply
-	33,  // 193: api.v1.HttpApi.GetSections:output_type -> api.v1.GetSectionsReply
-	29,  // 194: api.v1.HttpApi.GetTasks:output_type -> api.v1.GetTasksReply
-	27,  // 195: api.v1.HttpApi.ClaimTaskReward:output_type -> api.v1.ClaimTaskRewardReply
-	25,  // 196: api.v1.HttpApi.ShareTaskDone:output_type -> api.v1.ShareTaskDoneReply
-	23,  // 197: api.v1.HttpApi.Translate:output_type -> api.v1.TranslateReply
-	21,  // 198: api.v1.HttpApi.GetLeaderboard:output_type -> api.v1.GetLeaderboardResponse
-	116, // 199: api.v1.HttpApi.GetEventDetail:output_type -> api.v1.GetEventDetailReply
-	118, // 200: api.v1.HttpApi.GetEvents:output_type -> api.v1.GetEventsReply
-	145, // [145:201] is the sub-list for method output_type
-	89,  // [89:145] is the sub-list for method input_type
-	89,  // [89:89] is the sub-list for extension type_name
-	88,  // [88:89] is the sub-list for extension extendee
-	0,   // [0:88] is the sub-list for field type_name
+	5,   // 0: api.v1.GetLeaderboardRequest.time_interval:type_name -> api.v1.GetLeaderboardRequest.TimeInterval
+	6,   // 1: api.v1.GetLeaderboardRequest.sort_type:type_name -> api.v1.GetLeaderboardRequest.SortType
+	128, // 2: api.v1.GetLeaderboardResponse.entries:type_name -> api.v1.GetLeaderboardResponse.Entry
+	128, // 3: api.v1.GetLeaderboardResponse.user_own_entry:type_name -> api.v1.GetLeaderboardResponse.Entry
+	129, // 4: api.v1.GetTasksReply.tasks:type_name -> api.v1.GetTasksReply.Task
+	130, // 5: api.v1.GetBannersReply.banners:type_name -> api.v1.GetBannersReply.Banner
+	131, // 6: api.v1.GetSectionsReply.sections:type_name -> api.v1.GetSectionsReply.Section
+	133, // 7: api.v1.GetBaseTokenConfigReply.base_tokens:type_name -> api.v1.GetBaseTokenConfigReply.BaseToken
+	134, // 8: api.v1.GetInviteUserListReply.users:type_name -> api.v1.GetInviteUserListReply.User
+	135, // 9: api.v1.GetUserNotificationsReply.notifications:type_name -> api.v1.GetUserNotificationsReply.Notification
+	69,  // 10: api.v1.GetPaymasterDataRequest.user_operation:type_name -> api.v1.UserOperation
+	136, // 11: api.v1.GetCategoriesReply.categories:type_name -> api.v1.GetCategoriesReply.Category
+	7,   // 12: api.v1.GetMarketsRequest.sort_type:type_name -> api.v1.GetMarketsRequest.SortType
+	137, // 13: api.v1.GetMarketsReply.markets:type_name -> api.v1.GetMarketsReply.Market
+	69,  // 14: api.v1.PlaceOrderRequest.user_operation:type_name -> api.v1.UserOperation
+	69,  // 15: api.v1.ClaimMarketResultRequest.user_operation:type_name -> api.v1.UserOperation
+	69,  // 16: api.v1.TransferBaseTokenRequest.user_operation:type_name -> api.v1.UserOperation
+	142, // 17: api.v1.GetFollowMarketsReply.market_list:type_name -> api.v1.GetFollowMarketsReply.MarketInfo
+	143, // 18: api.v1.GetHoldingPositionsMarketReply.markets:type_name -> api.v1.GetHoldingPositionsMarketReply.Market
+	145, // 19: api.v1.GetHotMarketsReply.market_list:type_name -> api.v1.GetHotMarketsReply.MarketInfo
+	9,   // 20: api.v1.GetMarketDetailReply.market_status:type_name -> api.v1.GetMarketDetailReply.MaketStatus
+	1,   // 21: api.v1.GetMarketDetailReply.is_followed:type_name -> api.v1.IsFollowed
+	146, // 22: api.v1.GetMarketDetailReply.option_list:type_name -> api.v1.GetMarketDetailReply.OptionInfo
+	2,   // 23: api.v1.GetMarketDetailReply.is_claim:type_name -> api.v1.IsClaim
+	147, // 24: api.v1.GetMarketTradesReply.orders:type_name -> api.v1.GetMarketTradesReply.Order
+	149, // 25: api.v1.GetMarketPostsReply.posts:type_name -> api.v1.GetMarketPostsReply.Post
+	152, // 26: api.v1.GetCommentsReply.comments:type_name -> api.v1.GetCommentsReply.Comment
+	155, // 27: api.v1.GetUserPositionsReply.positions:type_name -> api.v1.GetUserPositionsReply.Position
+	156, // 28: api.v1.GetUserTradesReply.orders:type_name -> api.v1.GetUserTradesReply.Order
+	1,   // 29: api.v1.GetUserBaseInfoReply.is_followed:type_name -> api.v1.IsFollowed
+	11,  // 30: api.v1.SearchRequest.search_type:type_name -> api.v1.SearchRequest.SearchType
+	159, // 31: api.v1.SearchReply.users:type_name -> api.v1.SearchReply.User
+	158, // 32: api.v1.SearchReply.markets:type_name -> api.v1.SearchReply.Market
+	12,  // 33: api.v1.GetUserAssetHistoryRequest.time_interval:type_name -> api.v1.GetUserAssetHistoryRequest.TimeInterval
+	160, // 34: api.v1.GetUserAssetHistoryReply.snapshots:type_name -> api.v1.GetUserAssetHistoryReply.OneSnapshot
+	13,  // 35: api.v1.GetMarketOptionPriceHistoryRequest.time_interval:type_name -> api.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
+	161, // 36: api.v1.GetMarketOptionPriceHistoryReply.snapshots:type_name -> api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot
+	163, // 37: api.v1.GetUserTransactionsReply.transactions:type_name -> api.v1.GetUserTransactionsReply.Transaction
+	4,   // 38: api.v1.GetEventDetailReply.status:type_name -> api.v1.EventStatus
+	164, // 39: api.v1.GetEventDetailReply.markets:type_name -> api.v1.GetEventDetailReply.Market
+	4,   // 40: api.v1.GetEventsRequest.status:type_name -> api.v1.EventStatus
+	14,  // 41: api.v1.GetEventsRequest.sort_type:type_name -> api.v1.GetEventsRequest.SortType
+	166, // 42: api.v1.GetEventsReply.events:type_name -> api.v1.GetEventsReply.EventSummary
+	69,  // 43: api.v1.SwapRequest.user_operation:type_name -> api.v1.UserOperation
+	69,  // 44: api.v1.DepositLiquidityRequest.user_operation:type_name -> api.v1.UserOperation
+	69,  // 45: api.v1.WithdrawLiquidityRequest.user_operation:type_name -> api.v1.UserOperation
+	69,  // 46: api.v1.RedeemPositionRequest.user_operation:type_name -> api.v1.UserOperation
+	132, // 47: api.v1.GetSectionsReply.Section.predictions:type_name -> api.v1.GetSectionsReply.Section.Prediction
+	138, // 48: api.v1.GetMarketsReply.Market.options:type_name -> api.v1.GetMarketsReply.Market.Option
+	139, // 49: api.v1.GetMarketsReply.Market.post:type_name -> api.v1.GetMarketsReply.Market.Post
+	1,   // 50: api.v1.GetMarketsReply.Market.is_followed:type_name -> api.v1.IsFollowed
+	141, // 51: api.v1.GetMarketsReply.Market.Post.positions:type_name -> api.v1.GetMarketsReply.Market.Post.Position
+	8,   // 52: api.v1.GetMarketsReply.Market.Post.is_like:type_name -> api.v1.GetMarketsReply.IsLike
+	144, // 53: api.v1.GetHoldingPositionsMarketReply.Market.positions:type_name -> api.v1.GetHoldingPositionsMarketReply.Market.Position
+	148, // 54: api.v1.GetMarketTradesReply.Order.option:type_name -> api.v1.GetMarketTradesReply.Order.Option
+	150, // 55: api.v1.GetMarketPostsReply.Post.user_info:type_name -> api.v1.GetMarketPostsReply.Post.UserInfo
+	151, // 56: api.v1.GetMarketPostsReply.Post.positions:type_name -> api.v1.GetMarketPostsReply.Post.Position
+	10,  // 57: api.v1.GetCommentsReply.Comment.is_like:type_name -> api.v1.GetCommentsReply.IsLike
+	153, // 58: api.v1.GetCommentsReply.Comment.positions:type_name -> api.v1.GetCommentsReply.Comment.Position
+	154, // 59: api.v1.GetCommentsReply.Comment.replies:type_name -> api.v1.GetCommentsReply.Comment.Reply
+	10,  // 60: api.v1.GetCommentsReply.Comment.Reply.is_like:type_name -> api.v1.GetCommentsReply.IsLike
+	157, // 61: api.v1.GetUserTradesReply.Order.option:type_name -> api.v1.GetUserTradesReply.Order.Option
+	162, // 62: api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.token_prices:type_name -> api.v1.GetMarketOptionPriceHistoryReply.OneSnapshot.TokenPrice
+	3,   // 63: api.v1.GetUserTransactionsReply.Transaction.type:type_name -> api.v1.TxType
+	165, // 64: api.v1.GetEventDetailReply.Market.options:type_name -> api.v1.GetEventDetailReply.Market.Option
+	4,   // 65: api.v1.GetEventsReply.EventSummary.status:type_name -> api.v1.EventStatus
+	167, // 66: api.v1.GetEventsReply.EventSummary.markets:type_name -> api.v1.GetEventsReply.EventSummary.Market
+	168, // 67: api.v1.need_auth:extendee -> google.protobuf.MethodOptions
+	15,  // 68: api.v1.SseApi.Subscribe:input_type -> api.v1.SubscribeRequest
+	17,  // 69: api.v1.SseApi.Unsubscribe:input_type -> api.v1.UnsubscribeRequest
+	49,  // 70: api.v1.HttpApi.Login:input_type -> api.v1.LoginRequest
+	51,  // 71: api.v1.HttpApi.SetAvatar:input_type -> api.v1.SetAvatarRequest
+	53,  // 72: api.v1.HttpApi.SetName:input_type -> api.v1.SetNameRequest
+	55,  // 73: api.v1.HttpApi.SetDescription:input_type -> api.v1.SetDescriptionRequest
+	57,  // 74: api.v1.HttpApi.PlaceOrder:input_type -> api.v1.PlaceOrderRequest
+	59,  // 75: api.v1.HttpApi.ClaimMarketResult:input_type -> api.v1.ClaimMarketResultRequest
+	61,  // 76: api.v1.HttpApi.TransferBaseToken:input_type -> api.v1.TransferBaseTokenRequest
+	63,  // 77: api.v1.HttpApi.FollowMarket:input_type -> api.v1.FollowMarketRequest
+	65,  // 78: api.v1.HttpApi.UnfollowMarket:input_type -> api.v1.UnfollowMarketRequest
+	118, // 79: api.v1.HttpApi.Swap:input_type -> api.v1.SwapRequest
+	120, // 80: api.v1.HttpApi.DepositLiquidity:input_type -> api.v1.DepositLiquidityRequest
+	122, // 81: api.v1.HttpApi.WithdrawLiquidity:input_type -> api.v1.WithdrawLiquidityRequest
+	124, // 82: api.v1.HttpApi.RedeemPosition:input_type -> api.v1.RedeemPositionRequest
+	126, // 83: api.v1.HttpApi.GetSwapPrice:input_type -> api.v1.GetSwapPriceRequest
+	67,  // 84: api.v1.HttpApi.UploadFile:input_type -> api.v1.UploadFileRequest
+	78,  // 85: api.v1.HttpApi.DownloadFile:input_type -> api.v1.DownloadFileRequest
+	70,  // 86: api.v1.HttpApi.PublishPost:input_type -> api.v1.PublishPostRequest
+	72,  // 87: api.v1.HttpApi.PublishComment:input_type -> api.v1.PublishCommentRequest
+	74,  // 88: api.v1.HttpApi.LikeContent:input_type -> api.v1.LikeContentRequest
+	76,  // 89: api.v1.HttpApi.UnlikeContent:input_type -> api.v1.UnlikeContentRequest
+	94,  // 90: api.v1.HttpApi.FollowUser:input_type -> api.v1.FollowUserRequest
+	96,  // 91: api.v1.HttpApi.UnfollowUser:input_type -> api.v1.UnfollowUserRequest
+	80,  // 92: api.v1.HttpApi.GetFollowMarkets:input_type -> api.v1.GetFollowMarketsRequest
+	82,  // 93: api.v1.HttpApi.GetHoldingPositionsMarket:input_type -> api.v1.GetHoldingPositionsMarketRequest
+	84,  // 94: api.v1.HttpApi.GetHotMarkets:input_type -> api.v1.GetHotMarketsRequest
+	86,  // 95: api.v1.HttpApi.GetMarketDetail:input_type -> api.v1.GetMarketDetailRequest
+	88,  // 96: api.v1.HttpApi.GetMarketTrades:input_type -> api.v1.GetMarketTradesRequest
+	100, // 97: api.v1.HttpApi.GetUserTrades:input_type -> api.v1.GetUserTradesRequest
+	90,  // 98: api.v1.HttpApi.GetMarketPosts:input_type -> api.v1.GetMarketPostsRequest
+	92,  // 99: api.v1.HttpApi.GetComments:input_type -> api.v1.GetCommentsRequest
+	98,  // 100: api.v1.HttpApi.GetUserPositions:input_type -> api.v1.GetUserPositionsRequest
+	102, // 101: api.v1.HttpApi.GetUserBaseInfo:input_type -> api.v1.GetUserBaseInfoRequest
+	104, // 102: api.v1.HttpApi.GetUserAssetInfo:input_type -> api.v1.GetUserAssetInfoRequest
+	106, // 103: api.v1.HttpApi.Search:input_type -> api.v1.SearchRequest
+	108, // 104: api.v1.HttpApi.GetUserAssetHistory:input_type -> api.v1.GetUserAssetHistoryRequest
+	110, // 105: api.v1.HttpApi.GetMarketOptionPriceHistory:input_type -> api.v1.GetMarketOptionPriceHistoryRequest
+	47,  // 106: api.v1.HttpApi.GetMarkets:input_type -> api.v1.GetMarketsRequest
+	43,  // 107: api.v1.HttpApi.GetTags:input_type -> api.v1.GetTagsRequest
+	45,  // 108: api.v1.HttpApi.GetCategories:input_type -> api.v1.GetCategoriesRequest
+	41,  // 109: api.v1.HttpApi.GetPaymasterData:input_type -> api.v1.GetPaymasterDataRequest
+	37,  // 110: api.v1.HttpApi.GetUserNotifications:input_type -> api.v1.GetUserNotificationsRequest
+	39,  // 111: api.v1.HttpApi.MarkNotificationsAsRead:input_type -> api.v1.MarkNotificationsAsReadRequest
+	35,  // 112: api.v1.HttpApi.GetInviteUserList:input_type -> api.v1.GetInviteUserListRequest
+	112, // 113: api.v1.HttpApi.GetUserTransactions:input_type -> api.v1.GetUserTransactionsRequest
+	33,  // 114: api.v1.HttpApi.GetBaseTokenConfig:input_type -> api.v1.GetBaseTokenConfigRequest
+	29,  // 115: api.v1.HttpApi.GetBanners:input_type -> api.v1.GetBannersRequest
+	31,  // 116: api.v1.HttpApi.GetSections:input_type -> api.v1.GetSectionsRequest
+	27,  // 117: api.v1.HttpApi.GetTasks:input_type -> api.v1.GetTasksRequest
+	25,  // 118: api.v1.HttpApi.ClaimTaskReward:input_type -> api.v1.ClaimTaskRewardRequest
+	23,  // 119: api.v1.HttpApi.ShareTaskDone:input_type -> api.v1.ShareTaskDoneRequest
+	21,  // 120: api.v1.HttpApi.Translate:input_type -> api.v1.TranslateRequest
+	19,  // 121: api.v1.HttpApi.GetLeaderboard:input_type -> api.v1.GetLeaderboardRequest
+	114, // 122: api.v1.HttpApi.GetEventDetail:input_type -> api.v1.GetEventDetailRequest
+	116, // 123: api.v1.HttpApi.GetEvents:input_type -> api.v1.GetEventsRequest
+	16,  // 124: api.v1.SseApi.Subscribe:output_type -> api.v1.SubscribeReply
+	18,  // 125: api.v1.SseApi.Unsubscribe:output_type -> api.v1.UnsubscribeReply
+	50,  // 126: api.v1.HttpApi.Login:output_type -> api.v1.LoginReply
+	52,  // 127: api.v1.HttpApi.SetAvatar:output_type -> api.v1.SetAvatarReply
+	54,  // 128: api.v1.HttpApi.SetName:output_type -> api.v1.SetNameReply
+	56,  // 129: api.v1.HttpApi.SetDescription:output_type -> api.v1.SetDescriptionReply
+	58,  // 130: api.v1.HttpApi.PlaceOrder:output_type -> api.v1.PlaceOrderReply
+	60,  // 131: api.v1.HttpApi.ClaimMarketResult:output_type -> api.v1.ClaimMarketResultReply
+	62,  // 132: api.v1.HttpApi.TransferBaseToken:output_type -> api.v1.TransferBaseTokenReply
+	64,  // 133: api.v1.HttpApi.FollowMarket:output_type -> api.v1.FollowMarketReply
+	66,  // 134: api.v1.HttpApi.UnfollowMarket:output_type -> api.v1.UnfollowMarketReply
+	119, // 135: api.v1.HttpApi.Swap:output_type -> api.v1.SwapReply
+	121, // 136: api.v1.HttpApi.DepositLiquidity:output_type -> api.v1.DepositLiquidityReply
+	123, // 137: api.v1.HttpApi.WithdrawLiquidity:output_type -> api.v1.WithdrawLiquidityReply
+	125, // 138: api.v1.HttpApi.RedeemPosition:output_type -> api.v1.RedeemPositionReply
+	127, // 139: api.v1.HttpApi.GetSwapPrice:output_type -> api.v1.GetSwapPriceReply
+	68,  // 140: api.v1.HttpApi.UploadFile:output_type -> api.v1.UploadFileReply
+	79,  // 141: api.v1.HttpApi.DownloadFile:output_type -> api.v1.DownloadFileReply
+	71,  // 142: api.v1.HttpApi.PublishPost:output_type -> api.v1.PublishPostReply
+	73,  // 143: api.v1.HttpApi.PublishComment:output_type -> api.v1.PublishCommentReply
+	75,  // 144: api.v1.HttpApi.LikeContent:output_type -> api.v1.LikeContentReply
+	77,  // 145: api.v1.HttpApi.UnlikeContent:output_type -> api.v1.UnlikeContentReply
+	95,  // 146: api.v1.HttpApi.FollowUser:output_type -> api.v1.FollowUserReply
+	97,  // 147: api.v1.HttpApi.UnfollowUser:output_type -> api.v1.UnfollowUserReply
+	81,  // 148: api.v1.HttpApi.GetFollowMarkets:output_type -> api.v1.GetFollowMarketsReply
+	83,  // 149: api.v1.HttpApi.GetHoldingPositionsMarket:output_type -> api.v1.GetHoldingPositionsMarketReply
+	85,  // 150: api.v1.HttpApi.GetHotMarkets:output_type -> api.v1.GetHotMarketsReply
+	87,  // 151: api.v1.HttpApi.GetMarketDetail:output_type -> api.v1.GetMarketDetailReply
+	89,  // 152: api.v1.HttpApi.GetMarketTrades:output_type -> api.v1.GetMarketTradesReply
+	101, // 153: api.v1.HttpApi.GetUserTrades:output_type -> api.v1.GetUserTradesReply
+	91,  // 154: api.v1.HttpApi.GetMarketPosts:output_type -> api.v1.GetMarketPostsReply
+	93,  // 155: api.v1.HttpApi.GetComments:output_type -> api.v1.GetCommentsReply
+	99,  // 156: api.v1.HttpApi.GetUserPositions:output_type -> api.v1.GetUserPositionsReply
+	103, // 157: api.v1.HttpApi.GetUserBaseInfo:output_type -> api.v1.GetUserBaseInfoReply
+	105, // 158: api.v1.HttpApi.GetUserAssetInfo:output_type -> api.v1.GetUserAssetInfoReply
+	107, // 159: api.v1.HttpApi.Search:output_type -> api.v1.SearchReply
+	109, // 160: api.v1.HttpApi.GetUserAssetHistory:output_type -> api.v1.GetUserAssetHistoryReply
+	111, // 161: api.v1.HttpApi.GetMarketOptionPriceHistory:output_type -> api.v1.GetMarketOptionPriceHistoryReply
+	48,  // 162: api.v1.HttpApi.GetMarkets:output_type -> api.v1.GetMarketsReply
+	44,  // 163: api.v1.HttpApi.GetTags:output_type -> api.v1.GetTagsReply
+	46,  // 164: api.v1.HttpApi.GetCategories:output_type -> api.v1.GetCategoriesReply
+	42,  // 165: api.v1.HttpApi.GetPaymasterData:output_type -> api.v1.GetPaymasterDataReply
+	38,  // 166: api.v1.HttpApi.GetUserNotifications:output_type -> api.v1.GetUserNotificationsReply
+	40,  // 167: api.v1.HttpApi.MarkNotificationsAsRead:output_type -> api.v1.MarkNotificationsAsReadReply
+	36,  // 168: api.v1.HttpApi.GetInviteUserList:output_type -> api.v1.GetInviteUserListReply
+	113, // 169: api.v1.HttpApi.GetUserTransactions:output_type -> api.v1.GetUserTransactionsReply
+	34,  // 170: api.v1.HttpApi.GetBaseTokenConfig:output_type -> api.v1.GetBaseTokenConfigReply
+	30,  // 171: api.v1.HttpApi.GetBanners:output_type -> api.v1.GetBannersReply
+	32,  // 172: api.v1.HttpApi.GetSections:output_type -> api.v1.GetSectionsReply
+	28,  // 173: api.v1.HttpApi.GetTasks:output_type -> api.v1.GetTasksReply
+	26,  // 174: api.v1.HttpApi.ClaimTaskReward:output_type -> api.v1.ClaimTaskRewardReply
+	24,  // 175: api.v1.HttpApi.ShareTaskDone:output_type -> api.v1.ShareTaskDoneReply
+	22,  // 176: api.v1.HttpApi.Translate:output_type -> api.v1.TranslateReply
+	20,  // 177: api.v1.HttpApi.GetLeaderboard:output_type -> api.v1.GetLeaderboardResponse
+	115, // 178: api.v1.HttpApi.GetEventDetail:output_type -> api.v1.GetEventDetailReply
+	117, // 179: api.v1.HttpApi.GetEvents:output_type -> api.v1.GetEventsReply
+	124, // [124:180] is the sub-list for method output_type
+	68,  // [68:124] is the sub-list for method input_type
+	68,  // [68:68] is the sub-list for extension type_name
+	67,  // [67:68] is the sub-list for extension extendee
+	0,   // [0:67] is the sub-list for field type_name
 }
 
 func init() { file_market_backend_v1_api_proto_init() }
@@ -13685,7 +13573,7 @@ func file_market_backend_v1_api_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_market_backend_v1_api_proto_rawDesc), len(file_market_backend_v1_api_proto_rawDesc)),
-			NumEnums:      16,
+			NumEnums:      15,
 			NumMessages:   153,
 			NumExtensions: 1,
 			NumServices:   2,
