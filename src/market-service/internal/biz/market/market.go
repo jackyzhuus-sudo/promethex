@@ -86,6 +86,7 @@ type MarketHandler struct {
 	eventRepo  EventRepoInterface
 	log        log.Logger
 	confCustom *conf.Custom
+	tenantSlug string // ADR-008: S3 key prefix
 }
 
 type S3PredictionInfo struct {
@@ -173,13 +174,17 @@ type S3OptionInfo struct {
 	// CreationTime         time.Time  `json:"CreationTime"`
 }
 
-func NewMarketHandler(marketRepo MarketRepoInterface, eventRepo EventRepoInterface, logger log.Logger, conf *conf.Custom) *MarketHandler {
-	return &MarketHandler{marketRepo: marketRepo, eventRepo: eventRepo, log: logger, confCustom: conf}
+func NewMarketHandler(marketRepo MarketRepoInterface, eventRepo EventRepoInterface, logger log.Logger, conf *conf.Custom, s3Conf *conf.Data_S3) *MarketHandler {
+	slug := "arb-sepolia-usdc"
+	if s3Conf != nil && s3Conf.TenantSlug != "" {
+		slug = s3Conf.TenantSlug
+	}
+	return &MarketHandler{marketRepo: marketRepo, eventRepo: eventRepo, log: logger, confCustom: conf, tenantSlug: slug}
 }
 
 // tryFetchAndValidateS3Info 尝试从S3获取市场信息并验证是否包含图片和规则文件
 func (h *MarketHandler) tryFetchAndValidateS3Info(ctx common.Ctx, address string) bool {
-	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, address)
+	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3MarketMetadataKey(h.tenantSlug, address))
 	if err != nil {
 		ctx.Log.Errorf("tryFetchAndValidateS3Info DownloadFileFromAdminBucketS3 error: %+v", err)
 		return false
@@ -238,7 +243,7 @@ func (h *MarketHandler) CreateMarketAndOptions(ctx common.Ctx, marketEntityList 
 	// TODO 查s3能不能批量/并发
 	tagList := make([]string, 0, len(marketEntityList))
 	for _, marketEntity := range marketEntityList {
-		marketS3InfoBytes, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, marketEntity.Address)
+		marketS3InfoBytes, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3MarketMetadataKey(h.tenantSlug, marketEntity.Address))
 		if err != nil {
 			ctx.Log.Warnf("CreateMarketAndOptions DownloadFileFromAdminBucketS3 error: %+v", err)
 			continue
@@ -961,17 +966,7 @@ func (h *MarketHandler) GetTagsEmbedding(ctx common.Ctx, tagList []string) ([]fl
 }
 
 func (h *MarketHandler) GetCategoriesFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3CategoryInfo, int64, error) {
-
-	var key string
-	switch baseTokenType {
-	case BaseTokenTypePoints:
-		key = S3MarketCategoriesDefaultKey
-	case BaseTokenTypeUsdc:
-		key = S3MarketCategoriesUsdcKey
-	default:
-		key = S3MarketCategoriesDefaultKey
-	}
-	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, key)
+	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "categories"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
 	}
@@ -990,17 +985,7 @@ func (h *MarketHandler) GetCategoriesFromS3(ctx common.Ctx, baseTokenType uint8)
 }
 
 func (h *MarketHandler) GetBannersFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3BannerInfo, int64, error) {
-
-	var key string
-	switch baseTokenType {
-	case BaseTokenTypePoints:
-		key = S3MarketBannersDefaultKey
-	case BaseTokenTypeUsdc:
-		key = S3MarketBannersUsdcKey
-	default:
-		key = S3MarketBannersDefaultKey
-	}
-	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, key)
+	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "banners"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
 	}
@@ -1015,17 +1000,7 @@ func (h *MarketHandler) GetBannersFromS3(ctx common.Ctx, baseTokenType uint8) ([
 }
 
 func (h *MarketHandler) GetSectionsFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3SectionInfo, int64, error) {
-
-	var key string
-	switch baseTokenType {
-	case BaseTokenTypePoints:
-		key = S3MarketSectionsDefaultKey
-	case BaseTokenTypeUsdc:
-		key = S3MarketSectionsUsdcKey
-	default:
-		key = S3MarketSectionsDefaultKey
-	}
-	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, key)
+	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "sections"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
 	}
@@ -1058,7 +1033,7 @@ func (h *MarketHandler) UpdateMarketInfoByS3Data(ctx common.Ctx, marketAddress s
 		return errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
 	}
 
-	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, marketAddress)
+	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3MarketMetadataKey(h.tenantSlug, marketAddress))
 	if err != nil {
 		return errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
 	}

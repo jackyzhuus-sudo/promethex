@@ -1,6 +1,7 @@
 package market
 
 import (
+	"fmt"
 	"market-service/internal/biz/base"
 	"time"
 
@@ -28,16 +29,14 @@ var (
 	EventStatusFrozen   = uint8(4)
 )
 
-const (
-	S3MarketCategoriesDefaultKey = "Category-List_Default"
-	S3MarketCategoriesUsdcKey    = "Category-List_USDC"
+// S3 key builders (ADR-008: {tenant_slug}/sync/{type}.json)
+func S3ContentKey(tenantSlug, contentType string) string {
+	return fmt.Sprintf("%s/sync/%s.json", tenantSlug, contentType)
+}
 
-	S3MarketBannersDefaultKey = "Banners_Default"
-	S3MarketBannersUsdcKey    = "Banners_USDC"
-
-	S3MarketSectionsDefaultKey = "Section-List_Default"
-	S3MarketSectionsUsdcKey    = "Section-List_USDC"
-)
+func S3MarketMetadataKey(tenantSlug, marketAddress string) string {
+	return fmt.Sprintf("%s/sync/markets/%s.json", tenantSlug, marketAddress)
+}
 
 type MarketEntity struct {
 	base.BaseEntity

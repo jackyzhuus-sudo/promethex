@@ -64,6 +64,7 @@ message Data {
     string biz_bucket = 3;
     string admin_bucket = 4;
     string region = 5;
+    string tenant_slug = 6;  // ADR-008: S3 key prefix (default: arb-sepolia-usdc)
   }
 
   message Rpc {

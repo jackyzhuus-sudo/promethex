@@ -45,7 +45,7 @@ func wireApp(confServer *conf.Server, data *conf.Data, custom *conf.Custom, logg
 	marketcenterInfra := base.NewMarketcenterInfra(baseData, logger)
 	marketRepoInterface := market.NewMarketRepo(marketcenterInfra)
 	eventRepoInterface := market.NewEventRepo(marketcenterInfra)
-	marketHandler := market2.NewMarketHandler(marketRepoInterface, eventRepoInterface, logger, custom)
+	marketHandler := market2.NewMarketHandler(marketRepoInterface, eventRepoInterface, logger, custom, data.S3)
 	taskRepoInterface := task.NewTaskRepo(usercenterInfra)
 	taskHandler := task2.NewTaskHandler(taskRepoInterface, logger, custom)
 	assetRepoInterface := asset.NewAssetRepo(marketcenterInfra)
