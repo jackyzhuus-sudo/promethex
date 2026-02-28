@@ -20,6 +20,7 @@ const (
 	AcceptLangKey CtxKey = "accept_language"
 	DeviceTypeKey CtxKey = "device_type"
 	AppVersionKey CtxKey = "app_version"
+	BaseTokenKey        CtxKey = "base_token"
 	BaseTokenAddressKey CtxKey = "base_token_address"
 )
 
@@ -100,6 +101,14 @@ func GetDeviceTypeFromCtx(ctx context.Context) string {
 		return ""
 	}
 	return device
+}
+
+func GetBaseTokenFromCtx(ctx context.Context) int {
+	baseToken, ok := ctx.Value(BaseTokenKey).(int)
+	if !ok {
+		return 0
+	}
+	return baseToken
 }
 
 func GetBaseTokenAddressFromCtx(ctx context.Context) string {

@@ -302,7 +302,7 @@ func (s *MarketService) PublishComment(ctx context.Context, req *usercenter.Publ
 			Type:          userBiz.NotificationTypeReceiveComment,
 			Category:      uint8(userBiz.NotificationCategoryCommunity),
 			Status:        userBiz.NotificationStatusUnRead,
-			BaseTokenAddress: marketEntity.BaseTokenAddress,
+			BaseTokenType: uint8(marketEntity.TokenType),
 		})
 		if err != nil {
 			newCtx.Log.Errorf("async generate comment notification GenerateNewUserNotification error: %+v", err)
@@ -945,7 +945,7 @@ func (s *MarketService) GetUserNotifications(ctx context.Context, req *usercente
 		Category:      uint8(req.Category),
 		Type:          uint8(req.Type),
 		Status:        uint8(req.Status),
-		BaseTokenAddress: req.BaseTokenAddress,
+		BaseTokenType: uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Order:  "id desc",
 			Limit:  int32(req.PageSize),
@@ -1101,14 +1101,7 @@ func (s *MarketService) GetTasks(ctx context.Context, req *usercenter.GetTasksRe
 	}
 
 	// 将积分除以精度，得到真实的积分数量
-	var pointsDecimals uint32
-	for _, token := range s.confCustom.AssetTokens {
-		if token.Symbol == "POINTS" || token.Name == "Points" {
-			pointsDecimals = token.Decimals
-			break
-		}
-	}
-	realPoints := taskRewardPoints.Shift(-int32(pointsDecimals))
+	realPoints := taskRewardPoints.Shift(-int32(s.confCustom.AssetTokens.Points.Decimals))
 
 	rspTasks := make([]*usercenter.GetTasksResponse_Task, 0)
 	for _, taskEntity := range taskEntities {

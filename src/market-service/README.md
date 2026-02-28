@@ -1,6 +1,6 @@
-# Bayes Service
+# Market Service
 
-Bayes Service is the core microservice providing business logic for the Bayes prediction market platform. It handles market data, trading operations, user management, and asset management through gRPC interfaces.
+Market Service is the core microservice providing business logic for the prediction market platform. It handles market data, trading operations, user management, and asset management through gRPC interfaces.
 
 ## System Architecture
 
@@ -8,10 +8,10 @@ Bayes Service is the core microservice providing business logic for the Bayes pr
 graph TB
     A[Frontend]
     
-    B[Bayes Market Backend]
+    B[Market Backend]
     
-    C[Bayes Service]
-    D[Bayes Recommendation]
+    C[Market Service]
+    D[Recommendation]
     E[Block Listener]
 
     F[(Database)]
@@ -39,7 +39,7 @@ graph TB
 
 ## Project Description
 
-- This service is the core business logic microservice in the Bayes prediction market system
+- This service is the core business logic microservice in the prediction market system
 - Provides gRPC interfaces for upstream BFF services
 - Directly manages database and cache operations
 - Handles core business logic including market management, trading, user management, and asset operations
@@ -49,9 +49,9 @@ graph TB
 
 The system consists of multiple microservices:
 
-- **Bayes Market Backend (BFF)**: Frontend gateway service providing HTTP APIs
-- **Bayes Service**: Core business logic service handling market data, trading, and user management
-- **Bayes Recommendation**: AI/ML service providing embedding and recommendation algorithms
+- **Market Backend (BFF)**: Frontend gateway service providing HTTP APIs
+- **Market Service**: Core business logic service handling market data, trading, and user management
+- **Recommendation**: AI/ML service providing embedding and recommendation algorithms
 - **Block Listener**: Blockchain monitoring service that listens to on-chain events and updates business data
 
 ## Project Structure
@@ -194,7 +194,7 @@ server:
     timeout: 1s
 database:
   driver: postgres
-  source: "host=localhost user=postgres password=password dbname=bayes port=5432 sslmode=disable"
+  source: "host=localhost user=postgres password=password dbname=marketcenter port=5432 sslmode=disable"
 redis:
   addr: localhost:6379
   password: ""

@@ -382,7 +382,7 @@ func (s *HttpApiService) GetUserNotifications(ctx context.Context, req *apipb.Ge
 		Type:          req.Type,
 		Page:          req.Page,
 		PageSize:      req.PageSize,
-		BaseTokenAddress: util.GetBaseTokenAddressFromCtx(ctx),
+		BaseTokenType: usercenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
 	})
 	if err != nil {
 		c.Log.Errorf("rpc get user notifications failed, err: [%+v]", err)
@@ -457,16 +457,23 @@ func (s *HttpApiService) GetInviteUserList(ctx context.Context, req *apipb.GetIn
 }
 
 func (s *HttpApiService) GetBaseTokenConfig(ctx context.Context, req *apipb.GetBaseTokenConfigRequest) (*apipb.GetBaseTokenConfigReply, error) {
+
 	rsp := &apipb.GetBaseTokenConfigReply{
 		BaseTokens: make([]*apipb.GetBaseTokenConfigReply_BaseToken, 0),
 	}
-	for addr, token := range s.custom.AssetTokens {
-		rsp.BaseTokens = append(rsp.BaseTokens, &apipb.GetBaseTokenConfigReply_BaseToken{
-			BaseTokenName:     token.Name,
-			BaseTokenSymbol:   token.Symbol,
-			BaseTokenAddress:  addr,
-			BaseTokenDecimals: token.Decimals,
-		})
-	}
+	rsp.BaseTokens = append(rsp.BaseTokens, &apipb.GetBaseTokenConfigReply_BaseToken{
+		BaseTokenType:     1,
+		BaseTokenName:     s.custom.AssetTokens.Points.Name,
+		BaseTokenSymbol:   s.custom.AssetTokens.Points.Symbol,
+		BaseTokenAddress:  s.custom.AssetTokens.Points.Address,
+		BaseTokenDecimals: s.custom.AssetTokens.Points.Decimals,
+	})
+	rsp.BaseTokens = append(rsp.BaseTokens, &apipb.GetBaseTokenConfigReply_BaseToken{
+		BaseTokenType:     2,
+		BaseTokenName:     s.custom.AssetTokens.Usdc.Name,
+		BaseTokenSymbol:   s.custom.AssetTokens.Usdc.Symbol,
+		BaseTokenAddress:  s.custom.AssetTokens.Usdc.Address,
+		BaseTokenDecimals: s.custom.AssetTokens.Usdc.Decimals,
+	})
 	return rsp, nil
 }

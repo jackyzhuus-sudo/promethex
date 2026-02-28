@@ -54,15 +54,17 @@ data:
       addr: host.docker.internal:50051 # 推荐服务 gRPC 地址
       timeout: 3s                      # gRPC 调用超时
 custom:
-  asset_tokens:                      # key = lowercase hex address
-    "0x...points_address...":
+  asset_tokens:
+    points:
+      address: ""      # Points 代币地址
       name: Points     # 代币名称
       symbol: POINTS   # 代币符号
       decimals: 18     # 小数位数
-    "0x...usdc_address...":
-      name: USD Coin   # 代币名称
-      symbol: USDC     # 代币符号
-      decimals: 6      # 小数位数
+    usdc:
+      address: " "    # USDC 代币地址
+      name: USD Coin  # 代币名称
+      symbol: USDC    # 代币符号
+      decimals: 6     # 小数位数
   new_user_points: 0   # 新用户默认积分
   chain: sepolia       # 业务默认链标识
   lark_webhook_key: "" # 飞书告警 Webhook Key

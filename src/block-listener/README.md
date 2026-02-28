@@ -8,10 +8,10 @@ Block Listener is a blockchain monitoring service that listens to on-chain event
 graph TB
     A[Frontend]
 
-    B[Bayes Market Backend]
+    B[Market Backend]
 
-    C[Bayes Service]
-    D[Bayes Recommendation]
+    C[Market Service]
+    D[Recommendation]
     E[Block Listener]
 
     F[(Database)]
@@ -168,9 +168,11 @@ data:
     batch_size: 100
     scan_interval: 5s
 
-client:
-  bayes:
-    target: "dns:///market-service:9000"
+  marketcenter_rpc:
+    addr: market-service:9000
+    timeout: 10s
+  usercenter_rpc:
+    addr: market-service:9000
     timeout: 10s
 ```
 

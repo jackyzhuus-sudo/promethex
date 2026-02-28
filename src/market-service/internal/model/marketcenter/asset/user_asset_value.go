@@ -19,7 +19,7 @@ type UserAssetValue struct {
 	Balance       decimal.Decimal `gorm:"column:balance;type:NUMERIC;not null;default:0" comment:"某时刻的某资产余额"`
 	Portfolio     decimal.Decimal `gorm:"column:portfolio;type:NUMERIC;not null;default:0" comment:"某时刻的某资产持仓总价值"`
 	Pnl           decimal.Decimal `gorm:"column:pnl;type:NUMERIC;not null;default:0" comment:"某时刻的某资产总盈亏"`
-	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
+	BaseTokenType uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
 }
 
 func (u *UserAssetValue) ToEntity() *assetBiz.UserAssetValueEntity {
@@ -35,7 +35,7 @@ func (u *UserAssetValue) ToEntity() *assetBiz.UserAssetValueEntity {
 		Balance:       u.Balance,
 		Portfolio:     u.Portfolio,
 		Pnl:           u.Pnl,
-		BaseTokenAddress: u.BaseTokenAddress,
+		BaseTokenType: u.BaseTokenType,
 		Time:          u.Time,
 	}
 }
@@ -47,7 +47,7 @@ func (u *UserAssetValue) FromEntity(entity *assetBiz.UserAssetValueEntity) {
 	u.Balance = entity.Balance
 	u.Portfolio = entity.Portfolio
 	u.Pnl = entity.Pnl
-	u.BaseTokenAddress = entity.BaseTokenAddress
+	u.BaseTokenType = entity.BaseTokenType
 	u.Time = entity.Time
 	u.ID = entity.Id
 	u.CreatedAt = entity.CreatedAt

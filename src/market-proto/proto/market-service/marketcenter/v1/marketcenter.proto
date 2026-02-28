@@ -146,7 +146,7 @@ message GetLeaderboardRequest {
   TimeInterval time_interval = 1;
   uint32 page = 2;
   uint32 page_size = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
   string uid = 5;
   SortType sort_type = 6;
 }
@@ -177,7 +177,7 @@ message GetQuestionsRequest {
   string tag = 2;
   // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按过期时间
   SortType sort_type = 3; 
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
   uint32 status = 5;
   uint32 page = 6;
   uint32 page_size = 7;
@@ -214,7 +214,7 @@ message GetQuestionsResponse {
       uint32 status = 5;
       uint32 participants_count = 6;
       string volume = 7;
-      string base_token_address = 8; 
+      BaseTokenType base_token_type = 8;  // 1: points 2: usdc
       uint32 decimal = 10;  // 精度
   
       repeated Option options = 11;
@@ -230,7 +230,7 @@ message GetQuestionsResponse {
     uint32 status = 7; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
     uint32 participants_count = 8;
     string volume = 9;
-    string base_token_address = 10; 
+    BaseTokenType base_token_type = 10;  // 1: points 2: usdc
     uint32 decimal = 11;  // 精度
     uint32 created_at = 12;
     uint32 deadline = 13;
@@ -276,6 +276,7 @@ message GetQuestionDetailResponse {
     uint64 participants_count = 7;
     string result_option_address = 8;
     uint32 status = 9; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+    BaseTokenType base_token_type = 10; // 1: points 2: usdc
     string base_token_address = 11; // points或者usdc等的合约地址
     // 是否以领取结果 
     IsClaim is_claim = 12;
@@ -290,6 +291,7 @@ message GetQuestionDetailResponse {
   string rules = 5;
   string rules_file_url = 6;
   uint32 status = 7; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+  BaseTokenType base_token_type = 8; // 1: points 2: usdc
   string base_token_address = 9; // points或者usdc等的合约地址
   // 是否以领取结果 
   IsClaim is_claim = 10;
@@ -359,7 +361,7 @@ message BatchUpdateOptionPriceRequest {
     uint32 decimal = 3;
     uint64 block_time = 4;
     uint64 block_number = 5;
-    string base_token_address = 6;
+    BaseTokenType base_token_type = 6;
   }
   repeated OptionPrice option_prices = 1;
 }
@@ -383,7 +385,7 @@ message GetMarketTagsResponse {
 message GetMarketCategoriesRequest {
   uint32 page = 1;
   uint32 page_size = 2;
-  string base_token_address = 3;
+  BaseTokenType base_token_type = 3;
 }
 
 message GetMarketCategoriesResponse {
@@ -434,7 +436,7 @@ message GetMarketsAndOptionsInfoRequest {
   string tag = 2;
   // 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
   SortType sort_type = 3; 
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
   uint32 status = 5;
   uint32 page = 6;
   uint32 page_size = 7;
@@ -491,7 +493,7 @@ message GetMarketsAndOptionsInfoResponse {
     uint32 status = 5;
     uint32 participants_count = 6;
     string volume = 7;
-    string base_token_address = 8; 
+    BaseTokenType base_token_type = 8;  // 1: points 2: usdc
     IsFollowed is_followed = 9;
     uint32 decimal = 10;  // 精度
 
@@ -549,7 +551,7 @@ message ProcessMarketDepositOrWithdrawEventRequest {
   // 区块时间
   uint64 block_time = 12;
 
-  string base_token_address = 13;
+  BaseTokenType base_token_type = 13;
   uint32 decimal = 14;
   // 条件代币价格
   repeated UpdateOptionPrice option_prices = 15;
@@ -562,7 +564,7 @@ message ProcessMarketSwapEventRequest {
   repeated UpdateOptionPrice option_prices = 1;
   uint64 block_number = 2;
   string tx_hash = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
   uint64 block_time = 5;
 }
 
@@ -682,11 +684,11 @@ message GetMarketsAndOptionsForBlockListenerResponse {
       uint32 index = 2;
       string market_address = 3;
       uint32 decimal = 4;
-      string base_token_address = 5;
+      BaseTokenType base_token_type = 5;
     }
 
     string address = 1;
-    string base_token_address = 2;
+    BaseTokenType base_token_type = 2;
     repeated Option options = 3;
   }
 
@@ -751,7 +753,7 @@ message ClaimMarketResultResponse {
 
 message TransferBaseTokenRequest {
   string uid = 1;
-  string base_token_address = 2;
+  BaseTokenType base_token_type = 2;
   string amount = 3;
   string to_address = 4;
   UserOperation user_operation = 5;
@@ -804,7 +806,7 @@ message UpdateUserMarketFollowStatusResponse {}
 
 
 message GetHotMarketsRequest {
-  string base_token_address = 1;
+  BaseTokenType base_token_type = 1;
 }
 
 message GetHotMarketsResponse {
@@ -814,7 +816,7 @@ message GetHotMarketsResponse {
     string pic_url = 3;
     string description = 4;
     uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
-    string base_token_address = 6;
+    BaseTokenType base_token_type = 6;
   }
   repeated Market markets = 1;
 }
@@ -824,7 +826,7 @@ message GetFollowedMarketsRequest {
   string uid = 1;
   uint32 page = 2;
   uint32 page_size = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
 }
 
 message GetFollowedMarketsResponse {
@@ -835,7 +837,7 @@ message GetFollowedMarketsResponse {
     string description = 4;
     uint32 status = 5; // 1: 正常 2: 结算中 3: 有争议 4: 已结束
     int64 deadline = 6;
-    string base_token_address = 7;
+    BaseTokenType base_token_type = 7;
   }
   uint32 total = 1;
   repeated Market markets = 2;
@@ -844,7 +846,7 @@ message GetFollowedMarketsResponse {
 
 message GetHoldingPositionsMarketsRequest {
   string uid = 1;
-  string base_token_address = 2;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
   uint32 page = 3;
   uint32 page_size = 4;
 }
@@ -870,7 +872,7 @@ message GetHoldingPositionsMarketsResponse {
     string market_volume = 6;
     uint32 market_participants_count = 7;
     uint32 decimal = 8;
-    string base_token_address = 9;
+    BaseTokenType base_token_type = 9; // 1: points 2: usdc
 
     string user_market_total_value = 10;
     repeated Position positions = 11;
@@ -916,6 +918,7 @@ message GetMarketDetailResponse {
   IsFollowed is_followed = 12; // 1: 关注 2: 未关注
   repeated Option options = 13;
   uint32 decimal = 14;  
+  BaseTokenType base_token_type = 15; // 1: points 2: usdc
   string base_token_address = 16; // points或者usdc等的合约地址
   // 是否以领取结果 
   IsClaim is_claim = 17;
@@ -963,7 +966,7 @@ message GetUserTradesRequest {
   string market_address = 2;
   uint32 page = 3;
   uint32 page_size = 4;
-  string base_token_address = 5;
+  BaseTokenType base_token_type = 5;
 }
 
 message GetUserTradesResponse {
@@ -991,7 +994,7 @@ message GetUserTradesResponse {
     string deal_price = 7; // 成交价格
 
     Option option = 8;
-    string base_token_address = 9;
+    BaseTokenType base_token_type = 9;
   }
   uint32 total = 1;
   repeated Order orders = 2;
@@ -1021,6 +1024,11 @@ message GetMarketUsersPositionsResponse {
   repeated UserPosition user_positions = 1;
 }
 
+enum BaseTokenType {
+  BASE_TOKEN_TYPE_UNSPECIFIED = 0;
+  BASE_TOKEN_TYPE_POINTS = 1;
+  BASE_TOKEN_TYPE_USDC = 2;
+}
 
 // CTF Event 状态
 enum EventStatus {
@@ -1035,7 +1043,7 @@ enum EventStatus {
 message GetUserPositionsRequest {
   string uid = 1;
   string market_address = 2;
-  string base_token_address = 3;
+  BaseTokenType base_token_type = 3; // 1: points 2: usdc
   uint32 page = 4;
   uint32 page_size = 5;
   string option_address = 6;
@@ -1049,7 +1057,7 @@ message GetUserPositionsResponse {
     string market_description = 4;
 
     string option_address = 5;
-    string base_token_address = 6;
+    BaseTokenType base_token_type = 6;
     string option_name = 7;
     string option_description = 8;
     uint32 option_decimal = 9; 
@@ -1073,7 +1081,7 @@ message GetUserPositionsResponse {
 
 message GetUserLatestAssetValueRequest {
   string uid = 1;
-  string base_token_address = 2;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
 }
 
 message GetUserLatestAssetValueResponse {
@@ -1082,7 +1090,7 @@ message GetUserLatestAssetValueResponse {
   string portfolio = 3;
   string pnl = 4;
   uint32 decimal = 5;
-  string base_token_address = 6;
+  BaseTokenType base_token_type = 6;
   string volume = 7;
   uint32 pnl_rank = 8;
 }
@@ -1091,7 +1099,7 @@ message SearchMarketRequest {
   string keyword = 1;
   uint32 page = 2;
   uint32 page_size = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
 }
 
 message SearchMarketResponse {
@@ -1104,7 +1112,7 @@ message SearchMarketResponse {
     uint32 participants_count = 6;
     string volume = 7;
     int64 deadline = 8;
-    string base_token_address = 9;
+    BaseTokenType base_token_type = 9;
   }
   uint32 total = 1;
   repeated Market markets = 2;
@@ -1119,7 +1127,7 @@ message GetUserAssetHistoryRequest {
     TIME_INTERVAL_ALL = 4;
   }
   string uid = 1;
-  string base_token_address = 2;
+  BaseTokenType base_token_type = 2; // 1: points 2: usdc
   TimeInterval time_interval = 3; // 1: 7d  2: 1m  3: 3m   4: all
 }
 
@@ -1133,7 +1141,7 @@ message GetUserAssetHistoryResponse {
   }
   uint32 total = 1;
   repeated OneSnapshot snapshots = 2;
-  string base_token_address = 3;
+  BaseTokenType base_token_type = 3;
   uint32 decimal = 4;
 }
 
@@ -1168,7 +1176,7 @@ message ProcessMarketClaimResultEventRequest {
   string uid = 1;
   string user_address = 2;
   string market_address = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4; // 1: points 2: usdc
   string option_address = 5;
   string option_balance = 6;
   string amount = 7;
@@ -1253,7 +1261,7 @@ message GetUserTransactionsRequest {
   string uid = 1;
   uint32 page = 2;
   uint32 page_size = 3;
-  string base_token_address = 4;
+  BaseTokenType base_token_type = 4;
 }
 
 enum TxType {
@@ -1273,7 +1281,7 @@ message GetUserTransactionsResponse {
     string uid = 1;
     uint32 timestamp = 2;
     uint32 side = 3; // 1 转入  2 转出
-    string base_token_address = 4;
+    BaseTokenType base_token_type = 4;
     string token_address = 5;
     uint32 decimal = 6;
     string amount = 7;
@@ -1373,7 +1381,7 @@ message TxDataWithdraw {
 }
 
 message GetBannersRequest {
-  string base_token_address = 1;
+  BaseTokenType base_token_type = 1;
 }
 
 // [{"Weight":1,"Image":"image_7e895486-04f2-4559-b4f1-73898136ae3d_X Cover.png","Type":1,"Url":"0x3AaC6832dCF48577B042567443F03c5cF9E3FfF3","Id":"7e895486-04f2-4559-b4f1-73898136ae3d"},{"Weight":2,"Image":"image_f043d535-48d0-4200-9351-ac134f0f2c57_X Cover.png","Type":0,"Url":"Sports","Id":"f043d535-48d0-4200-9351-ac134f0f2c57"}]
@@ -1389,7 +1397,7 @@ message GetBannersResponse {
 }
 
 message GetSectionsRequest {
-  string base_token_address = 1;
+  BaseTokenType base_token_type = 1;
 }
 
 // [{"Predictions":[{"Prediction":"0x1F0c087178a5a189671B69889Cc5ef40cb8e37ec","Weight":3,"Id":"3fd884d7-9138-4bd8-4bba-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":2,"Id":"142cfb75-1434-48fa-4bbb-08ddbea6190f"},{"Prediction":"0x769a0B6ADd80c77bDaC51b84461c7D8eC126fFD8","Weight":1,"Id":"f1ac40bb-6fcc-4ecc-4bbc-08ddbea6190f"}],"Color":"rgb(255,208,208)","Title":"Sports","Type":1,"Weight":1,"Id":"2b86b132-512d-4946-9892-6231667818cb"},{"Predictions":[{"Prediction":"0xF6F2E039D31Bd5B6560b7474e3b2c2aC6b6876a3","Weight":0,"Id":"60d1d5d7-89c2-4a0b-4bbd-08ddbea6190f"},{"Prediction":"0xCb806005752D3460b159EdF182BFB96CfE078F7d","Weight":1,"Id":"56176a73-9ed0-4f6d-4bbe-08ddbea6190f"},{"Prediction":"0x764774E6E926C43C0417C3374D6df9E7cD736bF3","Weight":2,"Id":"7a349794-8a74-49ed-4bbf-08ddbea6190f"},{"Prediction":"0xb29f7fc2637dDf58168fD184376fe8612d3d043E","Weight":3,"Id":"a14566cb-4d06-4680-4bc0-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":4,"Id":"eb914ee8-a6af-4754-4bc1-08ddbea6190f"}],"Color":"rgb(83,159,143)","Title":"Trump","Type":0,"Weight":2,"Id":"4ace4d3f-c9a0-4982-be9b-9c00ecba8263"}]
@@ -1629,7 +1637,7 @@ message ProcessCTFMarketResolvedEventRequest {
   uint64 block_number = 3;
   uint64 block_time = 4;
   repeated UpdateOptionPrice option_prices = 5;
-  string base_token_address = 6;
+  BaseTokenType base_token_type = 6;
 }
 message ProcessCTFMarketResolvedEventResponse {}
 
@@ -1651,6 +1659,6 @@ message ProcessCTFLiquidityEventRequest {
   uint64 block_number = 9;
   uint64 block_time = 10;
   repeated UpdateOptionPrice option_prices = 11;
-  string base_token_address = 12;
+  BaseTokenType base_token_type = 12;
 }
 message ProcessCTFLiquidityEventResponse {}

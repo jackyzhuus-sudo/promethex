@@ -96,7 +96,7 @@ func (h *VolumeMonthlyLeaderboardHandler) processUserTradeMessage(ctx common.Ctx
 	}
 
 	monthStr := util.GetMonthStartTimeStr(userTradeStreamMsg.Timestamp)
-	leaderboardKey := fmt.Sprintf(assetBiz.VolumeMonthlyLeaderboard, userTradeStreamMsg.BaseTokenAddress, monthStr)
+	leaderboardKey := fmt.Sprintf(assetBiz.VolumeMonthlyLeaderboard, userTradeStreamMsg.BaseTokenType, monthStr)
 	err = h.assetBiz.UpdateLeaderboard(ctx, leaderboardKey, userTradeStreamMsg.UID, tradeVolume.InexactFloat64())
 	if err != nil {
 		ctx.Log.Errorf("failed to update volume monthly leaderboard: %w", err)

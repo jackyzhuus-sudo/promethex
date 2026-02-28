@@ -272,6 +272,55 @@ func (IsFollowed) EnumDescriptor() ([]byte, []int) {
 	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{3}
 }
 
+type BaseTokenType int32
+
+const (
+	BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED BaseTokenType = 0
+	BaseTokenType_BASE_TOKEN_TYPE_POINTS      BaseTokenType = 1
+	BaseTokenType_BASE_TOKEN_TYPE_USDC        BaseTokenType = 2
+)
+
+// Enum value maps for BaseTokenType.
+var (
+	BaseTokenType_name = map[int32]string{
+		0: "BASE_TOKEN_TYPE_UNSPECIFIED",
+		1: "BASE_TOKEN_TYPE_POINTS",
+		2: "BASE_TOKEN_TYPE_USDC",
+	}
+	BaseTokenType_value = map[string]int32{
+		"BASE_TOKEN_TYPE_UNSPECIFIED": 0,
+		"BASE_TOKEN_TYPE_POINTS":      1,
+		"BASE_TOKEN_TYPE_USDC":        2,
+	}
+)
+
+func (x BaseTokenType) Enum() *BaseTokenType {
+	p := new(BaseTokenType)
+	*p = x
+	return p
+}
+
+func (x BaseTokenType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BaseTokenType) Descriptor() protoreflect.EnumDescriptor {
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[4].Descriptor()
+}
+
+func (BaseTokenType) Type() protoreflect.EnumType {
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[4]
+}
+
+func (x BaseTokenType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BaseTokenType.Descriptor instead.
+func (BaseTokenType) EnumDescriptor() ([]byte, []int) {
+	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{4}
+}
+
 // CTF Event 状态
 type EventStatus int32
 
@@ -312,11 +361,11 @@ func (x EventStatus) String() string {
 }
 
 func (EventStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[4].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[5].Descriptor()
 }
 
 func (EventStatus) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[4]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[5]
 }
 
 func (x EventStatus) Number() protoreflect.EnumNumber {
@@ -325,7 +374,7 @@ func (x EventStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EventStatus.Descriptor instead.
 func (EventStatus) EnumDescriptor() ([]byte, []int) {
-	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{4}
+	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{5}
 }
 
 type TxType int32
@@ -379,11 +428,11 @@ func (x TxType) String() string {
 }
 
 func (TxType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[5].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[6].Descriptor()
 }
 
 func (TxType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[5]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[6]
 }
 
 func (x TxType) Number() protoreflect.EnumNumber {
@@ -392,7 +441,7 @@ func (x TxType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TxType.Descriptor instead.
 func (TxType) EnumDescriptor() ([]byte, []int) {
-	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{5}
+	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{6}
 }
 
 type GetLeaderboardRequest_TimeInterval int32
@@ -434,11 +483,11 @@ func (x GetLeaderboardRequest_TimeInterval) String() string {
 }
 
 func (GetLeaderboardRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[6].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[7].Descriptor()
 }
 
 func (GetLeaderboardRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[6]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[7]
 }
 
 func (x GetLeaderboardRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -486,11 +535,11 @@ func (x GetLeaderboardRequest_SortType) String() string {
 }
 
 func (GetLeaderboardRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[7].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[8].Descriptor()
 }
 
 func (GetLeaderboardRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[7]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[8]
 }
 
 func (x GetLeaderboardRequest_SortType) Number() protoreflect.EnumNumber {
@@ -541,11 +590,11 @@ func (x GetQuestionsRequest_SortType) String() string {
 }
 
 func (GetQuestionsRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[8].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[9].Descriptor()
 }
 
 func (GetQuestionsRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[8]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[9]
 }
 
 func (x GetQuestionsRequest_SortType) Number() protoreflect.EnumNumber {
@@ -590,11 +639,11 @@ func (x GetQuestionDetailResponse_IsClaim) String() string {
 }
 
 func (GetQuestionDetailResponse_IsClaim) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[9].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[10].Descriptor()
 }
 
 func (GetQuestionDetailResponse_IsClaim) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[9]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[10]
 }
 
 func (x GetQuestionDetailResponse_IsClaim) Number() protoreflect.EnumNumber {
@@ -651,11 +700,11 @@ func (x GetMarketsAndOptionsInfoRequest_SortType) String() string {
 }
 
 func (GetMarketsAndOptionsInfoRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[10].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[11].Descriptor()
 }
 
 func (GetMarketsAndOptionsInfoRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[10]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[11]
 }
 
 func (x GetMarketsAndOptionsInfoRequest_SortType) Number() protoreflect.EnumNumber {
@@ -700,11 +749,11 @@ func (x ProcessMarketDepositOrWithdrawEventRequest_Side) String() string {
 }
 
 func (ProcessMarketDepositOrWithdrawEventRequest_Side) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[11].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[12].Descriptor()
 }
 
 func (ProcessMarketDepositOrWithdrawEventRequest_Side) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[11]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[12]
 }
 
 func (x ProcessMarketDepositOrWithdrawEventRequest_Side) Number() protoreflect.EnumNumber {
@@ -749,11 +798,11 @@ func (x UpdateUserBaseTokenBalanceRequest_Side) String() string {
 }
 
 func (UpdateUserBaseTokenBalanceRequest_Side) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[12].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[13].Descriptor()
 }
 
 func (UpdateUserBaseTokenBalanceRequest_Side) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[12]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[13]
 }
 
 func (x UpdateUserBaseTokenBalanceRequest_Side) Number() protoreflect.EnumNumber {
@@ -798,11 +847,11 @@ func (x PlaceOrderRequest_Side) String() string {
 }
 
 func (PlaceOrderRequest_Side) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[13].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[14].Descriptor()
 }
 
 func (PlaceOrderRequest_Side) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[13]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[14]
 }
 
 func (x PlaceOrderRequest_Side) Number() protoreflect.EnumNumber {
@@ -847,11 +896,11 @@ func (x UpdateUserMarketFollowStatusRequest_Status) String() string {
 }
 
 func (UpdateUserMarketFollowStatusRequest_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[14].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[15].Descriptor()
 }
 
 func (UpdateUserMarketFollowStatusRequest_Status) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[14]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[15]
 }
 
 func (x UpdateUserMarketFollowStatusRequest_Status) Number() protoreflect.EnumNumber {
@@ -896,11 +945,11 @@ func (x GetMarketDetailResponse_IsClaim) String() string {
 }
 
 func (GetMarketDetailResponse_IsClaim) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[15].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[16].Descriptor()
 }
 
 func (GetMarketDetailResponse_IsClaim) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[15]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[16]
 }
 
 func (x GetMarketDetailResponse_IsClaim) Number() protoreflect.EnumNumber {
@@ -951,11 +1000,11 @@ func (x GetUserAssetHistoryRequest_TimeInterval) String() string {
 }
 
 func (GetUserAssetHistoryRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[16].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[17].Descriptor()
 }
 
 func (GetUserAssetHistoryRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[16]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[17]
 }
 
 func (x GetUserAssetHistoryRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -1009,11 +1058,11 @@ func (x GetMarketOptionPriceHistoryRequest_TimeInterval) String() string {
 }
 
 func (GetMarketOptionPriceHistoryRequest_TimeInterval) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[17].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[18].Descriptor()
 }
 
 func (GetMarketOptionPriceHistoryRequest_TimeInterval) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[17]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[18]
 }
 
 func (x GetMarketOptionPriceHistoryRequest_TimeInterval) Number() protoreflect.EnumNumber {
@@ -1064,11 +1113,11 @@ func (x UpdateMarketStatusRequest_Status) String() string {
 }
 
 func (UpdateMarketStatusRequest_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[18].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[19].Descriptor()
 }
 
 func (UpdateMarketStatusRequest_Status) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[18]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[19]
 }
 
 func (x UpdateMarketStatusRequest_Status) Number() protoreflect.EnumNumber {
@@ -1113,11 +1162,11 @@ func (x ListEventsRequest_SortType) String() string {
 }
 
 func (ListEventsRequest_SortType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[19].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[20].Descriptor()
 }
 
 func (ListEventsRequest_SortType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[19]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[20]
 }
 
 func (x ListEventsRequest_SortType) Number() protoreflect.EnumNumber {
@@ -1162,11 +1211,11 @@ func (x ProcessCTFConditionEventRequest_EventType) String() string {
 }
 
 func (ProcessCTFConditionEventRequest_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[20].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[21].Descriptor()
 }
 
 func (ProcessCTFConditionEventRequest_EventType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[20]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[21]
 }
 
 func (x ProcessCTFConditionEventRequest_EventType) Number() protoreflect.EnumNumber {
@@ -1214,11 +1263,11 @@ func (x ProcessCTFPositionEventRequest_EventType) String() string {
 }
 
 func (ProcessCTFPositionEventRequest_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[21].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[22].Descriptor()
 }
 
 func (ProcessCTFPositionEventRequest_EventType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[21]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[22]
 }
 
 func (x ProcessCTFPositionEventRequest_EventType) Number() protoreflect.EnumNumber {
@@ -1263,11 +1312,11 @@ func (x ProcessCTFTransferEventRequest_EventType) String() string {
 }
 
 func (ProcessCTFTransferEventRequest_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[22].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[23].Descriptor()
 }
 
 func (ProcessCTFTransferEventRequest_EventType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[22]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[23]
 }
 
 func (x ProcessCTFTransferEventRequest_EventType) Number() protoreflect.EnumNumber {
@@ -1312,11 +1361,11 @@ func (x ProcessCTFLiquidityEventRequest_EventType) String() string {
 }
 
 func (ProcessCTFLiquidityEventRequest_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[23].Descriptor()
+	return file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[24].Descriptor()
 }
 
 func (ProcessCTFLiquidityEventRequest_EventType) Type() protoreflect.EnumType {
-	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[23]
+	return &file_market_service_marketcenter_v1_marketcenter_proto_enumTypes[24]
 }
 
 func (x ProcessCTFLiquidityEventRequest_EventType) Number() protoreflect.EnumNumber {
@@ -1329,15 +1378,15 @@ func (ProcessCTFLiquidityEventRequest_EventType) EnumDescriptor() ([]byte, []int
 }
 
 type GetLeaderboardRequest struct {
-	state            protoimpl.MessageState             `protogen:"open.v1"`
-	TimeInterval     GetLeaderboardRequest_TimeInterval `protobuf:"varint,1,opt,name=time_interval,json=timeInterval,proto3,enum=marketcenter.v1.GetLeaderboardRequest_TimeInterval" json:"time_interval,omitempty"`
-	Page             uint32                             `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                             `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                             `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Uid              string                             `protobuf:"bytes,5,opt,name=uid,proto3" json:"uid,omitempty"`
-	SortType         GetLeaderboardRequest_SortType     `protobuf:"varint,6,opt,name=sort_type,json=sortType,proto3,enum=marketcenter.v1.GetLeaderboardRequest_SortType" json:"sort_type,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState             `protogen:"open.v1"`
+	TimeInterval  GetLeaderboardRequest_TimeInterval `protobuf:"varint,1,opt,name=time_interval,json=timeInterval,proto3,enum=marketcenter.v1.GetLeaderboardRequest_TimeInterval" json:"time_interval,omitempty"`
+	Page          uint32                             `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                             `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType                      `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Uid           string                             `protobuf:"bytes,5,opt,name=uid,proto3" json:"uid,omitempty"`
+	SortType      GetLeaderboardRequest_SortType     `protobuf:"varint,6,opt,name=sort_type,json=sortType,proto3,enum=marketcenter.v1.GetLeaderboardRequest_SortType" json:"sort_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetLeaderboardRequest) Reset() {
@@ -1391,11 +1440,11 @@ func (x *GetLeaderboardRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetLeaderboardRequest) GetBaseTokenAddress() string {
+func (x *GetLeaderboardRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetLeaderboardRequest) GetUid() string {
@@ -1480,7 +1529,7 @@ type GetQuestionsRequest struct {
 	Tag string `protobuf:"bytes,2,opt,name=tag,proto3" json:"tag,omitempty"`
 	// 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按过期时间
 	SortType          GetQuestionsRequest_SortType `protobuf:"varint,3,opt,name=sort_type,json=sortType,proto3,enum=marketcenter.v1.GetQuestionsRequest_SortType" json:"sort_type,omitempty"`
-	BaseTokenAddress  string                       `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	BaseTokenType     BaseTokenType                `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
 	Status            uint32                       `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	Page              uint32                       `protobuf:"varint,6,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize          uint32                       `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
@@ -1546,11 +1595,11 @@ func (x *GetQuestionsRequest) GetSortType() GetQuestionsRequest_SortType {
 	return GetQuestionsRequest_UNKNOWN
 }
 
-func (x *GetQuestionsRequest) GetBaseTokenAddress() string {
+func (x *GetQuestionsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetQuestionsRequest) GetStatus() uint32 {
@@ -1735,8 +1784,9 @@ type GetQuestionDetailResponse struct {
 	PicUrl           string                 `protobuf:"bytes,4,opt,name=pic_url,json=picUrl,proto3" json:"pic_url,omitempty"`
 	Rules            string                 `protobuf:"bytes,5,opt,name=rules,proto3" json:"rules,omitempty"`
 	RulesFileUrl     string                 `protobuf:"bytes,6,opt,name=rules_file_url,json=rulesFileUrl,proto3" json:"rules_file_url,omitempty"`
-	Status           uint32                 `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                                              // 1: 正常 2: 结算中 3: 有争议 4: 已结束
-	BaseTokenAddress string                 `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"` // points或者usdc等的合约地址
+	Status           uint32                 `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                                                                         // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+	BaseTokenType    BaseTokenType          `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	BaseTokenAddress string                 `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`                            // points或者usdc等的合约地址
 	// 是否以领取结果
 	IsClaim       GetQuestionDetailResponse_IsClaim `protobuf:"varint,10,opt,name=is_claim,json=isClaim,proto3,enum=marketcenter.v1.GetQuestionDetailResponse_IsClaim" json:"is_claim,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1820,6 +1870,13 @@ func (x *GetQuestionDetailResponse) GetStatus() uint32 {
 		return x.Status
 	}
 	return 0
+}
+
+func (x *GetQuestionDetailResponse) GetBaseTokenType() BaseTokenType {
+	if x != nil {
+		return x.BaseTokenType
+	}
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetQuestionDetailResponse) GetBaseTokenAddress() string {
@@ -2558,12 +2615,12 @@ func (x *GetMarketTagsResponse) GetTags() []string {
 }
 
 type GetMarketCategoriesRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Page             uint32                 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,3,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          uint32                 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,3,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMarketCategoriesRequest) Reset() {
@@ -2610,11 +2667,11 @@ func (x *GetMarketCategoriesRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetMarketCategoriesRequest) GetBaseTokenAddress() string {
+func (x *GetMarketCategoriesRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetMarketCategoriesResponse struct {
@@ -2764,12 +2821,12 @@ type GetMarketsAndOptionsInfoRequest struct {
 	// 标签（可选）
 	Tag string `protobuf:"bytes,2,opt,name=tag,proto3" json:"tag,omitempty"`
 	// 排序方式 1: 按创建时间 2: 按交易量 3: 按参与人数 4: 按最早（无用） 5: 按相似度（可选） 6: 按过期时间
-	SortType         GetMarketsAndOptionsInfoRequest_SortType `protobuf:"varint,3,opt,name=sort_type,json=sortType,proto3,enum=marketcenter.v1.GetMarketsAndOptionsInfoRequest_SortType" json:"sort_type,omitempty"`
-	BaseTokenAddress string                                   `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Status           uint32                                   `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
-	Page             uint32                                   `protobuf:"varint,6,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                                   `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	IsShow           MarketIsShow                             `protobuf:"varint,8,opt,name=is_show,json=isShow,proto3,enum=marketcenter.v1.MarketIsShow" json:"is_show,omitempty"` // 1: 显示 2: 隐藏
+	SortType      GetMarketsAndOptionsInfoRequest_SortType `protobuf:"varint,3,opt,name=sort_type,json=sortType,proto3,enum=marketcenter.v1.GetMarketsAndOptionsInfoRequest_SortType" json:"sort_type,omitempty"`
+	BaseTokenType BaseTokenType                            `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Status        uint32                                   `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	Page          uint32                                   `protobuf:"varint,6,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                                   `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	IsShow        MarketIsShow                             `protobuf:"varint,8,opt,name=is_show,json=isShow,proto3,enum=marketcenter.v1.MarketIsShow" json:"is_show,omitempty"` // 1: 显示 2: 隐藏
 	// 标签列表  查看推荐信息流时（sort_type = 5) 随机选几个标签传入
 	HotWords          []string `protobuf:"bytes,9,rep,name=hot_words,json=hotWords,proto3" json:"hot_words,omitempty"`
 	NotQueryPrice     bool     `protobuf:"varint,10,opt,name=not_query_price,json=notQueryPrice,proto3" json:"not_query_price,omitempty"`             // 是否不查询价格 默认查询
@@ -2834,11 +2891,11 @@ func (x *GetMarketsAndOptionsInfoRequest) GetSortType() GetMarketsAndOptionsInfo
 	return GetMarketsAndOptionsInfoRequest_SORT_TYPE_UNKNOWN
 }
 
-func (x *GetMarketsAndOptionsInfoRequest) GetBaseTokenAddress() string {
+func (x *GetMarketsAndOptionsInfoRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetMarketsAndOptionsInfoRequest) GetStatus() uint32 {
@@ -3061,9 +3118,9 @@ type ProcessMarketDepositOrWithdrawEventRequest struct {
 	// 交易hash
 	TxHash string `protobuf:"bytes,11,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
 	// 区块时间
-	BlockTime        uint64 `protobuf:"varint,12,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	BaseTokenAddress string `protobuf:"bytes,13,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Decimal          uint32 `protobuf:"varint,14,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	BlockTime     uint64        `protobuf:"varint,12,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	BaseTokenType BaseTokenType `protobuf:"varint,13,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Decimal       uint32        `protobuf:"varint,14,opt,name=decimal,proto3" json:"decimal,omitempty"`
 	// 条件代币价格
 	OptionPrices  []*UpdateOptionPrice `protobuf:"bytes,15,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3184,11 +3241,11 @@ func (x *ProcessMarketDepositOrWithdrawEventRequest) GetBlockTime() uint64 {
 	return 0
 }
 
-func (x *ProcessMarketDepositOrWithdrawEventRequest) GetBaseTokenAddress() string {
+func (x *ProcessMarketDepositOrWithdrawEventRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *ProcessMarketDepositOrWithdrawEventRequest) GetDecimal() uint32 {
@@ -3242,14 +3299,14 @@ func (*ProcessMarketDepositOrWithdrawEventResponse) Descriptor() ([]byte, []int)
 }
 
 type ProcessMarketSwapEventRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	OptionPrices     []*UpdateOptionPrice   `protobuf:"bytes,1,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
-	BlockNumber      uint64                 `protobuf:"varint,2,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
-	TxHash           string                 `protobuf:"bytes,3,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	BlockTime        uint64                 `protobuf:"varint,5,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OptionPrices  []*UpdateOptionPrice   `protobuf:"bytes,1,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
+	BlockNumber   uint64                 `protobuf:"varint,2,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
+	TxHash        string                 `protobuf:"bytes,3,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	BlockTime     uint64                 `protobuf:"varint,5,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProcessMarketSwapEventRequest) Reset() {
@@ -3303,11 +3360,11 @@ func (x *ProcessMarketSwapEventRequest) GetTxHash() string {
 	return ""
 }
 
-func (x *ProcessMarketSwapEventRequest) GetBaseTokenAddress() string {
+func (x *ProcessMarketSwapEventRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *ProcessMarketSwapEventRequest) GetBlockTime() uint64 {
@@ -4428,14 +4485,14 @@ func (x *ClaimMarketResultResponse) GetOpHash() string {
 }
 
 type TransferBaseTokenRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Amount           string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	ToAddress        string                 `protobuf:"bytes,4,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
-	UserOperation    *UserOperation         `protobuf:"bytes,5,opt,name=user_operation,json=userOperation,proto3" json:"user_operation,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Amount        string                 `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	ToAddress     string                 `protobuf:"bytes,4,opt,name=to_address,json=toAddress,proto3" json:"to_address,omitempty"`
+	UserOperation *UserOperation         `protobuf:"bytes,5,opt,name=user_operation,json=userOperation,proto3" json:"user_operation,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TransferBaseTokenRequest) Reset() {
@@ -4475,11 +4532,11 @@ func (x *TransferBaseTokenRequest) GetUid() string {
 	return ""
 }
 
-func (x *TransferBaseTokenRequest) GetBaseTokenAddress() string {
+func (x *TransferBaseTokenRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *TransferBaseTokenRequest) GetAmount() string {
@@ -4828,10 +4885,10 @@ func (*UpdateUserMarketFollowStatusResponse) Descriptor() ([]byte, []int) {
 }
 
 type GetHotMarketsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	BaseTokenAddress string                 `protobuf:"bytes,1,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHotMarketsRequest) Reset() {
@@ -4864,11 +4921,11 @@ func (*GetHotMarketsRequest) Descriptor() ([]byte, []int) {
 	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *GetHotMarketsRequest) GetBaseTokenAddress() string {
+func (x *GetHotMarketsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetHotMarketsResponse struct {
@@ -4916,13 +4973,13 @@ func (x *GetHotMarketsResponse) GetMarkets() []*GetHotMarketsResponse_Market {
 }
 
 type GetFollowedMarketsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Page             uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Page          uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetFollowedMarketsRequest) Reset() {
@@ -4976,11 +5033,11 @@ func (x *GetFollowedMarketsRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetFollowedMarketsRequest) GetBaseTokenAddress() string {
+func (x *GetFollowedMarketsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetFollowedMarketsResponse struct {
@@ -5036,13 +5093,13 @@ func (x *GetFollowedMarketsResponse) GetMarkets() []*GetFollowedMarketsResponse_
 }
 
 type GetHoldingPositionsMarketsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Page             uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	Page          uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHoldingPositionsMarketsRequest) Reset() {
@@ -5082,11 +5139,11 @@ func (x *GetHoldingPositionsMarketsRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetHoldingPositionsMarketsRequest) GetBaseTokenAddress() string {
+func (x *GetHoldingPositionsMarketsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetHoldingPositionsMarketsRequest) GetPage() uint32 {
@@ -5231,7 +5288,8 @@ type GetMarketDetailResponse struct {
 	IsFollowed          IsFollowed                        `protobuf:"varint,12,opt,name=is_followed,json=isFollowed,proto3,enum=marketcenter.v1.IsFollowed" json:"is_followed,omitempty"` // 1: 关注 2: 未关注
 	Options             []*GetMarketDetailResponse_Option `protobuf:"bytes,13,rep,name=options,proto3" json:"options,omitempty"`
 	Decimal             uint32                            `protobuf:"varint,14,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	BaseTokenAddress    string                            `protobuf:"bytes,16,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"` // points或者usdc等的合约地址
+	BaseTokenType       BaseTokenType                     `protobuf:"varint,15,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	BaseTokenAddress    string                            `protobuf:"bytes,16,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`                            // points或者usdc等的合约地址
 	// 是否以领取结果
 	IsClaim GetMarketDetailResponse_IsClaim `protobuf:"varint,17,opt,name=is_claim,json=isClaim,proto3,enum=marketcenter.v1.GetMarketDetailResponse_IsClaim" json:"is_claim,omitempty"`
 	// CTF fields
@@ -5369,6 +5427,13 @@ func (x *GetMarketDetailResponse) GetDecimal() uint32 {
 		return x.Decimal
 	}
 	return 0
+}
+
+func (x *GetMarketDetailResponse) GetBaseTokenType() BaseTokenType {
+	if x != nil {
+		return x.BaseTokenType
+	}
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetMarketDetailResponse) GetBaseTokenAddress() string {
@@ -5526,14 +5591,14 @@ func (x *GetMarketTradesResponse) GetOrders() []*GetMarketTradesResponse_Order {
 }
 
 type GetUserTradesRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	MarketAddress    string                 `protobuf:"bytes,2,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	Page             uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,5,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	MarketAddress string                 `protobuf:"bytes,2,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	Page          uint32                 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,5,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserTradesRequest) Reset() {
@@ -5594,11 +5659,11 @@ func (x *GetUserTradesRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetUserTradesRequest) GetBaseTokenAddress() string {
+func (x *GetUserTradesRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserTradesResponse struct {
@@ -5750,15 +5815,15 @@ func (x *GetMarketUsersPositionsResponse) GetUserPositions() []*GetMarketUsersPo
 }
 
 type GetUserPositionsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	MarketAddress    string                 `protobuf:"bytes,2,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,3,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Page             uint32                 `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	OptionAddress    string                 `protobuf:"bytes,6,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	MarketAddress string                 `protobuf:"bytes,2,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,3,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	Page          uint32                 `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	OptionAddress string                 `protobuf:"bytes,6,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserPositionsRequest) Reset() {
@@ -5805,11 +5870,11 @@ func (x *GetUserPositionsRequest) GetMarketAddress() string {
 	return ""
 }
 
-func (x *GetUserPositionsRequest) GetBaseTokenAddress() string {
+func (x *GetUserPositionsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserPositionsRequest) GetPage() uint32 {
@@ -5886,11 +5951,11 @@ func (x *GetUserPositionsResponse) GetPositions() []*GetUserPositionsResponse_Po
 }
 
 type GetUserLatestAssetValueRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserLatestAssetValueRequest) Reset() {
@@ -5930,25 +5995,25 @@ func (x *GetUserLatestAssetValueRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetUserLatestAssetValueRequest) GetBaseTokenAddress() string {
+func (x *GetUserLatestAssetValueRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserLatestAssetValueResponse struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Value            string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	Balance          string                 `protobuf:"bytes,2,opt,name=balance,proto3" json:"balance,omitempty"`
-	Portfolio        string                 `protobuf:"bytes,3,opt,name=portfolio,proto3" json:"portfolio,omitempty"`
-	Pnl              string                 `protobuf:"bytes,4,opt,name=pnl,proto3" json:"pnl,omitempty"`
-	Decimal          uint32                 `protobuf:"varint,5,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Volume           string                 `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
-	PnlRank          uint32                 `protobuf:"varint,8,opt,name=pnl_rank,json=pnlRank,proto3" json:"pnl_rank,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+	Balance       string                 `protobuf:"bytes,2,opt,name=balance,proto3" json:"balance,omitempty"`
+	Portfolio     string                 `protobuf:"bytes,3,opt,name=portfolio,proto3" json:"portfolio,omitempty"`
+	Pnl           string                 `protobuf:"bytes,4,opt,name=pnl,proto3" json:"pnl,omitempty"`
+	Decimal       uint32                 `protobuf:"varint,5,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Volume        string                 `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
+	PnlRank       uint32                 `protobuf:"varint,8,opt,name=pnl_rank,json=pnlRank,proto3" json:"pnl_rank,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserLatestAssetValueResponse) Reset() {
@@ -6016,11 +6081,11 @@ func (x *GetUserLatestAssetValueResponse) GetDecimal() uint32 {
 	return 0
 }
 
-func (x *GetUserLatestAssetValueResponse) GetBaseTokenAddress() string {
+func (x *GetUserLatestAssetValueResponse) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserLatestAssetValueResponse) GetVolume() string {
@@ -6038,13 +6103,13 @@ func (x *GetUserLatestAssetValueResponse) GetPnlRank() uint32 {
 }
 
 type SearchMarketRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Keyword          string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	Page             uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Page          uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SearchMarketRequest) Reset() {
@@ -6098,11 +6163,11 @@ func (x *SearchMarketRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *SearchMarketRequest) GetBaseTokenAddress() string {
+func (x *SearchMarketRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type SearchMarketResponse struct {
@@ -6158,12 +6223,12 @@ func (x *SearchMarketResponse) GetMarkets() []*SearchMarketResponse_Market {
 }
 
 type GetUserAssetHistoryRequest struct {
-	state            protoimpl.MessageState                  `protogen:"open.v1"`
-	Uid              string                                  `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	BaseTokenAddress string                                  `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	TimeInterval     GetUserAssetHistoryRequest_TimeInterval `protobuf:"varint,3,opt,name=time_interval,json=timeInterval,proto3,enum=marketcenter.v1.GetUserAssetHistoryRequest_TimeInterval" json:"time_interval,omitempty"` // 1: 7d  2: 1m  3: 3m   4: all
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState                  `protogen:"open.v1"`
+	Uid           string                                  `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	BaseTokenType BaseTokenType                           `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`                      // 1: points 2: usdc
+	TimeInterval  GetUserAssetHistoryRequest_TimeInterval `protobuf:"varint,3,opt,name=time_interval,json=timeInterval,proto3,enum=marketcenter.v1.GetUserAssetHistoryRequest_TimeInterval" json:"time_interval,omitempty"` // 1: 7d  2: 1m  3: 3m   4: all
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserAssetHistoryRequest) Reset() {
@@ -6203,11 +6268,11 @@ func (x *GetUserAssetHistoryRequest) GetUid() string {
 	return ""
 }
 
-func (x *GetUserAssetHistoryRequest) GetBaseTokenAddress() string {
+func (x *GetUserAssetHistoryRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserAssetHistoryRequest) GetTimeInterval() GetUserAssetHistoryRequest_TimeInterval {
@@ -6218,13 +6283,13 @@ func (x *GetUserAssetHistoryRequest) GetTimeInterval() GetUserAssetHistoryReques
 }
 
 type GetUserAssetHistoryResponse struct {
-	state            protoimpl.MessageState                     `protogen:"open.v1"`
-	Total            uint32                                     `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Snapshots        []*GetUserAssetHistoryResponse_OneSnapshot `protobuf:"bytes,2,rep,name=snapshots,proto3" json:"snapshots,omitempty"`
-	BaseTokenAddress string                                     `protobuf:"bytes,3,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Decimal          uint32                                     `protobuf:"varint,4,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState                     `protogen:"open.v1"`
+	Total         uint32                                     `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Snapshots     []*GetUserAssetHistoryResponse_OneSnapshot `protobuf:"bytes,2,rep,name=snapshots,proto3" json:"snapshots,omitempty"`
+	BaseTokenType BaseTokenType                              `protobuf:"varint,3,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Decimal       uint32                                     `protobuf:"varint,4,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserAssetHistoryResponse) Reset() {
@@ -6271,11 +6336,11 @@ func (x *GetUserAssetHistoryResponse) GetSnapshots() []*GetUserAssetHistoryRespo
 	return nil
 }
 
-func (x *GetUserAssetHistoryResponse) GetBaseTokenAddress() string {
+func (x *GetUserAssetHistoryResponse) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserAssetHistoryResponse) GetDecimal() uint32 {
@@ -6390,19 +6455,19 @@ func (x *GetMarketOptionPriceHistoryResponse) GetSnapshots() []*GetMarketOptionP
 }
 
 type ProcessMarketClaimResultEventRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	UserAddress      string                 `protobuf:"bytes,2,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
-	MarketAddress    string                 `protobuf:"bytes,3,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	OptionAddress    string                 `protobuf:"bytes,5,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
-	OptionBalance    string                 `protobuf:"bytes,6,opt,name=option_balance,json=optionBalance,proto3" json:"option_balance,omitempty"`
-	Amount           string                 `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"`
-	TxHash           string                 `protobuf:"bytes,8,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	BlockNumber      uint64                 `protobuf:"varint,9,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
-	BlockTime        uint64                 `protobuf:"varint,10,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	UserAddress   string                 `protobuf:"bytes,2,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
+	MarketAddress string                 `protobuf:"bytes,3,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	OptionAddress string                 `protobuf:"bytes,5,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
+	OptionBalance string                 `protobuf:"bytes,6,opt,name=option_balance,json=optionBalance,proto3" json:"option_balance,omitempty"`
+	Amount        string                 `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"`
+	TxHash        string                 `protobuf:"bytes,8,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
+	BlockNumber   uint64                 `protobuf:"varint,9,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
+	BlockTime     uint64                 `protobuf:"varint,10,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProcessMarketClaimResultEventRequest) Reset() {
@@ -6456,11 +6521,11 @@ func (x *ProcessMarketClaimResultEventRequest) GetMarketAddress() string {
 	return ""
 }
 
-func (x *ProcessMarketClaimResultEventRequest) GetBaseTokenAddress() string {
+func (x *ProcessMarketClaimResultEventRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *ProcessMarketClaimResultEventRequest) GetOptionAddress() string {
@@ -7098,13 +7163,13 @@ func (x *S3PredictionInfo) GetCategoryIds() []string {
 }
 
 type GetUserTransactionsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Page             uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Page          uint32                 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserTransactionsRequest) Reset() {
@@ -7158,11 +7223,11 @@ func (x *GetUserTransactionsRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetUserTransactionsRequest) GetBaseTokenAddress() string {
+func (x *GetUserTransactionsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserTransactionsResponse struct {
@@ -7711,10 +7776,10 @@ func (x *TxDataWithdraw) GetAddress() string {
 }
 
 type GetBannersRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	BaseTokenAddress string                 `protobuf:"bytes,1,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetBannersRequest) Reset() {
@@ -7747,11 +7812,11 @@ func (*GetBannersRequest) Descriptor() ([]byte, []int) {
 	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{99}
 }
 
-func (x *GetBannersRequest) GetBaseTokenAddress() string {
+func (x *GetBannersRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 // [{"Weight":1,"Image":"image_7e895486-04f2-4559-b4f1-73898136ae3d_X Cover.png","Type":1,"Url":"0x3AaC6832dCF48577B042567443F03c5cF9E3FfF3","Id":"7e895486-04f2-4559-b4f1-73898136ae3d"},{"Weight":2,"Image":"image_f043d535-48d0-4200-9351-ac134f0f2c57_X Cover.png","Type":0,"Url":"Sports","Id":"f043d535-48d0-4200-9351-ac134f0f2c57"}]
@@ -7800,10 +7865,10 @@ func (x *GetBannersResponse) GetBanners() []*GetBannersResponse_Banner {
 }
 
 type GetSectionsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	BaseTokenAddress string                 `protobuf:"bytes,1,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,1,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetSectionsRequest) Reset() {
@@ -7836,11 +7901,11 @@ func (*GetSectionsRequest) Descriptor() ([]byte, []int) {
 	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP(), []int{101}
 }
 
-func (x *GetSectionsRequest) GetBaseTokenAddress() string {
+func (x *GetSectionsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 // [{"Predictions":[{"Prediction":"0x1F0c087178a5a189671B69889Cc5ef40cb8e37ec","Weight":3,"Id":"3fd884d7-9138-4bd8-4bba-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":2,"Id":"142cfb75-1434-48fa-4bbb-08ddbea6190f"},{"Prediction":"0x769a0B6ADd80c77bDaC51b84461c7D8eC126fFD8","Weight":1,"Id":"f1ac40bb-6fcc-4ecc-4bbc-08ddbea6190f"}],"Color":"rgb(255,208,208)","Title":"Sports","Type":1,"Weight":1,"Id":"2b86b132-512d-4946-9892-6231667818cb"},{"Predictions":[{"Prediction":"0xF6F2E039D31Bd5B6560b7474e3b2c2aC6b6876a3","Weight":0,"Id":"60d1d5d7-89c2-4a0b-4bbd-08ddbea6190f"},{"Prediction":"0xCb806005752D3460b159EdF182BFB96CfE078F7d","Weight":1,"Id":"56176a73-9ed0-4f6d-4bbe-08ddbea6190f"},{"Prediction":"0x764774E6E926C43C0417C3374D6df9E7cD736bF3","Weight":2,"Id":"7a349794-8a74-49ed-4bbf-08ddbea6190f"},{"Prediction":"0xb29f7fc2637dDf58168fD184376fe8612d3d043E","Weight":3,"Id":"a14566cb-4d06-4680-4bc0-08ddbea6190f"},{"Prediction":"0xDb31118563f04575aF3465839a62E2Ed5C628112","Weight":4,"Id":"eb914ee8-a6af-4754-4bc1-08ddbea6190f"}],"Color":"rgb(83,159,143)","Title":"Trump","Type":0,"Weight":2,"Id":"4ace4d3f-c9a0-4982-be9b-9c00ecba8263"}]
@@ -9418,15 +9483,15 @@ func (*ProcessCTFTransferEventResponse) Descriptor() ([]byte, []int) {
 
 // CTFMarketResolved
 type ProcessCTFMarketResolvedEventRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	MarketAddress    string                 `protobuf:"bytes,1,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	TxHash           string                 `protobuf:"bytes,2,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	BlockNumber      uint64                 `protobuf:"varint,3,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
-	BlockTime        uint64                 `protobuf:"varint,4,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	OptionPrices     []*UpdateOptionPrice   `protobuf:"bytes,5,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MarketAddress string                 `protobuf:"bytes,1,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	TxHash        string                 `protobuf:"bytes,2,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
+	BlockNumber   uint64                 `protobuf:"varint,3,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
+	BlockTime     uint64                 `protobuf:"varint,4,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	OptionPrices  []*UpdateOptionPrice   `protobuf:"bytes,5,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ProcessCTFMarketResolvedEventRequest) Reset() {
@@ -9494,11 +9559,11 @@ func (x *ProcessCTFMarketResolvedEventRequest) GetOptionPrices() []*UpdateOption
 	return nil
 }
 
-func (x *ProcessCTFMarketResolvedEventRequest) GetBaseTokenAddress() string {
+func (x *ProcessCTFMarketResolvedEventRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type ProcessCTFMarketResolvedEventResponse struct {
@@ -9539,21 +9604,21 @@ func (*ProcessCTFMarketResolvedEventResponse) Descriptor() ([]byte, []int) {
 
 // LiquidityAdded + CTFLiquidityRemoved
 type ProcessCTFLiquidityEventRequest struct {
-	state            protoimpl.MessageState                    `protogen:"open.v1"`
-	EventType        ProcessCTFLiquidityEventRequest_EventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=marketcenter.v1.ProcessCTFLiquidityEventRequest_EventType" json:"event_type,omitempty"`
-	Uid              string                                    `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	UserAddress      string                                    `protobuf:"bytes,3,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
-	MarketAddress    string                                    `protobuf:"bytes,4,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	Amount           string                                    `protobuf:"bytes,5,opt,name=amount,proto3" json:"amount,omitempty"`                                          // USDC amount
-	LpAmount         string                                    `protobuf:"bytes,6,opt,name=lp_amount,json=lpAmount,proto3" json:"lp_amount,omitempty"`                      // LP tokens
-	ExcessPositions  []string                                  `protobuf:"bytes,7,rep,name=excess_positions,json=excessPositions,proto3" json:"excess_positions,omitempty"` // LiquidityRemoved only
-	TxHash           string                                    `protobuf:"bytes,8,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	BlockNumber      uint64                                    `protobuf:"varint,9,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
-	BlockTime        uint64                                    `protobuf:"varint,10,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	OptionPrices     []*UpdateOptionPrice                      `protobuf:"bytes,11,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
-	BaseTokenAddress string                                    `protobuf:"bytes,12,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state           protoimpl.MessageState                    `protogen:"open.v1"`
+	EventType       ProcessCTFLiquidityEventRequest_EventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=marketcenter.v1.ProcessCTFLiquidityEventRequest_EventType" json:"event_type,omitempty"`
+	Uid             string                                    `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	UserAddress     string                                    `protobuf:"bytes,3,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
+	MarketAddress   string                                    `protobuf:"bytes,4,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	Amount          string                                    `protobuf:"bytes,5,opt,name=amount,proto3" json:"amount,omitempty"`                                          // USDC amount
+	LpAmount        string                                    `protobuf:"bytes,6,opt,name=lp_amount,json=lpAmount,proto3" json:"lp_amount,omitempty"`                      // LP tokens
+	ExcessPositions []string                                  `protobuf:"bytes,7,rep,name=excess_positions,json=excessPositions,proto3" json:"excess_positions,omitempty"` // LiquidityRemoved only
+	TxHash          string                                    `protobuf:"bytes,8,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
+	BlockNumber     uint64                                    `protobuf:"varint,9,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
+	BlockTime       uint64                                    `protobuf:"varint,10,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	OptionPrices    []*UpdateOptionPrice                      `protobuf:"bytes,11,rep,name=option_prices,json=optionPrices,proto3" json:"option_prices,omitempty"`
+	BaseTokenType   BaseTokenType                             `protobuf:"varint,12,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ProcessCTFLiquidityEventRequest) Reset() {
@@ -9663,11 +9728,11 @@ func (x *ProcessCTFLiquidityEventRequest) GetOptionPrices() []*UpdateOptionPrice
 	return nil
 }
 
-func (x *ProcessCTFLiquidityEventRequest) GetBaseTokenAddress() string {
+func (x *ProcessCTFLiquidityEventRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type ProcessCTFLiquidityEventResponse struct {
@@ -9783,8 +9848,8 @@ type GetQuestionsResponse_Question struct {
 	Status            uint32                                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"` // 1: 正常 2: 结算中 3: 有争议 4: 已结束
 	ParticipantsCount uint32                                  `protobuf:"varint,8,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
 	Volume            string                                  `protobuf:"bytes,9,opt,name=volume,proto3" json:"volume,omitempty"`
-	BaseTokenAddress  string                                  `protobuf:"bytes,10,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Decimal           uint32                                  `protobuf:"varint,11,opt,name=decimal,proto3" json:"decimal,omitempty"` // 精度
+	BaseTokenType     BaseTokenType                           `protobuf:"varint,10,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	Decimal           uint32                                  `protobuf:"varint,11,opt,name=decimal,proto3" json:"decimal,omitempty"`                                                                       // 精度
 	CreatedAt         uint32                                  `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	Deadline          uint32                                  `protobuf:"varint,13,opt,name=deadline,proto3" json:"deadline,omitempty"`
 	Markets           []*GetQuestionsResponse_Question_Market `protobuf:"bytes,15,rep,name=markets,proto3" json:"markets,omitempty"`
@@ -9871,11 +9936,11 @@ func (x *GetQuestionsResponse_Question) GetVolume() string {
 	return ""
 }
 
-func (x *GetQuestionsResponse_Question) GetBaseTokenAddress() string {
+func (x *GetQuestionsResponse_Question) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetQuestionsResponse_Question) GetDecimal() uint32 {
@@ -9915,8 +9980,8 @@ type GetQuestionsResponse_Question_Market struct {
 	Status            uint32                                         `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	ParticipantsCount uint32                                         `protobuf:"varint,6,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
 	Volume            string                                         `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
-	BaseTokenAddress  string                                         `protobuf:"bytes,8,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Decimal           uint32                                         `protobuf:"varint,10,opt,name=decimal,proto3" json:"decimal,omitempty"` // 精度
+	BaseTokenType     BaseTokenType                                  `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	Decimal           uint32                                         `protobuf:"varint,10,opt,name=decimal,proto3" json:"decimal,omitempty"`                                                                      // 精度
 	Options           []*GetQuestionsResponse_Question_Market_Option `protobuf:"bytes,11,rep,name=options,proto3" json:"options,omitempty"`
 	CreatedAt         uint32                                         `protobuf:"varint,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	Deadline          uint32                                         `protobuf:"varint,14,opt,name=deadline,proto3" json:"deadline,omitempty"`
@@ -10004,11 +10069,11 @@ func (x *GetQuestionsResponse_Question_Market) GetVolume() string {
 	return ""
 }
 
-func (x *GetQuestionsResponse_Question_Market) GetBaseTokenAddress() string {
+func (x *GetQuestionsResponse_Question_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetQuestionsResponse_Question_Market) GetDecimal() uint32 {
@@ -10156,8 +10221,9 @@ type GetQuestionDetailResponse_Market struct {
 	Volume              string                 `protobuf:"bytes,6,opt,name=volume,proto3" json:"volume,omitempty"`
 	ParticipantsCount   uint64                 `protobuf:"varint,7,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
 	ResultOptionAddress string                 `protobuf:"bytes,8,opt,name=result_option_address,json=resultOptionAddress,proto3" json:"result_option_address,omitempty"`
-	Status              uint32                 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`                                               // 1: 正常 2: 结算中 3: 有争议 4: 已结束
-	BaseTokenAddress    string                 `protobuf:"bytes,11,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"` // points或者usdc等的合约地址
+	Status              uint32                 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`                                                                          // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+	BaseTokenType       BaseTokenType          `protobuf:"varint,10,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
+	BaseTokenAddress    string                 `protobuf:"bytes,11,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`                            // points或者usdc等的合约地址
 	// 是否以领取结果
 	IsClaim       GetQuestionDetailResponse_IsClaim          `protobuf:"varint,12,opt,name=is_claim,json=isClaim,proto3,enum=marketcenter.v1.GetQuestionDetailResponse_IsClaim" json:"is_claim,omitempty"`
 	Options       []*GetQuestionDetailResponse_Market_Option `protobuf:"bytes,13,rep,name=options,proto3" json:"options,omitempty"`
@@ -10256,6 +10322,13 @@ func (x *GetQuestionDetailResponse_Market) GetStatus() uint32 {
 		return x.Status
 	}
 	return 0
+}
+
+func (x *GetQuestionDetailResponse_Market) GetBaseTokenType() BaseTokenType {
+	if x != nil {
+		return x.BaseTokenType
+	}
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetQuestionDetailResponse_Market) GetBaseTokenAddress() string {
@@ -10372,15 +10445,15 @@ func (x *GetQuestionDetailResponse_Market_Option) GetDescription() string {
 }
 
 type BatchUpdateOptionPriceRequest_OptionPrice struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	OptionAddress    string                 `protobuf:"bytes,1,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
-	Price            string                 `protobuf:"bytes,2,opt,name=price,proto3" json:"price,omitempty"`
-	Decimal          uint32                 `protobuf:"varint,3,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	BlockTime        uint64                 `protobuf:"varint,4,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
-	BlockNumber      uint64                 `protobuf:"varint,5,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OptionAddress string                 `protobuf:"bytes,1,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
+	Price         string                 `protobuf:"bytes,2,opt,name=price,proto3" json:"price,omitempty"`
+	Decimal       uint32                 `protobuf:"varint,3,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	BlockTime     uint64                 `protobuf:"varint,4,opt,name=block_time,json=blockTime,proto3" json:"block_time,omitempty"`
+	BlockNumber   uint64                 `protobuf:"varint,5,opt,name=block_number,json=blockNumber,proto3" json:"block_number,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatchUpdateOptionPriceRequest_OptionPrice) Reset() {
@@ -10448,11 +10521,11 @@ func (x *BatchUpdateOptionPriceRequest_OptionPrice) GetBlockNumber() uint64 {
 	return 0
 }
 
-func (x *BatchUpdateOptionPriceRequest_OptionPrice) GetBaseTokenAddress() string {
+func (x *BatchUpdateOptionPriceRequest_OptionPrice) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetMarketCategoriesResponse_Category struct {
@@ -10696,7 +10769,7 @@ type GetMarketsAndOptionsInfoResponse_Market struct {
 	Status            uint32                                            `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	ParticipantsCount uint32                                            `protobuf:"varint,6,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
 	Volume            string                                            `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
-	BaseTokenAddress  string                                            `protobuf:"bytes,8,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	BaseTokenType     BaseTokenType                                     `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
 	IsFollowed        IsFollowed                                        `protobuf:"varint,9,opt,name=is_followed,json=isFollowed,proto3,enum=marketcenter.v1.IsFollowed" json:"is_followed,omitempty"`
 	Decimal           uint32                                            `protobuf:"varint,10,opt,name=decimal,proto3" json:"decimal,omitempty"` // 精度
 	Options           []*GetMarketsAndOptionsInfoResponse_Market_Option `protobuf:"bytes,11,rep,name=options,proto3" json:"options,omitempty"`
@@ -10792,11 +10865,11 @@ func (x *GetMarketsAndOptionsInfoResponse_Market) GetVolume() string {
 	return ""
 }
 
-func (x *GetMarketsAndOptionsInfoResponse_Market) GetBaseTokenAddress() string {
+func (x *GetMarketsAndOptionsInfoResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetMarketsAndOptionsInfoResponse_Market) GetIsFollowed() IsFollowed {
@@ -11438,12 +11511,12 @@ func (x *UpdateUsersClaimRequest_UserClaim) GetBlockNumber() uint64 {
 }
 
 type GetMarketsAndOptionsForBlockListenerResponse_Market struct {
-	state            protoimpl.MessageState                                        `protogen:"open.v1"`
-	Address          string                                                        `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	BaseTokenAddress string                                                        `protobuf:"bytes,2,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	Options          []*GetMarketsAndOptionsForBlockListenerResponse_Market_Option `protobuf:"bytes,3,rep,name=options,proto3" json:"options,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState                                        `protogen:"open.v1"`
+	Address       string                                                        `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	BaseTokenType BaseTokenType                                                 `protobuf:"varint,2,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	Options       []*GetMarketsAndOptionsForBlockListenerResponse_Market_Option `protobuf:"bytes,3,rep,name=options,proto3" json:"options,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) Reset() {
@@ -11483,11 +11556,11 @@ func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) GetAddress() strin
 	return ""
 }
 
-func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) GetBaseTokenAddress() string {
+func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) GetOptions() []*GetMarketsAndOptionsForBlockListenerResponse_Market_Option {
@@ -11498,14 +11571,14 @@ func (x *GetMarketsAndOptionsForBlockListenerResponse_Market) GetOptions() []*Ge
 }
 
 type GetMarketsAndOptionsForBlockListenerResponse_Market_Option struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Address          string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	Index            uint32                 `protobuf:"varint,2,opt,name=index,proto3" json:"index,omitempty"`
-	MarketAddress    string                 `protobuf:"bytes,3,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
-	Decimal          uint32                 `protobuf:"varint,4,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,5,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Address       string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	Index         uint32                 `protobuf:"varint,2,opt,name=index,proto3" json:"index,omitempty"`
+	MarketAddress string                 `protobuf:"bytes,3,opt,name=market_address,json=marketAddress,proto3" json:"market_address,omitempty"`
+	Decimal       uint32                 `protobuf:"varint,4,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,5,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMarketsAndOptionsForBlockListenerResponse_Market_Option) Reset() {
@@ -11566,11 +11639,11 @@ func (x *GetMarketsAndOptionsForBlockListenerResponse_Market_Option) GetDecimal(
 	return 0
 }
 
-func (x *GetMarketsAndOptionsForBlockListenerResponse_Market_Option) GetBaseTokenAddress() string {
+func (x *GetMarketsAndOptionsForBlockListenerResponse_Market_Option) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetOptionTokensPriceRequest_Option struct {
@@ -11694,15 +11767,15 @@ func (x *GetOptionTokensPriceResponse_OptionPrice) GetDecimal() uint32 {
 }
 
 type GetHotMarketsResponse_Market struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Name             string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Address          string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	PicUrl           string                 `protobuf:"bytes,3,opt,name=pic_url,json=picUrl,proto3" json:"pic_url,omitempty"`
-	Description      string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Status           uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1: 正常 2: 结算中 3: 有争议 4: 已结束
-	BaseTokenAddress string                 `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	PicUrl        string                 `protobuf:"bytes,3,opt,name=pic_url,json=picUrl,proto3" json:"pic_url,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+	BaseTokenType BaseTokenType          `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHotMarketsResponse_Market) Reset() {
@@ -11770,24 +11843,24 @@ func (x *GetHotMarketsResponse_Market) GetStatus() uint32 {
 	return 0
 }
 
-func (x *GetHotMarketsResponse_Market) GetBaseTokenAddress() string {
+func (x *GetHotMarketsResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetFollowedMarketsResponse_Market struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Name             string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Address          string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	PicUrl           string                 `protobuf:"bytes,3,opt,name=pic_url,json=picUrl,proto3" json:"pic_url,omitempty"`
-	Description      string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Status           uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1: 正常 2: 结算中 3: 有争议 4: 已结束
-	Deadline         int64                  `protobuf:"varint,6,opt,name=deadline,proto3" json:"deadline,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,7,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	PicUrl        string                 `protobuf:"bytes,3,opt,name=pic_url,json=picUrl,proto3" json:"pic_url,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1: 正常 2: 结算中 3: 有争议 4: 已结束
+	Deadline      int64                  `protobuf:"varint,6,opt,name=deadline,proto3" json:"deadline,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,7,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetFollowedMarketsResponse_Market) Reset() {
@@ -11862,11 +11935,11 @@ func (x *GetFollowedMarketsResponse_Market) GetDeadline() int64 {
 	return 0
 }
 
-func (x *GetFollowedMarketsResponse_Market) GetBaseTokenAddress() string {
+func (x *GetFollowedMarketsResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetHoldingPositionsMarketsResponse_Market struct {
@@ -11879,7 +11952,7 @@ type GetHoldingPositionsMarketsResponse_Market struct {
 	MarketVolume            string                                                `protobuf:"bytes,6,opt,name=market_volume,json=marketVolume,proto3" json:"market_volume,omitempty"`
 	MarketParticipantsCount uint32                                                `protobuf:"varint,7,opt,name=market_participants_count,json=marketParticipantsCount,proto3" json:"market_participants_count,omitempty"`
 	Decimal                 uint32                                                `protobuf:"varint,8,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	BaseTokenAddress        string                                                `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	BaseTokenType           BaseTokenType                                         `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"` // 1: points 2: usdc
 	UserMarketTotalValue    string                                                `protobuf:"bytes,10,opt,name=user_market_total_value,json=userMarketTotalValue,proto3" json:"user_market_total_value,omitempty"`
 	Positions               []*GetHoldingPositionsMarketsResponse_Market_Position `protobuf:"bytes,11,rep,name=positions,proto3" json:"positions,omitempty"`
 	unknownFields           protoimpl.UnknownFields
@@ -11972,11 +12045,11 @@ func (x *GetHoldingPositionsMarketsResponse_Market) GetDecimal() uint32 {
 	return 0
 }
 
-func (x *GetHoldingPositionsMarketsResponse_Market) GetBaseTokenAddress() string {
+func (x *GetHoldingPositionsMarketsResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetHoldingPositionsMarketsResponse_Market) GetUserMarketTotalValue() string {
@@ -12370,18 +12443,18 @@ func (x *GetMarketTradesResponse_Order_Option) GetPicUrl() string {
 }
 
 type GetUserTradesResponse_Order struct {
-	state            protoimpl.MessageState              `protogen:"open.v1"`
-	Uuid             string                              `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Uid              string                              `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	Side             uint32                              `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"`                                       // 1: deposit买 2: withdraw卖
-	Amount           string                              `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`                                    // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
-	ReceiveAmount    string                              `protobuf:"bytes,5,opt,name=receive_amount,json=receiveAmount,proto3" json:"receive_amount,omitempty"` // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
-	Timestamp        uint64                              `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                             // 交易时间
-	DealPrice        string                              `protobuf:"bytes,7,opt,name=deal_price,json=dealPrice,proto3" json:"deal_price,omitempty"`             // 成交价格
-	Option           *GetUserTradesResponse_Order_Option `protobuf:"bytes,8,opt,name=option,proto3" json:"option,omitempty"`
-	BaseTokenAddress string                              `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState              `protogen:"open.v1"`
+	Uuid          string                              `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Uid           string                              `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Side          uint32                              `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"`                                       // 1: deposit买 2: withdraw卖
+	Amount        string                              `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`                                    // deposit买 amount为投入的基础代币数量 / withdraw卖 amount为投入的条件代币数量
+	ReceiveAmount string                              `protobuf:"bytes,5,opt,name=receive_amount,json=receiveAmount,proto3" json:"receive_amount,omitempty"` // deposit买 receive_amount为实际接收的条件代币数量 / withdraw卖 receive_amount为实际接收的基础代币数量
+	Timestamp     uint64                              `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                             // 交易时间
+	DealPrice     string                              `protobuf:"bytes,7,opt,name=deal_price,json=dealPrice,proto3" json:"deal_price,omitempty"`             // 成交价格
+	Option        *GetUserTradesResponse_Order_Option `protobuf:"bytes,8,opt,name=option,proto3" json:"option,omitempty"`
+	BaseTokenType BaseTokenType                       `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserTradesResponse_Order) Reset() {
@@ -12470,11 +12543,11 @@ func (x *GetUserTradesResponse_Order) GetOption() *GetUserTradesResponse_Order_O
 	return nil
 }
 
-func (x *GetUserTradesResponse_Order) GetBaseTokenAddress() string {
+func (x *GetUserTradesResponse_Order) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserTradesResponse_Order_Option struct {
@@ -12760,7 +12833,7 @@ type GetUserPositionsResponse_Position struct {
 	MarketPicUrl      string                 `protobuf:"bytes,3,opt,name=market_pic_url,json=marketPicUrl,proto3" json:"market_pic_url,omitempty"`
 	MarketDescription string                 `protobuf:"bytes,4,opt,name=market_description,json=marketDescription,proto3" json:"market_description,omitempty"`
 	OptionAddress     string                 `protobuf:"bytes,5,opt,name=option_address,json=optionAddress,proto3" json:"option_address,omitempty"`
-	BaseTokenAddress  string                 `protobuf:"bytes,6,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	BaseTokenType     BaseTokenType          `protobuf:"varint,6,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
 	OptionName        string                 `protobuf:"bytes,7,opt,name=option_name,json=optionName,proto3" json:"option_name,omitempty"`
 	OptionDescription string                 `protobuf:"bytes,8,opt,name=option_description,json=optionDescription,proto3" json:"option_description,omitempty"`
 	OptionDecimal     uint32                 `protobuf:"varint,9,opt,name=option_decimal,json=optionDecimal,proto3" json:"option_decimal,omitempty"`
@@ -12845,11 +12918,11 @@ func (x *GetUserPositionsResponse_Position) GetOptionAddress() string {
 	return ""
 }
 
-func (x *GetUserPositionsResponse_Position) GetBaseTokenAddress() string {
+func (x *GetUserPositionsResponse_Position) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserPositionsResponse_Position) GetOptionName() string {
@@ -12967,7 +13040,7 @@ type SearchMarketResponse_Market struct {
 	ParticipantsCount uint32                 `protobuf:"varint,6,opt,name=participants_count,json=participantsCount,proto3" json:"participants_count,omitempty"`
 	Volume            string                 `protobuf:"bytes,7,opt,name=volume,proto3" json:"volume,omitempty"`
 	Deadline          int64                  `protobuf:"varint,8,opt,name=deadline,proto3" json:"deadline,omitempty"`
-	BaseTokenAddress  string                 `protobuf:"bytes,9,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
+	BaseTokenType     BaseTokenType          `protobuf:"varint,9,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -13058,11 +13131,11 @@ func (x *SearchMarketResponse_Market) GetDeadline() int64 {
 	return 0
 }
 
-func (x *SearchMarketResponse_Market) GetBaseTokenAddress() string {
+func (x *SearchMarketResponse_Market) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserAssetHistoryResponse_OneSnapshot struct {
@@ -13254,20 +13327,20 @@ func (x *GetMarketOptionPriceHistoryResponse_OneSnapshot_TokenPrice) GetDecimal(
 }
 
 type GetUserTransactionsResponse_Transaction struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Timestamp        uint32                 `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Side             uint32                 `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"` // 1 转入  2 转出
-	BaseTokenAddress string                 `protobuf:"bytes,4,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	TokenAddress     string                 `protobuf:"bytes,5,opt,name=token_address,json=tokenAddress,proto3" json:"token_address,omitempty"`
-	Decimal          uint32                 `protobuf:"varint,6,opt,name=decimal,proto3" json:"decimal,omitempty"`
-	Amount           string                 `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"`
-	Type             TxType                 `protobuf:"varint,8,opt,name=type,proto3,enum=marketcenter.v1.TxType" json:"type,omitempty"`
-	Status           uint32                 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
-	BizData          string                 `protobuf:"bytes,10,opt,name=biz_data,json=bizData,proto3" json:"biz_data,omitempty"`
-	TxHash           string                 `protobuf:"bytes,11,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Timestamp     uint32                 `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Side          uint32                 `protobuf:"varint,3,opt,name=side,proto3" json:"side,omitempty"` // 1 转入  2 转出
+	BaseTokenType BaseTokenType          `protobuf:"varint,4,opt,name=base_token_type,json=baseTokenType,proto3,enum=marketcenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	TokenAddress  string                 `protobuf:"bytes,5,opt,name=token_address,json=tokenAddress,proto3" json:"token_address,omitempty"`
+	Decimal       uint32                 `protobuf:"varint,6,opt,name=decimal,proto3" json:"decimal,omitempty"`
+	Amount        string                 `protobuf:"bytes,7,opt,name=amount,proto3" json:"amount,omitempty"`
+	Type          TxType                 `protobuf:"varint,8,opt,name=type,proto3,enum=marketcenter.v1.TxType" json:"type,omitempty"`
+	Status        uint32                 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	BizData       string                 `protobuf:"bytes,10,opt,name=biz_data,json=bizData,proto3" json:"biz_data,omitempty"`
+	TxHash        string                 `protobuf:"bytes,11,opt,name=tx_hash,json=txHash,proto3" json:"tx_hash,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserTransactionsResponse_Transaction) Reset() {
@@ -13321,11 +13394,11 @@ func (x *GetUserTransactionsResponse_Transaction) GetSide() uint32 {
 	return 0
 }
 
-func (x *GetUserTransactionsResponse_Transaction) GetBaseTokenAddress() string {
+func (x *GetUserTransactionsResponse_Transaction) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 func (x *GetUserTransactionsResponse_Transaction) GetTokenAddress() string {
@@ -13857,12 +13930,12 @@ var File_market_service_marketcenter_v1_marketcenter_proto protoreflect.FileDesc
 
 const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\n" +
-	"1market-service/marketcenter/v1/marketcenter.proto\x12\x0fmarketcenter.v1\"\xaa\x04\n" +
+	"1market-service/marketcenter/v1/marketcenter.proto\x12\x0fmarketcenter.v1\"\xc4\x04\n" +
 	"\x15GetLeaderboardRequest\x12X\n" +
 	"\rtime_interval\x18\x01 \x01(\x0e23.marketcenter.v1.GetLeaderboardRequest.TimeIntervalR\ftimeInterval\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12\x10\n" +
+	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x10\n" +
 	"\x03uid\x18\x05 \x01(\tR\x03uid\x12L\n" +
 	"\tsort_type\x18\x06 \x01(\x0e2/.marketcenter.v1.GetLeaderboardRequest.SortTypeR\bsortType\"\x8c\x01\n" +
 	"\fTimeInterval\x12\x1d\n" +
@@ -13884,12 +13957,12 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x14\n" +
 	"\x05score\x18\x02 \x01(\tR\x05score\x12\x18\n" +
 	"\adecimal\x18\x03 \x01(\rR\adecimal\x12\x12\n" +
-	"\x04rank\x18\x04 \x01(\rR\x04rank\"\xcf\x04\n" +
+	"\x04rank\x18\x04 \x01(\rR\x04rank\"\xe9\x04\n" +
 	"\x13GetQuestionsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x10\n" +
 	"\x03tag\x18\x02 \x01(\tR\x03tag\x12J\n" +
-	"\tsort_type\x18\x03 \x01(\x0e2-.marketcenter.v1.GetQuestionsRequest.SortTypeR\bsortType\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
+	"\tsort_type\x18\x03 \x01(\x0e2-.marketcenter.v1.GetQuestionsRequest.SortTypeR\bsortType\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x12\n" +
 	"\x04page\x18\x06 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\a \x01(\rR\bpageSize\x126\n" +
@@ -13908,10 +13981,10 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\n" +
 	"\x06VOLUME\x10\x02\x12\x10\n" +
 	"\fPARTICIPANTS\x10\x03\x12\v\n" +
-	"\aEXPIRED\x10\x04\"\xc6\t\n" +
+	"\aEXPIRED\x10\x04\"\xfa\t\n" +
 	"\x14GetQuestionsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12L\n" +
-	"\tquestions\x18\x02 \x03(\v2..marketcenter.v1.GetQuestionsResponse.QuestionR\tquestions\x1a\xc9\b\n" +
+	"\tquestions\x18\x02 \x03(\v2..marketcenter.v1.GetQuestionsResponse.QuestionR\tquestions\x1a\xfd\b\n" +
 	"\bQuestion\x12#\n" +
 	"\rquestion_uuid\x18\x01 \x01(\tR\fquestionUuid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -13919,14 +13992,14 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\apic_url\x18\x04 \x01(\tR\x06picUrl\x12\x16\n" +
 	"\x06status\x18\a \x01(\rR\x06status\x12-\n" +
 	"\x12participants_count\x18\b \x01(\rR\x11participantsCount\x12\x16\n" +
-	"\x06volume\x18\t \x01(\tR\x06volume\x12,\n" +
-	"\x12base_token_address\x18\n" +
-	" \x01(\tR\x10baseTokenAddress\x12\x18\n" +
+	"\x06volume\x18\t \x01(\tR\x06volume\x12F\n" +
+	"\x0fbase_token_type\x18\n" +
+	" \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x18\n" +
 	"\adecimal\x18\v \x01(\rR\adecimal\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\f \x01(\rR\tcreatedAt\x12\x1a\n" +
 	"\bdeadline\x18\r \x01(\rR\bdeadline\x12O\n" +
-	"\amarkets\x18\x0f \x03(\v25.marketcenter.v1.GetQuestionsResponse.Question.MarketR\amarkets\x1a\x95\x05\n" +
+	"\amarkets\x18\x0f \x03(\v25.marketcenter.v1.GetQuestionsResponse.Question.MarketR\amarkets\x1a\xaf\x05\n" +
 	"\x06Market\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -13934,8 +14007,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12-\n" +
 	"\x12participants_count\x18\x06 \x01(\rR\x11participantsCount\x12\x16\n" +
-	"\x06volume\x18\a \x01(\tR\x06volume\x12,\n" +
-	"\x12base_token_address\x18\b \x01(\tR\x10baseTokenAddress\x12\x18\n" +
+	"\x06volume\x18\a \x01(\tR\x06volume\x12F\n" +
+	"\x0fbase_token_type\x18\b \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x18\n" +
 	"\adecimal\x18\n" +
 	" \x01(\rR\adecimal\x12V\n" +
 	"\aoptions\x18\v \x03(\v2<.marketcenter.v1.GetQuestionsResponse.Question.Market.OptionR\aoptions\x12\x1d\n" +
@@ -13954,7 +14027,7 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x05price\x18\b \x01(\tR\x05price\"Q\n" +
 	"\x18GetQuestionDetailRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12#\n" +
-	"\rquestion_uuid\x18\x02 \x01(\tR\fquestionUuid\"\xde\b\n" +
+	"\rquestion_uuid\x18\x02 \x01(\tR\fquestionUuid\"\xee\t\n" +
 	"\x19GetQuestionDetailResponse\x12#\n" +
 	"\rquestion_uuid\x18\x01 \x01(\tR\fquestionUuid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -13962,10 +14035,11 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\apic_url\x18\x04 \x01(\tR\x06picUrl\x12\x14\n" +
 	"\x05rules\x18\x05 \x01(\tR\x05rules\x12$\n" +
 	"\x0erules_file_url\x18\x06 \x01(\tR\frulesFileUrl\x12\x16\n" +
-	"\x06status\x18\a \x01(\rR\x06status\x12,\n" +
+	"\x06status\x18\a \x01(\rR\x06status\x12F\n" +
+	"\x0fbase_token_type\x18\b \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12,\n" +
 	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x12M\n" +
 	"\bis_claim\x18\n" +
-	" \x01(\x0e22.marketcenter.v1.GetQuestionDetailResponse.IsClaimR\aisClaim\x1a\xad\x05\n" +
+	" \x01(\x0e22.marketcenter.v1.GetQuestionDetailResponse.IsClaimR\aisClaim\x1a\xf5\x05\n" +
 	"\x06Market\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -13975,7 +14049,9 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x06volume\x18\x06 \x01(\tR\x06volume\x12-\n" +
 	"\x12participants_count\x18\a \x01(\x04R\x11participantsCount\x122\n" +
 	"\x15result_option_address\x18\b \x01(\tR\x13resultOptionAddress\x12\x16\n" +
-	"\x06status\x18\t \x01(\rR\x06status\x12,\n" +
+	"\x06status\x18\t \x01(\rR\x06status\x12F\n" +
+	"\x0fbase_token_type\x18\n" +
+	" \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12,\n" +
 	"\x12base_token_address\x18\v \x01(\tR\x10baseTokenAddress\x12M\n" +
 	"\bis_claim\x18\f \x01(\x0e22.marketcenter.v1.GetQuestionDetailResponse.IsClaimR\aisClaim\x12R\n" +
 	"\aoptions\x18\r \x03(\v28.marketcenter.v1.GetQuestionDetailResponse.Market.OptionR\aoptions\x1a\xb9\x01\n" +
@@ -14022,28 +14098,28 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	" paymaster_verification_gas_limit\x18\x03 \x01(\tR\x1dpaymasterVerificationGasLimit\x120\n" +
 	"\x14pre_verification_gas\x18\x04 \x01(\tR\x12preVerificationGas\x124\n" +
 	"\x16verification_gas_limit\x18\x05 \x01(\tR\x14verificationGasLimit\x12$\n" +
-	"\x0ecall_gas_limit\x18\x06 \x01(\tR\fcallGasLimit\"\xd7\x02\n" +
+	"\x0ecall_gas_limit\x18\x06 \x01(\tR\fcallGasLimit\"\xf1\x02\n" +
 	"\x1dBatchUpdateOptionPriceRequest\x12_\n" +
-	"\roption_prices\x18\x01 \x03(\v2:.marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPriceR\foptionPrices\x1a\xd4\x01\n" +
+	"\roption_prices\x18\x01 \x03(\v2:.marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPriceR\foptionPrices\x1a\xee\x01\n" +
 	"\vOptionPrice\x12%\n" +
 	"\x0eoption_address\x18\x01 \x01(\tR\roptionAddress\x12\x14\n" +
 	"\x05price\x18\x02 \x01(\tR\x05price\x12\x18\n" +
 	"\adecimal\x18\x03 \x01(\rR\adecimal\x12\x1d\n" +
 	"\n" +
 	"block_time\x18\x04 \x01(\x04R\tblockTime\x12!\n" +
-	"\fblock_number\x18\x05 \x01(\x04R\vblockNumber\x12,\n" +
-	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\" \n" +
+	"\fblock_number\x18\x05 \x01(\x04R\vblockNumber\x12F\n" +
+	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\" \n" +
 	"\x1eBatchUpdateOptionPriceResponse\"G\n" +
 	"\x14GetMarketTagsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\rR\bpageSize\"A\n" +
 	"\x15GetMarketTagsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\x12\n" +
-	"\x04tags\x18\x02 \x03(\tR\x04tags\"{\n" +
+	"\x04tags\x18\x02 \x03(\tR\x04tags\"\x95\x01\n" +
 	"\x1aGetMarketCategoriesRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x03 \x01(\tR\x10baseTokenAddress\"\xd2\x01\n" +
+	"\tpage_size\x18\x02 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x03 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xd2\x01\n" +
 	"\x1bGetMarketCategoriesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12U\n" +
 	"\n" +
@@ -14067,12 +14143,12 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\bPosition\x12%\n" +
 	"\x0eoption_address\x18\x01 \x01(\tR\roptionAddress\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\tR\x06amount\x12\x18\n" +
-	"\adecimal\x18\x03 \x01(\rR\adecimal\"\x8e\x06\n" +
+	"\adecimal\x18\x03 \x01(\rR\adecimal\"\xa8\x06\n" +
 	"\x1fGetMarketsAndOptionsInfoRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x10\n" +
 	"\x03tag\x18\x02 \x01(\tR\x03tag\x12V\n" +
-	"\tsort_type\x18\x03 \x01(\x0e29.marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortTypeR\bsortType\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
+	"\tsort_type\x18\x03 \x01(\x0e29.marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortTypeR\bsortType\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x12\n" +
 	"\x04page\x18\x06 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\a \x01(\rR\bpageSize\x126\n" +
@@ -14095,10 +14171,10 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x16SORT_TYPE_PARTICIPANTS\x10\x03\x12\x14\n" +
 	"\x10SORT_TYPE_OLDEST\x10\x04\x12\x18\n" +
 	"\x14SORT_TYPE_SIMILARITY\x10\x05\x12\x15\n" +
-	"\x11SORT_TYPE_EXPIRED\x10\x06\"\xa3\b\n" +
+	"\x11SORT_TYPE_EXPIRED\x10\x06\"\xbd\b\n" +
 	" GetMarketsAndOptionsInfoResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12R\n" +
-	"\amarkets\x18\x02 \x03(\v28.marketcenter.v1.GetMarketsAndOptionsInfoResponse.MarketR\amarkets\x1a\x94\a\n" +
+	"\amarkets\x18\x02 \x03(\v28.marketcenter.v1.GetMarketsAndOptionsInfoResponse.MarketR\amarkets\x1a\xae\a\n" +
 	"\x06Market\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -14106,8 +14182,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12-\n" +
 	"\x12participants_count\x18\x06 \x01(\rR\x11participantsCount\x12\x16\n" +
-	"\x06volume\x18\a \x01(\tR\x06volume\x12,\n" +
-	"\x12base_token_address\x18\b \x01(\tR\x10baseTokenAddress\x12<\n" +
+	"\x06volume\x18\a \x01(\tR\x06volume\x12F\n" +
+	"\x0fbase_token_type\x18\b \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12<\n" +
 	"\vis_followed\x18\t \x01(\x0e2\x1b.marketcenter.v1.IsFollowedR\n" +
 	"isFollowed\x12\x18\n" +
 	"\adecimal\x18\n" +
@@ -14137,7 +14213,7 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x11UpdateOptionPrice\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x14\n" +
 	"\x05price\x18\x02 \x01(\tR\x05price\x12\x18\n" +
-	"\adecimal\x18\x03 \x01(\rR\adecimal\"\xd5\x05\n" +
+	"\adecimal\x18\x03 \x01(\rR\adecimal\"\xef\x05\n" +
 	"*ProcessMarketDepositOrWithdrawEventRequest\x12T\n" +
 	"\x04side\x18\x01 \x01(\x0e2@.marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.SideR\x04side\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\x12%\n" +
@@ -14153,20 +14229,20 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	" \x01(\x04R\vblockNumber\x12\x17\n" +
 	"\atx_hash\x18\v \x01(\tR\x06txHash\x12\x1d\n" +
 	"\n" +
-	"block_time\x18\f \x01(\x04R\tblockTime\x12,\n" +
-	"\x12base_token_address\x18\r \x01(\tR\x10baseTokenAddress\x12\x18\n" +
+	"block_time\x18\f \x01(\x04R\tblockTime\x12F\n" +
+	"\x0fbase_token_type\x18\r \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x18\n" +
 	"\adecimal\x18\x0e \x01(\rR\adecimal\x12G\n" +
 	"\roption_prices\x18\x0f \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\"A\n" +
 	"\x04Side\x12\x14\n" +
 	"\x10SIDE_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fSIDE_DEPOSIT\x10\x01\x12\x11\n" +
 	"\rSIDE_WITHDRAW\x10\x02\"-\n" +
-	"+ProcessMarketDepositOrWithdrawEventResponse\"\xf1\x01\n" +
+	"+ProcessMarketDepositOrWithdrawEventResponse\"\x8b\x02\n" +
 	"\x1dProcessMarketSwapEventRequest\x12G\n" +
 	"\roption_prices\x18\x01 \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\x12!\n" +
 	"\fblock_number\x18\x02 \x01(\x04R\vblockNumber\x12\x17\n" +
-	"\atx_hash\x18\x03 \x01(\tR\x06txHash\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12\x1d\n" +
+	"\atx_hash\x18\x03 \x01(\tR\x06txHash\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x1d\n" +
 	"\n" +
 	"block_time\x18\x05 \x01(\x04R\tblockTime\" \n" +
 	"\x1eProcessMarketSwapEventResponse\"\xd8\x05\n" +
@@ -14248,19 +14324,19 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\fblock_number\x18\a \x01(\x04R\vblockNumber\"\x1a\n" +
 	"\x18UpdateUsersClaimResponse\"X\n" +
 	"+GetMarketsAndOptionsForBlockListenerRequest\x12)\n" +
-	"\x10market_addresses\x18\x01 \x03(\tR\x0fmarketAddresses\"\xf2\x03\n" +
+	"\x10market_addresses\x18\x01 \x03(\tR\x0fmarketAddresses\"\xa6\x04\n" +
 	",GetMarketsAndOptionsForBlockListenerResponse\x12^\n" +
-	"\amarkets\x18\x01 \x03(\v2D.marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.MarketR\amarkets\x1a\xe1\x02\n" +
+	"\amarkets\x18\x01 \x03(\v2D.marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.MarketR\amarkets\x1a\x95\x03\n" +
 	"\x06Market\x12\x18\n" +
-	"\aaddress\x18\x01 \x01(\tR\aaddress\x12,\n" +
-	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12e\n" +
-	"\aoptions\x18\x03 \x03(\v2K.marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.OptionR\aoptions\x1a\xa7\x01\n" +
+	"\aaddress\x18\x01 \x01(\tR\aaddress\x12F\n" +
+	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12e\n" +
+	"\aoptions\x18\x03 \x03(\v2K.marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.OptionR\aoptions\x1a\xc1\x01\n" +
 	"\x06Option\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x14\n" +
 	"\x05index\x18\x02 \x01(\rR\x05index\x12%\n" +
 	"\x0emarket_address\x18\x03 \x01(\tR\rmarketAddress\x12\x18\n" +
-	"\adecimal\x18\x04 \x01(\rR\adecimal\x12,\n" +
-	"\x12base_token_address\x18\x05 \x01(\tR\x10baseTokenAddress\"\x8b\x05\n" +
+	"\adecimal\x18\x04 \x01(\rR\adecimal\x12F\n" +
+	"\x0fbase_token_type\x18\x05 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\x8b\x05\n" +
 	"\rUserOperation\x12\x16\n" +
 	"\x06sender\x18\x01 \x01(\tR\x06sender\x12\x14\n" +
 	"\x05nonce\x18\x02 \x01(\tR\x05nonce\x12\x1b\n" +
@@ -14303,10 +14379,10 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x0eoption_address\x18\x03 \x01(\tR\roptionAddress\x12E\n" +
 	"\x0euser_operation\x18\x05 \x01(\v2\x1e.marketcenter.v1.UserOperationR\ruserOperation\"4\n" +
 	"\x19ClaimMarketResultResponse\x12\x17\n" +
-	"\aop_hash\x18\x01 \x01(\tR\x06opHash\"\xd8\x01\n" +
+	"\aop_hash\x18\x01 \x01(\tR\x06opHash\"\xf2\x01\n" +
 	"\x18TransferBaseTokenRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
-	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12F\n" +
+	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\tR\x06amount\x12\x1d\n" +
 	"\n" +
 	"to_address\x18\x04 \x01(\tR\ttoAddress\x12E\n" +
@@ -14338,44 +14414,44 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rSTATUS_FOLLOW\x10\x01\x12\x13\n" +
 	"\x0fSTATUS_UNFOLLOW\x10\x02\"&\n" +
-	"$UpdateUserMarketFollowStatusResponse\"D\n" +
-	"\x14GetHotMarketsRequest\x12,\n" +
-	"\x12base_token_address\x18\x01 \x01(\tR\x10baseTokenAddress\"\x9a\x02\n" +
+	"$UpdateUserMarketFollowStatusResponse\"^\n" +
+	"\x14GetHotMarketsRequest\x12F\n" +
+	"\x0fbase_token_type\x18\x01 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xb4\x02\n" +
 	"\x15GetHotMarketsResponse\x12G\n" +
-	"\amarkets\x18\x01 \x03(\v2-.marketcenter.v1.GetHotMarketsResponse.MarketR\amarkets\x1a\xb7\x01\n" +
+	"\amarkets\x18\x01 \x03(\v2-.marketcenter.v1.GetHotMarketsResponse.MarketR\amarkets\x1a\xd1\x01\n" +
 	"\x06Market\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x17\n" +
 	"\apic_url\x18\x03 \x01(\tR\x06picUrl\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\rR\x06status\x12,\n" +
-	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\"\x8c\x01\n" +
+	"\x06status\x18\x05 \x01(\rR\x06status\x12F\n" +
+	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xa6\x01\n" +
 	"\x19GetFollowedMarketsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\"\xd6\x02\n" +
+	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xf0\x02\n" +
 	"\x1aGetFollowedMarketsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12L\n" +
-	"\amarkets\x18\x02 \x03(\v22.marketcenter.v1.GetFollowedMarketsResponse.MarketR\amarkets\x1a\xd3\x01\n" +
+	"\amarkets\x18\x02 \x03(\v22.marketcenter.v1.GetFollowedMarketsResponse.MarketR\amarkets\x1a\xed\x01\n" +
 	"\x06Market\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x17\n" +
 	"\apic_url\x18\x03 \x01(\tR\x06picUrl\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x1a\n" +
-	"\bdeadline\x18\x06 \x01(\x03R\bdeadline\x12,\n" +
-	"\x12base_token_address\x18\a \x01(\tR\x10baseTokenAddress\"\x94\x01\n" +
+	"\bdeadline\x18\x06 \x01(\x03R\bdeadline\x12F\n" +
+	"\x0fbase_token_type\x18\a \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xae\x01\n" +
 	"!GetHoldingPositionsMarketsRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
-	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12\x12\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12F\n" +
+	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\rR\bpageSize\"\xf9\x06\n" +
+	"\tpage_size\x18\x04 \x01(\rR\bpageSize\"\x93\a\n" +
 	"\"GetHoldingPositionsMarketsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\x1f\n" +
 	"\vtotal_value\x18\x02 \x01(\tR\n" +
 	"totalValue\x12T\n" +
-	"\amarkets\x18\x03 \x03(\v2:.marketcenter.v1.GetHoldingPositionsMarketsResponse.MarketR\amarkets\x1a\xc5\x05\n" +
+	"\amarkets\x18\x03 \x03(\v2:.marketcenter.v1.GetHoldingPositionsMarketsResponse.MarketR\amarkets\x1a\xdf\x05\n" +
 	"\x06Market\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aaddress\x18\x02 \x01(\tR\aaddress\x12\x17\n" +
@@ -14384,8 +14460,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12#\n" +
 	"\rmarket_volume\x18\x06 \x01(\tR\fmarketVolume\x12:\n" +
 	"\x19market_participants_count\x18\a \x01(\rR\x17marketParticipantsCount\x12\x18\n" +
-	"\adecimal\x18\b \x01(\rR\adecimal\x12,\n" +
-	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x125\n" +
+	"\adecimal\x18\b \x01(\rR\adecimal\x12F\n" +
+	"\x0fbase_token_type\x18\t \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x125\n" +
 	"\x17user_market_total_value\x18\n" +
 	" \x01(\tR\x14userMarketTotalValue\x12a\n" +
 	"\tpositions\x18\v \x03(\v2C.marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.PositionR\tpositions\x1a\xf6\x01\n" +
@@ -14400,7 +14476,7 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\adecimal\x18\a \x01(\rR\adecimal\"D\n" +
 	"\x16GetMarketDetailRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x18\n" +
-	"\aaddress\x18\x02 \x01(\tR\aaddress\"\xc3\b\n" +
+	"\aaddress\x18\x02 \x01(\tR\aaddress\"\x8b\t\n" +
 	"\x17GetMarketDetailResponse\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -14417,7 +14493,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\vis_followed\x18\f \x01(\x0e2\x1b.marketcenter.v1.IsFollowedR\n" +
 	"isFollowed\x12I\n" +
 	"\aoptions\x18\r \x03(\v2/.marketcenter.v1.GetMarketDetailResponse.OptionR\aoptions\x12\x18\n" +
-	"\adecimal\x18\x0e \x01(\rR\adecimal\x12,\n" +
+	"\adecimal\x18\x0e \x01(\rR\adecimal\x12F\n" +
+	"\x0fbase_token_type\x18\x0f \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12,\n" +
 	"\x12base_token_address\x18\x10 \x01(\tR\x10baseTokenAddress\x12K\n" +
 	"\bis_claim\x18\x11 \x01(\x0e20.marketcenter.v1.GetMarketDetailResponse.IsClaimR\aisClaim\x12\x19\n" +
 	"\bevent_id\x18\x12 \x01(\tR\aeventId\x12!\n" +
@@ -14462,16 +14539,16 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x18\n" +
 	"\adecimal\x18\x04 \x01(\rR\adecimal\x12\x16\n" +
 	"\x06symbol\x18\x05 \x01(\tR\x06symbol\x12\x17\n" +
-	"\apic_url\x18\x06 \x01(\tR\x06picUrl\"\xae\x01\n" +
+	"\apic_url\x18\x06 \x01(\tR\x06picUrl\"\xc8\x01\n" +
 	"\x14GetUserTradesRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12%\n" +
 	"\x0emarket_address\x18\x02 \x01(\tR\rmarketAddress\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x05 \x01(\tR\x10baseTokenAddress\"\xad\x06\n" +
+	"\tpage_size\x18\x04 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x05 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xc7\x06\n" +
 	"\x15GetUserTradesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12D\n" +
-	"\x06orders\x18\x02 \x03(\v2,.marketcenter.v1.GetUserTradesResponse.OrderR\x06orders\x1a\xb7\x05\n" +
+	"\x06orders\x18\x02 \x03(\v2,.marketcenter.v1.GetUserTradesResponse.OrderR\x06orders\x1a\xd1\x05\n" +
 	"\x05Order\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\x12\x12\n" +
@@ -14481,8 +14558,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\ttimestamp\x18\x06 \x01(\x04R\ttimestamp\x12\x1d\n" +
 	"\n" +
 	"deal_price\x18\a \x01(\tR\tdealPrice\x12K\n" +
-	"\x06option\x18\b \x01(\v23.marketcenter.v1.GetUserTradesResponse.Order.OptionR\x06option\x12,\n" +
-	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\x1a\xfc\x02\n" +
+	"\x06option\x18\b \x01(\v23.marketcenter.v1.GetUserTradesResponse.Order.OptionR\x06option\x12F\n" +
+	"\x0fbase_token_type\x18\t \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x1a\xfc\x02\n" +
 	"\x06Option\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -14514,25 +14591,25 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\rtoken_decimal\x18\x05 \x01(\tR\ftokenDecimal\x12\"\n" +
 	"\rtoken_pic_url\x18\x06 \x01(\tR\vtokenPicUrl\x12\x18\n" +
 	"\abalance\x18\a \x01(\tR\abalance\x12\x18\n" +
-	"\adecimal\x18\b \x01(\rR\adecimal\"\xd8\x01\n" +
+	"\adecimal\x18\b \x01(\rR\adecimal\"\xf2\x01\n" +
 	"\x17GetUserPositionsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12%\n" +
-	"\x0emarket_address\x18\x02 \x01(\tR\rmarketAddress\x12,\n" +
-	"\x12base_token_address\x18\x03 \x01(\tR\x10baseTokenAddress\x12\x12\n" +
+	"\x0emarket_address\x18\x02 \x01(\tR\rmarketAddress\x12F\n" +
+	"\x0fbase_token_type\x18\x03 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x12\n" +
 	"\x04page\x18\x04 \x01(\rR\x04page\x12\x1b\n" +
 	"\tpage_size\x18\x05 \x01(\rR\bpageSize\x12%\n" +
-	"\x0eoption_address\x18\x06 \x01(\tR\roptionAddress\"\xdf\x06\n" +
+	"\x0eoption_address\x18\x06 \x01(\tR\roptionAddress\"\xf9\x06\n" +
 	"\x18GetUserPositionsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12P\n" +
-	"\tpositions\x18\x03 \x03(\v22.marketcenter.v1.GetUserPositionsResponse.PositionR\tpositions\x1a\xda\x05\n" +
+	"\tpositions\x18\x03 \x03(\v22.marketcenter.v1.GetUserPositionsResponse.PositionR\tpositions\x1a\xf4\x05\n" +
 	"\bPosition\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
 	"marketName\x12$\n" +
 	"\x0emarket_pic_url\x18\x03 \x01(\tR\fmarketPicUrl\x12-\n" +
 	"\x12market_description\x18\x04 \x01(\tR\x11marketDescription\x12%\n" +
-	"\x0eoption_address\x18\x05 \x01(\tR\roptionAddress\x12,\n" +
-	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\x12\x1f\n" +
+	"\x0eoption_address\x18\x05 \x01(\tR\roptionAddress\x12F\n" +
+	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x1f\n" +
 	"\voption_name\x18\a \x01(\tR\n" +
 	"optionName\x12-\n" +
 	"\x12option_description\x18\b \x01(\tR\x11optionDescription\x12%\n" +
@@ -14551,27 +14628,27 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x06status\x18\x13 \x01(\rR\x06status\x12\x1a\n" +
 	"\bdeadline\x18\x14 \x01(\x03R\bdeadline\x12\x1d\n" +
 	"\n" +
-	"is_claimed\x18\x15 \x01(\rR\tisClaimed\"`\n" +
+	"is_claimed\x18\x15 \x01(\rR\tisClaimed\"z\n" +
 	"\x1eGetUserLatestAssetValueRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
-	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\"\xfc\x01\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12F\n" +
+	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\x96\x02\n" +
 	"\x1fGetUserLatestAssetValueResponse\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12\x18\n" +
 	"\abalance\x18\x02 \x01(\tR\abalance\x12\x1c\n" +
 	"\tportfolio\x18\x03 \x01(\tR\tportfolio\x12\x10\n" +
 	"\x03pnl\x18\x04 \x01(\tR\x03pnl\x12\x18\n" +
-	"\adecimal\x18\x05 \x01(\rR\adecimal\x12,\n" +
-	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\x12\x16\n" +
+	"\adecimal\x18\x05 \x01(\rR\adecimal\x12F\n" +
+	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x16\n" +
 	"\x06volume\x18\a \x01(\tR\x06volume\x12\x19\n" +
-	"\bpnl_rank\x18\b \x01(\rR\apnlRank\"\x8e\x01\n" +
+	"\bpnl_rank\x18\b \x01(\rR\apnlRank\"\xa8\x01\n" +
 	"\x13SearchMarketRequest\x12\x18\n" +
 	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\"\x91\x03\n" +
+	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xab\x03\n" +
 	"\x14SearchMarketResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12F\n" +
-	"\amarkets\x18\x02 \x03(\v2,.marketcenter.v1.SearchMarketResponse.MarketR\amarkets\x1a\x9a\x02\n" +
+	"\amarkets\x18\x02 \x03(\v2,.marketcenter.v1.SearchMarketResponse.MarketR\amarkets\x1a\xb4\x02\n" +
 	"\x06Market\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
@@ -14580,22 +14657,22 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12-\n" +
 	"\x12participants_count\x18\x06 \x01(\rR\x11participantsCount\x12\x16\n" +
 	"\x06volume\x18\a \x01(\tR\x06volume\x12\x1a\n" +
-	"\bdeadline\x18\b \x01(\x03R\bdeadline\x12,\n" +
-	"\x12base_token_address\x18\t \x01(\tR\x10baseTokenAddress\"\xc4\x02\n" +
+	"\bdeadline\x18\b \x01(\x03R\bdeadline\x12F\n" +
+	"\x0fbase_token_type\x18\t \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xde\x02\n" +
 	"\x1aGetUserAssetHistoryRequest\x12\x10\n" +
-	"\x03uid\x18\x01 \x01(\tR\x03uid\x12,\n" +
-	"\x12base_token_address\x18\x02 \x01(\tR\x10baseTokenAddress\x12]\n" +
+	"\x03uid\x18\x01 \x01(\tR\x03uid\x12F\n" +
+	"\x0fbase_token_type\x18\x02 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12]\n" +
 	"\rtime_interval\x18\x03 \x01(\x0e28.marketcenter.v1.GetUserAssetHistoryRequest.TimeIntervalR\ftimeInterval\"\x86\x01\n" +
 	"\fTimeInterval\x12\x1d\n" +
 	"\x19TIME_INTERVAL_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10TIME_INTERVAL_7D\x10\x01\x12\x14\n" +
 	"\x10TIME_INTERVAL_1M\x10\x02\x12\x14\n" +
 	"\x10TIME_INTERVAL_3M\x10\x03\x12\x15\n" +
-	"\x11TIME_INTERVAL_ALL\x10\x04\"\xe1\x02\n" +
+	"\x11TIME_INTERVAL_ALL\x10\x04\"\xfb\x02\n" +
 	"\x1bGetUserAssetHistoryResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12V\n" +
-	"\tsnapshots\x18\x02 \x03(\v28.marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshotR\tsnapshots\x12,\n" +
-	"\x12base_token_address\x18\x03 \x01(\tR\x10baseTokenAddress\x12\x18\n" +
+	"\tsnapshots\x18\x02 \x03(\v28.marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshotR\tsnapshots\x12F\n" +
+	"\x0fbase_token_type\x18\x03 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12\x18\n" +
 	"\adecimal\x18\x04 \x01(\rR\adecimal\x1a\x8b\x01\n" +
 	"\vOneSnapshot\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12\x18\n" +
@@ -14623,12 +14700,12 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"TokenPrice\x12#\n" +
 	"\rtoken_address\x18\x01 \x01(\tR\ftokenAddress\x12\x14\n" +
 	"\x05price\x18\x02 \x01(\tR\x05price\x12\x18\n" +
-	"\adecimal\x18\x03 \x01(\rR\adecimal\"\xf1\x02\n" +
+	"\adecimal\x18\x03 \x01(\rR\adecimal\"\x8b\x03\n" +
 	"$ProcessMarketClaimResultEventRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12!\n" +
 	"\fuser_address\x18\x02 \x01(\tR\vuserAddress\x12%\n" +
-	"\x0emarket_address\x18\x03 \x01(\tR\rmarketAddress\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12%\n" +
+	"\x0emarket_address\x18\x03 \x01(\tR\rmarketAddress\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12%\n" +
 	"\x0eoption_address\x18\x05 \x01(\tR\roptionAddress\x12%\n" +
 	"\x0eoption_balance\x18\x06 \x01(\tR\roptionBalance\x12\x16\n" +
 	"\x06amount\x18\a \x01(\tR\x06amount\x12\x17\n" +
@@ -14703,20 +14780,20 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x12_winning_option_idB\f\n" +
 	"\n" +
 	"_settle_txB\x12\n" +
-	"\x10_deleter_user_id\"\x8d\x01\n" +
+	"\x10_deleter_user_id\"\xa7\x01\n" +
 	"\x1aGetUserTransactionsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\"\xe3\x03\n" +
+	"\tpage_size\x18\x03 \x01(\rR\bpageSize\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xfd\x03\n" +
 	"\x1bGetUserTransactionsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\\\n" +
-	"\ftransactions\x18\x02 \x03(\v28.marketcenter.v1.GetUserTransactionsResponse.TransactionR\ftransactions\x1a\xcf\x02\n" +
+	"\ftransactions\x18\x02 \x03(\v28.marketcenter.v1.GetUserTransactionsResponse.TransactionR\ftransactions\x1a\xe9\x02\n" +
 	"\vTransaction\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x1c\n" +
 	"\ttimestamp\x18\x02 \x01(\rR\ttimestamp\x12\x12\n" +
-	"\x04side\x18\x03 \x01(\rR\x04side\x12,\n" +
-	"\x12base_token_address\x18\x04 \x01(\tR\x10baseTokenAddress\x12#\n" +
+	"\x04side\x18\x03 \x01(\rR\x04side\x12F\n" +
+	"\x0fbase_token_type\x18\x04 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\x12#\n" +
 	"\rtoken_address\x18\x05 \x01(\tR\ftokenAddress\x12\x18\n" +
 	"\adecimal\x18\x06 \x01(\rR\adecimal\x12\x16\n" +
 	"\x06amount\x18\a \x01(\tR\x06amount\x12+\n" +
@@ -14765,9 +14842,9 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\rTxDataDeposit\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\"*\n" +
 	"\x0eTxDataWithdraw\x12\x18\n" +
-	"\aaddress\x18\x01 \x01(\tR\aaddress\"A\n" +
-	"\x11GetBannersRequest\x12,\n" +
-	"\x12base_token_address\x18\x01 \x01(\tR\x10baseTokenAddress\"\xc8\x01\n" +
+	"\aaddress\x18\x01 \x01(\tR\aaddress\"[\n" +
+	"\x11GetBannersRequest\x12F\n" +
+	"\x0fbase_token_type\x18\x01 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\xc8\x01\n" +
 	"\x12GetBannersResponse\x12D\n" +
 	"\abanners\x18\x01 \x03(\v2*.marketcenter.v1.GetBannersResponse.BannerR\abanners\x1al\n" +
 	"\x06Banner\x12\x16\n" +
@@ -14775,9 +14852,9 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x05image\x18\x02 \x01(\tR\x05image\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\x05R\x04type\x12\x10\n" +
 	"\x03url\x18\x04 \x01(\tR\x03url\x12\x0e\n" +
-	"\x02id\x18\x05 \x01(\tR\x02id\"B\n" +
-	"\x12GetSectionsRequest\x12,\n" +
-	"\x12base_token_address\x18\x01 \x01(\tR\x10baseTokenAddress\"\x84\x03\n" +
+	"\x02id\x18\x05 \x01(\tR\x02id\"\\\n" +
+	"\x12GetSectionsRequest\x12F\n" +
+	"\x0fbase_token_type\x18\x01 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"\x84\x03\n" +
 	"\x13GetSectionsResponse\x12H\n" +
 	"\bsections\x18\x01 \x03(\v2,.marketcenter.v1.GetSectionsResponse.SectionR\bsections\x1a\xa2\x02\n" +
 	"\aSection\x12\x14\n" +
@@ -14967,16 +15044,16 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\x16EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fTRANSFER_SINGLE\x10\x01\x12\x12\n" +
 	"\x0eTRANSFER_BATCH\x10\x02\"!\n" +
-	"\x1fProcessCTFTransferEventResponse\"\x9f\x02\n" +
+	"\x1fProcessCTFTransferEventResponse\"\xb9\x02\n" +
 	"$ProcessCTFMarketResolvedEventRequest\x12%\n" +
 	"\x0emarket_address\x18\x01 \x01(\tR\rmarketAddress\x12\x17\n" +
 	"\atx_hash\x18\x02 \x01(\tR\x06txHash\x12!\n" +
 	"\fblock_number\x18\x03 \x01(\x04R\vblockNumber\x12\x1d\n" +
 	"\n" +
 	"block_time\x18\x04 \x01(\x04R\tblockTime\x12G\n" +
-	"\roption_prices\x18\x05 \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\x12,\n" +
-	"\x12base_token_address\x18\x06 \x01(\tR\x10baseTokenAddress\"'\n" +
-	"%ProcessCTFMarketResolvedEventResponse\"\xdf\x04\n" +
+	"\roption_prices\x18\x05 \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\x12F\n" +
+	"\x0fbase_token_type\x18\x06 \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"'\n" +
+	"%ProcessCTFMarketResolvedEventResponse\"\xf9\x04\n" +
 	"\x1fProcessCTFLiquidityEventRequest\x12Y\n" +
 	"\n" +
 	"event_type\x18\x01 \x01(\x0e2:.marketcenter.v1.ProcessCTFLiquidityEventRequest.EventTypeR\teventType\x12\x10\n" +
@@ -14991,8 +15068,8 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"\n" +
 	"block_time\x18\n" +
 	" \x01(\x04R\tblockTime\x12G\n" +
-	"\roption_prices\x18\v \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\x12,\n" +
-	"\x12base_token_address\x18\f \x01(\tR\x10baseTokenAddress\"S\n" +
+	"\roption_prices\x18\v \x03(\v2\".marketcenter.v1.UpdateOptionPriceR\foptionPrices\x12F\n" +
+	"\x0fbase_token_type\x18\f \x01(\x0e2\x1e.marketcenter.v1.BaseTokenTypeR\rbaseTokenType\"S\n" +
 	"\tEventType\x12\x1a\n" +
 	"\x16EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fLIQUIDITY_ADDED\x10\x01\x12\x15\n" +
@@ -15030,7 +15107,11 @@ const file_market_service_marketcenter_v1_marketcenter_proto_rawDesc = "" +
 	"IsFollowed\x12\x1b\n" +
 	"\x17IS_FOLLOWED_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fIS_FOLLOWED_YES\x10\x01\x12\x12\n" +
-	"\x0eIS_FOLLOWED_NO\x10\x02*\x91\x01\n" +
+	"\x0eIS_FOLLOWED_NO\x10\x02*f\n" +
+	"\rBaseTokenType\x12\x1f\n" +
+	"\x1bBASE_TOKEN_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16BASE_TOKEN_TYPE_POINTS\x10\x01\x12\x18\n" +
+	"\x14BASE_TOKEN_TYPE_USDC\x10\x02*\x91\x01\n" +
 	"\vEventStatus\x12\x1c\n" +
 	"\x18EVENT_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13EVENT_STATUS_ACTIVE\x10\x01\x12\x19\n" +
@@ -15117,405 +15198,445 @@ func file_market_service_marketcenter_v1_marketcenter_proto_rawDescGZIP() []byte
 	return file_market_service_marketcenter_v1_marketcenter_proto_rawDescData
 }
 
-var file_market_service_marketcenter_v1_marketcenter_proto_enumTypes = make([]protoimpl.EnumInfo, 24)
+var file_market_service_marketcenter_v1_marketcenter_proto_enumTypes = make([]protoimpl.EnumInfo, 25)
 var file_market_service_marketcenter_v1_marketcenter_proto_msgTypes = make([]protoimpl.MessageInfo, 174)
 var file_market_service_marketcenter_v1_marketcenter_proto_goTypes = []any{
 	(ErrorCode)(0),                                                           // 0: marketcenter.v1.ErrorCode
 	(MarketIsShow)(0),                                                        // 1: marketcenter.v1.MarketIsShow
 	(QuestionShow)(0),                                                        // 2: marketcenter.v1.QuestionShow
 	(IsFollowed)(0),                                                          // 3: marketcenter.v1.IsFollowed
-	(EventStatus)(0),                                                         // 4: marketcenter.v1.EventStatus
-	(TxType)(0),                                                              // 5: marketcenter.v1.TxType
-	(GetLeaderboardRequest_TimeInterval)(0),                                  // 6: marketcenter.v1.GetLeaderboardRequest.TimeInterval
-	(GetLeaderboardRequest_SortType)(0),                                      // 7: marketcenter.v1.GetLeaderboardRequest.SortType
-	(GetQuestionsRequest_SortType)(0),                                        // 8: marketcenter.v1.GetQuestionsRequest.SortType
-	(GetQuestionDetailResponse_IsClaim)(0),                                   // 9: marketcenter.v1.GetQuestionDetailResponse.IsClaim
-	(GetMarketsAndOptionsInfoRequest_SortType)(0),                            // 10: marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortType
-	(ProcessMarketDepositOrWithdrawEventRequest_Side)(0),                     // 11: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.Side
-	(UpdateUserBaseTokenBalanceRequest_Side)(0),                              // 12: marketcenter.v1.UpdateUserBaseTokenBalanceRequest.Side
-	(PlaceOrderRequest_Side)(0),                                              // 13: marketcenter.v1.PlaceOrderRequest.Side
-	(UpdateUserMarketFollowStatusRequest_Status)(0),                          // 14: marketcenter.v1.UpdateUserMarketFollowStatusRequest.Status
-	(GetMarketDetailResponse_IsClaim)(0),                                     // 15: marketcenter.v1.GetMarketDetailResponse.IsClaim
-	(GetUserAssetHistoryRequest_TimeInterval)(0),                             // 16: marketcenter.v1.GetUserAssetHistoryRequest.TimeInterval
-	(GetMarketOptionPriceHistoryRequest_TimeInterval)(0),                     // 17: marketcenter.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
-	(UpdateMarketStatusRequest_Status)(0),                                    // 18: marketcenter.v1.UpdateMarketStatusRequest.Status
-	(ListEventsRequest_SortType)(0),                                          // 19: marketcenter.v1.ListEventsRequest.SortType
-	(ProcessCTFConditionEventRequest_EventType)(0),                           // 20: marketcenter.v1.ProcessCTFConditionEventRequest.EventType
-	(ProcessCTFPositionEventRequest_EventType)(0),                            // 21: marketcenter.v1.ProcessCTFPositionEventRequest.EventType
-	(ProcessCTFTransferEventRequest_EventType)(0),                            // 22: marketcenter.v1.ProcessCTFTransferEventRequest.EventType
-	(ProcessCTFLiquidityEventRequest_EventType)(0),                           // 23: marketcenter.v1.ProcessCTFLiquidityEventRequest.EventType
-	(*GetLeaderboardRequest)(nil),                                            // 24: marketcenter.v1.GetLeaderboardRequest
-	(*GetLeaderboardResponse)(nil),                                           // 25: marketcenter.v1.GetLeaderboardResponse
-	(*GetQuestionsRequest)(nil),                                              // 26: marketcenter.v1.GetQuestionsRequest
-	(*GetQuestionsResponse)(nil),                                             // 27: marketcenter.v1.GetQuestionsResponse
-	(*GetQuestionDetailRequest)(nil),                                         // 28: marketcenter.v1.GetQuestionDetailRequest
-	(*GetQuestionDetailResponse)(nil),                                        // 29: marketcenter.v1.GetQuestionDetailResponse
-	(*UpdateMarketInfoRequest)(nil),                                          // 30: marketcenter.v1.UpdateMarketInfoRequest
-	(*UpdateMarketInfoResponse)(nil),                                         // 31: marketcenter.v1.UpdateMarketInfoResponse
-	(*ProcessMarketSettingEventRequest)(nil),                                 // 32: marketcenter.v1.ProcessMarketSettingEventRequest
-	(*ProcessMarketSettingEventResponse)(nil),                                // 33: marketcenter.v1.ProcessMarketSettingEventResponse
-	(*ProcessMarketAssertDisputedEventRequest)(nil),                          // 34: marketcenter.v1.ProcessMarketAssertDisputedEventRequest
-	(*ProcessMarketAssertDisputedEventResponse)(nil),                         // 35: marketcenter.v1.ProcessMarketAssertDisputedEventResponse
-	(*ProcessMarketAssertionResolvedEventRequest)(nil),                       // 36: marketcenter.v1.ProcessMarketAssertionResolvedEventRequest
-	(*ProcessMarketAssertionResolvedEventResponse)(nil),                      // 37: marketcenter.v1.ProcessMarketAssertionResolvedEventResponse
-	(*GetPayMasterDataRequest)(nil),                                          // 38: marketcenter.v1.GetPayMasterDataRequest
-	(*GetPayMasterDataResponse)(nil),                                         // 39: marketcenter.v1.GetPayMasterDataResponse
-	(*BatchUpdateOptionPriceRequest)(nil),                                    // 40: marketcenter.v1.BatchUpdateOptionPriceRequest
-	(*BatchUpdateOptionPriceResponse)(nil),                                   // 41: marketcenter.v1.BatchUpdateOptionPriceResponse
-	(*GetMarketTagsRequest)(nil),                                             // 42: marketcenter.v1.GetMarketTagsRequest
-	(*GetMarketTagsResponse)(nil),                                            // 43: marketcenter.v1.GetMarketTagsResponse
-	(*GetMarketCategoriesRequest)(nil),                                       // 44: marketcenter.v1.GetMarketCategoriesRequest
-	(*GetMarketCategoriesResponse)(nil),                                      // 45: marketcenter.v1.GetMarketCategoriesResponse
-	(*BatchGetMarketUsersPositionsRequest)(nil),                              // 46: marketcenter.v1.BatchGetMarketUsersPositionsRequest
-	(*BatchGetMarketUsersPositionsResponse)(nil),                             // 47: marketcenter.v1.BatchGetMarketUsersPositionsResponse
-	(*GetMarketsAndOptionsInfoRequest)(nil),                                  // 48: marketcenter.v1.GetMarketsAndOptionsInfoRequest
-	(*GetMarketsAndOptionsInfoResponse)(nil),                                 // 49: marketcenter.v1.GetMarketsAndOptionsInfoResponse
-	(*UpdateOptionPrice)(nil),                                                // 50: marketcenter.v1.UpdateOptionPrice
-	(*ProcessMarketDepositOrWithdrawEventRequest)(nil),                       // 51: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest
-	(*ProcessMarketDepositOrWithdrawEventResponse)(nil),                      // 52: marketcenter.v1.ProcessMarketDepositOrWithdrawEventResponse
-	(*ProcessMarketSwapEventRequest)(nil),                                    // 53: marketcenter.v1.ProcessMarketSwapEventRequest
-	(*ProcessMarketSwapEventResponse)(nil),                                   // 54: marketcenter.v1.ProcessMarketSwapEventResponse
-	(*CreateMarketsAndOptionsRequest)(nil),                                   // 55: marketcenter.v1.CreateMarketsAndOptionsRequest
-	(*CreateMarketsAndOptionsResponse)(nil),                                  // 56: marketcenter.v1.CreateMarketsAndOptionsResponse
-	(*TokenBalance)(nil),                                                     // 57: marketcenter.v1.TokenBalance
-	(*UpdateUserBaseTokenBalanceRequest)(nil),                                // 58: marketcenter.v1.UpdateUserBaseTokenBalanceRequest
-	(*UpdateUserBaseTokenBalanceResponse)(nil),                               // 59: marketcenter.v1.UpdateUserBaseTokenBalanceResponse
-	(*UpdateOptionsPriceRequest)(nil),                                        // 60: marketcenter.v1.UpdateOptionsPriceRequest
-	(*UpdateOptionsPriceResponse)(nil),                                       // 61: marketcenter.v1.UpdateOptionsPriceResponse
-	(*UpdateSettleMarketsRequest)(nil),                                       // 62: marketcenter.v1.UpdateSettleMarketsRequest
-	(*UpdateSettleMarketsResponse)(nil),                                      // 63: marketcenter.v1.UpdateSettleMarketsResponse
-	(*UpdateUsersClaimRequest)(nil),                                          // 64: marketcenter.v1.UpdateUsersClaimRequest
-	(*UpdateUsersClaimResponse)(nil),                                         // 65: marketcenter.v1.UpdateUsersClaimResponse
-	(*GetMarketsAndOptionsForBlockListenerRequest)(nil),                      // 66: marketcenter.v1.GetMarketsAndOptionsForBlockListenerRequest
-	(*GetMarketsAndOptionsForBlockListenerResponse)(nil),                     // 67: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse
-	(*UserOperation)(nil),                                                    // 68: marketcenter.v1.UserOperation
-	(*PlaceOrderRequest)(nil),                                                // 69: marketcenter.v1.PlaceOrderRequest
-	(*PlaceOrderResponse)(nil),                                               // 70: marketcenter.v1.PlaceOrderResponse
-	(*ClaimMarketResultRequest)(nil),                                         // 71: marketcenter.v1.ClaimMarketResultRequest
-	(*ClaimMarketResultResponse)(nil),                                        // 72: marketcenter.v1.ClaimMarketResultResponse
-	(*TransferBaseTokenRequest)(nil),                                         // 73: marketcenter.v1.TransferBaseTokenRequest
-	(*TransferBaseTokenResponse)(nil),                                        // 74: marketcenter.v1.TransferBaseTokenResponse
-	(*GetOptionTokensPriceRequest)(nil),                                      // 75: marketcenter.v1.GetOptionTokensPriceRequest
-	(*GetOptionTokensPriceResponse)(nil),                                     // 76: marketcenter.v1.GetOptionTokensPriceResponse
-	(*UpdateOrderPriceByTxHashRequest)(nil),                                  // 77: marketcenter.v1.UpdateOrderPriceByTxHashRequest
-	(*UpdateOrderPriceByTxHashResponse)(nil),                                 // 78: marketcenter.v1.UpdateOrderPriceByTxHashResponse
-	(*UpdateUserMarketFollowStatusRequest)(nil),                              // 79: marketcenter.v1.UpdateUserMarketFollowStatusRequest
-	(*UpdateUserMarketFollowStatusResponse)(nil),                             // 80: marketcenter.v1.UpdateUserMarketFollowStatusResponse
-	(*GetHotMarketsRequest)(nil),                                             // 81: marketcenter.v1.GetHotMarketsRequest
-	(*GetHotMarketsResponse)(nil),                                            // 82: marketcenter.v1.GetHotMarketsResponse
-	(*GetFollowedMarketsRequest)(nil),                                        // 83: marketcenter.v1.GetFollowedMarketsRequest
-	(*GetFollowedMarketsResponse)(nil),                                       // 84: marketcenter.v1.GetFollowedMarketsResponse
-	(*GetHoldingPositionsMarketsRequest)(nil),                                // 85: marketcenter.v1.GetHoldingPositionsMarketsRequest
-	(*GetHoldingPositionsMarketsResponse)(nil),                               // 86: marketcenter.v1.GetHoldingPositionsMarketsResponse
-	(*GetMarketDetailRequest)(nil),                                           // 87: marketcenter.v1.GetMarketDetailRequest
-	(*GetMarketDetailResponse)(nil),                                          // 88: marketcenter.v1.GetMarketDetailResponse
-	(*GetMarketTradesRequest)(nil),                                           // 89: marketcenter.v1.GetMarketTradesRequest
-	(*GetMarketTradesResponse)(nil),                                          // 90: marketcenter.v1.GetMarketTradesResponse
-	(*GetUserTradesRequest)(nil),                                             // 91: marketcenter.v1.GetUserTradesRequest
-	(*GetUserTradesResponse)(nil),                                            // 92: marketcenter.v1.GetUserTradesResponse
-	(*GetMarketUsersPositionsRequest)(nil),                                   // 93: marketcenter.v1.GetMarketUsersPositionsRequest
-	(*GetMarketUsersPositionsResponse)(nil),                                  // 94: marketcenter.v1.GetMarketUsersPositionsResponse
-	(*GetUserPositionsRequest)(nil),                                          // 95: marketcenter.v1.GetUserPositionsRequest
-	(*GetUserPositionsResponse)(nil),                                         // 96: marketcenter.v1.GetUserPositionsResponse
-	(*GetUserLatestAssetValueRequest)(nil),                                   // 97: marketcenter.v1.GetUserLatestAssetValueRequest
-	(*GetUserLatestAssetValueResponse)(nil),                                  // 98: marketcenter.v1.GetUserLatestAssetValueResponse
-	(*SearchMarketRequest)(nil),                                              // 99: marketcenter.v1.SearchMarketRequest
-	(*SearchMarketResponse)(nil),                                             // 100: marketcenter.v1.SearchMarketResponse
-	(*GetUserAssetHistoryRequest)(nil),                                       // 101: marketcenter.v1.GetUserAssetHistoryRequest
-	(*GetUserAssetHistoryResponse)(nil),                                      // 102: marketcenter.v1.GetUserAssetHistoryResponse
-	(*GetMarketOptionPriceHistoryRequest)(nil),                               // 103: marketcenter.v1.GetMarketOptionPriceHistoryRequest
-	(*GetMarketOptionPriceHistoryResponse)(nil),                              // 104: marketcenter.v1.GetMarketOptionPriceHistoryResponse
-	(*ProcessMarketClaimResultEventRequest)(nil),                             // 105: marketcenter.v1.ProcessMarketClaimResultEventRequest
-	(*ProcessMarketClaimResultEventResponse)(nil),                            // 106: marketcenter.v1.ProcessMarketClaimResultEventResponse
-	(*UpdateMarketStatusRequest)(nil),                                        // 107: marketcenter.v1.UpdateMarketStatusRequest
-	(*UpdateMarketStatusResponse)(nil),                                       // 108: marketcenter.v1.UpdateMarketStatusResponse
-	(*S3TagInfo)(nil),                                                        // 109: marketcenter.v1.S3TagInfo
-	(*S3CategoryInfo)(nil),                                                   // 110: marketcenter.v1.S3CategoryInfo
-	(*S3CategoryList)(nil),                                                   // 111: marketcenter.v1.S3CategoryList
-	(*S3OptionInfo)(nil),                                                     // 112: marketcenter.v1.S3OptionInfo
-	(*S3PredictionInfo)(nil),                                                 // 113: marketcenter.v1.S3PredictionInfo
-	(*GetUserTransactionsRequest)(nil),                                       // 114: marketcenter.v1.GetUserTransactionsRequest
-	(*GetUserTransactionsResponse)(nil),                                      // 115: marketcenter.v1.GetUserTransactionsResponse
-	(*TxDataBuy)(nil),                                                        // 116: marketcenter.v1.TxDataBuy
-	(*TxDataSell)(nil),                                                       // 117: marketcenter.v1.TxDataSell
-	(*TxDataClaim)(nil),                                                      // 118: marketcenter.v1.TxDataClaim
-	(*TxDataMintPoints)(nil),                                                 // 119: marketcenter.v1.TxDataMintPoints
-	(*TxDataMintInvitePoints)(nil),                                           // 120: marketcenter.v1.TxDataMintInvitePoints
-	(*TxDataDeposit)(nil),                                                    // 121: marketcenter.v1.TxDataDeposit
-	(*TxDataWithdraw)(nil),                                                   // 122: marketcenter.v1.TxDataWithdraw
-	(*GetBannersRequest)(nil),                                                // 123: marketcenter.v1.GetBannersRequest
-	(*GetBannersResponse)(nil),                                               // 124: marketcenter.v1.GetBannersResponse
-	(*GetSectionsRequest)(nil),                                               // 125: marketcenter.v1.GetSectionsRequest
-	(*GetSectionsResponse)(nil),                                              // 126: marketcenter.v1.GetSectionsResponse
-	(*PredictionEvent)(nil),                                                  // 127: marketcenter.v1.PredictionEvent
-	(*GetEventRequest)(nil),                                                  // 128: marketcenter.v1.GetEventRequest
-	(*GetEventResponse)(nil),                                                 // 129: marketcenter.v1.GetEventResponse
-	(*ListEventsRequest)(nil),                                                // 130: marketcenter.v1.ListEventsRequest
-	(*ListEventsResponse)(nil),                                               // 131: marketcenter.v1.ListEventsResponse
-	(*CreateEventRequest)(nil),                                               // 132: marketcenter.v1.CreateEventRequest
-	(*CreateEventResponse)(nil),                                              // 133: marketcenter.v1.CreateEventResponse
-	(*CTFSwapRequest)(nil),                                                   // 134: marketcenter.v1.CTFSwapRequest
-	(*CTFSwapResponse)(nil),                                                  // 135: marketcenter.v1.CTFSwapResponse
-	(*CTFDepositLiquidityRequest)(nil),                                       // 136: marketcenter.v1.CTFDepositLiquidityRequest
-	(*CTFDepositLiquidityResponse)(nil),                                      // 137: marketcenter.v1.CTFDepositLiquidityResponse
-	(*CTFWithdrawLiquidityRequest)(nil),                                      // 138: marketcenter.v1.CTFWithdrawLiquidityRequest
-	(*CTFWithdrawLiquidityResponse)(nil),                                     // 139: marketcenter.v1.CTFWithdrawLiquidityResponse
-	(*CTFRedeemPositionRequest)(nil),                                         // 140: marketcenter.v1.CTFRedeemPositionRequest
-	(*CTFRedeemPositionResponse)(nil),                                        // 141: marketcenter.v1.CTFRedeemPositionResponse
-	(*CTFGetSwapPriceRequest)(nil),                                           // 142: marketcenter.v1.CTFGetSwapPriceRequest
-	(*CTFGetSwapPriceResponse)(nil),                                          // 143: marketcenter.v1.CTFGetSwapPriceResponse
-	(*ProcessCTFConditionEventRequest)(nil),                                  // 144: marketcenter.v1.ProcessCTFConditionEventRequest
-	(*ProcessCTFConditionEventResponse)(nil),                                 // 145: marketcenter.v1.ProcessCTFConditionEventResponse
-	(*ProcessCTFPositionEventRequest)(nil),                                   // 146: marketcenter.v1.ProcessCTFPositionEventRequest
-	(*ProcessCTFPositionEventResponse)(nil),                                  // 147: marketcenter.v1.ProcessCTFPositionEventResponse
-	(*ProcessCTFTransferEventRequest)(nil),                                   // 148: marketcenter.v1.ProcessCTFTransferEventRequest
-	(*ProcessCTFTransferEventResponse)(nil),                                  // 149: marketcenter.v1.ProcessCTFTransferEventResponse
-	(*ProcessCTFMarketResolvedEventRequest)(nil),                             // 150: marketcenter.v1.ProcessCTFMarketResolvedEventRequest
-	(*ProcessCTFMarketResolvedEventResponse)(nil),                            // 151: marketcenter.v1.ProcessCTFMarketResolvedEventResponse
-	(*ProcessCTFLiquidityEventRequest)(nil),                                  // 152: marketcenter.v1.ProcessCTFLiquidityEventRequest
-	(*ProcessCTFLiquidityEventResponse)(nil),                                 // 153: marketcenter.v1.ProcessCTFLiquidityEventResponse
-	(*GetLeaderboardResponse_Entry)(nil),                                     // 154: marketcenter.v1.GetLeaderboardResponse.Entry
-	(*GetQuestionsResponse_Question)(nil),                                    // 155: marketcenter.v1.GetQuestionsResponse.Question
-	(*GetQuestionsResponse_Question_Market)(nil),                             // 156: marketcenter.v1.GetQuestionsResponse.Question.Market
-	(*GetQuestionsResponse_Question_Market_Option)(nil),                      // 157: marketcenter.v1.GetQuestionsResponse.Question.Market.Option
-	(*GetQuestionDetailResponse_Market)(nil),                                 // 158: marketcenter.v1.GetQuestionDetailResponse.Market
-	(*GetQuestionDetailResponse_Market_Option)(nil),                          // 159: marketcenter.v1.GetQuestionDetailResponse.Market.Option
-	(*BatchUpdateOptionPriceRequest_OptionPrice)(nil),                        // 160: marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPrice
-	(*GetMarketCategoriesResponse_Category)(nil),                             // 161: marketcenter.v1.GetMarketCategoriesResponse.Category
-	(*BatchGetMarketUsersPositionsRequest_MarketAndUser)(nil),                // 162: marketcenter.v1.BatchGetMarketUsersPositionsRequest.MarketAndUser
-	(*BatchGetMarketUsersPositionsResponse_UserMarketPosition)(nil),          // 163: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition
-	(*BatchGetMarketUsersPositionsResponse_UserMarketPosition_Position)(nil), // 164: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.Position
-	(*GetMarketsAndOptionsInfoResponse_Market)(nil),                          // 165: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market
-	(*GetMarketsAndOptionsInfoResponse_Market_Option)(nil),                   // 166: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.Option
-	(*CreateMarketsAndOptionsRequest_Option)(nil),                            // 167: marketcenter.v1.CreateMarketsAndOptionsRequest.Option
-	(*CreateMarketsAndOptionsRequest_Market)(nil),                            // 168: marketcenter.v1.CreateMarketsAndOptionsRequest.Market
-	(*UpdateOptionsPriceRequest_OptionPrice)(nil),                            // 169: marketcenter.v1.UpdateOptionsPriceRequest.OptionPrice
-	(*UpdateSettleMarketsRequest_SettleMarket)(nil),                          // 170: marketcenter.v1.UpdateSettleMarketsRequest.SettleMarket
-	(*UpdateUsersClaimRequest_UserClaim)(nil),                                // 171: marketcenter.v1.UpdateUsersClaimRequest.UserClaim
-	(*GetMarketsAndOptionsForBlockListenerResponse_Market)(nil),              // 172: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market
-	(*GetMarketsAndOptionsForBlockListenerResponse_Market_Option)(nil),       // 173: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.Option
-	(*GetOptionTokensPriceRequest_Option)(nil),                               // 174: marketcenter.v1.GetOptionTokensPriceRequest.Option
-	(*GetOptionTokensPriceResponse_OptionPrice)(nil),                         // 175: marketcenter.v1.GetOptionTokensPriceResponse.OptionPrice
-	(*GetHotMarketsResponse_Market)(nil),                                     // 176: marketcenter.v1.GetHotMarketsResponse.Market
-	(*GetFollowedMarketsResponse_Market)(nil),                                // 177: marketcenter.v1.GetFollowedMarketsResponse.Market
-	(*GetHoldingPositionsMarketsResponse_Market)(nil),                        // 178: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market
-	(*GetHoldingPositionsMarketsResponse_Market_Position)(nil),               // 179: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.Position
-	(*GetMarketDetailResponse_Option)(nil),                                   // 180: marketcenter.v1.GetMarketDetailResponse.Option
-	(*GetMarketTradesResponse_Order)(nil),                                    // 181: marketcenter.v1.GetMarketTradesResponse.Order
-	(*GetMarketTradesResponse_Order_Option)(nil),                             // 182: marketcenter.v1.GetMarketTradesResponse.Order.Option
-	(*GetUserTradesResponse_Order)(nil),                                      // 183: marketcenter.v1.GetUserTradesResponse.Order
-	(*GetUserTradesResponse_Order_Option)(nil),                               // 184: marketcenter.v1.GetUserTradesResponse.Order.Option
-	(*GetMarketUsersPositionsResponse_UserPosition)(nil),                     // 185: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition
-	(*GetMarketUsersPositionsResponse_UserPosition_Position)(nil),            // 186: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.Position
-	(*GetUserPositionsResponse_Position)(nil),                                // 187: marketcenter.v1.GetUserPositionsResponse.Position
-	(*SearchMarketResponse_Market)(nil),                                      // 188: marketcenter.v1.SearchMarketResponse.Market
-	(*GetUserAssetHistoryResponse_OneSnapshot)(nil),                          // 189: marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshot
-	(*GetMarketOptionPriceHistoryResponse_OneSnapshot)(nil),                  // 190: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot
-	(*GetMarketOptionPriceHistoryResponse_OneSnapshot_TokenPrice)(nil),       // 191: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.TokenPrice
-	(*GetUserTransactionsResponse_Transaction)(nil),                          // 192: marketcenter.v1.GetUserTransactionsResponse.Transaction
-	(*GetBannersResponse_Banner)(nil),                                        // 193: marketcenter.v1.GetBannersResponse.Banner
-	(*GetSectionsResponse_Section)(nil),                                      // 194: marketcenter.v1.GetSectionsResponse.Section
-	(*GetSectionsResponse_Section_Prediction)(nil),                           // 195: marketcenter.v1.GetSectionsResponse.Section.Prediction
-	(*PredictionEvent_Market)(nil),                                           // 196: marketcenter.v1.PredictionEvent.Market
-	(*PredictionEvent_Market_Option)(nil),                                    // 197: marketcenter.v1.PredictionEvent.Market.Option
+	(BaseTokenType)(0),                                                       // 4: marketcenter.v1.BaseTokenType
+	(EventStatus)(0),                                                         // 5: marketcenter.v1.EventStatus
+	(TxType)(0),                                                              // 6: marketcenter.v1.TxType
+	(GetLeaderboardRequest_TimeInterval)(0),                                  // 7: marketcenter.v1.GetLeaderboardRequest.TimeInterval
+	(GetLeaderboardRequest_SortType)(0),                                      // 8: marketcenter.v1.GetLeaderboardRequest.SortType
+	(GetQuestionsRequest_SortType)(0),                                        // 9: marketcenter.v1.GetQuestionsRequest.SortType
+	(GetQuestionDetailResponse_IsClaim)(0),                                   // 10: marketcenter.v1.GetQuestionDetailResponse.IsClaim
+	(GetMarketsAndOptionsInfoRequest_SortType)(0),                            // 11: marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortType
+	(ProcessMarketDepositOrWithdrawEventRequest_Side)(0),                     // 12: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.Side
+	(UpdateUserBaseTokenBalanceRequest_Side)(0),                              // 13: marketcenter.v1.UpdateUserBaseTokenBalanceRequest.Side
+	(PlaceOrderRequest_Side)(0),                                              // 14: marketcenter.v1.PlaceOrderRequest.Side
+	(UpdateUserMarketFollowStatusRequest_Status)(0),                          // 15: marketcenter.v1.UpdateUserMarketFollowStatusRequest.Status
+	(GetMarketDetailResponse_IsClaim)(0),                                     // 16: marketcenter.v1.GetMarketDetailResponse.IsClaim
+	(GetUserAssetHistoryRequest_TimeInterval)(0),                             // 17: marketcenter.v1.GetUserAssetHistoryRequest.TimeInterval
+	(GetMarketOptionPriceHistoryRequest_TimeInterval)(0),                     // 18: marketcenter.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
+	(UpdateMarketStatusRequest_Status)(0),                                    // 19: marketcenter.v1.UpdateMarketStatusRequest.Status
+	(ListEventsRequest_SortType)(0),                                          // 20: marketcenter.v1.ListEventsRequest.SortType
+	(ProcessCTFConditionEventRequest_EventType)(0),                           // 21: marketcenter.v1.ProcessCTFConditionEventRequest.EventType
+	(ProcessCTFPositionEventRequest_EventType)(0),                            // 22: marketcenter.v1.ProcessCTFPositionEventRequest.EventType
+	(ProcessCTFTransferEventRequest_EventType)(0),                            // 23: marketcenter.v1.ProcessCTFTransferEventRequest.EventType
+	(ProcessCTFLiquidityEventRequest_EventType)(0),                           // 24: marketcenter.v1.ProcessCTFLiquidityEventRequest.EventType
+	(*GetLeaderboardRequest)(nil),                                            // 25: marketcenter.v1.GetLeaderboardRequest
+	(*GetLeaderboardResponse)(nil),                                           // 26: marketcenter.v1.GetLeaderboardResponse
+	(*GetQuestionsRequest)(nil),                                              // 27: marketcenter.v1.GetQuestionsRequest
+	(*GetQuestionsResponse)(nil),                                             // 28: marketcenter.v1.GetQuestionsResponse
+	(*GetQuestionDetailRequest)(nil),                                         // 29: marketcenter.v1.GetQuestionDetailRequest
+	(*GetQuestionDetailResponse)(nil),                                        // 30: marketcenter.v1.GetQuestionDetailResponse
+	(*UpdateMarketInfoRequest)(nil),                                          // 31: marketcenter.v1.UpdateMarketInfoRequest
+	(*UpdateMarketInfoResponse)(nil),                                         // 32: marketcenter.v1.UpdateMarketInfoResponse
+	(*ProcessMarketSettingEventRequest)(nil),                                 // 33: marketcenter.v1.ProcessMarketSettingEventRequest
+	(*ProcessMarketSettingEventResponse)(nil),                                // 34: marketcenter.v1.ProcessMarketSettingEventResponse
+	(*ProcessMarketAssertDisputedEventRequest)(nil),                          // 35: marketcenter.v1.ProcessMarketAssertDisputedEventRequest
+	(*ProcessMarketAssertDisputedEventResponse)(nil),                         // 36: marketcenter.v1.ProcessMarketAssertDisputedEventResponse
+	(*ProcessMarketAssertionResolvedEventRequest)(nil),                       // 37: marketcenter.v1.ProcessMarketAssertionResolvedEventRequest
+	(*ProcessMarketAssertionResolvedEventResponse)(nil),                      // 38: marketcenter.v1.ProcessMarketAssertionResolvedEventResponse
+	(*GetPayMasterDataRequest)(nil),                                          // 39: marketcenter.v1.GetPayMasterDataRequest
+	(*GetPayMasterDataResponse)(nil),                                         // 40: marketcenter.v1.GetPayMasterDataResponse
+	(*BatchUpdateOptionPriceRequest)(nil),                                    // 41: marketcenter.v1.BatchUpdateOptionPriceRequest
+	(*BatchUpdateOptionPriceResponse)(nil),                                   // 42: marketcenter.v1.BatchUpdateOptionPriceResponse
+	(*GetMarketTagsRequest)(nil),                                             // 43: marketcenter.v1.GetMarketTagsRequest
+	(*GetMarketTagsResponse)(nil),                                            // 44: marketcenter.v1.GetMarketTagsResponse
+	(*GetMarketCategoriesRequest)(nil),                                       // 45: marketcenter.v1.GetMarketCategoriesRequest
+	(*GetMarketCategoriesResponse)(nil),                                      // 46: marketcenter.v1.GetMarketCategoriesResponse
+	(*BatchGetMarketUsersPositionsRequest)(nil),                              // 47: marketcenter.v1.BatchGetMarketUsersPositionsRequest
+	(*BatchGetMarketUsersPositionsResponse)(nil),                             // 48: marketcenter.v1.BatchGetMarketUsersPositionsResponse
+	(*GetMarketsAndOptionsInfoRequest)(nil),                                  // 49: marketcenter.v1.GetMarketsAndOptionsInfoRequest
+	(*GetMarketsAndOptionsInfoResponse)(nil),                                 // 50: marketcenter.v1.GetMarketsAndOptionsInfoResponse
+	(*UpdateOptionPrice)(nil),                                                // 51: marketcenter.v1.UpdateOptionPrice
+	(*ProcessMarketDepositOrWithdrawEventRequest)(nil),                       // 52: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest
+	(*ProcessMarketDepositOrWithdrawEventResponse)(nil),                      // 53: marketcenter.v1.ProcessMarketDepositOrWithdrawEventResponse
+	(*ProcessMarketSwapEventRequest)(nil),                                    // 54: marketcenter.v1.ProcessMarketSwapEventRequest
+	(*ProcessMarketSwapEventResponse)(nil),                                   // 55: marketcenter.v1.ProcessMarketSwapEventResponse
+	(*CreateMarketsAndOptionsRequest)(nil),                                   // 56: marketcenter.v1.CreateMarketsAndOptionsRequest
+	(*CreateMarketsAndOptionsResponse)(nil),                                  // 57: marketcenter.v1.CreateMarketsAndOptionsResponse
+	(*TokenBalance)(nil),                                                     // 58: marketcenter.v1.TokenBalance
+	(*UpdateUserBaseTokenBalanceRequest)(nil),                                // 59: marketcenter.v1.UpdateUserBaseTokenBalanceRequest
+	(*UpdateUserBaseTokenBalanceResponse)(nil),                               // 60: marketcenter.v1.UpdateUserBaseTokenBalanceResponse
+	(*UpdateOptionsPriceRequest)(nil),                                        // 61: marketcenter.v1.UpdateOptionsPriceRequest
+	(*UpdateOptionsPriceResponse)(nil),                                       // 62: marketcenter.v1.UpdateOptionsPriceResponse
+	(*UpdateSettleMarketsRequest)(nil),                                       // 63: marketcenter.v1.UpdateSettleMarketsRequest
+	(*UpdateSettleMarketsResponse)(nil),                                      // 64: marketcenter.v1.UpdateSettleMarketsResponse
+	(*UpdateUsersClaimRequest)(nil),                                          // 65: marketcenter.v1.UpdateUsersClaimRequest
+	(*UpdateUsersClaimResponse)(nil),                                         // 66: marketcenter.v1.UpdateUsersClaimResponse
+	(*GetMarketsAndOptionsForBlockListenerRequest)(nil),                      // 67: marketcenter.v1.GetMarketsAndOptionsForBlockListenerRequest
+	(*GetMarketsAndOptionsForBlockListenerResponse)(nil),                     // 68: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse
+	(*UserOperation)(nil),                                                    // 69: marketcenter.v1.UserOperation
+	(*PlaceOrderRequest)(nil),                                                // 70: marketcenter.v1.PlaceOrderRequest
+	(*PlaceOrderResponse)(nil),                                               // 71: marketcenter.v1.PlaceOrderResponse
+	(*ClaimMarketResultRequest)(nil),                                         // 72: marketcenter.v1.ClaimMarketResultRequest
+	(*ClaimMarketResultResponse)(nil),                                        // 73: marketcenter.v1.ClaimMarketResultResponse
+	(*TransferBaseTokenRequest)(nil),                                         // 74: marketcenter.v1.TransferBaseTokenRequest
+	(*TransferBaseTokenResponse)(nil),                                        // 75: marketcenter.v1.TransferBaseTokenResponse
+	(*GetOptionTokensPriceRequest)(nil),                                      // 76: marketcenter.v1.GetOptionTokensPriceRequest
+	(*GetOptionTokensPriceResponse)(nil),                                     // 77: marketcenter.v1.GetOptionTokensPriceResponse
+	(*UpdateOrderPriceByTxHashRequest)(nil),                                  // 78: marketcenter.v1.UpdateOrderPriceByTxHashRequest
+	(*UpdateOrderPriceByTxHashResponse)(nil),                                 // 79: marketcenter.v1.UpdateOrderPriceByTxHashResponse
+	(*UpdateUserMarketFollowStatusRequest)(nil),                              // 80: marketcenter.v1.UpdateUserMarketFollowStatusRequest
+	(*UpdateUserMarketFollowStatusResponse)(nil),                             // 81: marketcenter.v1.UpdateUserMarketFollowStatusResponse
+	(*GetHotMarketsRequest)(nil),                                             // 82: marketcenter.v1.GetHotMarketsRequest
+	(*GetHotMarketsResponse)(nil),                                            // 83: marketcenter.v1.GetHotMarketsResponse
+	(*GetFollowedMarketsRequest)(nil),                                        // 84: marketcenter.v1.GetFollowedMarketsRequest
+	(*GetFollowedMarketsResponse)(nil),                                       // 85: marketcenter.v1.GetFollowedMarketsResponse
+	(*GetHoldingPositionsMarketsRequest)(nil),                                // 86: marketcenter.v1.GetHoldingPositionsMarketsRequest
+	(*GetHoldingPositionsMarketsResponse)(nil),                               // 87: marketcenter.v1.GetHoldingPositionsMarketsResponse
+	(*GetMarketDetailRequest)(nil),                                           // 88: marketcenter.v1.GetMarketDetailRequest
+	(*GetMarketDetailResponse)(nil),                                          // 89: marketcenter.v1.GetMarketDetailResponse
+	(*GetMarketTradesRequest)(nil),                                           // 90: marketcenter.v1.GetMarketTradesRequest
+	(*GetMarketTradesResponse)(nil),                                          // 91: marketcenter.v1.GetMarketTradesResponse
+	(*GetUserTradesRequest)(nil),                                             // 92: marketcenter.v1.GetUserTradesRequest
+	(*GetUserTradesResponse)(nil),                                            // 93: marketcenter.v1.GetUserTradesResponse
+	(*GetMarketUsersPositionsRequest)(nil),                                   // 94: marketcenter.v1.GetMarketUsersPositionsRequest
+	(*GetMarketUsersPositionsResponse)(nil),                                  // 95: marketcenter.v1.GetMarketUsersPositionsResponse
+	(*GetUserPositionsRequest)(nil),                                          // 96: marketcenter.v1.GetUserPositionsRequest
+	(*GetUserPositionsResponse)(nil),                                         // 97: marketcenter.v1.GetUserPositionsResponse
+	(*GetUserLatestAssetValueRequest)(nil),                                   // 98: marketcenter.v1.GetUserLatestAssetValueRequest
+	(*GetUserLatestAssetValueResponse)(nil),                                  // 99: marketcenter.v1.GetUserLatestAssetValueResponse
+	(*SearchMarketRequest)(nil),                                              // 100: marketcenter.v1.SearchMarketRequest
+	(*SearchMarketResponse)(nil),                                             // 101: marketcenter.v1.SearchMarketResponse
+	(*GetUserAssetHistoryRequest)(nil),                                       // 102: marketcenter.v1.GetUserAssetHistoryRequest
+	(*GetUserAssetHistoryResponse)(nil),                                      // 103: marketcenter.v1.GetUserAssetHistoryResponse
+	(*GetMarketOptionPriceHistoryRequest)(nil),                               // 104: marketcenter.v1.GetMarketOptionPriceHistoryRequest
+	(*GetMarketOptionPriceHistoryResponse)(nil),                              // 105: marketcenter.v1.GetMarketOptionPriceHistoryResponse
+	(*ProcessMarketClaimResultEventRequest)(nil),                             // 106: marketcenter.v1.ProcessMarketClaimResultEventRequest
+	(*ProcessMarketClaimResultEventResponse)(nil),                            // 107: marketcenter.v1.ProcessMarketClaimResultEventResponse
+	(*UpdateMarketStatusRequest)(nil),                                        // 108: marketcenter.v1.UpdateMarketStatusRequest
+	(*UpdateMarketStatusResponse)(nil),                                       // 109: marketcenter.v1.UpdateMarketStatusResponse
+	(*S3TagInfo)(nil),                                                        // 110: marketcenter.v1.S3TagInfo
+	(*S3CategoryInfo)(nil),                                                   // 111: marketcenter.v1.S3CategoryInfo
+	(*S3CategoryList)(nil),                                                   // 112: marketcenter.v1.S3CategoryList
+	(*S3OptionInfo)(nil),                                                     // 113: marketcenter.v1.S3OptionInfo
+	(*S3PredictionInfo)(nil),                                                 // 114: marketcenter.v1.S3PredictionInfo
+	(*GetUserTransactionsRequest)(nil),                                       // 115: marketcenter.v1.GetUserTransactionsRequest
+	(*GetUserTransactionsResponse)(nil),                                      // 116: marketcenter.v1.GetUserTransactionsResponse
+	(*TxDataBuy)(nil),                                                        // 117: marketcenter.v1.TxDataBuy
+	(*TxDataSell)(nil),                                                       // 118: marketcenter.v1.TxDataSell
+	(*TxDataClaim)(nil),                                                      // 119: marketcenter.v1.TxDataClaim
+	(*TxDataMintPoints)(nil),                                                 // 120: marketcenter.v1.TxDataMintPoints
+	(*TxDataMintInvitePoints)(nil),                                           // 121: marketcenter.v1.TxDataMintInvitePoints
+	(*TxDataDeposit)(nil),                                                    // 122: marketcenter.v1.TxDataDeposit
+	(*TxDataWithdraw)(nil),                                                   // 123: marketcenter.v1.TxDataWithdraw
+	(*GetBannersRequest)(nil),                                                // 124: marketcenter.v1.GetBannersRequest
+	(*GetBannersResponse)(nil),                                               // 125: marketcenter.v1.GetBannersResponse
+	(*GetSectionsRequest)(nil),                                               // 126: marketcenter.v1.GetSectionsRequest
+	(*GetSectionsResponse)(nil),                                              // 127: marketcenter.v1.GetSectionsResponse
+	(*PredictionEvent)(nil),                                                  // 128: marketcenter.v1.PredictionEvent
+	(*GetEventRequest)(nil),                                                  // 129: marketcenter.v1.GetEventRequest
+	(*GetEventResponse)(nil),                                                 // 130: marketcenter.v1.GetEventResponse
+	(*ListEventsRequest)(nil),                                                // 131: marketcenter.v1.ListEventsRequest
+	(*ListEventsResponse)(nil),                                               // 132: marketcenter.v1.ListEventsResponse
+	(*CreateEventRequest)(nil),                                               // 133: marketcenter.v1.CreateEventRequest
+	(*CreateEventResponse)(nil),                                              // 134: marketcenter.v1.CreateEventResponse
+	(*CTFSwapRequest)(nil),                                                   // 135: marketcenter.v1.CTFSwapRequest
+	(*CTFSwapResponse)(nil),                                                  // 136: marketcenter.v1.CTFSwapResponse
+	(*CTFDepositLiquidityRequest)(nil),                                       // 137: marketcenter.v1.CTFDepositLiquidityRequest
+	(*CTFDepositLiquidityResponse)(nil),                                      // 138: marketcenter.v1.CTFDepositLiquidityResponse
+	(*CTFWithdrawLiquidityRequest)(nil),                                      // 139: marketcenter.v1.CTFWithdrawLiquidityRequest
+	(*CTFWithdrawLiquidityResponse)(nil),                                     // 140: marketcenter.v1.CTFWithdrawLiquidityResponse
+	(*CTFRedeemPositionRequest)(nil),                                         // 141: marketcenter.v1.CTFRedeemPositionRequest
+	(*CTFRedeemPositionResponse)(nil),                                        // 142: marketcenter.v1.CTFRedeemPositionResponse
+	(*CTFGetSwapPriceRequest)(nil),                                           // 143: marketcenter.v1.CTFGetSwapPriceRequest
+	(*CTFGetSwapPriceResponse)(nil),                                          // 144: marketcenter.v1.CTFGetSwapPriceResponse
+	(*ProcessCTFConditionEventRequest)(nil),                                  // 145: marketcenter.v1.ProcessCTFConditionEventRequest
+	(*ProcessCTFConditionEventResponse)(nil),                                 // 146: marketcenter.v1.ProcessCTFConditionEventResponse
+	(*ProcessCTFPositionEventRequest)(nil),                                   // 147: marketcenter.v1.ProcessCTFPositionEventRequest
+	(*ProcessCTFPositionEventResponse)(nil),                                  // 148: marketcenter.v1.ProcessCTFPositionEventResponse
+	(*ProcessCTFTransferEventRequest)(nil),                                   // 149: marketcenter.v1.ProcessCTFTransferEventRequest
+	(*ProcessCTFTransferEventResponse)(nil),                                  // 150: marketcenter.v1.ProcessCTFTransferEventResponse
+	(*ProcessCTFMarketResolvedEventRequest)(nil),                             // 151: marketcenter.v1.ProcessCTFMarketResolvedEventRequest
+	(*ProcessCTFMarketResolvedEventResponse)(nil),                            // 152: marketcenter.v1.ProcessCTFMarketResolvedEventResponse
+	(*ProcessCTFLiquidityEventRequest)(nil),                                  // 153: marketcenter.v1.ProcessCTFLiquidityEventRequest
+	(*ProcessCTFLiquidityEventResponse)(nil),                                 // 154: marketcenter.v1.ProcessCTFLiquidityEventResponse
+	(*GetLeaderboardResponse_Entry)(nil),                                     // 155: marketcenter.v1.GetLeaderboardResponse.Entry
+	(*GetQuestionsResponse_Question)(nil),                                    // 156: marketcenter.v1.GetQuestionsResponse.Question
+	(*GetQuestionsResponse_Question_Market)(nil),                             // 157: marketcenter.v1.GetQuestionsResponse.Question.Market
+	(*GetQuestionsResponse_Question_Market_Option)(nil),                      // 158: marketcenter.v1.GetQuestionsResponse.Question.Market.Option
+	(*GetQuestionDetailResponse_Market)(nil),                                 // 159: marketcenter.v1.GetQuestionDetailResponse.Market
+	(*GetQuestionDetailResponse_Market_Option)(nil),                          // 160: marketcenter.v1.GetQuestionDetailResponse.Market.Option
+	(*BatchUpdateOptionPriceRequest_OptionPrice)(nil),                        // 161: marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPrice
+	(*GetMarketCategoriesResponse_Category)(nil),                             // 162: marketcenter.v1.GetMarketCategoriesResponse.Category
+	(*BatchGetMarketUsersPositionsRequest_MarketAndUser)(nil),                // 163: marketcenter.v1.BatchGetMarketUsersPositionsRequest.MarketAndUser
+	(*BatchGetMarketUsersPositionsResponse_UserMarketPosition)(nil),          // 164: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition
+	(*BatchGetMarketUsersPositionsResponse_UserMarketPosition_Position)(nil), // 165: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.Position
+	(*GetMarketsAndOptionsInfoResponse_Market)(nil),                          // 166: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market
+	(*GetMarketsAndOptionsInfoResponse_Market_Option)(nil),                   // 167: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.Option
+	(*CreateMarketsAndOptionsRequest_Option)(nil),                            // 168: marketcenter.v1.CreateMarketsAndOptionsRequest.Option
+	(*CreateMarketsAndOptionsRequest_Market)(nil),                            // 169: marketcenter.v1.CreateMarketsAndOptionsRequest.Market
+	(*UpdateOptionsPriceRequest_OptionPrice)(nil),                            // 170: marketcenter.v1.UpdateOptionsPriceRequest.OptionPrice
+	(*UpdateSettleMarketsRequest_SettleMarket)(nil),                          // 171: marketcenter.v1.UpdateSettleMarketsRequest.SettleMarket
+	(*UpdateUsersClaimRequest_UserClaim)(nil),                                // 172: marketcenter.v1.UpdateUsersClaimRequest.UserClaim
+	(*GetMarketsAndOptionsForBlockListenerResponse_Market)(nil),              // 173: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market
+	(*GetMarketsAndOptionsForBlockListenerResponse_Market_Option)(nil),       // 174: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.Option
+	(*GetOptionTokensPriceRequest_Option)(nil),                               // 175: marketcenter.v1.GetOptionTokensPriceRequest.Option
+	(*GetOptionTokensPriceResponse_OptionPrice)(nil),                         // 176: marketcenter.v1.GetOptionTokensPriceResponse.OptionPrice
+	(*GetHotMarketsResponse_Market)(nil),                                     // 177: marketcenter.v1.GetHotMarketsResponse.Market
+	(*GetFollowedMarketsResponse_Market)(nil),                                // 178: marketcenter.v1.GetFollowedMarketsResponse.Market
+	(*GetHoldingPositionsMarketsResponse_Market)(nil),                        // 179: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market
+	(*GetHoldingPositionsMarketsResponse_Market_Position)(nil),               // 180: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.Position
+	(*GetMarketDetailResponse_Option)(nil),                                   // 181: marketcenter.v1.GetMarketDetailResponse.Option
+	(*GetMarketTradesResponse_Order)(nil),                                    // 182: marketcenter.v1.GetMarketTradesResponse.Order
+	(*GetMarketTradesResponse_Order_Option)(nil),                             // 183: marketcenter.v1.GetMarketTradesResponse.Order.Option
+	(*GetUserTradesResponse_Order)(nil),                                      // 184: marketcenter.v1.GetUserTradesResponse.Order
+	(*GetUserTradesResponse_Order_Option)(nil),                               // 185: marketcenter.v1.GetUserTradesResponse.Order.Option
+	(*GetMarketUsersPositionsResponse_UserPosition)(nil),                     // 186: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition
+	(*GetMarketUsersPositionsResponse_UserPosition_Position)(nil),            // 187: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.Position
+	(*GetUserPositionsResponse_Position)(nil),                                // 188: marketcenter.v1.GetUserPositionsResponse.Position
+	(*SearchMarketResponse_Market)(nil),                                      // 189: marketcenter.v1.SearchMarketResponse.Market
+	(*GetUserAssetHistoryResponse_OneSnapshot)(nil),                          // 190: marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshot
+	(*GetMarketOptionPriceHistoryResponse_OneSnapshot)(nil),                  // 191: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot
+	(*GetMarketOptionPriceHistoryResponse_OneSnapshot_TokenPrice)(nil),       // 192: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.TokenPrice
+	(*GetUserTransactionsResponse_Transaction)(nil),                          // 193: marketcenter.v1.GetUserTransactionsResponse.Transaction
+	(*GetBannersResponse_Banner)(nil),                                        // 194: marketcenter.v1.GetBannersResponse.Banner
+	(*GetSectionsResponse_Section)(nil),                                      // 195: marketcenter.v1.GetSectionsResponse.Section
+	(*GetSectionsResponse_Section_Prediction)(nil),                           // 196: marketcenter.v1.GetSectionsResponse.Section.Prediction
+	(*PredictionEvent_Market)(nil),                                           // 197: marketcenter.v1.PredictionEvent.Market
+	(*PredictionEvent_Market_Option)(nil),                                    // 198: marketcenter.v1.PredictionEvent.Market.Option
 }
 var file_market_service_marketcenter_v1_marketcenter_proto_depIdxs = []int32{
-	6,   // 0: marketcenter.v1.GetLeaderboardRequest.time_interval:type_name -> marketcenter.v1.GetLeaderboardRequest.TimeInterval
-	7,   // 1: marketcenter.v1.GetLeaderboardRequest.sort_type:type_name -> marketcenter.v1.GetLeaderboardRequest.SortType
-	154, // 2: marketcenter.v1.GetLeaderboardResponse.entries:type_name -> marketcenter.v1.GetLeaderboardResponse.Entry
-	154, // 3: marketcenter.v1.GetLeaderboardResponse.user_own_entry:type_name -> marketcenter.v1.GetLeaderboardResponse.Entry
-	8,   // 4: marketcenter.v1.GetQuestionsRequest.sort_type:type_name -> marketcenter.v1.GetQuestionsRequest.SortType
-	1,   // 5: marketcenter.v1.GetQuestionsRequest.is_show:type_name -> marketcenter.v1.MarketIsShow
-	155, // 6: marketcenter.v1.GetQuestionsResponse.questions:type_name -> marketcenter.v1.GetQuestionsResponse.Question
-	9,   // 7: marketcenter.v1.GetQuestionDetailResponse.is_claim:type_name -> marketcenter.v1.GetQuestionDetailResponse.IsClaim
-	68,  // 8: marketcenter.v1.GetPayMasterDataRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	160, // 9: marketcenter.v1.BatchUpdateOptionPriceRequest.option_prices:type_name -> marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPrice
-	161, // 10: marketcenter.v1.GetMarketCategoriesResponse.categories:type_name -> marketcenter.v1.GetMarketCategoriesResponse.Category
-	162, // 11: marketcenter.v1.BatchGetMarketUsersPositionsRequest.market_and_users:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsRequest.MarketAndUser
-	163, // 12: marketcenter.v1.BatchGetMarketUsersPositionsResponse.user_market_positions:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition
-	10,  // 13: marketcenter.v1.GetMarketsAndOptionsInfoRequest.sort_type:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortType
-	1,   // 14: marketcenter.v1.GetMarketsAndOptionsInfoRequest.is_show:type_name -> marketcenter.v1.MarketIsShow
-	165, // 15: marketcenter.v1.GetMarketsAndOptionsInfoResponse.markets:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market
-	11,  // 16: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.side:type_name -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.Side
-	50,  // 17: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
-	50,  // 18: marketcenter.v1.ProcessMarketSwapEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
-	168, // 19: marketcenter.v1.CreateMarketsAndOptionsRequest.markets:type_name -> marketcenter.v1.CreateMarketsAndOptionsRequest.Market
-	57,  // 20: marketcenter.v1.UpdateUserBaseTokenBalanceRequest.token_balance:type_name -> marketcenter.v1.TokenBalance
-	169, // 21: marketcenter.v1.UpdateOptionsPriceRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionsPriceRequest.OptionPrice
-	170, // 22: marketcenter.v1.UpdateSettleMarketsRequest.settle_markets:type_name -> marketcenter.v1.UpdateSettleMarketsRequest.SettleMarket
-	171, // 23: marketcenter.v1.UpdateUsersClaimRequest.user_claims:type_name -> marketcenter.v1.UpdateUsersClaimRequest.UserClaim
-	172, // 24: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.markets:type_name -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market
-	13,  // 25: marketcenter.v1.PlaceOrderRequest.side:type_name -> marketcenter.v1.PlaceOrderRequest.Side
-	68,  // 26: marketcenter.v1.PlaceOrderRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	68,  // 27: marketcenter.v1.ClaimMarketResultRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	68,  // 28: marketcenter.v1.TransferBaseTokenRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	174, // 29: marketcenter.v1.GetOptionTokensPriceRequest.options:type_name -> marketcenter.v1.GetOptionTokensPriceRequest.Option
-	175, // 30: marketcenter.v1.GetOptionTokensPriceResponse.option_prices:type_name -> marketcenter.v1.GetOptionTokensPriceResponse.OptionPrice
-	14,  // 31: marketcenter.v1.UpdateUserMarketFollowStatusRequest.status:type_name -> marketcenter.v1.UpdateUserMarketFollowStatusRequest.Status
-	176, // 32: marketcenter.v1.GetHotMarketsResponse.markets:type_name -> marketcenter.v1.GetHotMarketsResponse.Market
-	177, // 33: marketcenter.v1.GetFollowedMarketsResponse.markets:type_name -> marketcenter.v1.GetFollowedMarketsResponse.Market
-	178, // 34: marketcenter.v1.GetHoldingPositionsMarketsResponse.markets:type_name -> marketcenter.v1.GetHoldingPositionsMarketsResponse.Market
-	3,   // 35: marketcenter.v1.GetMarketDetailResponse.is_followed:type_name -> marketcenter.v1.IsFollowed
-	180, // 36: marketcenter.v1.GetMarketDetailResponse.options:type_name -> marketcenter.v1.GetMarketDetailResponse.Option
-	15,  // 37: marketcenter.v1.GetMarketDetailResponse.is_claim:type_name -> marketcenter.v1.GetMarketDetailResponse.IsClaim
-	181, // 38: marketcenter.v1.GetMarketTradesResponse.orders:type_name -> marketcenter.v1.GetMarketTradesResponse.Order
-	183, // 39: marketcenter.v1.GetUserTradesResponse.orders:type_name -> marketcenter.v1.GetUserTradesResponse.Order
-	185, // 40: marketcenter.v1.GetMarketUsersPositionsResponse.user_positions:type_name -> marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition
-	187, // 41: marketcenter.v1.GetUserPositionsResponse.positions:type_name -> marketcenter.v1.GetUserPositionsResponse.Position
-	188, // 42: marketcenter.v1.SearchMarketResponse.markets:type_name -> marketcenter.v1.SearchMarketResponse.Market
-	16,  // 43: marketcenter.v1.GetUserAssetHistoryRequest.time_interval:type_name -> marketcenter.v1.GetUserAssetHistoryRequest.TimeInterval
-	189, // 44: marketcenter.v1.GetUserAssetHistoryResponse.snapshots:type_name -> marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshot
-	17,  // 45: marketcenter.v1.GetMarketOptionPriceHistoryRequest.time_interval:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
-	190, // 46: marketcenter.v1.GetMarketOptionPriceHistoryResponse.snapshots:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot
-	18,  // 47: marketcenter.v1.UpdateMarketStatusRequest.status:type_name -> marketcenter.v1.UpdateMarketStatusRequest.Status
-	110, // 48: marketcenter.v1.S3CategoryList.categories:type_name -> marketcenter.v1.S3CategoryInfo
-	112, // 49: marketcenter.v1.S3PredictionInfo.options:type_name -> marketcenter.v1.S3OptionInfo
-	109, // 50: marketcenter.v1.S3PredictionInfo.tags:type_name -> marketcenter.v1.S3TagInfo
-	192, // 51: marketcenter.v1.GetUserTransactionsResponse.transactions:type_name -> marketcenter.v1.GetUserTransactionsResponse.Transaction
-	193, // 52: marketcenter.v1.GetBannersResponse.banners:type_name -> marketcenter.v1.GetBannersResponse.Banner
-	194, // 53: marketcenter.v1.GetSectionsResponse.sections:type_name -> marketcenter.v1.GetSectionsResponse.Section
-	4,   // 54: marketcenter.v1.PredictionEvent.status:type_name -> marketcenter.v1.EventStatus
-	196, // 55: marketcenter.v1.PredictionEvent.markets:type_name -> marketcenter.v1.PredictionEvent.Market
-	127, // 56: marketcenter.v1.GetEventResponse.event:type_name -> marketcenter.v1.PredictionEvent
-	4,   // 57: marketcenter.v1.ListEventsRequest.status:type_name -> marketcenter.v1.EventStatus
-	19,  // 58: marketcenter.v1.ListEventsRequest.sort_type:type_name -> marketcenter.v1.ListEventsRequest.SortType
-	127, // 59: marketcenter.v1.ListEventsResponse.events:type_name -> marketcenter.v1.PredictionEvent
-	68,  // 60: marketcenter.v1.CTFSwapRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	68,  // 61: marketcenter.v1.CTFDepositLiquidityRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	68,  // 62: marketcenter.v1.CTFWithdrawLiquidityRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	68,  // 63: marketcenter.v1.CTFRedeemPositionRequest.user_operation:type_name -> marketcenter.v1.UserOperation
-	20,  // 64: marketcenter.v1.ProcessCTFConditionEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFConditionEventRequest.EventType
-	21,  // 65: marketcenter.v1.ProcessCTFPositionEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFPositionEventRequest.EventType
-	22,  // 66: marketcenter.v1.ProcessCTFTransferEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFTransferEventRequest.EventType
-	50,  // 67: marketcenter.v1.ProcessCTFMarketResolvedEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
-	23,  // 68: marketcenter.v1.ProcessCTFLiquidityEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFLiquidityEventRequest.EventType
-	50,  // 69: marketcenter.v1.ProcessCTFLiquidityEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
-	156, // 70: marketcenter.v1.GetQuestionsResponse.Question.markets:type_name -> marketcenter.v1.GetQuestionsResponse.Question.Market
-	157, // 71: marketcenter.v1.GetQuestionsResponse.Question.Market.options:type_name -> marketcenter.v1.GetQuestionsResponse.Question.Market.Option
-	9,   // 72: marketcenter.v1.GetQuestionDetailResponse.Market.is_claim:type_name -> marketcenter.v1.GetQuestionDetailResponse.IsClaim
-	159, // 73: marketcenter.v1.GetQuestionDetailResponse.Market.options:type_name -> marketcenter.v1.GetQuestionDetailResponse.Market.Option
-	164, // 74: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.positions:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.Position
-	3,   // 75: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.is_followed:type_name -> marketcenter.v1.IsFollowed
-	166, // 76: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.options:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.Option
-	167, // 77: marketcenter.v1.CreateMarketsAndOptionsRequest.Market.options:type_name -> marketcenter.v1.CreateMarketsAndOptionsRequest.Option
-	173, // 78: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.options:type_name -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.Option
-	179, // 79: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.positions:type_name -> marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.Position
-	182, // 80: marketcenter.v1.GetMarketTradesResponse.Order.option:type_name -> marketcenter.v1.GetMarketTradesResponse.Order.Option
-	184, // 81: marketcenter.v1.GetUserTradesResponse.Order.option:type_name -> marketcenter.v1.GetUserTradesResponse.Order.Option
-	186, // 82: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.positions:type_name -> marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.Position
-	191, // 83: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.token_prices:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.TokenPrice
-	5,   // 84: marketcenter.v1.GetUserTransactionsResponse.Transaction.type:type_name -> marketcenter.v1.TxType
-	195, // 85: marketcenter.v1.GetSectionsResponse.Section.predictions:type_name -> marketcenter.v1.GetSectionsResponse.Section.Prediction
-	197, // 86: marketcenter.v1.PredictionEvent.Market.options:type_name -> marketcenter.v1.PredictionEvent.Market.Option
-	38,  // 87: marketcenter.v1.Marketcenter.GetPayMasterData:input_type -> marketcenter.v1.GetPayMasterDataRequest
-	79,  // 88: marketcenter.v1.Marketcenter.UpdateUserMarketFollowStatus:input_type -> marketcenter.v1.UpdateUserMarketFollowStatusRequest
-	69,  // 89: marketcenter.v1.Marketcenter.PlaceOrder:input_type -> marketcenter.v1.PlaceOrderRequest
-	71,  // 90: marketcenter.v1.Marketcenter.ClaimMarketResult:input_type -> marketcenter.v1.ClaimMarketResultRequest
-	73,  // 91: marketcenter.v1.Marketcenter.TransferBaseToken:input_type -> marketcenter.v1.TransferBaseTokenRequest
-	75,  // 92: marketcenter.v1.Marketcenter.GetOptionTokensPrice:input_type -> marketcenter.v1.GetOptionTokensPriceRequest
-	93,  // 93: marketcenter.v1.Marketcenter.GetMarketUsersPositions:input_type -> marketcenter.v1.GetMarketUsersPositionsRequest
-	81,  // 94: marketcenter.v1.Marketcenter.GetHotMarkets:input_type -> marketcenter.v1.GetHotMarketsRequest
-	83,  // 95: marketcenter.v1.Marketcenter.GetFollowedMarkets:input_type -> marketcenter.v1.GetFollowedMarketsRequest
-	85,  // 96: marketcenter.v1.Marketcenter.GetHoldingPositionsMarkets:input_type -> marketcenter.v1.GetHoldingPositionsMarketsRequest
-	87,  // 97: marketcenter.v1.Marketcenter.GetMarketDetail:input_type -> marketcenter.v1.GetMarketDetailRequest
-	89,  // 98: marketcenter.v1.Marketcenter.GetMarketTrades:input_type -> marketcenter.v1.GetMarketTradesRequest
-	95,  // 99: marketcenter.v1.Marketcenter.GetUserPositions:input_type -> marketcenter.v1.GetUserPositionsRequest
-	91,  // 100: marketcenter.v1.Marketcenter.GetUserTrades:input_type -> marketcenter.v1.GetUserTradesRequest
-	97,  // 101: marketcenter.v1.Marketcenter.GetUserLatestAssetValue:input_type -> marketcenter.v1.GetUserLatestAssetValueRequest
-	99,  // 102: marketcenter.v1.Marketcenter.SearchMarket:input_type -> marketcenter.v1.SearchMarketRequest
-	101, // 103: marketcenter.v1.Marketcenter.GetUserAssetHistory:input_type -> marketcenter.v1.GetUserAssetHistoryRequest
-	103, // 104: marketcenter.v1.Marketcenter.GetMarketOptionPriceHistory:input_type -> marketcenter.v1.GetMarketOptionPriceHistoryRequest
-	42,  // 105: marketcenter.v1.Marketcenter.GetMarketTags:input_type -> marketcenter.v1.GetMarketTagsRequest
-	44,  // 106: marketcenter.v1.Marketcenter.GetMarketCategories:input_type -> marketcenter.v1.GetMarketCategoriesRequest
-	48,  // 107: marketcenter.v1.Marketcenter.GetMarketsAndOptionsInfo:input_type -> marketcenter.v1.GetMarketsAndOptionsInfoRequest
-	46,  // 108: marketcenter.v1.Marketcenter.BatchGetMarketUsersPositions:input_type -> marketcenter.v1.BatchGetMarketUsersPositionsRequest
-	66,  // 109: marketcenter.v1.Marketcenter.GetMarketsAndOptionsForBlockListener:input_type -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerRequest
-	55,  // 110: marketcenter.v1.Marketcenter.CreateMarketsAndOptions:input_type -> marketcenter.v1.CreateMarketsAndOptionsRequest
-	51,  // 111: marketcenter.v1.Marketcenter.ProcessMarketDepositOrWithdrawEvent:input_type -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest
-	53,  // 112: marketcenter.v1.Marketcenter.ProcessMarketSwapEvent:input_type -> marketcenter.v1.ProcessMarketSwapEventRequest
-	105, // 113: marketcenter.v1.Marketcenter.ProcessMarketClaimResultEvent:input_type -> marketcenter.v1.ProcessMarketClaimResultEventRequest
-	32,  // 114: marketcenter.v1.Marketcenter.ProcessMarketSettingEvent:input_type -> marketcenter.v1.ProcessMarketSettingEventRequest
-	34,  // 115: marketcenter.v1.Marketcenter.ProcessMarketAssertDisputedEvent:input_type -> marketcenter.v1.ProcessMarketAssertDisputedEventRequest
-	36,  // 116: marketcenter.v1.Marketcenter.ProcessMarketAssertionResolvedEvent:input_type -> marketcenter.v1.ProcessMarketAssertionResolvedEventRequest
-	58,  // 117: marketcenter.v1.Marketcenter.UpdateUserBaseTokenBalance:input_type -> marketcenter.v1.UpdateUserBaseTokenBalanceRequest
-	40,  // 118: marketcenter.v1.Marketcenter.BatchUpdateOptionPrice:input_type -> marketcenter.v1.BatchUpdateOptionPriceRequest
-	107, // 119: marketcenter.v1.Marketcenter.UpdateMarketStatus:input_type -> marketcenter.v1.UpdateMarketStatusRequest
-	30,  // 120: marketcenter.v1.Marketcenter.UpdateMarketInfo:input_type -> marketcenter.v1.UpdateMarketInfoRequest
-	114, // 121: marketcenter.v1.Marketcenter.GetUserTransactions:input_type -> marketcenter.v1.GetUserTransactionsRequest
-	123, // 122: marketcenter.v1.Marketcenter.GetBanners:input_type -> marketcenter.v1.GetBannersRequest
-	125, // 123: marketcenter.v1.Marketcenter.GetSections:input_type -> marketcenter.v1.GetSectionsRequest
-	24,  // 124: marketcenter.v1.Marketcenter.GetLeaderboard:input_type -> marketcenter.v1.GetLeaderboardRequest
-	28,  // 125: marketcenter.v1.Marketcenter.GetQuestionDetail:input_type -> marketcenter.v1.GetQuestionDetailRequest
-	128, // 126: marketcenter.v1.Marketcenter.GetEvent:input_type -> marketcenter.v1.GetEventRequest
-	130, // 127: marketcenter.v1.Marketcenter.ListEvents:input_type -> marketcenter.v1.ListEventsRequest
-	132, // 128: marketcenter.v1.Marketcenter.CreateEvent:input_type -> marketcenter.v1.CreateEventRequest
-	134, // 129: marketcenter.v1.Marketcenter.CTFSwap:input_type -> marketcenter.v1.CTFSwapRequest
-	136, // 130: marketcenter.v1.Marketcenter.CTFDepositLiquidity:input_type -> marketcenter.v1.CTFDepositLiquidityRequest
-	138, // 131: marketcenter.v1.Marketcenter.CTFWithdrawLiquidity:input_type -> marketcenter.v1.CTFWithdrawLiquidityRequest
-	140, // 132: marketcenter.v1.Marketcenter.CTFRedeemPosition:input_type -> marketcenter.v1.CTFRedeemPositionRequest
-	142, // 133: marketcenter.v1.Marketcenter.CTFGetSwapPrice:input_type -> marketcenter.v1.CTFGetSwapPriceRequest
-	144, // 134: marketcenter.v1.Marketcenter.ProcessCTFConditionEvent:input_type -> marketcenter.v1.ProcessCTFConditionEventRequest
-	146, // 135: marketcenter.v1.Marketcenter.ProcessCTFPositionEvent:input_type -> marketcenter.v1.ProcessCTFPositionEventRequest
-	148, // 136: marketcenter.v1.Marketcenter.ProcessCTFTransferEvent:input_type -> marketcenter.v1.ProcessCTFTransferEventRequest
-	150, // 137: marketcenter.v1.Marketcenter.ProcessCTFMarketResolvedEvent:input_type -> marketcenter.v1.ProcessCTFMarketResolvedEventRequest
-	152, // 138: marketcenter.v1.Marketcenter.ProcessCTFLiquidityEvent:input_type -> marketcenter.v1.ProcessCTFLiquidityEventRequest
-	39,  // 139: marketcenter.v1.Marketcenter.GetPayMasterData:output_type -> marketcenter.v1.GetPayMasterDataResponse
-	80,  // 140: marketcenter.v1.Marketcenter.UpdateUserMarketFollowStatus:output_type -> marketcenter.v1.UpdateUserMarketFollowStatusResponse
-	70,  // 141: marketcenter.v1.Marketcenter.PlaceOrder:output_type -> marketcenter.v1.PlaceOrderResponse
-	72,  // 142: marketcenter.v1.Marketcenter.ClaimMarketResult:output_type -> marketcenter.v1.ClaimMarketResultResponse
-	74,  // 143: marketcenter.v1.Marketcenter.TransferBaseToken:output_type -> marketcenter.v1.TransferBaseTokenResponse
-	76,  // 144: marketcenter.v1.Marketcenter.GetOptionTokensPrice:output_type -> marketcenter.v1.GetOptionTokensPriceResponse
-	94,  // 145: marketcenter.v1.Marketcenter.GetMarketUsersPositions:output_type -> marketcenter.v1.GetMarketUsersPositionsResponse
-	82,  // 146: marketcenter.v1.Marketcenter.GetHotMarkets:output_type -> marketcenter.v1.GetHotMarketsResponse
-	84,  // 147: marketcenter.v1.Marketcenter.GetFollowedMarkets:output_type -> marketcenter.v1.GetFollowedMarketsResponse
-	86,  // 148: marketcenter.v1.Marketcenter.GetHoldingPositionsMarkets:output_type -> marketcenter.v1.GetHoldingPositionsMarketsResponse
-	88,  // 149: marketcenter.v1.Marketcenter.GetMarketDetail:output_type -> marketcenter.v1.GetMarketDetailResponse
-	90,  // 150: marketcenter.v1.Marketcenter.GetMarketTrades:output_type -> marketcenter.v1.GetMarketTradesResponse
-	96,  // 151: marketcenter.v1.Marketcenter.GetUserPositions:output_type -> marketcenter.v1.GetUserPositionsResponse
-	92,  // 152: marketcenter.v1.Marketcenter.GetUserTrades:output_type -> marketcenter.v1.GetUserTradesResponse
-	98,  // 153: marketcenter.v1.Marketcenter.GetUserLatestAssetValue:output_type -> marketcenter.v1.GetUserLatestAssetValueResponse
-	100, // 154: marketcenter.v1.Marketcenter.SearchMarket:output_type -> marketcenter.v1.SearchMarketResponse
-	102, // 155: marketcenter.v1.Marketcenter.GetUserAssetHistory:output_type -> marketcenter.v1.GetUserAssetHistoryResponse
-	104, // 156: marketcenter.v1.Marketcenter.GetMarketOptionPriceHistory:output_type -> marketcenter.v1.GetMarketOptionPriceHistoryResponse
-	43,  // 157: marketcenter.v1.Marketcenter.GetMarketTags:output_type -> marketcenter.v1.GetMarketTagsResponse
-	45,  // 158: marketcenter.v1.Marketcenter.GetMarketCategories:output_type -> marketcenter.v1.GetMarketCategoriesResponse
-	49,  // 159: marketcenter.v1.Marketcenter.GetMarketsAndOptionsInfo:output_type -> marketcenter.v1.GetMarketsAndOptionsInfoResponse
-	47,  // 160: marketcenter.v1.Marketcenter.BatchGetMarketUsersPositions:output_type -> marketcenter.v1.BatchGetMarketUsersPositionsResponse
-	67,  // 161: marketcenter.v1.Marketcenter.GetMarketsAndOptionsForBlockListener:output_type -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse
-	56,  // 162: marketcenter.v1.Marketcenter.CreateMarketsAndOptions:output_type -> marketcenter.v1.CreateMarketsAndOptionsResponse
-	52,  // 163: marketcenter.v1.Marketcenter.ProcessMarketDepositOrWithdrawEvent:output_type -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventResponse
-	54,  // 164: marketcenter.v1.Marketcenter.ProcessMarketSwapEvent:output_type -> marketcenter.v1.ProcessMarketSwapEventResponse
-	106, // 165: marketcenter.v1.Marketcenter.ProcessMarketClaimResultEvent:output_type -> marketcenter.v1.ProcessMarketClaimResultEventResponse
-	33,  // 166: marketcenter.v1.Marketcenter.ProcessMarketSettingEvent:output_type -> marketcenter.v1.ProcessMarketSettingEventResponse
-	35,  // 167: marketcenter.v1.Marketcenter.ProcessMarketAssertDisputedEvent:output_type -> marketcenter.v1.ProcessMarketAssertDisputedEventResponse
-	37,  // 168: marketcenter.v1.Marketcenter.ProcessMarketAssertionResolvedEvent:output_type -> marketcenter.v1.ProcessMarketAssertionResolvedEventResponse
-	59,  // 169: marketcenter.v1.Marketcenter.UpdateUserBaseTokenBalance:output_type -> marketcenter.v1.UpdateUserBaseTokenBalanceResponse
-	41,  // 170: marketcenter.v1.Marketcenter.BatchUpdateOptionPrice:output_type -> marketcenter.v1.BatchUpdateOptionPriceResponse
-	108, // 171: marketcenter.v1.Marketcenter.UpdateMarketStatus:output_type -> marketcenter.v1.UpdateMarketStatusResponse
-	31,  // 172: marketcenter.v1.Marketcenter.UpdateMarketInfo:output_type -> marketcenter.v1.UpdateMarketInfoResponse
-	115, // 173: marketcenter.v1.Marketcenter.GetUserTransactions:output_type -> marketcenter.v1.GetUserTransactionsResponse
-	124, // 174: marketcenter.v1.Marketcenter.GetBanners:output_type -> marketcenter.v1.GetBannersResponse
-	126, // 175: marketcenter.v1.Marketcenter.GetSections:output_type -> marketcenter.v1.GetSectionsResponse
-	25,  // 176: marketcenter.v1.Marketcenter.GetLeaderboard:output_type -> marketcenter.v1.GetLeaderboardResponse
-	29,  // 177: marketcenter.v1.Marketcenter.GetQuestionDetail:output_type -> marketcenter.v1.GetQuestionDetailResponse
-	129, // 178: marketcenter.v1.Marketcenter.GetEvent:output_type -> marketcenter.v1.GetEventResponse
-	131, // 179: marketcenter.v1.Marketcenter.ListEvents:output_type -> marketcenter.v1.ListEventsResponse
-	133, // 180: marketcenter.v1.Marketcenter.CreateEvent:output_type -> marketcenter.v1.CreateEventResponse
-	135, // 181: marketcenter.v1.Marketcenter.CTFSwap:output_type -> marketcenter.v1.CTFSwapResponse
-	137, // 182: marketcenter.v1.Marketcenter.CTFDepositLiquidity:output_type -> marketcenter.v1.CTFDepositLiquidityResponse
-	139, // 183: marketcenter.v1.Marketcenter.CTFWithdrawLiquidity:output_type -> marketcenter.v1.CTFWithdrawLiquidityResponse
-	141, // 184: marketcenter.v1.Marketcenter.CTFRedeemPosition:output_type -> marketcenter.v1.CTFRedeemPositionResponse
-	143, // 185: marketcenter.v1.Marketcenter.CTFGetSwapPrice:output_type -> marketcenter.v1.CTFGetSwapPriceResponse
-	145, // 186: marketcenter.v1.Marketcenter.ProcessCTFConditionEvent:output_type -> marketcenter.v1.ProcessCTFConditionEventResponse
-	147, // 187: marketcenter.v1.Marketcenter.ProcessCTFPositionEvent:output_type -> marketcenter.v1.ProcessCTFPositionEventResponse
-	149, // 188: marketcenter.v1.Marketcenter.ProcessCTFTransferEvent:output_type -> marketcenter.v1.ProcessCTFTransferEventResponse
-	151, // 189: marketcenter.v1.Marketcenter.ProcessCTFMarketResolvedEvent:output_type -> marketcenter.v1.ProcessCTFMarketResolvedEventResponse
-	153, // 190: marketcenter.v1.Marketcenter.ProcessCTFLiquidityEvent:output_type -> marketcenter.v1.ProcessCTFLiquidityEventResponse
-	139, // [139:191] is the sub-list for method output_type
-	87,  // [87:139] is the sub-list for method input_type
-	87,  // [87:87] is the sub-list for extension type_name
-	87,  // [87:87] is the sub-list for extension extendee
-	0,   // [0:87] is the sub-list for field type_name
+	7,   // 0: marketcenter.v1.GetLeaderboardRequest.time_interval:type_name -> marketcenter.v1.GetLeaderboardRequest.TimeInterval
+	4,   // 1: marketcenter.v1.GetLeaderboardRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	8,   // 2: marketcenter.v1.GetLeaderboardRequest.sort_type:type_name -> marketcenter.v1.GetLeaderboardRequest.SortType
+	155, // 3: marketcenter.v1.GetLeaderboardResponse.entries:type_name -> marketcenter.v1.GetLeaderboardResponse.Entry
+	155, // 4: marketcenter.v1.GetLeaderboardResponse.user_own_entry:type_name -> marketcenter.v1.GetLeaderboardResponse.Entry
+	9,   // 5: marketcenter.v1.GetQuestionsRequest.sort_type:type_name -> marketcenter.v1.GetQuestionsRequest.SortType
+	4,   // 6: marketcenter.v1.GetQuestionsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	1,   // 7: marketcenter.v1.GetQuestionsRequest.is_show:type_name -> marketcenter.v1.MarketIsShow
+	156, // 8: marketcenter.v1.GetQuestionsResponse.questions:type_name -> marketcenter.v1.GetQuestionsResponse.Question
+	4,   // 9: marketcenter.v1.GetQuestionDetailResponse.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	10,  // 10: marketcenter.v1.GetQuestionDetailResponse.is_claim:type_name -> marketcenter.v1.GetQuestionDetailResponse.IsClaim
+	69,  // 11: marketcenter.v1.GetPayMasterDataRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	161, // 12: marketcenter.v1.BatchUpdateOptionPriceRequest.option_prices:type_name -> marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPrice
+	4,   // 13: marketcenter.v1.GetMarketCategoriesRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	162, // 14: marketcenter.v1.GetMarketCategoriesResponse.categories:type_name -> marketcenter.v1.GetMarketCategoriesResponse.Category
+	163, // 15: marketcenter.v1.BatchGetMarketUsersPositionsRequest.market_and_users:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsRequest.MarketAndUser
+	164, // 16: marketcenter.v1.BatchGetMarketUsersPositionsResponse.user_market_positions:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition
+	11,  // 17: marketcenter.v1.GetMarketsAndOptionsInfoRequest.sort_type:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoRequest.SortType
+	4,   // 18: marketcenter.v1.GetMarketsAndOptionsInfoRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	1,   // 19: marketcenter.v1.GetMarketsAndOptionsInfoRequest.is_show:type_name -> marketcenter.v1.MarketIsShow
+	166, // 20: marketcenter.v1.GetMarketsAndOptionsInfoResponse.markets:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market
+	12,  // 21: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.side:type_name -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.Side
+	4,   // 22: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	51,  // 23: marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
+	51,  // 24: marketcenter.v1.ProcessMarketSwapEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
+	4,   // 25: marketcenter.v1.ProcessMarketSwapEventRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	169, // 26: marketcenter.v1.CreateMarketsAndOptionsRequest.markets:type_name -> marketcenter.v1.CreateMarketsAndOptionsRequest.Market
+	58,  // 27: marketcenter.v1.UpdateUserBaseTokenBalanceRequest.token_balance:type_name -> marketcenter.v1.TokenBalance
+	170, // 28: marketcenter.v1.UpdateOptionsPriceRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionsPriceRequest.OptionPrice
+	171, // 29: marketcenter.v1.UpdateSettleMarketsRequest.settle_markets:type_name -> marketcenter.v1.UpdateSettleMarketsRequest.SettleMarket
+	172, // 30: marketcenter.v1.UpdateUsersClaimRequest.user_claims:type_name -> marketcenter.v1.UpdateUsersClaimRequest.UserClaim
+	173, // 31: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.markets:type_name -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market
+	14,  // 32: marketcenter.v1.PlaceOrderRequest.side:type_name -> marketcenter.v1.PlaceOrderRequest.Side
+	69,  // 33: marketcenter.v1.PlaceOrderRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	69,  // 34: marketcenter.v1.ClaimMarketResultRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	4,   // 35: marketcenter.v1.TransferBaseTokenRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	69,  // 36: marketcenter.v1.TransferBaseTokenRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	175, // 37: marketcenter.v1.GetOptionTokensPriceRequest.options:type_name -> marketcenter.v1.GetOptionTokensPriceRequest.Option
+	176, // 38: marketcenter.v1.GetOptionTokensPriceResponse.option_prices:type_name -> marketcenter.v1.GetOptionTokensPriceResponse.OptionPrice
+	15,  // 39: marketcenter.v1.UpdateUserMarketFollowStatusRequest.status:type_name -> marketcenter.v1.UpdateUserMarketFollowStatusRequest.Status
+	4,   // 40: marketcenter.v1.GetHotMarketsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	177, // 41: marketcenter.v1.GetHotMarketsResponse.markets:type_name -> marketcenter.v1.GetHotMarketsResponse.Market
+	4,   // 42: marketcenter.v1.GetFollowedMarketsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	178, // 43: marketcenter.v1.GetFollowedMarketsResponse.markets:type_name -> marketcenter.v1.GetFollowedMarketsResponse.Market
+	4,   // 44: marketcenter.v1.GetHoldingPositionsMarketsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	179, // 45: marketcenter.v1.GetHoldingPositionsMarketsResponse.markets:type_name -> marketcenter.v1.GetHoldingPositionsMarketsResponse.Market
+	3,   // 46: marketcenter.v1.GetMarketDetailResponse.is_followed:type_name -> marketcenter.v1.IsFollowed
+	181, // 47: marketcenter.v1.GetMarketDetailResponse.options:type_name -> marketcenter.v1.GetMarketDetailResponse.Option
+	4,   // 48: marketcenter.v1.GetMarketDetailResponse.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	16,  // 49: marketcenter.v1.GetMarketDetailResponse.is_claim:type_name -> marketcenter.v1.GetMarketDetailResponse.IsClaim
+	182, // 50: marketcenter.v1.GetMarketTradesResponse.orders:type_name -> marketcenter.v1.GetMarketTradesResponse.Order
+	4,   // 51: marketcenter.v1.GetUserTradesRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	184, // 52: marketcenter.v1.GetUserTradesResponse.orders:type_name -> marketcenter.v1.GetUserTradesResponse.Order
+	186, // 53: marketcenter.v1.GetMarketUsersPositionsResponse.user_positions:type_name -> marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition
+	4,   // 54: marketcenter.v1.GetUserPositionsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	188, // 55: marketcenter.v1.GetUserPositionsResponse.positions:type_name -> marketcenter.v1.GetUserPositionsResponse.Position
+	4,   // 56: marketcenter.v1.GetUserLatestAssetValueRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 57: marketcenter.v1.GetUserLatestAssetValueResponse.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 58: marketcenter.v1.SearchMarketRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	189, // 59: marketcenter.v1.SearchMarketResponse.markets:type_name -> marketcenter.v1.SearchMarketResponse.Market
+	4,   // 60: marketcenter.v1.GetUserAssetHistoryRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	17,  // 61: marketcenter.v1.GetUserAssetHistoryRequest.time_interval:type_name -> marketcenter.v1.GetUserAssetHistoryRequest.TimeInterval
+	190, // 62: marketcenter.v1.GetUserAssetHistoryResponse.snapshots:type_name -> marketcenter.v1.GetUserAssetHistoryResponse.OneSnapshot
+	4,   // 63: marketcenter.v1.GetUserAssetHistoryResponse.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	18,  // 64: marketcenter.v1.GetMarketOptionPriceHistoryRequest.time_interval:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryRequest.TimeInterval
+	191, // 65: marketcenter.v1.GetMarketOptionPriceHistoryResponse.snapshots:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot
+	4,   // 66: marketcenter.v1.ProcessMarketClaimResultEventRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	19,  // 67: marketcenter.v1.UpdateMarketStatusRequest.status:type_name -> marketcenter.v1.UpdateMarketStatusRequest.Status
+	111, // 68: marketcenter.v1.S3CategoryList.categories:type_name -> marketcenter.v1.S3CategoryInfo
+	113, // 69: marketcenter.v1.S3PredictionInfo.options:type_name -> marketcenter.v1.S3OptionInfo
+	110, // 70: marketcenter.v1.S3PredictionInfo.tags:type_name -> marketcenter.v1.S3TagInfo
+	4,   // 71: marketcenter.v1.GetUserTransactionsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	193, // 72: marketcenter.v1.GetUserTransactionsResponse.transactions:type_name -> marketcenter.v1.GetUserTransactionsResponse.Transaction
+	4,   // 73: marketcenter.v1.GetBannersRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	194, // 74: marketcenter.v1.GetBannersResponse.banners:type_name -> marketcenter.v1.GetBannersResponse.Banner
+	4,   // 75: marketcenter.v1.GetSectionsRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	195, // 76: marketcenter.v1.GetSectionsResponse.sections:type_name -> marketcenter.v1.GetSectionsResponse.Section
+	5,   // 77: marketcenter.v1.PredictionEvent.status:type_name -> marketcenter.v1.EventStatus
+	197, // 78: marketcenter.v1.PredictionEvent.markets:type_name -> marketcenter.v1.PredictionEvent.Market
+	128, // 79: marketcenter.v1.GetEventResponse.event:type_name -> marketcenter.v1.PredictionEvent
+	5,   // 80: marketcenter.v1.ListEventsRequest.status:type_name -> marketcenter.v1.EventStatus
+	20,  // 81: marketcenter.v1.ListEventsRequest.sort_type:type_name -> marketcenter.v1.ListEventsRequest.SortType
+	128, // 82: marketcenter.v1.ListEventsResponse.events:type_name -> marketcenter.v1.PredictionEvent
+	69,  // 83: marketcenter.v1.CTFSwapRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	69,  // 84: marketcenter.v1.CTFDepositLiquidityRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	69,  // 85: marketcenter.v1.CTFWithdrawLiquidityRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	69,  // 86: marketcenter.v1.CTFRedeemPositionRequest.user_operation:type_name -> marketcenter.v1.UserOperation
+	21,  // 87: marketcenter.v1.ProcessCTFConditionEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFConditionEventRequest.EventType
+	22,  // 88: marketcenter.v1.ProcessCTFPositionEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFPositionEventRequest.EventType
+	23,  // 89: marketcenter.v1.ProcessCTFTransferEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFTransferEventRequest.EventType
+	51,  // 90: marketcenter.v1.ProcessCTFMarketResolvedEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
+	4,   // 91: marketcenter.v1.ProcessCTFMarketResolvedEventRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	24,  // 92: marketcenter.v1.ProcessCTFLiquidityEventRequest.event_type:type_name -> marketcenter.v1.ProcessCTFLiquidityEventRequest.EventType
+	51,  // 93: marketcenter.v1.ProcessCTFLiquidityEventRequest.option_prices:type_name -> marketcenter.v1.UpdateOptionPrice
+	4,   // 94: marketcenter.v1.ProcessCTFLiquidityEventRequest.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 95: marketcenter.v1.GetQuestionsResponse.Question.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	157, // 96: marketcenter.v1.GetQuestionsResponse.Question.markets:type_name -> marketcenter.v1.GetQuestionsResponse.Question.Market
+	4,   // 97: marketcenter.v1.GetQuestionsResponse.Question.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	158, // 98: marketcenter.v1.GetQuestionsResponse.Question.Market.options:type_name -> marketcenter.v1.GetQuestionsResponse.Question.Market.Option
+	4,   // 99: marketcenter.v1.GetQuestionDetailResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	10,  // 100: marketcenter.v1.GetQuestionDetailResponse.Market.is_claim:type_name -> marketcenter.v1.GetQuestionDetailResponse.IsClaim
+	160, // 101: marketcenter.v1.GetQuestionDetailResponse.Market.options:type_name -> marketcenter.v1.GetQuestionDetailResponse.Market.Option
+	4,   // 102: marketcenter.v1.BatchUpdateOptionPriceRequest.OptionPrice.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	165, // 103: marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.positions:type_name -> marketcenter.v1.BatchGetMarketUsersPositionsResponse.UserMarketPosition.Position
+	4,   // 104: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	3,   // 105: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.is_followed:type_name -> marketcenter.v1.IsFollowed
+	167, // 106: marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.options:type_name -> marketcenter.v1.GetMarketsAndOptionsInfoResponse.Market.Option
+	168, // 107: marketcenter.v1.CreateMarketsAndOptionsRequest.Market.options:type_name -> marketcenter.v1.CreateMarketsAndOptionsRequest.Option
+	4,   // 108: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	174, // 109: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.options:type_name -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.Option
+	4,   // 110: marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse.Market.Option.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 111: marketcenter.v1.GetHotMarketsResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 112: marketcenter.v1.GetFollowedMarketsResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 113: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	180, // 114: marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.positions:type_name -> marketcenter.v1.GetHoldingPositionsMarketsResponse.Market.Position
+	183, // 115: marketcenter.v1.GetMarketTradesResponse.Order.option:type_name -> marketcenter.v1.GetMarketTradesResponse.Order.Option
+	185, // 116: marketcenter.v1.GetUserTradesResponse.Order.option:type_name -> marketcenter.v1.GetUserTradesResponse.Order.Option
+	4,   // 117: marketcenter.v1.GetUserTradesResponse.Order.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	187, // 118: marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.positions:type_name -> marketcenter.v1.GetMarketUsersPositionsResponse.UserPosition.Position
+	4,   // 119: marketcenter.v1.GetUserPositionsResponse.Position.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	4,   // 120: marketcenter.v1.SearchMarketResponse.Market.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	192, // 121: marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.token_prices:type_name -> marketcenter.v1.GetMarketOptionPriceHistoryResponse.OneSnapshot.TokenPrice
+	4,   // 122: marketcenter.v1.GetUserTransactionsResponse.Transaction.base_token_type:type_name -> marketcenter.v1.BaseTokenType
+	6,   // 123: marketcenter.v1.GetUserTransactionsResponse.Transaction.type:type_name -> marketcenter.v1.TxType
+	196, // 124: marketcenter.v1.GetSectionsResponse.Section.predictions:type_name -> marketcenter.v1.GetSectionsResponse.Section.Prediction
+	198, // 125: marketcenter.v1.PredictionEvent.Market.options:type_name -> marketcenter.v1.PredictionEvent.Market.Option
+	39,  // 126: marketcenter.v1.Marketcenter.GetPayMasterData:input_type -> marketcenter.v1.GetPayMasterDataRequest
+	80,  // 127: marketcenter.v1.Marketcenter.UpdateUserMarketFollowStatus:input_type -> marketcenter.v1.UpdateUserMarketFollowStatusRequest
+	70,  // 128: marketcenter.v1.Marketcenter.PlaceOrder:input_type -> marketcenter.v1.PlaceOrderRequest
+	72,  // 129: marketcenter.v1.Marketcenter.ClaimMarketResult:input_type -> marketcenter.v1.ClaimMarketResultRequest
+	74,  // 130: marketcenter.v1.Marketcenter.TransferBaseToken:input_type -> marketcenter.v1.TransferBaseTokenRequest
+	76,  // 131: marketcenter.v1.Marketcenter.GetOptionTokensPrice:input_type -> marketcenter.v1.GetOptionTokensPriceRequest
+	94,  // 132: marketcenter.v1.Marketcenter.GetMarketUsersPositions:input_type -> marketcenter.v1.GetMarketUsersPositionsRequest
+	82,  // 133: marketcenter.v1.Marketcenter.GetHotMarkets:input_type -> marketcenter.v1.GetHotMarketsRequest
+	84,  // 134: marketcenter.v1.Marketcenter.GetFollowedMarkets:input_type -> marketcenter.v1.GetFollowedMarketsRequest
+	86,  // 135: marketcenter.v1.Marketcenter.GetHoldingPositionsMarkets:input_type -> marketcenter.v1.GetHoldingPositionsMarketsRequest
+	88,  // 136: marketcenter.v1.Marketcenter.GetMarketDetail:input_type -> marketcenter.v1.GetMarketDetailRequest
+	90,  // 137: marketcenter.v1.Marketcenter.GetMarketTrades:input_type -> marketcenter.v1.GetMarketTradesRequest
+	96,  // 138: marketcenter.v1.Marketcenter.GetUserPositions:input_type -> marketcenter.v1.GetUserPositionsRequest
+	92,  // 139: marketcenter.v1.Marketcenter.GetUserTrades:input_type -> marketcenter.v1.GetUserTradesRequest
+	98,  // 140: marketcenter.v1.Marketcenter.GetUserLatestAssetValue:input_type -> marketcenter.v1.GetUserLatestAssetValueRequest
+	100, // 141: marketcenter.v1.Marketcenter.SearchMarket:input_type -> marketcenter.v1.SearchMarketRequest
+	102, // 142: marketcenter.v1.Marketcenter.GetUserAssetHistory:input_type -> marketcenter.v1.GetUserAssetHistoryRequest
+	104, // 143: marketcenter.v1.Marketcenter.GetMarketOptionPriceHistory:input_type -> marketcenter.v1.GetMarketOptionPriceHistoryRequest
+	43,  // 144: marketcenter.v1.Marketcenter.GetMarketTags:input_type -> marketcenter.v1.GetMarketTagsRequest
+	45,  // 145: marketcenter.v1.Marketcenter.GetMarketCategories:input_type -> marketcenter.v1.GetMarketCategoriesRequest
+	49,  // 146: marketcenter.v1.Marketcenter.GetMarketsAndOptionsInfo:input_type -> marketcenter.v1.GetMarketsAndOptionsInfoRequest
+	47,  // 147: marketcenter.v1.Marketcenter.BatchGetMarketUsersPositions:input_type -> marketcenter.v1.BatchGetMarketUsersPositionsRequest
+	67,  // 148: marketcenter.v1.Marketcenter.GetMarketsAndOptionsForBlockListener:input_type -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerRequest
+	56,  // 149: marketcenter.v1.Marketcenter.CreateMarketsAndOptions:input_type -> marketcenter.v1.CreateMarketsAndOptionsRequest
+	52,  // 150: marketcenter.v1.Marketcenter.ProcessMarketDepositOrWithdrawEvent:input_type -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventRequest
+	54,  // 151: marketcenter.v1.Marketcenter.ProcessMarketSwapEvent:input_type -> marketcenter.v1.ProcessMarketSwapEventRequest
+	106, // 152: marketcenter.v1.Marketcenter.ProcessMarketClaimResultEvent:input_type -> marketcenter.v1.ProcessMarketClaimResultEventRequest
+	33,  // 153: marketcenter.v1.Marketcenter.ProcessMarketSettingEvent:input_type -> marketcenter.v1.ProcessMarketSettingEventRequest
+	35,  // 154: marketcenter.v1.Marketcenter.ProcessMarketAssertDisputedEvent:input_type -> marketcenter.v1.ProcessMarketAssertDisputedEventRequest
+	37,  // 155: marketcenter.v1.Marketcenter.ProcessMarketAssertionResolvedEvent:input_type -> marketcenter.v1.ProcessMarketAssertionResolvedEventRequest
+	59,  // 156: marketcenter.v1.Marketcenter.UpdateUserBaseTokenBalance:input_type -> marketcenter.v1.UpdateUserBaseTokenBalanceRequest
+	41,  // 157: marketcenter.v1.Marketcenter.BatchUpdateOptionPrice:input_type -> marketcenter.v1.BatchUpdateOptionPriceRequest
+	108, // 158: marketcenter.v1.Marketcenter.UpdateMarketStatus:input_type -> marketcenter.v1.UpdateMarketStatusRequest
+	31,  // 159: marketcenter.v1.Marketcenter.UpdateMarketInfo:input_type -> marketcenter.v1.UpdateMarketInfoRequest
+	115, // 160: marketcenter.v1.Marketcenter.GetUserTransactions:input_type -> marketcenter.v1.GetUserTransactionsRequest
+	124, // 161: marketcenter.v1.Marketcenter.GetBanners:input_type -> marketcenter.v1.GetBannersRequest
+	126, // 162: marketcenter.v1.Marketcenter.GetSections:input_type -> marketcenter.v1.GetSectionsRequest
+	25,  // 163: marketcenter.v1.Marketcenter.GetLeaderboard:input_type -> marketcenter.v1.GetLeaderboardRequest
+	29,  // 164: marketcenter.v1.Marketcenter.GetQuestionDetail:input_type -> marketcenter.v1.GetQuestionDetailRequest
+	129, // 165: marketcenter.v1.Marketcenter.GetEvent:input_type -> marketcenter.v1.GetEventRequest
+	131, // 166: marketcenter.v1.Marketcenter.ListEvents:input_type -> marketcenter.v1.ListEventsRequest
+	133, // 167: marketcenter.v1.Marketcenter.CreateEvent:input_type -> marketcenter.v1.CreateEventRequest
+	135, // 168: marketcenter.v1.Marketcenter.CTFSwap:input_type -> marketcenter.v1.CTFSwapRequest
+	137, // 169: marketcenter.v1.Marketcenter.CTFDepositLiquidity:input_type -> marketcenter.v1.CTFDepositLiquidityRequest
+	139, // 170: marketcenter.v1.Marketcenter.CTFWithdrawLiquidity:input_type -> marketcenter.v1.CTFWithdrawLiquidityRequest
+	141, // 171: marketcenter.v1.Marketcenter.CTFRedeemPosition:input_type -> marketcenter.v1.CTFRedeemPositionRequest
+	143, // 172: marketcenter.v1.Marketcenter.CTFGetSwapPrice:input_type -> marketcenter.v1.CTFGetSwapPriceRequest
+	145, // 173: marketcenter.v1.Marketcenter.ProcessCTFConditionEvent:input_type -> marketcenter.v1.ProcessCTFConditionEventRequest
+	147, // 174: marketcenter.v1.Marketcenter.ProcessCTFPositionEvent:input_type -> marketcenter.v1.ProcessCTFPositionEventRequest
+	149, // 175: marketcenter.v1.Marketcenter.ProcessCTFTransferEvent:input_type -> marketcenter.v1.ProcessCTFTransferEventRequest
+	151, // 176: marketcenter.v1.Marketcenter.ProcessCTFMarketResolvedEvent:input_type -> marketcenter.v1.ProcessCTFMarketResolvedEventRequest
+	153, // 177: marketcenter.v1.Marketcenter.ProcessCTFLiquidityEvent:input_type -> marketcenter.v1.ProcessCTFLiquidityEventRequest
+	40,  // 178: marketcenter.v1.Marketcenter.GetPayMasterData:output_type -> marketcenter.v1.GetPayMasterDataResponse
+	81,  // 179: marketcenter.v1.Marketcenter.UpdateUserMarketFollowStatus:output_type -> marketcenter.v1.UpdateUserMarketFollowStatusResponse
+	71,  // 180: marketcenter.v1.Marketcenter.PlaceOrder:output_type -> marketcenter.v1.PlaceOrderResponse
+	73,  // 181: marketcenter.v1.Marketcenter.ClaimMarketResult:output_type -> marketcenter.v1.ClaimMarketResultResponse
+	75,  // 182: marketcenter.v1.Marketcenter.TransferBaseToken:output_type -> marketcenter.v1.TransferBaseTokenResponse
+	77,  // 183: marketcenter.v1.Marketcenter.GetOptionTokensPrice:output_type -> marketcenter.v1.GetOptionTokensPriceResponse
+	95,  // 184: marketcenter.v1.Marketcenter.GetMarketUsersPositions:output_type -> marketcenter.v1.GetMarketUsersPositionsResponse
+	83,  // 185: marketcenter.v1.Marketcenter.GetHotMarkets:output_type -> marketcenter.v1.GetHotMarketsResponse
+	85,  // 186: marketcenter.v1.Marketcenter.GetFollowedMarkets:output_type -> marketcenter.v1.GetFollowedMarketsResponse
+	87,  // 187: marketcenter.v1.Marketcenter.GetHoldingPositionsMarkets:output_type -> marketcenter.v1.GetHoldingPositionsMarketsResponse
+	89,  // 188: marketcenter.v1.Marketcenter.GetMarketDetail:output_type -> marketcenter.v1.GetMarketDetailResponse
+	91,  // 189: marketcenter.v1.Marketcenter.GetMarketTrades:output_type -> marketcenter.v1.GetMarketTradesResponse
+	97,  // 190: marketcenter.v1.Marketcenter.GetUserPositions:output_type -> marketcenter.v1.GetUserPositionsResponse
+	93,  // 191: marketcenter.v1.Marketcenter.GetUserTrades:output_type -> marketcenter.v1.GetUserTradesResponse
+	99,  // 192: marketcenter.v1.Marketcenter.GetUserLatestAssetValue:output_type -> marketcenter.v1.GetUserLatestAssetValueResponse
+	101, // 193: marketcenter.v1.Marketcenter.SearchMarket:output_type -> marketcenter.v1.SearchMarketResponse
+	103, // 194: marketcenter.v1.Marketcenter.GetUserAssetHistory:output_type -> marketcenter.v1.GetUserAssetHistoryResponse
+	105, // 195: marketcenter.v1.Marketcenter.GetMarketOptionPriceHistory:output_type -> marketcenter.v1.GetMarketOptionPriceHistoryResponse
+	44,  // 196: marketcenter.v1.Marketcenter.GetMarketTags:output_type -> marketcenter.v1.GetMarketTagsResponse
+	46,  // 197: marketcenter.v1.Marketcenter.GetMarketCategories:output_type -> marketcenter.v1.GetMarketCategoriesResponse
+	50,  // 198: marketcenter.v1.Marketcenter.GetMarketsAndOptionsInfo:output_type -> marketcenter.v1.GetMarketsAndOptionsInfoResponse
+	48,  // 199: marketcenter.v1.Marketcenter.BatchGetMarketUsersPositions:output_type -> marketcenter.v1.BatchGetMarketUsersPositionsResponse
+	68,  // 200: marketcenter.v1.Marketcenter.GetMarketsAndOptionsForBlockListener:output_type -> marketcenter.v1.GetMarketsAndOptionsForBlockListenerResponse
+	57,  // 201: marketcenter.v1.Marketcenter.CreateMarketsAndOptions:output_type -> marketcenter.v1.CreateMarketsAndOptionsResponse
+	53,  // 202: marketcenter.v1.Marketcenter.ProcessMarketDepositOrWithdrawEvent:output_type -> marketcenter.v1.ProcessMarketDepositOrWithdrawEventResponse
+	55,  // 203: marketcenter.v1.Marketcenter.ProcessMarketSwapEvent:output_type -> marketcenter.v1.ProcessMarketSwapEventResponse
+	107, // 204: marketcenter.v1.Marketcenter.ProcessMarketClaimResultEvent:output_type -> marketcenter.v1.ProcessMarketClaimResultEventResponse
+	34,  // 205: marketcenter.v1.Marketcenter.ProcessMarketSettingEvent:output_type -> marketcenter.v1.ProcessMarketSettingEventResponse
+	36,  // 206: marketcenter.v1.Marketcenter.ProcessMarketAssertDisputedEvent:output_type -> marketcenter.v1.ProcessMarketAssertDisputedEventResponse
+	38,  // 207: marketcenter.v1.Marketcenter.ProcessMarketAssertionResolvedEvent:output_type -> marketcenter.v1.ProcessMarketAssertionResolvedEventResponse
+	60,  // 208: marketcenter.v1.Marketcenter.UpdateUserBaseTokenBalance:output_type -> marketcenter.v1.UpdateUserBaseTokenBalanceResponse
+	42,  // 209: marketcenter.v1.Marketcenter.BatchUpdateOptionPrice:output_type -> marketcenter.v1.BatchUpdateOptionPriceResponse
+	109, // 210: marketcenter.v1.Marketcenter.UpdateMarketStatus:output_type -> marketcenter.v1.UpdateMarketStatusResponse
+	32,  // 211: marketcenter.v1.Marketcenter.UpdateMarketInfo:output_type -> marketcenter.v1.UpdateMarketInfoResponse
+	116, // 212: marketcenter.v1.Marketcenter.GetUserTransactions:output_type -> marketcenter.v1.GetUserTransactionsResponse
+	125, // 213: marketcenter.v1.Marketcenter.GetBanners:output_type -> marketcenter.v1.GetBannersResponse
+	127, // 214: marketcenter.v1.Marketcenter.GetSections:output_type -> marketcenter.v1.GetSectionsResponse
+	26,  // 215: marketcenter.v1.Marketcenter.GetLeaderboard:output_type -> marketcenter.v1.GetLeaderboardResponse
+	30,  // 216: marketcenter.v1.Marketcenter.GetQuestionDetail:output_type -> marketcenter.v1.GetQuestionDetailResponse
+	130, // 217: marketcenter.v1.Marketcenter.GetEvent:output_type -> marketcenter.v1.GetEventResponse
+	132, // 218: marketcenter.v1.Marketcenter.ListEvents:output_type -> marketcenter.v1.ListEventsResponse
+	134, // 219: marketcenter.v1.Marketcenter.CreateEvent:output_type -> marketcenter.v1.CreateEventResponse
+	136, // 220: marketcenter.v1.Marketcenter.CTFSwap:output_type -> marketcenter.v1.CTFSwapResponse
+	138, // 221: marketcenter.v1.Marketcenter.CTFDepositLiquidity:output_type -> marketcenter.v1.CTFDepositLiquidityResponse
+	140, // 222: marketcenter.v1.Marketcenter.CTFWithdrawLiquidity:output_type -> marketcenter.v1.CTFWithdrawLiquidityResponse
+	142, // 223: marketcenter.v1.Marketcenter.CTFRedeemPosition:output_type -> marketcenter.v1.CTFRedeemPositionResponse
+	144, // 224: marketcenter.v1.Marketcenter.CTFGetSwapPrice:output_type -> marketcenter.v1.CTFGetSwapPriceResponse
+	146, // 225: marketcenter.v1.Marketcenter.ProcessCTFConditionEvent:output_type -> marketcenter.v1.ProcessCTFConditionEventResponse
+	148, // 226: marketcenter.v1.Marketcenter.ProcessCTFPositionEvent:output_type -> marketcenter.v1.ProcessCTFPositionEventResponse
+	150, // 227: marketcenter.v1.Marketcenter.ProcessCTFTransferEvent:output_type -> marketcenter.v1.ProcessCTFTransferEventResponse
+	152, // 228: marketcenter.v1.Marketcenter.ProcessCTFMarketResolvedEvent:output_type -> marketcenter.v1.ProcessCTFMarketResolvedEventResponse
+	154, // 229: marketcenter.v1.Marketcenter.ProcessCTFLiquidityEvent:output_type -> marketcenter.v1.ProcessCTFLiquidityEventResponse
+	178, // [178:230] is the sub-list for method output_type
+	126, // [126:178] is the sub-list for method input_type
+	126, // [126:126] is the sub-list for extension type_name
+	126, // [126:126] is the sub-list for extension extendee
+	0,   // [0:126] is the sub-list for field type_name
 }
 
 func init() { file_market_service_marketcenter_v1_marketcenter_proto_init() }
@@ -15530,7 +15651,7 @@ func file_market_service_marketcenter_v1_marketcenter_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_market_service_marketcenter_v1_marketcenter_proto_rawDesc), len(file_market_service_marketcenter_v1_marketcenter_proto_rawDesc)),
-			NumEnums:      24,
+			NumEnums:      25,
 			NumMessages:   174,
 			NumExtensions: 0,
 			NumServices:   1,

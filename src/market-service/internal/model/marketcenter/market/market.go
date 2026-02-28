@@ -21,7 +21,7 @@ type Market struct {
 	TxHash             string          `gorm:"column:tx_hash;type:varchar(66);not null;" comment:"创建市场合约的tx hash"`
 	Name               string          `gorm:"column:name;type:varchar(512);not null;default:''" comment:"市场名描述"`
 	Fee                uint32          `gorm:"column:fee;type:integer;not null;default:0" comment:"交易费率 100代表1%"`
-	BaseTokenAddress   string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
+	TokenType          uint8           `gorm:"column:token_type;type:smallint;not null;default:1" comment:"使用的基础资产代币  1积分 2usdc"`
 	IsShow             uint8           `gorm:"column:is_show;type:smallint;not null;default:1" comment:"前端是否可见 1是2否"`
 	OracleAddress      string          `gorm:"column:oracle_address;type:varchar(42);not null;default:''" comment:"预言机地址"`
 	Volume             decimal.Decimal `gorm:"column:volume;type:NUMERIC;not null;default:0" comment:"成交量总额"`
@@ -148,7 +148,7 @@ func (m *Market) ToEntity() *marketBiz.MarketEntity {
 		TxHash:            m.TxHash,
 		Name:              m.Name,
 		Fee:               m.Fee,
-		BaseTokenAddress:  m.BaseTokenAddress,
+		TokenType:         m.TokenType,
 		IsShow:            m.IsShow,
 		OracleAddress:     m.OracleAddress,
 		Volume:            m.Volume,
@@ -177,7 +177,7 @@ func (m *Market) FromEntity(entity *marketBiz.MarketEntity) {
 	m.TxHash = entity.TxHash
 	m.Name = entity.Name
 	m.Fee = entity.Fee
-	m.BaseTokenAddress = entity.BaseTokenAddress
+	m.TokenType = entity.TokenType
 	m.IsShow = entity.IsShow
 	m.OracleAddress = entity.OracleAddress
 	m.Volume = entity.Volume

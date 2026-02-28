@@ -32,28 +32,35 @@ func (s *MarketService) CreateMarketsAndOptions(ctx context.Context, req *market
 	marketEntityList := make([]*marketBiz.MarketEntity, 0, len(req.Markets))
 	for _, market := range req.Markets {
 		marketEntity := &marketBiz.MarketEntity{
-			Address:          market.Address,
-			Name:             market.Name,
-			BaseTokenAddress: market.BaseTokenAddress,
+			Address: market.Address,
+			Name:    market.Name,
+			TokenType: func() uint8 {
+				if market.BaseTokenAddress == s.confCustom.AssetTokens.Points.Address {
+					return marketBiz.BaseTokenTypePoints
+				} else if market.BaseTokenAddress == s.confCustom.AssetTokens.Usdc.Address {
+					return marketBiz.BaseTokenTypeUsdc
+				}
+				return marketBiz.BaseTokenTypePoints
+			}(),
 			OracleAddress:    market.OracleAddress,
 			EventId:          market.EventId,
 			ConditionId:      market.ConditionId,
 			QuestionId:       market.QuestionId,
 			OutcomeSlotCount: market.OutcomeSlotCount,
-			Deadline:         market.Deadline,
-			TxHash:           market.TxHash,
+			Deadline:      market.Deadline,
+			TxHash:        market.TxHash,
 		}
 		for _, option := range market.Options {
 			marketEntity.Options = append(marketEntity.Options, &marketBiz.OptionEntity{
-				MarketAddress:    market.Address,
-				Address:          option.Address,
-				Name:             option.Name,
-				Symbol:           option.Symbol,
-				Description:      option.Description,
-				Decimal:          uint8(option.Decimal),
-				Index:            option.Index,
-				BaseTokenAddress: market.BaseTokenAddress,
-				PositionId:       option.PositionId,
+				MarketAddress: market.Address,
+				Address:       option.Address,
+				Name:          option.Name,
+				Symbol:        option.Symbol,
+				Description:   option.Description,
+				Decimal:       uint8(option.Decimal),
+				Index:         option.Index,
+				BaseTokenType: marketEntity.TokenType,
+				PositionId:    option.PositionId,
 			})
 		}
 		marketEntityList = append(marketEntityList, marketEntity)
@@ -105,16 +112,16 @@ func (s *MarketService) GetMarketsAndOptionsForBlockListener(ctx context.Context
 			continue
 		}
 		market := &marketcenter.GetMarketsAndOptionsForBlockListenerResponse_Market{
-			Address:          marketEntity.Address,
-			BaseTokenAddress: marketEntity.BaseTokenAddress,
+			Address:       marketEntity.Address,
+			BaseTokenType: marketcenter.BaseTokenType(marketEntity.TokenType),
 		}
 		for _, option := range marketEntity.Options {
 			market.Options = append(market.Options, &marketcenter.GetMarketsAndOptionsForBlockListenerResponse_Market_Option{
-				Address:          option.Address,
-				Index:            option.Index,
-				MarketAddress:    marketEntity.Address,
-				Decimal:          uint32(option.Decimal),
-				BaseTokenAddress: marketEntity.BaseTokenAddress,
+				Address:       option.Address,
+				Index:         option.Index,
+				MarketAddress: marketEntity.Address,
+				Decimal:       uint32(option.Decimal),
+				BaseTokenType: marketcenter.BaseTokenType(marketEntity.TokenType),
 			})
 		}
 		rsp.Markets = append(rsp.Markets, market)
@@ -296,16 +303,21 @@ func (s *MarketService) TransferBaseToken(ctx context.Context, req *marketcenter
 	}
 
 	userTransferTokensEntity := &assetBiz.UserTransferTokensEntity{
-		UID:              req.Uid,
-		TokenAddress:     req.BaseTokenAddress,
-		ExternalAddress:  req.ToAddress,
-		Side:             assetBiz.UserTransferTokensSideWithdraw,
-		BaseTokenAddress: req.BaseTokenAddress,
-		Amount:           amount,
-		Status:           assetBiz.UserTransferTokensStatusPending,
-		EventProcessed:   assetBiz.ProcessedNo,
+		UID: req.Uid,
+		TokenAddress: func() string {
+			if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC {
+				return s.confCustom.AssetTokens.Usdc.Address
+			}
+			return s.confCustom.AssetTokens.Points.Address
+		}(),
+		ExternalAddress: req.ToAddress,
+		Side:            assetBiz.UserTransferTokensSideWithdraw,
+		BaseTokenType:   uint8(req.BaseTokenType),
+		Amount:          amount,
+		Status:          assetBiz.UserTransferTokensStatusPending,
+		EventProcessed:  assetBiz.ProcessedNo,
 		Tx: &assetBiz.SendTxEntity{
-			BaseTokenAddress: req.BaseTokenAddress,
+			BaseTokenType: uint8(req.BaseTokenType),
 			UID:           req.Uid,
 			Status:        assetBiz.SendTxStatusSending,
 			Chain:         s.confCustom.Chain,
@@ -423,16 +435,16 @@ func (s *MarketService) GetHoldingPositionsMarkets(ctx context.Context, req *mar
 	}
 
 	userTotalValue, err := s.assetHandler.GetUserTotalValue(c, &assetBiz.UserTokenBalanceQuery{
-		UID:              req.Uid,
-		BaseTokenAddress: req.BaseTokenAddress,
+		UID:           req.Uid,
+		BaseTokenType: uint8(req.BaseTokenType),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	marketValues, total, err := s.assetHandler.GetUserMarketPositionsByValue(c, &assetBiz.UserTokenBalanceQuery{
-		UID:              req.Uid,
-		BaseTokenAddress: req.BaseTokenAddress,
+		UID:           req.Uid,
+		BaseTokenType: uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Limit:  int32(req.PageSize),
 			Offset: int32((req.Page - 1) * req.PageSize),
@@ -480,7 +492,7 @@ func (s *MarketService) GetHoldingPositionsMarkets(ctx context.Context, req *mar
 		UID:               req.Uid,
 		MarketAddressList: marketAddressList,
 		Type:              assetBiz.TypeUserTokenBalanceOption,
-		BaseTokenAddress:  req.BaseTokenAddress,
+		BaseTokenType:     uint8(req.BaseTokenType),
 		StatusNotEqual:    assetBiz.UserTokenBalanceStatusEndLose,
 		NoZero:            true,
 	})
@@ -488,9 +500,11 @@ func (s *MarketService) GetHoldingPositionsMarkets(ctx context.Context, req *mar
 		return nil, err
 	}
 
-	decimals := 6
-	if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(req.BaseTokenAddress)]; tokenInfo != nil {
-		decimals = int(tokenInfo.Decimals)
+	decimals := 0
+	if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC {
+		decimals = int(s.confCustom.AssetTokens.Usdc.Decimals)
+	} else {
+		decimals = int(s.confCustom.AssetTokens.Points.Decimals)
 	}
 	rspMarketInfoList := make([]*marketcenter.GetHoldingPositionsMarketsResponse_Market, 0, len(marketAddressList))
 	for _, marketValueSt := range marketValues {
@@ -507,7 +521,7 @@ func (s *MarketService) GetHoldingPositionsMarkets(ctx context.Context, req *mar
 			marketInfo.Status = uint32(marketEntity.Status)
 			marketInfo.MarketVolume = marketEntity.Volume.String()
 			marketInfo.MarketParticipantsCount = uint32(marketEntity.ParticipantsCount)
-			marketInfo.BaseTokenAddress = marketEntity.BaseTokenAddress
+			marketInfo.BaseTokenType = marketcenter.BaseTokenType(marketEntity.TokenType)
 		}
 
 		for _, userTokenBalanceEntity := range userTokenBalanceEntities {
@@ -546,7 +560,7 @@ func (s *MarketService) GetHotMarkets(ctx context.Context, req *marketcenter.Get
 		Status:        marketBiz.MarketStatusRunnig,
 		IsShow:        uint8(marketBiz.MarketShow),
 		IsNotDeadline: true,
-		BaseTokenAddress: req.BaseTokenAddress,
+		BaseTokenType: uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Order: "volume desc",
 			Limit: 6,
@@ -560,11 +574,11 @@ func (s *MarketService) GetHotMarkets(ctx context.Context, req *marketcenter.Get
 	}
 	for _, marketEntity := range marketEntityList {
 		rsp.Markets = append(rsp.Markets, &marketcenter.GetHotMarketsResponse_Market{
-			Address:          marketEntity.Address,
-			Name:             marketEntity.Name,
-			PicUrl:           marketEntity.PicUrl,
-			Description:      marketEntity.Description,
-			BaseTokenAddress: marketEntity.BaseTokenAddress,
+			Address:       marketEntity.Address,
+			Name:          marketEntity.Name,
+			PicUrl:        marketEntity.PicUrl,
+			Description:   marketEntity.Description,
+			BaseTokenType: marketcenter.BaseTokenType(marketEntity.TokenType),
 		})
 	}
 	return rsp, nil
@@ -591,7 +605,7 @@ func (s *MarketService) GetUserTrades(ctx context.Context, req *marketcenter.Get
 		MarketAddress:  req.MarketAddress,
 		Status:         assetBiz.OrderStatusSuccess,
 		EventProcessed: assetBiz.ProcessedYes,
-		BaseTokenAddress: req.BaseTokenAddress,
+		BaseTokenType:  uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Order:  "id desc",
 			Limit:  int32(req.PageSize),
@@ -647,7 +661,7 @@ func (s *MarketService) GetUserTrades(ctx context.Context, req *marketcenter.Get
 			ReceiveAmount: orderEntity.ReceiveAmount.String(),
 			DealPrice:     orderEntity.DealPrice.String(),
 			Timestamp:     uint64(orderEntity.CreatedAt.Unix()),
-			BaseTokenAddress: orderEntity.BaseTokenAddress,
+			BaseTokenType: marketcenter.BaseTokenType(orderEntity.BaseTokenType),
 		}
 
 		if optionEntity, ok := optionAddressToOptionEntityMap[orderEntity.OptionAddress]; ok {
@@ -842,12 +856,24 @@ func (s *MarketService) GetMarketDetail(ctx context.Context, req *marketcenter.G
 		Deadline:    marketEntity.Deadline,
 		Volume:      marketEntity.Volume.String(),
 		Decimal: func() uint32 {
-			if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(marketEntity.BaseTokenAddress)]; tokenInfo != nil {
-				return tokenInfo.Decimals
+			if marketEntity.TokenType == assetBiz.BaseTokenTypePoints {
+				return s.confCustom.AssetTokens.Points.Decimals
+			} else if marketEntity.TokenType == assetBiz.BaseTokenTypeUsdc {
+				return s.confCustom.AssetTokens.Usdc.Decimals
+			} else {
+				return 6
 			}
-			return 6
 		}(),
-		BaseTokenAddress: marketEntity.BaseTokenAddress,
+		BaseTokenType: marketcenter.BaseTokenType(marketEntity.TokenType),
+		BaseTokenAddress: func() string {
+			if marketEntity.TokenType == assetBiz.BaseTokenTypePoints {
+				return s.confCustom.AssetTokens.Points.Address
+			} else if marketEntity.TokenType == assetBiz.BaseTokenTypeUsdc {
+				return s.confCustom.AssetTokens.Usdc.Address
+			} else {
+				return s.confCustom.AssetTokens.Points.Address
+			}
+		}(),
 		ParticipantsCount:   marketEntity.ParticipantsCount,
 		Rules:               marketEntity.Rules,
 		RulesFileUrl:        marketEntity.RulesUrl,
@@ -929,8 +955,8 @@ func (s *MarketService) GetUserPositions(ctx context.Context, req *marketcenter.
 		UID:           req.Uid,
 		MarketAddress: req.MarketAddress,
 		TokenAddress:  req.OptionAddress,
-		BaseTokenAddress: req.BaseTokenAddress,
-		Type:             assetBiz.TypeUserTokenBalanceOption,
+		BaseTokenType: uint8(req.BaseTokenType),
+		Type:          assetBiz.TypeUserTokenBalanceOption,
 		MinBalance:    assetBiz.MinPointBalance,
 		BaseQuery: base.BaseQuery{
 			Order:  "balance desc",
@@ -1014,7 +1040,7 @@ func (s *MarketService) GetUserPositions(ctx context.Context, req *marketcenter.
 			onePosition.MarketName = marketEntity.Name
 			onePosition.MarketDescription = marketEntity.Description
 			onePosition.MarketPicUrl = marketEntity.PicUrl
-			onePosition.BaseTokenAddress = marketEntity.BaseTokenAddress
+			onePosition.BaseTokenType = marketcenter.BaseTokenType(marketEntity.TokenType)
 			onePosition.Deadline = int64(marketEntity.Deadline)
 		}
 
@@ -1043,13 +1069,18 @@ func (s *MarketService) GetUserLatestAssetValue(ctx context.Context, req *market
 		return nil, errors.New(int(marketcenter.ErrorCode_PARAM), "PARAM_ERROR", "missing uid")
 	}
 
-	assetAddress := req.BaseTokenAddress
-	tokenInfo := s.confCustom.AssetTokens[strings.ToLower(assetAddress)]
-	if tokenInfo == nil {
-		return nil, errors.New(int(marketcenter.ErrorCode_PARAM), "PARAM_ERROR", "invalid base token address")
+	assetAddress := ""
+	decimalNum := uint32(0)
+	if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_POINTS {
+		assetAddress = s.confCustom.AssetTokens.Points.Address
+		decimalNum = s.confCustom.AssetTokens.Points.Decimals
+	} else if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC {
+		assetAddress = s.confCustom.AssetTokens.Usdc.Address
+		decimalNum = s.confCustom.AssetTokens.Usdc.Decimals
+	} else {
+		return nil, errors.New(int(marketcenter.ErrorCode_PARAM), "PARAM_ERROR", "invalid base token type")
 	}
-	decimalNum := tokenInfo.Decimals
-	userAssetValueEntity, err := s.assetHandler.CalculateUserAssetValue(c, req.Uid, assetAddress, assetAddress)
+	userAssetValueEntity, err := s.assetHandler.CalculateUserAssetValue(c, req.Uid, assetAddress, uint8(req.BaseTokenType))
 	if err != nil {
 		return nil, err
 	}
@@ -1059,9 +1090,9 @@ func (s *MarketService) GetUserLatestAssetValue(ctx context.Context, req *market
 	var volumeScore float64
 
 	// 构建排行榜key
-	baseTokenAddress := req.BaseTokenAddress
-	volumeLeaderboardKey := fmt.Sprintf(assetBiz.VolumeAllTimeLeaderboard, baseTokenAddress)
-	pnlLeaderboardKey := fmt.Sprintf(assetBiz.PnlAllTimeLeaderboard, baseTokenAddress)
+	baseTokenType := uint8(req.BaseTokenType)
+	volumeLeaderboardKey := fmt.Sprintf(assetBiz.VolumeAllTimeLeaderboard, baseTokenType)
+	pnlLeaderboardKey := fmt.Sprintf(assetBiz.PnlAllTimeLeaderboard, baseTokenType)
 
 	volumeScore, err = s.assetHandler.GetUserScore(c, volumeLeaderboardKey, req.Uid)
 	if err != nil {
@@ -1085,9 +1116,9 @@ func (s *MarketService) GetUserLatestAssetValue(ctx context.Context, req *market
 	}
 	go func(newCtx common.Ctx) {
 		latestRecord, err := s.assetHandler.GetUserAssetValue(newCtx, &assetBiz.UserAssetValueQuery{
-			UID:              req.Uid,
-			AssetAddress:     assetAddress,
-			BaseTokenAddress: req.BaseTokenAddress,
+			UID:           req.Uid,
+			AssetAddress:  assetAddress,
+			BaseTokenType: uint8(req.BaseTokenType),
 			BaseQuery: base.BaseQuery{
 				Order: "created_at desc",
 				Limit: 1,
@@ -1100,7 +1131,7 @@ func (s *MarketService) GetUserLatestAssetValue(ctx context.Context, req *market
 
 		// 如果有最新记录，比较业务数据是否相同
 		if latestRecord != nil && latestRecord.UID != "" {
-			// 比较关键业务字段：Value、Balance、Portfolio、Pnl
+			// 比较关键业务字段：Value、Balance、Portfolio、Pnl、BaseTokenType
 			if latestRecord.Value.Equal(userAssetValueEntity.Value) &&
 				latestRecord.Balance.Equal(userAssetValueEntity.Balance) &&
 				latestRecord.Portfolio.Equal(userAssetValueEntity.Portfolio) &&
@@ -1144,7 +1175,7 @@ func (s *MarketService) SearchMarket(ctx context.Context, req *marketcenter.Sear
 	marketEntityList, total, err := s.marketHandler.SearchMarket(c, &marketBiz.MarketQuery{
 		Search: req.Keyword,
 		IsShow: marketBiz.MarketShow,
-		// BaseTokenAddress: req.BaseTokenAddress,
+		// BaseTokenType: uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Order:  "id desc",
 			Limit:  int32(req.PageSize),
@@ -1168,7 +1199,7 @@ func (s *MarketService) SearchMarket(ctx context.Context, req *marketcenter.Sear
 			ParticipantsCount: uint32(marketEntity.ParticipantsCount),
 			Volume:            marketEntity.Volume.String(),
 			Deadline:          int64(marketEntity.Deadline),
-			BaseTokenAddress:  marketEntity.BaseTokenAddress,
+			BaseTokenType:     marketcenter.BaseTokenType(marketEntity.TokenType),
 		})
 	}
 	return rsp, nil
@@ -1190,17 +1221,20 @@ func (s *MarketService) GetUserAssetHistory(ctx context.Context, req *marketcent
 	default:
 		timeRange = "all"
 	}
-	userAssetValueEntities, err := s.assetHandler.GetUserAssetHistory(c, req.Uid, req.BaseTokenAddress, timeRange)
+	userAssetValueEntities, err := s.assetHandler.GetUserAssetHistory(c, req.Uid, uint8(req.BaseTokenType), timeRange)
 	if err != nil {
 		return nil, err
 	}
 
 	rsp := &marketcenter.GetUserAssetHistoryResponse{
-		Total:            uint32(len(userAssetValueEntities)),
-		BaseTokenAddress: req.BaseTokenAddress,
+		Total:         uint32(len(userAssetValueEntities)),
+		BaseTokenType: marketcenter.BaseTokenType(req.BaseTokenType),
 		Decimal: func() uint32 {
-			if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(req.BaseTokenAddress)]; tokenInfo != nil {
-				return tokenInfo.Decimals
+			switch req.BaseTokenType {
+			case marketcenter.BaseTokenType_BASE_TOKEN_TYPE_POINTS:
+				return uint32(s.confCustom.AssetTokens.Points.Decimals)
+			case marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC:
+				return uint32(s.confCustom.AssetTokens.Usdc.Decimals)
 			}
 			return 6
 		}(),
@@ -1356,8 +1390,8 @@ func (s *MarketService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context,
 		s.userHandler.PublishUserChannel(newCtx, req.Uid, &sse_message.Msg{
 			Event: sse_message.EventUserAssetChanged,
 			Data: &sse_message.UserAssetChangedMsgData{
-				Uid:              req.Uid,
-				BaseTokenAddress: req.BaseTokenAddress,
+				Uid:           req.Uid,
+				BaseTokenType: uint8(req.BaseTokenType),
 			},
 		})
 
@@ -1430,8 +1464,14 @@ func (s *MarketService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context,
 			OptionName:    optionInfo.Name,
 			OptionDesc:    optionInfo.Description,
 			OptionPicUrl:  optionInfo.PicUrl,
-			Decimal:          int32(optionInfo.Decimal),
-			BaseTokenAddress: marketInfo.BaseTokenAddress,
+			BaseTokenType: marketInfo.TokenType,
+			Decimal:       int32(optionInfo.Decimal),
+			BaseTokenAddress: func() string {
+				if marketInfo.TokenType == assetBiz.BaseTokenTypeUsdc {
+					return s.confCustom.AssetTokens.Usdc.Address
+				}
+				return s.confCustom.AssetTokens.Points.Address
+			}(),
 			AmountIn:  req.AmountIn,
 			AmountOut: req.AmountOut,
 			Side:      uint8(req.Side),
@@ -1447,7 +1487,7 @@ func (s *MarketService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context,
 			Category:      uint8(userBiz.NotificationCategoryTrade),
 			BizJson:       json.RawMessage(bizData),
 			Status:        userBiz.NotificationStatusUnRead,
-			BaseTokenAddress: marketInfo.BaseTokenAddress,
+			BaseTokenType: uint8(marketInfo.TokenType),
 		})
 		if err != nil {
 			newCtx.Log.Errorf("async generate trade notification error: %+v", err)
@@ -1479,7 +1519,7 @@ func (s *MarketService) ProcessMarketDepositOrWithdrawEvent(ctx context.Context,
 			Price:         req.Price,
 			TxHash:        req.TxHash,
 			Timestamp:     int64(req.BlockTime),
-			BaseTokenAddress: req.BaseTokenAddress,
+			BaseTokenType: uint8(marketcenter.BaseTokenType(req.BaseTokenType)),
 		})
 		if err != nil {
 			alarm.Lark.Send(fmt.Sprintf("async ProduceUserTradeStreamMsg error: %+v, uid: %s", err, req.Uid))
@@ -1549,14 +1589,14 @@ func (s *MarketService) UpdateUserBaseTokenBalance(ctx context.Context, req *mar
 		TokenAddress:  req.TokenBalance.TokenAddress,
 		Balance:       amount,
 		BlockNumber:   req.TokenBalance.BlockNumber,
-		Decimal: func() uint8 {
-			if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(req.TokenBalance.TokenAddress)]; tokenInfo != nil {
-				return uint8(tokenInfo.Decimals)
+		Decimal:       uint8(s.confCustom.AssetTokens.Usdc.Decimals),
+		Type:          assetBiz.TypeUserTokenBalanceBaseAsset,
+		BaseTokenType: func() uint8 {
+			if req.TokenBalance.TokenAddress == s.confCustom.AssetTokens.Usdc.Address {
+				return assetBiz.BaseTokenTypeUsdc
 			}
-			return 6
+			return assetBiz.BaseTokenTypePoints
 		}(),
-		Type:             assetBiz.TypeUserTokenBalanceBaseAsset,
-		BaseTokenAddress: req.TokenBalance.TokenAddress,
 		TxHash:         req.TxHash,
 		FromAddress:    req.From,
 		ToAddress:      req.To,
@@ -1612,9 +1652,9 @@ func (s *MarketService) GetMarketsAndOptionsInfo(ctx context.Context, req *marke
 	if req.NewMarket {
 		// 查询最新创建的16个市场
 		latestMarkets, err := s.marketHandler.GetMarkets(c, &marketBiz.MarketQuery{
-			IsShow:           uint8(req.IsShow),
-			Status:           uint8(req.Status),
-			BaseTokenAddress: req.BaseTokenAddress,
+			IsShow:        uint8(req.IsShow),
+			Status:        uint8(req.Status),
+			BaseTokenType: uint8(req.BaseTokenType),
 			BaseQuery: base.BaseQuery{
 				Order: "id desc",
 				Limit: 16,
@@ -1634,9 +1674,9 @@ func (s *MarketService) GetMarketsAndOptionsInfo(ctx context.Context, req *marke
 	}
 
 	query := &marketBiz.MarketQuery{
-		Tag:              req.Tag,
-		Status:           uint8(req.Status),
-		BaseTokenAddress: req.BaseTokenAddress,
+		Tag:           req.Tag,
+		Status:        uint8(req.Status),
+		BaseTokenType: uint8(req.BaseTokenType),
 		IsShow:        uint8(req.IsShow),
 		IsNotDeadline: true,
 		Category:      req.CategoryId,
@@ -1676,8 +1716,10 @@ func (s *MarketService) GetMarketsAndOptionsInfo(ctx context.Context, req *marke
 	if req.MinVolumeTrending {
 		minVolume := decimal.NewFromInt(int64(s.confCustom.MinVolume))
 		var decimals uint32 = 6
-		if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(req.BaseTokenAddress)]; tokenInfo != nil {
-			decimals = tokenInfo.Decimals
+		if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC {
+			decimals = s.confCustom.AssetTokens.Usdc.Decimals
+		} else if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_POINTS {
+			decimals = s.confCustom.AssetTokens.Points.Decimals
 		}
 		minVolumeDecimal := minVolume.Mul(decimal.New(1, int32(decimals)))
 		query.MinVolume = minVolumeDecimal
@@ -1705,16 +1747,19 @@ func (s *MarketService) GetMarketsAndOptionsInfo(ctx context.Context, req *marke
 			Status:            uint32(marketEntity.Status),
 			ParticipantsCount: uint32(marketEntity.ParticipantsCount),
 			Volume:            marketEntity.Volume.String(),
-			BaseTokenAddress:  marketEntity.BaseTokenAddress,
+			BaseTokenType:     marketcenter.BaseTokenType(marketEntity.TokenType),
 			IsFollowed:        marketcenter.IsFollowed(marketEntity.IsFollowed),
 			Result:            marketEntity.Result,
 			CreatedAt:         uint32(marketEntity.CreatedAt.Unix()),
 			Deadline:          uint32(marketEntity.Deadline),
 			Decimal: func() uint32 {
-				if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(marketEntity.BaseTokenAddress)]; tokenInfo != nil {
-					return tokenInfo.Decimals
+				if marketEntity.TokenType == assetBiz.BaseTokenTypePoints {
+					return s.confCustom.AssetTokens.Points.Decimals
+				} else if marketEntity.TokenType == assetBiz.BaseTokenTypeUsdc {
+					return s.confCustom.AssetTokens.Usdc.Decimals
+				} else {
+					return 6
 				}
-				return 6
 			}(),
 			Options: make([]*marketcenter.GetMarketsAndOptionsInfoResponse_Market_Option, 0, len(marketEntity.Options)),
 			EventId:          marketEntity.EventId,
@@ -1840,7 +1885,7 @@ func (s *MarketService) BatchUpdateOptionPrice(ctx context.Context, req *marketc
 			Price:         price,
 			BlockNumber:   optionPrice.BlockNumber,
 			BlockTime:     time.Unix(int64(optionPrice.BlockTime), 0),
-			BaseTokenAddress: optionPrice.BaseTokenAddress,
+			BaseTokenType: uint8(optionPrice.BaseTokenType),
 			Decimals:      uint8(optionPrice.Decimal),
 		})
 	}
@@ -1942,7 +1987,7 @@ func (s *MarketService) ProcessMarketAssertionResolvedEvent(ctx context.Context,
 			}(),
 			BlockNumber:   req.BlockNumber,
 			BlockTime:     time.Now(),
-			BaseTokenAddress: marketEntity.BaseTokenAddress,
+			BaseTokenType: uint8(marketEntity.TokenType),
 			Decimals:      uint8(option.Decimal),
 		})
 	}
@@ -2013,7 +2058,7 @@ func (s *MarketService) ProcessMarketAssertionResolvedEvent(ctx context.Context,
 func (s *MarketService) GetMarketCategories(ctx context.Context, req *marketcenter.GetMarketCategoriesRequest) (*marketcenter.GetMarketCategoriesResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
-	categoryList, total, err := s.marketHandler.GetCategoriesFromS3(c, req.BaseTokenAddress)
+	categoryList, total, err := s.marketHandler.GetCategoriesFromS3(c, uint8(req.BaseTokenType))
 	if err != nil {
 		return nil, err
 	}
@@ -2037,7 +2082,7 @@ func (s *MarketService) GetMarketCategories(ctx context.Context, req *marketcent
 func (s *MarketService) GetBanners(ctx context.Context, req *marketcenter.GetBannersRequest) (*marketcenter.GetBannersResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
-	banners, _, err := s.marketHandler.GetBannersFromS3(c, req.BaseTokenAddress)
+	banners, _, err := s.marketHandler.GetBannersFromS3(c, uint8(req.BaseTokenType))
 	if err != nil {
 		return nil, err
 	}
@@ -2058,7 +2103,7 @@ func (s *MarketService) GetBanners(ctx context.Context, req *marketcenter.GetBan
 func (s *MarketService) GetSections(ctx context.Context, req *marketcenter.GetSectionsRequest) (*marketcenter.GetSectionsResponse, error) {
 	c := common.NewBaseCtx(ctx, s.log)
 
-	sections, _, err := s.marketHandler.GetSectionsFromS3(c, req.BaseTokenAddress)
+	sections, _, err := s.marketHandler.GetSectionsFromS3(c, uint8(req.BaseTokenType))
 	if err != nil {
 		return nil, err
 	}
@@ -2114,7 +2159,7 @@ func (s *MarketService) GetUserTransactions(ctx context.Context, req *marketcent
 
 	transactions, total, err := s.assetHandler.GetUserTransactions(c, &assetBiz.SendTxQuery{
 		UID:           req.Uid,
-		BaseTokenAddress: req.BaseTokenAddress,
+		BaseTokenType: uint8(req.BaseTokenType),
 		BaseQuery: base.BaseQuery{
 			Limit:  int32(req.PageSize),
 			Offset: int32((req.Page - 1) * req.PageSize),
@@ -2145,7 +2190,7 @@ func (s *MarketService) GetLeaderboard(ctx context.Context, req *marketcenter.Ge
 	}
 
 	// 构建排行榜key
-	leaderboardKey, err := s.buildLeaderboardKey(req.TimeInterval, req.BaseTokenAddress, req.SortType)
+	leaderboardKey, err := s.buildLeaderboardKey(req.TimeInterval, req.BaseTokenType, req.SortType)
 	if err != nil {
 		return nil, err
 	}
@@ -2177,9 +2222,13 @@ func (s *MarketService) GetLeaderboard(ctx context.Context, req *marketcenter.Ge
 	}
 
 	// 获取小数位数
-	var decimalValue uint32 = 6
-	if tokenInfo := s.confCustom.AssetTokens[strings.ToLower(req.BaseTokenAddress)]; tokenInfo != nil {
-		decimalValue = tokenInfo.Decimals
+	var decimalValue uint32
+	if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_POINTS {
+		decimalValue = s.confCustom.AssetTokens.Points.Decimals
+	} else if req.BaseTokenType == marketcenter.BaseTokenType_BASE_TOKEN_TYPE_USDC {
+		decimalValue = s.confCustom.AssetTokens.Usdc.Decimals
+	} else {
+		decimalValue = 6 // 默认值
 	}
 
 	for i, entry := range entries {
@@ -2237,7 +2286,9 @@ func (s *MarketService) GetLeaderboard(ctx context.Context, req *marketcenter.Ge
 }
 
 // buildLeaderboardKey 构建排行榜key
-func (s *MarketService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderboardRequest_TimeInterval, baseTokenAddress string, sortType marketcenter.GetLeaderboardRequest_SortType) (string, error) {
+func (s *MarketService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderboardRequest_TimeInterval, baseTokenType marketcenter.BaseTokenType, sortType marketcenter.GetLeaderboardRequest_SortType) (string, error) {
+	baseTokenTypeUint := uint8(baseTokenType)
+
 	// 根据排序类型选择对应的排行榜
 	var leaderboardType string
 	switch sortType {
@@ -2255,15 +2306,15 @@ func (s *MarketService) buildLeaderboardKey(timeInterval marketcenter.GetLeaderb
 	switch timeInterval {
 	case marketcenter.GetLeaderboardRequest_TIME_INTERVAL_DAY:
 		dayStr := util.GetDayStartTimeStr(time.Now().Unix())
-		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenAddress, leaderboardType, "daily-"+dayStr), nil
+		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenTypeUint, leaderboardType, "daily-"+dayStr), nil
 	case marketcenter.GetLeaderboardRequest_TIME_INTERVAL_WEEK:
 		weekStr := util.GetWeekStartTimeStr(time.Now().Unix())
-		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenAddress, leaderboardType, "weekly-"+weekStr), nil
+		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenTypeUint, leaderboardType, "weekly-"+weekStr), nil
 	case marketcenter.GetLeaderboardRequest_TIME_INTERVAL_MONTH:
 		monthStr := util.GetMonthStartTimeStr(time.Now().Unix())
-		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenAddress, leaderboardType, "monthly-"+monthStr), nil
+		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenTypeUint, leaderboardType, "monthly-"+monthStr), nil
 	case marketcenter.GetLeaderboardRequest_TIME_INTERVAL_ALL:
-		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenAddress, leaderboardType, "all-time"), nil
+		return fmt.Sprintf(assetBiz.LeaderboardKey, baseTokenTypeUint, leaderboardType, "all-time"), nil
 	default:
 		return "", errors.New(int(marketcenter.ErrorCode_PARAM), "PARAM_ERROR", "invalid time interval")
 	}
@@ -2418,27 +2469,331 @@ func (s *MarketService) eventEntityToProto(entity *marketBiz.PredictionEventEnti
 }
 
 // ============================================
-// CTF APMM 交易桩 (TRADING_NOT_READY)
+// CTF APMM Trading Endpoints
 // ============================================
 
-func (s *MarketService) CTFSwap(ctx context.Context, req *marketcenter.CTFSwapRequest) (*marketcenter.CTFSwapResponse, error) {
-	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+// protoUserOpToEntity converts a proto UserOperation to a biz UserOperation entity.
+func protoUserOpToEntity(op *marketcenter.UserOperation) *assetBiz.UserOperation {
+	if op == nil {
+		return nil
+	}
+	return &assetBiz.UserOperation{
+		Sender:                        op.Sender,
+		Nonce:                         op.Nonce,
+		CallData:                      op.CallData,
+		CallGasLimit:                  op.CallGasLimit,
+		VerificationGasLimit:          op.VerificationGasLimit,
+		PreVerificationGas:            op.PreVerificationGas,
+		MaxFeePerGas:                  op.MaxFeePerGas,
+		MaxPriorityFeePerGas:          op.MaxPriorityFeePerGas,
+		Signature:                     op.Signature,
+		Factory:                       op.Factory,
+		FactoryData:                   op.FactoryData,
+		Paymaster:                     op.Paymaster,
+		PaymasterData:                 op.PaymasterData,
+		PaymasterVerificationGasLimit: op.PaymasterVerificationGasLimit,
+		PaymasterPostOpGasLimit:       op.PaymasterPostOpGasLimit,
+	}
 }
 
-func (s *MarketService) CTFDepositLiquidity(ctx context.Context, req *marketcenter.CTFDepositLiquidityRequest) (*marketcenter.CTFDepositLiquidityResponse, error) {
-	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
-}
-
-func (s *MarketService) CTFWithdrawLiquidity(ctx context.Context, req *marketcenter.CTFWithdrawLiquidityRequest) (*marketcenter.CTFWithdrawLiquidityResponse, error) {
-	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
-}
-
-func (s *MarketService) CTFRedeemPosition(ctx context.Context, req *marketcenter.CTFRedeemPositionRequest) (*marketcenter.CTFRedeemPositionResponse, error) {
-	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+// checkEventNotFrozen looks up the parent NegRisk event for a market address
+// and returns an error if the event is frozen (NegRiskAdapter rejects deposits for frozen events).
+func (s *MarketService) checkEventNotFrozen(c common.Ctx, marketAddress string) error {
+	market, err := s.marketHandler.GetMarketDetail(c, marketAddress)
+	if err != nil || market == nil {
+		return nil // cannot verify — let the chain call decide
+	}
+	if market.EventId == "" {
+		return nil // not a NegRisk market
+	}
+	event, err := s.marketHandler.GetEvent(c, &marketBiz.PredictionEventQuery{EventId: market.EventId})
+	if err != nil || event == nil {
+		return nil // cannot verify — let the chain call decide
+	}
+	if event.Status == marketBiz.EventStatusFrozen {
+		return errors.New(int(marketcenterPb.ErrorCode_PARAM), "EVENT_FROZEN", "event is frozen — trading and deposits are disabled")
+	}
+	return nil
 }
 
 func (s *MarketService) CTFGetSwapPrice(ctx context.Context, req *marketcenter.CTFGetSwapPriceRequest) (*marketcenter.CTFGetSwapPriceResponse, error) {
-	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+	c := common.NewBaseCtx(ctx, s.log)
+
+	// Reject early if the parent event is frozen (NegRiskAdapter would revert)
+	if err := s.checkEventNotFrozen(c, req.MarketAddress); err != nil {
+		return nil, err
+	}
+
+	optionIndex := new(big.Int)
+	if _, ok := optionIndex.SetString(req.OptionIndex, 10); !ok {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "invalid option_index")
+	}
+
+	amount := new(big.Int)
+	if _, ok := amount.SetString(req.Amount, 10); !ok {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "invalid amount")
+	}
+
+	ctfABI := util.ParsePredictionCTFABI()
+
+	// 1. Get current price (returns uint256 — the APMM probability price)
+	priceData, err := ctfABI.Pack("price", optionIndex)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_PACK_ERROR", err.Error())
+	}
+	priceResult, err := s.assetHandler.GetRepo().CallContractView(c, req.MarketAddress, priceData)
+	if err != nil {
+		c.Log.Errorf("CTFGetSwapPrice price() call error: %+v", err)
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "CONTRACT_CALL_ERROR", "price call failed: "+err.Error())
+	}
+	priceValues, err := ctfABI.Unpack("price", priceResult)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_UNPACK_ERROR", err.Error())
+	}
+	_ = priceValues[0].(*big.Int) // currentPrice (APMM probability)
+
+	// 2. Get numOutcomes to know the pool size
+	numOutcomesData, err := ctfABI.Pack("numOutcomes")
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_PACK_ERROR", err.Error())
+	}
+	numOutcomesResult, err := s.assetHandler.GetRepo().CallContractView(c, req.MarketAddress, numOutcomesData)
+	if err != nil {
+		c.Log.Errorf("CTFGetSwapPrice numOutcomes() call error: %+v", err)
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "CONTRACT_CALL_ERROR", "numOutcomes call failed: "+err.Error())
+	}
+	numOutcomesValues, err := ctfABI.Unpack("numOutcomes", numOutcomesResult)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_UNPACK_ERROR", err.Error())
+	}
+	numOutcomes := int(numOutcomesValues[0].(*big.Int).Int64())
+
+	// 3. Get fee from state()
+	stateData, err := ctfABI.Pack("state")
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_PACK_ERROR", err.Error())
+	}
+	stateResult, err := s.assetHandler.GetRepo().CallContractView(c, req.MarketAddress, stateData)
+	if err != nil {
+		c.Log.Errorf("CTFGetSwapPrice state() call error: %+v", err)
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "CONTRACT_CALL_ERROR", "state call failed: "+err.Error())
+	}
+	stateValues, err := ctfABI.Unpack("state", stateResult)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_UNPACK_ERROR", err.Error())
+	}
+	feeBps := stateValues[0].(*big.Int) // fee in basis points (10000 = 100%)
+
+	// 4. Calculate expected output based on side.
+	//
+	// PredictionCTF uses baseToken.decimals() (6 for USDC) to compute an internal
+	// scaling `factor`. All amounts going in/out of the view functions are in the
+	// baseToken's native decimals (6 for USDC). The contract handles the SD59x18
+	// fixed-point math internally — callers just pass raw token amounts.
+	var expectedAmount *big.Int
+	if req.Side == "buy" {
+		// Buy: deposit USDC, get position tokens out.
+		// getAmountOut(optionOut, delta) — delta is raw baseToken amount (6 dec).
+		// Returns SD59x18 whose unwrap() is the position token amount in baseToken decimals.
+		data, err := ctfABI.Pack("getAmountOut", optionIndex, amount)
+		if err != nil {
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_PACK_ERROR", err.Error())
+		}
+		result, err := s.assetHandler.GetRepo().CallContractView(c, req.MarketAddress, data)
+		if err != nil {
+			c.Log.Errorf("CTFGetSwapPrice getAmountOut() call error: %+v", err)
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "CONTRACT_CALL_ERROR", "getAmountOut call failed: "+err.Error())
+		}
+		values, err := ctfABI.Unpack("getAmountOut", result)
+		if err != nil {
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_UNPACK_ERROR", err.Error())
+		}
+		expectedAmount = values[0].(*big.Int)
+	} else {
+		// Sell: burn position tokens, get USDC back.
+		// getAmountsOut(int256[] x) — x[optionIn] = raw position amount (same decimals as baseToken).
+		// The sd() cast inside the contract wraps the raw int256 as SD59x18 for math;
+		// the result's unwrap() gives back a value in baseToken decimals.
+		deltas := make([]*big.Int, numOutcomes)
+		for i := range deltas {
+			deltas[i] = big.NewInt(0)
+		}
+		idx := int(optionIndex.Int64())
+		if idx < numOutcomes {
+			deltas[idx] = new(big.Int).Set(amount)
+		}
+
+		data, err := ctfABI.Pack("getAmountsOut", deltas)
+		if err != nil {
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_PACK_ERROR", err.Error())
+		}
+		result, err := s.assetHandler.GetRepo().CallContractView(c, req.MarketAddress, data)
+		if err != nil {
+			c.Log.Errorf("CTFGetSwapPrice getAmountsOut() call error: %+v", err)
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "CONTRACT_CALL_ERROR", "getAmountsOut call failed: "+err.Error())
+		}
+		values, err := ctfABI.Unpack("getAmountsOut", result)
+		if err != nil {
+			return nil, errors.New(int(marketcenterPb.ErrorCode_INTERNAL), "ABI_UNPACK_ERROR", err.Error())
+		}
+		expectedAmount = values[0].(*big.Int)
+		// getAmountsOut returns a positive value representing USDC out (before fee deduction)
+		if expectedAmount.Sign() < 0 {
+			expectedAmount = new(big.Int).Neg(expectedAmount)
+		}
+	}
+
+	// 5. Return response.
+	// expectedAmount is in baseToken decimals (6 for USDC), same scale as the input amount.
+	return &marketcenter.CTFGetSwapPriceResponse{
+		ExpectedAmount: expectedAmount.String(),
+		PriceImpact:    "0", // TODO: compute from price delta
+		Fee:            feeBps.String(),
+	}, nil
+}
+
+func (s *MarketService) CTFSwap(ctx context.Context, req *marketcenter.CTFSwapRequest) (*marketcenter.CTFSwapResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	// Reject early if the parent event is frozen (NegRiskAdapter would revert)
+	if err := s.checkEventNotFrozen(c, req.MarketAddress); err != nil {
+		return nil, err
+	}
+
+	amount, err := decimal.NewFromString(req.Amount)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "invalid amount")
+	}
+	minReceiveAmount, err := decimal.NewFromString(req.MinReceiveAmount)
+	if err != nil {
+		return nil, errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "invalid min_receive_amount")
+	}
+
+	side := assetBiz.OrderSideBuy
+	txSource := assetBiz.TxSourceCTFSwapBuy
+	if req.Side == "sell" {
+		side = assetBiz.OrderSideSell
+		txSource = assetBiz.TxSourceCTFSwapSell
+	}
+
+	orderEntity := &assetBiz.OrderEntity{
+		UID:              req.Uid,
+		MarketAddress:    req.MarketAddress,
+		OptionAddress:    req.OptionIndex, // CTF uses optionIndex instead of option address
+		Side:             side,
+		Amount:           amount,
+		MinReceiveAmount: minReceiveAmount,
+		Status:           assetBiz.OrderStatusPending,
+		BaseTokenType:    assetBiz.BaseTokenTypeUsdc,
+		Tx: &assetBiz.SendTxEntity{
+			UID:           req.Uid,
+			Status:        assetBiz.SendTxStatusSending,
+			Chain:         s.confCustom.Chain,
+			Type:          assetBiz.TxTypeUserOperation,
+			Source:        txSource,
+			BaseTokenType: assetBiz.BaseTokenTypeUsdc,
+			UserOperation: protoUserOpToEntity(req.UserOperation),
+		},
+	}
+
+	newOrderEntity, err := s.assetHandler.PlaceOrder(c, orderEntity)
+	if err != nil {
+		if !errors.Is(err, assetBiz.ErrPlaceOrderTooQuick) {
+			s.assetHandler.GetRepo().ReleaseLockDirect(c, fmt.Sprintf(assetBiz.UserOperationLockKey, req.Uid))
+		}
+		return nil, err
+	}
+
+	go func(newCtx common.Ctx) {
+		defer func() {
+			if err := recover(); err != nil {
+				alarm.Lark.Send(fmt.Sprintf("CTFSwap async WaitPlaceOrderUserOperationReceipt panic: %+v, stack: %+v", err, string(debug.Stack())))
+			}
+		}()
+		s.assetHandler.WaitPlaceOrderUserOperationReceipt(newCtx, newOrderEntity)
+	}(common.CloneBaseCtx(c, s.log))
+
+	return &marketcenter.CTFSwapResponse{
+		OpHash:    newOrderEntity.OpHash,
+		OrderUuid: newOrderEntity.UUID,
+	}, nil
+}
+
+func (s *MarketService) CTFDepositLiquidity(ctx context.Context, req *marketcenter.CTFDepositLiquidityRequest) (*marketcenter.CTFDepositLiquidityResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	// Reject early if the parent event is frozen (NegRiskAdapter would revert)
+	if err := s.checkEventNotFrozen(c, req.MarketAddress); err != nil {
+		return nil, err
+	}
+
+	sendTx := &assetBiz.SendTxEntity{
+		UID:           req.Uid,
+		Status:        assetBiz.SendTxStatusSending,
+		Chain:         s.confCustom.Chain,
+		Type:          assetBiz.TxTypeUserOperation,
+		Source:        assetBiz.TxSourceCTFDepositLiquidity,
+		BaseTokenType: assetBiz.BaseTokenTypeUsdc,
+		UserOperation: protoUserOpToEntity(req.UserOperation),
+	}
+
+	opHash, err := s.assetHandler.CTFSendUserOp(c, sendTx)
+	if err != nil {
+		if !errors.Is(err, assetBiz.ErrPlaceOrderTooQuick) {
+			s.assetHandler.GetRepo().ReleaseLockDirect(c, fmt.Sprintf(assetBiz.UserOperationLockKey, req.Uid))
+		}
+		return nil, err
+	}
+
+	return &marketcenter.CTFDepositLiquidityResponse{OpHash: opHash}, nil
+}
+
+func (s *MarketService) CTFWithdrawLiquidity(ctx context.Context, req *marketcenter.CTFWithdrawLiquidityRequest) (*marketcenter.CTFWithdrawLiquidityResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	sendTx := &assetBiz.SendTxEntity{
+		UID:           req.Uid,
+		Status:        assetBiz.SendTxStatusSending,
+		Chain:         s.confCustom.Chain,
+		Type:          assetBiz.TxTypeUserOperation,
+		Source:        assetBiz.TxSourceCTFWithdrawLiquidity,
+		BaseTokenType: assetBiz.BaseTokenTypeUsdc,
+		UserOperation: protoUserOpToEntity(req.UserOperation),
+	}
+
+	opHash, err := s.assetHandler.CTFSendUserOp(c, sendTx)
+	if err != nil {
+		if !errors.Is(err, assetBiz.ErrPlaceOrderTooQuick) {
+			s.assetHandler.GetRepo().ReleaseLockDirect(c, fmt.Sprintf(assetBiz.UserOperationLockKey, req.Uid))
+		}
+		return nil, err
+	}
+
+	return &marketcenter.CTFWithdrawLiquidityResponse{OpHash: opHash}, nil
+}
+
+func (s *MarketService) CTFRedeemPosition(ctx context.Context, req *marketcenter.CTFRedeemPositionRequest) (*marketcenter.CTFRedeemPositionResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+
+	sendTx := &assetBiz.SendTxEntity{
+		UID:           req.Uid,
+		Status:        assetBiz.SendTxStatusSending,
+		Chain:         s.confCustom.Chain,
+		Type:          assetBiz.TxTypeUserOperation,
+		Source:        assetBiz.TxSourceCTFRedeemPosition,
+		BaseTokenType: assetBiz.BaseTokenTypeUsdc,
+		UserOperation: protoUserOpToEntity(req.UserOperation),
+	}
+
+	opHash, err := s.assetHandler.CTFSendUserOp(c, sendTx)
+	if err != nil {
+		if !errors.Is(err, assetBiz.ErrPlaceOrderTooQuick) {
+			s.assetHandler.GetRepo().ReleaseLockDirect(c, fmt.Sprintf(assetBiz.UserOperationLockKey, req.Uid))
+		}
+		return nil, err
+	}
+
+	return &marketcenter.CTFRedeemPositionResponse{OpHash: opHash}, nil
 }
 
 // ============================================

@@ -1,4 +1,17 @@
-.PHONY: tunnel tunnel-stop tunnel-domains help
+.PHONY: tunnel tunnel-stop tunnel-domains vps-status help
+
+# VPS 部署查看 (需设置 PROME_VPS=user@host，可选 PROME_BACKEND_PATH=/path/to/prome/backend)
+PROME_BACKEND_PATH ?= backend
+vps-status:
+	@if [ -z "$(PROME_VPS)" ]; then \
+		echo "用法: make vps-status PROME_VPS=user@host"; \
+		echo "可选: PROME_BACKEND_PATH=/path/to/prome/backend"; \
+		echo ""; \
+		echo "或在 VPS 上直接执行:"; \
+		echo "  ssh \$${PROME_VPS} 'cd \$${PROME_BACKEND_PATH} && docker compose ps'"; \
+		exit 1; \
+	fi
+	@ssh "$(PROME_VPS)" "cd $(PROME_BACKEND_PATH) && docker compose ps && echo '' && docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
 
 # Cloudflare 隧道配置
 TUNNEL_LOG := /tmp/cloudflared.log

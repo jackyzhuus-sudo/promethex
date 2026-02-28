@@ -79,10 +79,12 @@ paths:
                   schema:
                     type: integer
                     format: uint32
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
             responses:
                 "200":
                     description: OK
@@ -517,10 +519,12 @@ paths:
                   schema:
                     type: integer
                     format: uint32
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
             responses:
                 "200":
                     description: OK
@@ -540,10 +544,12 @@ paths:
                   description: 查看的用户uid
                   schema:
                     type: string
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: page
                   in: query
                   description: 页码
@@ -570,10 +576,12 @@ paths:
             description: 获取热门市场列表 need_auth = false
             operationId: HttpApi_GetHotMarkets
             parameters:
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
             responses:
                 "200":
                     description: OK
@@ -720,11 +728,12 @@ paths:
                   schema:
                     type: integer
                     format: enum
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
                   description: '基础代币类型（可选）1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: status
                   in: query
                   description: 市场状态（可选）
@@ -851,10 +860,12 @@ paths:
             description: 获取用户自身的当前资产信息 need_auth = false
             operationId: HttpApi_GetUserAssetInfo
             parameters:
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: uid
                   in: query
                   description: 用户uid
@@ -896,11 +907,12 @@ paths:
                   description: 市场地址(可选)
                   schema:
                     type: string
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
                   description: '基础代币类型(可选) 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: optionAddress
                   in: query
                   description: 条件代币地址(可选)
@@ -942,10 +954,12 @@ paths:
                   description: 查看的用户uid
                   schema:
                     type: string
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
             responses:
                 "200":
                     description: OK
@@ -1151,10 +1165,12 @@ paths:
                   description: 查看的用户uid
                   schema:
                     type: string
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: timeInterval
                   in: query
                   description: '时间间隔 1: 7d  2: 1m  3: 3m   4: all'
@@ -1205,10 +1221,12 @@ paths:
                   description: 用户名称
                   schema:
                     type: string
-                - name: baseTokenAddress
+                - name: baseTokenType
                   in: query
+                  description: '基础代币类型 1: points 2: usdc'
                   schema:
-                    type: string
+                    type: integer
+                    format: enum
                 - name: inviteCode
                   in: query
                   description: 邀请码
@@ -1617,6 +1635,10 @@ components:
         api.v1.GetBaseTokenConfigReply_BaseToken:
             type: object
             properties:
+                baseTokenType:
+                    type: integer
+                    description: '代币类型 1: points 2: usdc'
+                    format: uint32
                 baseTokenName:
                     type: string
                     description: 代币名称
@@ -1886,8 +1908,10 @@ components:
                 deadline:
                     type: string
                     description: 市场截止时间
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
         api.v1.GetHoldingPositionsMarketReply:
             type: object
             properties:
@@ -1928,8 +1952,10 @@ components:
                     type: integer
                     description: 市场参与者数量
                     format: uint32
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
                 userMarketTotalValue:
                     type: string
                     description: 用户该市场的总持仓价值
@@ -1965,8 +1991,10 @@ components:
                     type: integer
                     description: '市场状态 1: 进行中 2: 结算中 3: 有争议 4: 已结束'
                     format: uint32
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
         api.v1.GetInviteUserListReply:
             type: object
             properties:
@@ -2094,6 +2122,10 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.GetMarketDetailReply_OptionInfo'
                     description: 条件代币列表
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
                 baseTokenAddress:
                     type: string
                     description: 基础代币地址
@@ -2305,9 +2337,10 @@ components:
                     type: integer
                     description: 市场交易人数
                     format: uint32
-                baseTokenAddress:
-                    type: string
-                    description: 基础代币地址
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: uint32
                 options:
                     type: array
                     items:
@@ -2492,8 +2525,9 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.GetUserAssetHistoryReply_OneSnapshot'
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    format: enum
                 decimal:
                     type: integer
                     description: 精度
@@ -2645,9 +2679,10 @@ components:
                 createdAt:
                     type: string
                     description: 时间
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
                     description: 基础代币类型
+                    format: enum
         api.v1.GetUserPositionsReply:
             type: object
             properties:
@@ -2677,8 +2712,10 @@ components:
                 optionAddress:
                     type: string
                     description: 条件代币地址
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
                 optionName:
                     type: string
                     description: 条件代币名称
@@ -2764,8 +2801,10 @@ components:
                     description: 成交价格
                 option:
                     $ref: '#/components/schemas/api.v1.Order_Option'
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
         api.v1.GetUserTransactionsReply:
             type: object
             properties:
@@ -2790,8 +2829,10 @@ components:
                     type: integer
                     description: 方向 1 转入base token  2 转出base token
                     format: uint32
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
                 tokenAddress:
                     type: string
                     description: 代币地址
@@ -3219,8 +3260,10 @@ components:
                 deadline:
                     type: string
                     description: 市场截止时间
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
         api.v1.SearchReply_User:
             type: object
             properties:
@@ -3362,8 +3405,10 @@ components:
                 toAddress:
                     type: string
                     description: 接收地址
-                baseTokenAddress:
-                    type: string
+                baseTokenType:
+                    type: integer
+                    description: '基础代币类型 1: points 2: usdc'
+                    format: enum
                 amount:
                     type: string
                     description: 转账数量

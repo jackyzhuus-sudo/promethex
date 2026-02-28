@@ -1,6 +1,6 @@
-# Bayes Market Backend
+# Market Backend
 
-Bayes Market Backend BFF service, serving as an intermediary layer between frontend and microservices, providing HTTP interfaces to frontend and calling downstream market-service microservices via gRPC.
+Market Backend BFF service, serving as an intermediary layer between frontend and microservices, providing HTTP interfaces to frontend and calling downstream market-service microservices via gRPC.
 
 ## System Architecture
 
@@ -8,10 +8,10 @@ Bayes Market Backend BFF service, serving as an intermediary layer between front
 graph TB
     A[Frontend]
     
-    B[Bayes Market Backend]
+    B[Market Backend]
     
-    C[Bayes Service]
-    D[Bayes Recommendation]
+    C[Market Service]
+    D[Recommendation]
     E[Block Listener]
 
     F[(Database)]
@@ -49,9 +49,9 @@ graph TB
 
 The system consists of multiple microservices:
 
-- **Bayes Market Backend (BFF)**: Frontend gateway service providing HTTP APIs
-- **Bayes Service**: Core business logic service handling market data, trading, and user management
-- **Bayes Recommendation**: AI/ML service providing embedding and recommendation algorithms
+- **Market Backend (BFF)**: Frontend gateway service providing HTTP APIs
+- **Market Service**: Core business logic service handling market data, trading, and user management
+- **Recommendation**: AI/ML service providing embedding and recommendation algorithms
 - **Block Listener**: Blockchain monitoring service that listens to on-chain events and updates business data
 
 ## Project Structure
@@ -59,8 +59,7 @@ The system consists of multiple microservices:
 ```
 market-backend/
 ├── api/                              # API definition directory
-│   └── bayes/                       # API namespace
-│       └── v1/                      # V1 version API definitions
+│   └── v1/                          # V1 API definitions
 ├── cmd/                             # Main program entry directory
 │   └── market-backend/        # Service startup entry
 ├── internal/                        # Internal package directory (not exposed)
@@ -159,13 +158,14 @@ server:
   http:
     addr: :8000
     timeout: 1s
-  grpc:
-    addr: :9000
-    timeout: 1s
-client:
-  bayes:
-    target: dns:///market-service:9000
-    timeout: 1s
+data:
+  rpc:
+    usercenter_rpc:
+      addr: market-service:9000
+      timeout: 1s
+    marketcenter_rpc:
+      addr: market-service:9000
+      timeout: 1s
 ```
 
 ## Error Handling

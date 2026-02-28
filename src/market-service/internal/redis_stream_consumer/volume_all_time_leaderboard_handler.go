@@ -95,7 +95,7 @@ func (h *VolumeAllTimeLeaderboardHandler) processUserTradeMessage(ctx common.Ctx
 	}
 
 	// 更新Volume All Time Leaderboard
-	leaderboardKey := fmt.Sprintf(assetBiz.VolumeAllTimeLeaderboard, userTradeStreamMsg.BaseTokenAddress)
+	leaderboardKey := fmt.Sprintf(assetBiz.VolumeAllTimeLeaderboard, userTradeStreamMsg.BaseTokenType)
 	err = h.assetBiz.UpdateLeaderboard(ctx, leaderboardKey, userTradeStreamMsg.UID, tradeVolume.InexactFloat64())
 	if err != nil {
 		ctx.Log.Errorf("failed to update volume all time leaderboard: %w", err)

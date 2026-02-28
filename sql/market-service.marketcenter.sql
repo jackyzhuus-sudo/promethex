@@ -268,3 +268,60 @@ CREATE INDEX IF NOT EXISTS idx_user_transfer_tokens_uid ON t_user_transfer_token
 CREATE INDEX IF NOT EXISTS idx_user_transfer_tokens_status ON t_user_transfer_tokens(status);
 CREATE INDEX IF NOT EXISTS idx_user_transfer_tokens_side ON t_user_transfer_tokens(side);
 CREATE INDEX IF NOT EXISTS idx_user_transfer_tokens_base_token_type ON t_user_transfer_tokens(base_token_type);
+
+-- 创建 CTF Prediction Event 表
+CREATE TABLE IF NOT EXISTS t_prediction_event (
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    event_id VARCHAR(66) NOT NULL DEFAULT '',
+    title VARCHAR(512) NOT NULL DEFAULT '',
+    outcome_slot_count INTEGER NOT NULL DEFAULT 2,
+    collateral VARCHAR(42) NOT NULL DEFAULT '',
+    status SMALLINT NOT NULL DEFAULT 1,
+    metadata_hash VARCHAR(128) NOT NULL DEFAULT '',
+    CONSTRAINT idx_event_id UNIQUE (event_id)
+);
+
+-- 创建用户市场持仓表
+CREATE TABLE IF NOT EXISTS t_user_market_position (
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    uid VARCHAR(24) NOT NULL,
+    market_address VARCHAR(42) NOT NULL,
+    base_token_type SMALLINT NOT NULL DEFAULT 1,
+    total_value NUMERIC NOT NULL DEFAULT 0,
+    status SMALLINT NOT NULL DEFAULT 1,
+    CONSTRAINT idx_uid_market_address1 UNIQUE (uid, market_address)
+);
+
+-- 创建任务表
+CREATE TABLE IF NOT EXISTS t_task (
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    uuid VARCHAR(36) NOT NULL,
+    key VARCHAR(128) NOT NULL,
+    is_show SMALLINT NOT NULL DEFAULT 1,
+    type SMALLINT NOT NULL DEFAULT 1,
+    name VARCHAR(512) NOT NULL DEFAULT '',
+    description VARCHAR(1024) NOT NULL DEFAULT '',
+    pic_url VARCHAR(512) NOT NULL DEFAULT '',
+    reward BIGINT NOT NULL DEFAULT 0,
+    jump_url VARCHAR(512) NOT NULL DEFAULT ''
+);
+
+-- 创建用户任务表
+CREATE TABLE IF NOT EXISTS t_user_task (
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    uuid VARCHAR(36) NOT NULL,
+    uid VARCHAR(24) NOT NULL,
+    task_uuid VARCHAR(36) NOT NULL,
+    task_key VARCHAR(128) NOT NULL,
+    reward BIGINT NOT NULL DEFAULT 0,
+    claimed SMALLINT NOT NULL DEFAULT 2,
+    claimed_at BIGINT NOT NULL DEFAULT 0
+);

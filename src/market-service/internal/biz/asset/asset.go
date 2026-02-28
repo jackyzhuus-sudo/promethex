@@ -72,7 +72,7 @@ type AssetRepoInterface interface {
 
 	BatchCreateUserAssetValue(ctx common.Ctx, userAssetValueEntities []*UserAssetValueEntity) error
 	GetUserAssetValue(ctx common.Ctx, query *UserAssetValueQuery) (*UserAssetValueEntity, error)
-	GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenAddress string, timeRange string) ([]*UserAssetValueEntity, error)
+	GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenType uint8, timeRange string) ([]*UserAssetValueEntity, error)
 	CreateOrUpdateUserMarketPosition(ctx common.Ctx, userMarketPositionEntity *UserMarketPositionEntity) error
 	UpdateUserMarketPositionDecrease(ctx common.Ctx, userMarketPositionEntity *UserMarketPositionEntity) error
 
@@ -107,6 +107,7 @@ type AssetRepoInterface interface {
 	GetUserOperationReceipt(ctx common.Ctx, userOpHash string) (*simplejson.Json, error)
 	SendUserOperationToAlchemy(ctx common.Ctx, userOperation *UserOperation) (string, error)
 	MintERC20Token(ctx common.Ctx, tokenAddress string, to string, amount *big.Int) (string, error)
+	CallContractView(ctx common.Ctx, contractAddr string, data []byte) ([]byte, error)
 
 	// leaderboard
 	ZRevRank(ctx common.Ctx, key, member string) (int64, error)
@@ -167,8 +168,8 @@ func (h *AssetHandler) ProcessUserBaseTokenUpdate(ctx common.Ctx, userTokenBalan
 			}
 
 			err = h.assetRepo.CreateSendTx(ctx, &SendTxEntity{
-				BaseTokenAddress: userTokenBalanceEntity.BaseTokenAddress,
-				UID:              userTokenBalanceEntity.UID,
+				BaseTokenType: uint8(userTokenBalanceEntity.BaseTokenType),
+				UID:           userTokenBalanceEntity.UID,
 				Type:          TxTypeNormal,
 				Source:        TxSourceTransferDeposit,
 				Status:        SendTxStatusExecSuccess,
@@ -182,12 +183,12 @@ func (h *AssetHandler) ProcessUserBaseTokenUpdate(ctx common.Ctx, userTokenBalan
 			}
 
 			err = h.assetRepo.CreateUserTransferTokens(ctx, &UserTransferTokensEntity{
-				UUID:             util.GenerateUUID(),
-				UID:              userTokenBalanceEntity.UID,
-				TokenAddress:     userTokenBalanceEntity.TokenAddress,
-				ExternalAddress:  userTokenBalanceEntity.FromAddress,
-				Side:             UserTransferTokensSideDeposit,
-				BaseTokenAddress: userTokenBalanceEntity.BaseTokenAddress,
+				UUID:            util.GenerateUUID(),
+				UID:             userTokenBalanceEntity.UID,
+				TokenAddress:    userTokenBalanceEntity.TokenAddress,
+				ExternalAddress: userTokenBalanceEntity.FromAddress,
+				Side:            UserTransferTokensSideDeposit,
+				BaseTokenType:   userTokenBalanceEntity.BaseTokenType,
 				Amount:          userTokenBalanceEntity.TransferAmount,
 				Status:          UserTransferTokensStatusSuccess,
 				TxHash:          userTokenBalanceEntity.TxHash,
@@ -289,8 +290,8 @@ func (h *AssetHandler) PlaceOrder(ctx common.Ctx, orderEntity *OrderEntity) (*Or
 		return nil, errors.New(int(marketcenterPb.ErrorCode_INVALID_USER_OPERATION), "INVALID_USER_OPERATION", "invalid market address: "+callDataMarketAddress)
 	}
 
-	orderEntity.BaseTokenAddress = marketEntity.BaseTokenAddress
-	orderEntity.Tx.BaseTokenAddress = marketEntity.BaseTokenAddress
+	orderEntity.BaseTokenType = uint8(marketEntity.TokenType)
+	orderEntity.Tx.BaseTokenType = uint8(marketEntity.TokenType)
 
 	opHash, err := h.assetRepo.SendUserOperationToAlchemy(ctx, orderEntity.Tx.UserOperation)
 	if err != nil {
@@ -321,6 +322,42 @@ func (h *AssetHandler) PlaceOrder(ctx common.Ctx, orderEntity *OrderEntity) (*Or
 	}
 
 	return orderEntity, nil
+}
+
+// CTFSendUserOp sends a CTF UserOperation (for liquidity/redeem, no order entity needed).
+func (h *AssetHandler) CTFSendUserOp(ctx common.Ctx, sendTx *SendTxEntity) (string, error) {
+	lockKey := fmt.Sprintf(UserOperationLockKey, sendTx.UID)
+	_, ok, err := h.assetRepo.AcquireLock(ctx, lockKey, 10*time.Second)
+	if err != nil {
+		return "", errors.New(int(marketcenterPb.ErrorCode_REDIS), "REDIS_ERROR", err.Error())
+	}
+	if !ok {
+		return "", ErrPlaceOrderTooQuick
+	}
+
+	err = sendTx.UserOperation.Validate()
+	if err != nil {
+		ctx.Log.Errorf("CTFSendUserOp UserOperation Validate error: %v", err)
+		return "", errors.New(int(marketcenterPb.ErrorCode_INVALID_USER_OPERATION), "INVALID_USER_OPERATION", err.Error())
+	}
+
+	opHash, err := h.assetRepo.SendUserOperationToAlchemy(ctx, sendTx.UserOperation)
+	if err != nil {
+		ctx.Log.Errorf("CTFSendUserOp SendUserOperationToAlchemy error: %+v", err)
+		return "", errors.New(int(marketcenterPb.ErrorCode_ALCHEMY), "ALCHEMY_ERROR", "SendUserOperationToAlchemy error:"+err.Error())
+	}
+	if opHash == "" {
+		return "", errors.New(int(marketcenterPb.ErrorCode_ALCHEMY), "ALCHEMY_ERROR", "response opHash is empty")
+	}
+
+	sendTx.OpHash = opHash
+	err = h.assetRepo.CreateSendTx(ctx, sendTx)
+	if err != nil {
+		ctx.Log.Errorf("CTFSendUserOp CreateSendTx error: %+v", err)
+		return "", errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
+	}
+
+	return opHash, nil
 }
 
 func (h *AssetHandler) WaitPlaceOrderUserOperationReceipt(ctx common.Ctx, orderEntity *OrderEntity) {
@@ -645,8 +682,8 @@ func (h *AssetHandler) ClaimMarketResult(ctx common.Ctx, userClaimResultEntity *
 		return nil, errors.New(int(marketcenterPb.ErrorCode_INVALID_USER_OPERATION), "INVALID_USER_OPERATION", err.Error())
 	}
 
-	userClaimResultEntity.BaseTokenAddress = marketEntity.BaseTokenAddress
-	userClaimResultEntity.Tx.BaseTokenAddress = marketEntity.BaseTokenAddress
+	userClaimResultEntity.BaseTokenType = uint8(marketEntity.TokenType)
+	userClaimResultEntity.Tx.BaseTokenType = uint8(marketEntity.TokenType)
 
 	opHash, err := h.assetRepo.SendUserOperationToAlchemy(ctx, userClaimResultEntity.Tx.UserOperation)
 	if err != nil {
@@ -784,12 +821,12 @@ func (h *AssetHandler) ProcessMarketDepositEventInAssetHandler(ctx common.Ctx, r
 	// 这里biz层不加事务 放到service层加事务
 
 	err = h.assetRepo.CreateOrUpdateOrder(ctx, &OrderEntity{
-		UUID:             util.GenerateUUID(),
-		UID:              req.Uid,
-		OptionAddress:    req.UserOptionTokenAddress,
-		MarketAddress:    req.MarketAddress,
-		BaseTokenAddress: req.BaseTokenAddress,
-		Side:             OrderSideBuy,
+		UUID:           util.GenerateUUID(),
+		UID:            req.Uid,
+		OptionAddress:  req.UserOptionTokenAddress,
+		MarketAddress:  req.MarketAddress,
+		BaseTokenType:  uint8(req.BaseTokenType),
+		Side:           OrderSideBuy,
 		EventProcessed: ProcessedYes,
 
 		TxHash: req.TxHash,
@@ -836,9 +873,9 @@ func (h *AssetHandler) ProcessMarketDepositEventInAssetHandler(ctx common.Ctx, r
 			Balance:       userOptionOutBalance, // 没算精度信息1次
 			AvgBuyPrice:   buyPirce,             // 没算精度信息1次
 			BlockNumber:   req.BlockNumber,
-			Decimal:          uint8(req.Decimal),
-			BaseTokenAddress: req.BaseTokenAddress,
-			Type:             uint8(TypeUserTokenBalanceOption),
+			Decimal:       uint8(req.Decimal),
+			BaseTokenType: uint8(req.BaseTokenType),
+			Type:          uint8(TypeUserTokenBalanceOption),
 		}
 		err = h.assetRepo.CreateUserTokenBalance(ctx, userTokenBalanceEntity)
 		if err != nil {
@@ -849,10 +886,10 @@ func (h *AssetHandler) ProcessMarketDepositEventInAssetHandler(ctx common.Ctx, r
 
 	/*
 		err = h.assetRepo.CreateOrUpdateUserMarketPosition(ctx, &UserMarketPositionEntity{
-			UID:              req.Uid,
-			MarketAddress:    req.MarketAddress,
-			BaseTokenAddress: req.BaseTokenAddress,
-			TotalValue:       amountIn,
+			UID:           req.Uid,
+			MarketAddress: req.MarketAddress,
+			BaseTokenType: uint8(req.BaseTokenType),
+			TotalValue:    amountIn,
 		})
 		if err != nil {
 			ctx.Log.Errorf("CreateOrUpdateUserMarketPosition error: %+v", err)
@@ -907,12 +944,12 @@ func (h *AssetHandler) ProcessMarketWithdrawEventInAssetHandler(ctx common.Ctx, 
 	pnl := priceChange.Mul(amountIn).Div(decimal.New(1, int32(userTokenBalanceEntity.Decimal)))
 
 	err = h.assetRepo.CreateOrUpdateOrder(ctx, &OrderEntity{
-		UUID:             util.GenerateUUID(),
-		UID:              req.Uid,
-		OptionAddress:    req.UserOptionTokenAddress,
-		MarketAddress:    req.MarketAddress,
-		BaseTokenAddress: req.BaseTokenAddress,
-		Side:             OrderSideSell,
+		UUID:          util.GenerateUUID(),
+		UID:           req.Uid,
+		OptionAddress: req.UserOptionTokenAddress,
+		MarketAddress: req.MarketAddress,
+		BaseTokenType: uint8(req.BaseTokenType),
+		Side:          OrderSideSell,
 
 		TxHash: req.TxHash,
 		Status: OrderStatusSuccess,
@@ -939,10 +976,10 @@ func (h *AssetHandler) ProcessMarketWithdrawEventInAssetHandler(ctx common.Ctx, 
 
 	/*
 		err = h.assetRepo.UpdateUserMarketPositionDecrease(ctx, &UserMarketPositionEntity{
-			UID:              req.Uid,
-			MarketAddress:    req.MarketAddress,
-			BaseTokenAddress: req.BaseTokenAddress,
-			TotalValue:       amountOut, // 没算精度信息（1次）
+			UID:           req.Uid,
+			MarketAddress: req.MarketAddress,
+			BaseTokenType: uint8(req.BaseTokenType),
+			TotalValue:    amountOut, // 没算精度信息（1次）
 		})
 		if err != nil {
 			ctx.Log.Errorf("UpdateUserMarketPositionDecrease error: %+v", err)
@@ -963,12 +1000,12 @@ func (h *AssetHandler) ProcessMarketClaimResultEventInAssetHandler(ctx common.Ct
 	}
 
 	err = h.assetRepo.CreateOrUpdateUserClaimResult(ctx, &UserClaimResultEntity{
-		UUID:             util.GenerateUUID(),
-		UID:              req.Uid,
-		MarketAddress:    req.MarketAddress,
-		OptionAddress:    req.OptionAddress,
-		Amount:           amount,
-		BaseTokenAddress: req.BaseTokenAddress,
+		UUID:           util.GenerateUUID(),
+		UID:            req.Uid,
+		MarketAddress:  req.MarketAddress,
+		OptionAddress:  req.OptionAddress,
+		Amount:         amount,
+		BaseTokenType:  uint8(req.BaseTokenType),
 		Status:         UserClaimResultStatusSuccess,
 		EventProcessed: ProcessedYes,
 		TxHash:         req.TxHash,
@@ -992,10 +1029,10 @@ func (h *AssetHandler) ProcessMarketClaimResultEventInAssetHandler(ctx common.Ct
 
 	/*
 		err = h.assetRepo.UpdateUserMarketPositionDecrease(ctx, &UserMarketPositionEntity{
-			UID:              req.Uid,
-			MarketAddress:    req.MarketAddress,
-			BaseTokenAddress: req.BaseTokenAddress,
-			TotalValue:       amount,
+			UID:           req.Uid,
+			MarketAddress: req.MarketAddress,
+			BaseTokenType: uint8(req.BaseTokenType),
+			TotalValue:    amount,
 		})
 		if err != nil {
 			ctx.Log.Errorf("UpdateUserMarketPositionDecrease error: %+v", err)
@@ -1014,23 +1051,13 @@ func (h *AssetHandler) GetUserAssetValue(ctx common.Ctx, query *UserAssetValueQu
 	return userAssetValueEntity, nil
 }
 
-func (h *AssetHandler) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenAddress string, timeRange string) ([]*UserAssetValueEntity, error) {
-	userAssetValueEntities, err := h.assetRepo.GetUserAssetHistory(ctx, uid, baseTokenAddress, timeRange)
+func (h *AssetHandler) GetUserAssetHistory(ctx common.Ctx, uid string, baseTokenType uint8, timeRange string) ([]*UserAssetValueEntity, error) {
+	userAssetValueEntities, err := h.assetRepo.GetUserAssetHistory(ctx, uid, baseTokenType, timeRange)
 	if err != nil {
 		ctx.Log.Errorf("GetUserAssetHistory error: %+v", err)
 		return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
 	}
 	return userAssetValueEntities, nil
-}
-
-// findPointsToken returns the address and token info for the "points" token from config.
-func (h *AssetHandler) findPointsToken() (string, *conf.Custom_AssetToken) {
-	for addr, token := range h.confCustom.AssetTokens {
-		if strings.EqualFold(token.Symbol, "POINTS") || strings.EqualFold(token.Name, "Points") {
-			return addr, token
-		}
-	}
-	return "", nil
 }
 
 func (h *AssetHandler) MintPointsToUser(ctx common.Ctx, uid string, userAddress string, txSource uint8, amount *big.Int) (string, error) {
@@ -1039,25 +1066,20 @@ func (h *AssetHandler) MintPointsToUser(ctx common.Ctx, uid string, userAddress 
 		return "", errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "source is not valid")
 	}
 
-	pointsAddr, pointsToken := h.findPointsToken()
-	if pointsToken == nil {
-		return "", errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", "points token not found in config")
-	}
-
-	txHash, err := h.assetRepo.MintERC20Token(ctx, pointsToken.Address, userAddress, amount)
+	txHash, err := h.assetRepo.MintERC20Token(ctx, h.confCustom.AssetTokens.Points.Address, userAddress, amount)
 	if err != nil {
 		ctx.Log.Errorf("MintPointsToNewUser MintERC20Token error: %+v", err)
 		return "", errors.New(int(marketcenterPb.ErrorCode_ALCHEMY), "ALCHEMY_ERROR", "mint points to user failed: "+err.Error())
 	}
 
 	err = h.assetRepo.CreateSendTx(ctx, &SendTxEntity{
-		UID:              uid,
-		TxHash:           txHash,
-		Source:           txSource,
-		Status:           SendTxStatusSending,
-		Chain:            h.confCustom.Chain,
-		Type:             TxTypeNormal,
-		BaseTokenAddress: pointsAddr,
+		UID:           uid,
+		TxHash:        txHash,
+		Source:        txSource,
+		Status:        SendTxStatusSending,
+		Chain:         h.confCustom.Chain,
+		Type:          TxTypeNormal,
+		BaseTokenType: uint8(BaseTokenTypePoints),
 	})
 	if err != nil {
 		ctx.Log.Errorf("MintPointsToNewUser CreateSendTx error: %+v", err)
@@ -1144,16 +1166,16 @@ func (h *AssetHandler) GetUserTokenBalancesByQueryItems(ctx common.Ctx, queryIte
 	return userTokenBalanceEntities, nil
 }
 
-func (h *AssetHandler) CalculateUserAssetValue(ctx common.Ctx, uid string, assetAddress string, baseTokenAddress string) (*UserAssetValueEntity, error) {
+func (h *AssetHandler) CalculateUserAssetValue(ctx common.Ctx, uid string, assetAddress string, baseTokenType uint8) (*UserAssetValueEntity, error) {
 	// 计算用户当前的
 	//	1. 持仓总价值(t_user_token_balance, t_option_token_price)
 	//  2. 该资产代币的余额(t_user_token_balance)
 	//  3. pnl(已实现t_order ; 未实现 t_user_token_balance)
 
 	userAssetValueEntity := &UserAssetValueEntity{
-		UID:              uid,
-		AssetAddress:     assetAddress,
-		BaseTokenAddress: baseTokenAddress,
+		UID:           uid,
+		AssetAddress:  assetAddress,
+		BaseTokenType: baseTokenType,
 		Value:         decimal.Zero,
 		Balance:       decimal.Zero,
 		Portfolio:     decimal.Zero,
@@ -1164,11 +1186,11 @@ func (h *AssetHandler) CalculateUserAssetValue(ctx common.Ctx, uid string, asset
 	}
 
 	userTokenBalanceEntities, err := h.assetRepo.GetUserTokenBalance(ctx, &UserTokenBalanceQuery{
-		UID:              uid,
-		BaseTokenAddress: baseTokenAddress,
-		Type:             TypeUserTokenBalanceOption,
-		NoZero:           true,
-		StatusNotEqual:   UserTokenBalanceStatusEndLose,
+		UID:            uid,
+		BaseTokenType:  baseTokenType,
+		Type:           TypeUserTokenBalanceOption,
+		NoZero:         true,
+		StatusNotEqual: UserTokenBalanceStatusEndLose,
 	})
 	if err != nil {
 		return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
@@ -1203,10 +1225,10 @@ func (h *AssetHandler) CalculateUserAssetValue(ctx common.Ctx, uid string, asset
 
 	//-----
 	assetTokenBalanceEntities, err := h.assetRepo.GetUserTokenBalance(ctx, &UserTokenBalanceQuery{
-		UID:              uid,
-		BaseTokenAddress: baseTokenAddress,
-		Type:             TypeUserTokenBalanceBaseAsset,
-		NoZero:           true,
+		UID:           uid,
+		BaseTokenType: baseTokenType,
+		Type:          TypeUserTokenBalanceBaseAsset,
+		NoZero:        true,
 	})
 	if err != nil {
 		return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
@@ -1230,8 +1252,8 @@ func (h *AssetHandler) CalculateUserAssetValue(ctx common.Ctx, uid string, asset
 	}
 
 	orderEntities, _, err := h.assetRepo.GetOrdersWithTotal(ctx, &OrderQuery{
-		UID:              uid,
-		BaseTokenAddress: baseTokenAddress,
+		UID:           uid,
+		BaseTokenType: baseTokenType,
 		Side:          OrderSideSell,
 		Status:        OrderStatusSuccess,
 	})
@@ -1513,13 +1535,16 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_BUY
 			transaction.Side = 1 // 转入
 			if order, exists := orderMap[sendTx.TxHash]; exists {
-				transaction.BaseTokenAddress = order.BaseTokenAddress
+				transaction.BaseTokenType = marketcenterPb.BaseTokenType(order.BaseTokenType)
 				transaction.Amount = order.Amount.String()
 
 				// 设置token地址和精度
-				transaction.TokenAddress = order.BaseTokenAddress
-				if tokenInfo := h.confCustom.AssetTokens[strings.ToLower(order.BaseTokenAddress)]; tokenInfo != nil {
-					transaction.Decimal = tokenInfo.Decimals
+				if order.BaseTokenType == BaseTokenTypePoints {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
+				} else {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Usdc.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Usdc.Decimals
 				}
 
 				buyData := &TxDataBuy{}
@@ -1547,13 +1572,16 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_SELL
 			transaction.Side = 2 // 转出
 			if order, exists := orderMap[sendTx.TxHash]; exists {
-				transaction.BaseTokenAddress = order.BaseTokenAddress
+				transaction.BaseTokenType = marketcenterPb.BaseTokenType(order.BaseTokenType)
 				transaction.Amount = order.ReceiveAmount.String()
 
 				// 设置token地址和精度
-				transaction.TokenAddress = order.BaseTokenAddress
-				if tokenInfo := h.confCustom.AssetTokens[strings.ToLower(order.BaseTokenAddress)]; tokenInfo != nil {
-					transaction.Decimal = tokenInfo.Decimals
+				if order.BaseTokenType == BaseTokenTypePoints {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
+				} else {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Usdc.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Usdc.Decimals
 				}
 
 				sellData := &TxDataSell{}
@@ -1581,13 +1609,16 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_CLAIM
 			transaction.Side = 1 // 转入
 			if claim, exists := claimMap[sendTx.TxHash]; exists {
-				transaction.BaseTokenAddress = claim.BaseTokenAddress
+				transaction.BaseTokenType = marketcenterPb.BaseTokenType(claim.BaseTokenType)
 				transaction.Amount = claim.Amount.String()
 
 				// 设置token地址和精度
-				transaction.TokenAddress = claim.BaseTokenAddress
-				if tokenInfo := h.confCustom.AssetTokens[strings.ToLower(claim.BaseTokenAddress)]; tokenInfo != nil {
-					transaction.Decimal = tokenInfo.Decimals
+				if claim.BaseTokenType == BaseTokenTypePoints {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
+				} else {
+					transaction.TokenAddress = h.confCustom.AssetTokens.Usdc.Address
+					transaction.Decimal = h.confCustom.AssetTokens.Usdc.Decimals
 				}
 
 				claimData := &TxDataClaim{}
@@ -1614,12 +1645,9 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 		case TxSourceMintInitPoins:
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_MINT_POINTS
 			transaction.Side = 1 // 转入
-			pointsAddr, pointsToken := h.findPointsToken()
-			transaction.BaseTokenAddress = pointsAddr
-			if pointsToken != nil {
-				transaction.TokenAddress = pointsToken.Address
-				transaction.Decimal = pointsToken.Decimals
-			}
+			transaction.BaseTokenType = marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
+			transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+			transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
 
 			if mint, exists := mintMap[sendTx.TxHash]; exists {
 				transaction.Amount = mint.Amount.String()
@@ -1637,12 +1665,9 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 		case TxSourceMintInviteRewardPoints:
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_MINT_INVITE_POINTS
 			transaction.Side = 1 // 转入
-			pointsAddr, pointsToken := h.findPointsToken()
-			transaction.BaseTokenAddress = pointsAddr
-			if pointsToken != nil {
-				transaction.TokenAddress = pointsToken.Address
-				transaction.Decimal = pointsToken.Decimals
-			}
+			transaction.BaseTokenType = marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
+			transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+			transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
 
 			mintInviteData := &TxDataMintInvitePoints{
 				// TODO: 如果需要邀请用户信息，需要从其他地方查询
@@ -1676,12 +1701,9 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 		case TxSourceMintTaskRewardPoints:
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_MINT_TASK_REWARD_POINTS
 			transaction.Side = 1 // 转入
-			pointsAddr, pointsToken := h.findPointsToken()
-			transaction.BaseTokenAddress = pointsAddr
-			if pointsToken != nil {
-				transaction.TokenAddress = pointsToken.Address
-				transaction.Decimal = pointsToken.Decimals
-			}
+			transaction.BaseTokenType = marketcenterPb.BaseTokenType_BASE_TOKEN_TYPE_POINTS
+			transaction.TokenAddress = h.confCustom.AssetTokens.Points.Address
+			transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
 
 			mintTaskRewardData := &TxDataMintTaskRewardPoints{
 				// TODO: 如果需要任务信息，需要从其他地方查询
@@ -1725,13 +1747,15 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_DEPOSIT
 			transaction.Side = 1 // 转入
 			if transfer, exists := transferMap[sendTx.TxHash]; exists {
-				transaction.BaseTokenAddress = transfer.BaseTokenAddress
+				transaction.BaseTokenType = marketcenterPb.BaseTokenType(transfer.BaseTokenType)
 				transaction.TokenAddress = transfer.TokenAddress
 				transaction.Amount = transfer.Amount.String()
 
 				// 设置精度
-				if tokenInfo := h.confCustom.AssetTokens[strings.ToLower(transfer.BaseTokenAddress)]; tokenInfo != nil {
-					transaction.Decimal = tokenInfo.Decimals
+				if transfer.BaseTokenType == BaseTokenTypePoints {
+					transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
+				} else {
+					transaction.Decimal = h.confCustom.AssetTokens.Usdc.Decimals
 				}
 
 				depositData := &TxDataDeposit{
@@ -1749,13 +1773,15 @@ func (h *AssetHandler) GetUserTransactions(ctx common.Ctx, query *SendTxQuery) (
 			transaction.Type = marketcenterPb.TxType_TX_TYPE_WITHDRAW
 			transaction.Side = 2 // 转出
 			if transfer, exists := transferMap[sendTx.TxHash]; exists {
-				transaction.BaseTokenAddress = transfer.BaseTokenAddress
+				transaction.BaseTokenType = marketcenterPb.BaseTokenType(transfer.BaseTokenType)
 				transaction.TokenAddress = transfer.TokenAddress
 				transaction.Amount = transfer.Amount.String()
 
 				// 设置精度
-				if tokenInfo := h.confCustom.AssetTokens[strings.ToLower(transfer.BaseTokenAddress)]; tokenInfo != nil {
-					transaction.Decimal = tokenInfo.Decimals
+				if transfer.BaseTokenType == BaseTokenTypePoints {
+					transaction.Decimal = h.confCustom.AssetTokens.Points.Decimals
+				} else {
+					transaction.Decimal = h.confCustom.AssetTokens.Usdc.Decimals
 				}
 
 				withdrawData := &TxDataWithdraw{

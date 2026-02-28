@@ -85,14 +85,20 @@ message Data {
 }
 
 message Custom {
-  message AssetToken {
-    string address = 1;
-    string name = 2;
-    string symbol = 3;
-    uint32 decimals = 4;
+  message AssetTokens {
+    message token {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      uint32 decimals = 4;
+    }
+
+    token points = 1;
+    token usdc = 2;
   }
 
-  map<string, AssetToken> asset_tokens = 1;  // key = lowercase hex address
+
+  AssetTokens asset_tokens = 1;
   uint32 new_user_points = 2;
   string chain = 3;
   string lark_webhook_key = 4;

@@ -67,11 +67,17 @@ message Data {
 
 
 message Custom {
-  message AssetToken {
-    string address = 1;
-    string name = 2;
-    string symbol = 3;
-    uint32 decimals = 4;
+
+  message AssetTokens {
+    message token {
+      string address = 1;
+      string name = 2;
+      string symbol = 3;
+      uint32 decimals = 4;
+    }
+
+    token points = 1;
+    token usdc = 2;
   }
 
   string env = 1;
@@ -80,6 +86,6 @@ message Custom {
   bool lark_enabled = 4;
   string magiclink_secret_api_key = 5;
   string magiclink_client_id = 6;
-  map<string, AssetToken> asset_tokens = 7;  // key = lowercase hex address
+  AssetTokens asset_tokens = 7;
   string test_uid = 8;
 }

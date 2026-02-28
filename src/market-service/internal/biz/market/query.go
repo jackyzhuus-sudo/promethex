@@ -25,8 +25,8 @@ type MarketQuery struct {
 	IsNotDeadline bool     // 是否未到截止时间
 
 	Embedding     []float64 // 向量搜索
-	Category         string // 分类
-	BaseTokenAddress string // 基础代币地址
+	Category      string    // 分类
+	BaseTokenType uint8     // 基础代币类型
 
 	// 新增：用户关注相关字段
 	OnlyFollowed bool   // 是否只查询关注的市场
@@ -136,8 +136,8 @@ func (query *MarketQuery) applyConditions(db *gorm.DB, prefix string) *gorm.DB {
 	if query.Category != "" {
 		db = db.Where(prefix + "categories ? '" + query.Category + "'")
 	}
-	if query.BaseTokenAddress != "" {
-		db = db.Where(prefix+"base_token_address = ?", query.BaseTokenAddress)
+	if query.BaseTokenType > 0 {
+		db = db.Where(prefix+"token_type = ?", query.BaseTokenType)
 	}
 	if query.MinVolume.GreaterThan(decimal.Zero) {
 		db = db.Where(prefix+"volume >= ?", query.MinVolume)

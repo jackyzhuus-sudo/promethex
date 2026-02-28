@@ -96,7 +96,7 @@ func (h *VolumeWeeklyLeaderboardHandler) processUserTradeMessage(ctx common.Ctx,
 	}
 
 	weekStr := util.GetWeekStartTimeStr(userTradeStreamMsg.Timestamp)
-	leaderboardKey := fmt.Sprintf(assetBiz.VolumeWeeklyLeaderboard, userTradeStreamMsg.BaseTokenAddress, weekStr)
+	leaderboardKey := fmt.Sprintf(assetBiz.VolumeWeeklyLeaderboard, userTradeStreamMsg.BaseTokenType, weekStr)
 	err = h.assetBiz.UpdateLeaderboard(ctx, leaderboardKey, userTradeStreamMsg.UID, tradeVolume.InexactFloat64())
 	if err != nil {
 		ctx.Log.Errorf("failed to update volume weekly leaderboard: %w", err)

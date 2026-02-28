@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.2
-// source: conf.proto
+// source: internal/conf/conf.proto
 
 package conf
 
@@ -33,7 +33,7 @@ type Bootstrap struct {
 
 func (x *Bootstrap) Reset() {
 	*x = Bootstrap{}
-	mi := &file_conf_proto_msgTypes[0]
+	mi := &file_internal_conf_conf_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +45,7 @@ func (x *Bootstrap) String() string {
 func (*Bootstrap) ProtoMessage() {}
 
 func (x *Bootstrap) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[0]
+	mi := &file_internal_conf_conf_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *Bootstrap) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bootstrap.ProtoReflect.Descriptor instead.
 func (*Bootstrap) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Bootstrap) GetServer() *Server {
@@ -91,7 +91,7 @@ type Server struct {
 
 func (x *Server) Reset() {
 	*x = Server{}
-	mi := &file_conf_proto_msgTypes[1]
+	mi := &file_internal_conf_conf_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -103,7 +103,7 @@ func (x *Server) String() string {
 func (*Server) ProtoMessage() {}
 
 func (x *Server) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[1]
+	mi := &file_internal_conf_conf_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -116,7 +116,7 @@ func (x *Server) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Server.ProtoReflect.Descriptor instead.
 func (*Server) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{1}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Server) GetGrpc() *Server_GRPC {
@@ -139,7 +139,7 @@ type Data struct {
 
 func (x *Data) Reset() {
 	*x = Data{}
-	mi := &file_conf_proto_msgTypes[2]
+	mi := &file_internal_conf_conf_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +151,7 @@ func (x *Data) String() string {
 func (*Data) ProtoMessage() {}
 
 func (x *Data) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[2]
+	mi := &file_internal_conf_conf_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -164,7 +164,7 @@ func (x *Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data.ProtoReflect.Descriptor instead.
 func (*Data) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Data) GetPostgresql() *Data_PostgresqlData {
@@ -203,21 +203,21 @@ func (x *Data) GetRpc() *Data_Rpc {
 }
 
 type Custom struct {
-	state            protoimpl.MessageState        `protogen:"open.v1"`
-	AssetTokens      map[string]*Custom_AssetToken `protobuf:"bytes,1,rep,name=asset_tokens,json=assetTokens,proto3" json:"asset_tokens,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key = lowercase hex address
-	NewUserPoints    uint32                        `protobuf:"varint,2,opt,name=new_user_points,json=newUserPoints,proto3" json:"new_user_points,omitempty"`
-	Chain            string                        `protobuf:"bytes,3,opt,name=chain,proto3" json:"chain,omitempty"`
-	LarkWebhookKey   string                        `protobuf:"bytes,4,opt,name=lark_webhook_key,json=larkWebhookKey,proto3" json:"lark_webhook_key,omitempty"`
-	MinVolume        uint32                        `protobuf:"varint,5,opt,name=min_volume,json=minVolume,proto3" json:"min_volume,omitempty"`
-	MaxDeadlineHours uint32                        `protobuf:"varint,6,opt,name=max_deadline_hours,json=maxDeadlineHours,proto3" json:"max_deadline_hours,omitempty"`
-	LarkEnabled      bool                          `protobuf:"varint,7,opt,name=lark_enabled,json=larkEnabled,proto3" json:"lark_enabled,omitempty"`
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	AssetTokens      *Custom_AssetTokens    `protobuf:"bytes,1,opt,name=asset_tokens,json=assetTokens,proto3" json:"asset_tokens,omitempty"`
+	NewUserPoints    uint32                 `protobuf:"varint,2,opt,name=new_user_points,json=newUserPoints,proto3" json:"new_user_points,omitempty"`
+	Chain            string                 `protobuf:"bytes,3,opt,name=chain,proto3" json:"chain,omitempty"`
+	LarkWebhookKey   string                 `protobuf:"bytes,4,opt,name=lark_webhook_key,json=larkWebhookKey,proto3" json:"lark_webhook_key,omitempty"`
+	MinVolume        uint32                 `protobuf:"varint,5,opt,name=min_volume,json=minVolume,proto3" json:"min_volume,omitempty"`
+	MaxDeadlineHours uint32                 `protobuf:"varint,6,opt,name=max_deadline_hours,json=maxDeadlineHours,proto3" json:"max_deadline_hours,omitempty"`
+	LarkEnabled      bool                   `protobuf:"varint,7,opt,name=lark_enabled,json=larkEnabled,proto3" json:"lark_enabled,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Custom) Reset() {
 	*x = Custom{}
-	mi := &file_conf_proto_msgTypes[3]
+	mi := &file_internal_conf_conf_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -229,7 +229,7 @@ func (x *Custom) String() string {
 func (*Custom) ProtoMessage() {}
 
 func (x *Custom) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[3]
+	mi := &file_internal_conf_conf_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -242,10 +242,10 @@ func (x *Custom) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Custom.ProtoReflect.Descriptor instead.
 func (*Custom) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{3}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Custom) GetAssetTokens() map[string]*Custom_AssetToken {
+func (x *Custom) GetAssetTokens() *Custom_AssetTokens {
 	if x != nil {
 		return x.AssetTokens
 	}
@@ -305,7 +305,7 @@ type Server_GRPC struct {
 
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
-	mi := &file_conf_proto_msgTypes[4]
+	mi := &file_internal_conf_conf_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -317,7 +317,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[4]
+	mi := &file_internal_conf_conf_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -330,7 +330,7 @@ func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Server_GRPC.ProtoReflect.Descriptor instead.
 func (*Server_GRPC) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{1, 0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{1, 0}
 }
 
 func (x *Server_GRPC) GetNetwork() string {
@@ -364,7 +364,7 @@ type Data_PostgresqlData struct {
 
 func (x *Data_PostgresqlData) Reset() {
 	*x = Data_PostgresqlData{}
-	mi := &file_conf_proto_msgTypes[5]
+	mi := &file_internal_conf_conf_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -376,7 +376,7 @@ func (x *Data_PostgresqlData) String() string {
 func (*Data_PostgresqlData) ProtoMessage() {}
 
 func (x *Data_PostgresqlData) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[5]
+	mi := &file_internal_conf_conf_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -389,7 +389,7 @@ func (x *Data_PostgresqlData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_PostgresqlData.ProtoReflect.Descriptor instead.
 func (*Data_PostgresqlData) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 0}
 }
 
 func (x *Data_PostgresqlData) GetUsercenter() *Data_PostgresqlData_Postgresql {
@@ -416,7 +416,7 @@ type Data_RedisData struct {
 
 func (x *Data_RedisData) Reset() {
 	*x = Data_RedisData{}
-	mi := &file_conf_proto_msgTypes[6]
+	mi := &file_internal_conf_conf_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -428,7 +428,7 @@ func (x *Data_RedisData) String() string {
 func (*Data_RedisData) ProtoMessage() {}
 
 func (x *Data_RedisData) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[6]
+	mi := &file_internal_conf_conf_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -441,7 +441,7 @@ func (x *Data_RedisData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_RedisData.ProtoReflect.Descriptor instead.
 func (*Data_RedisData) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 1}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 1}
 }
 
 func (x *Data_RedisData) GetUsercenter() *Data_RedisData_Redis {
@@ -474,7 +474,7 @@ type Data_Alchemy struct {
 
 func (x *Data_Alchemy) Reset() {
 	*x = Data_Alchemy{}
-	mi := &file_conf_proto_msgTypes[7]
+	mi := &file_internal_conf_conf_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -486,7 +486,7 @@ func (x *Data_Alchemy) String() string {
 func (*Data_Alchemy) ProtoMessage() {}
 
 func (x *Data_Alchemy) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[7]
+	mi := &file_internal_conf_conf_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -499,7 +499,7 @@ func (x *Data_Alchemy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_Alchemy.ProtoReflect.Descriptor instead.
 func (*Data_Alchemy) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 2}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 2}
 }
 
 func (x *Data_Alchemy) GetApiKey() string {
@@ -565,16 +565,16 @@ type Data_S3 struct {
 	BizBucket     string                 `protobuf:"bytes,3,opt,name=biz_bucket,json=bizBucket,proto3" json:"biz_bucket,omitempty"`
 	AdminBucket   string                 `protobuf:"bytes,4,opt,name=admin_bucket,json=adminBucket,proto3" json:"admin_bucket,omitempty"`
 	Region        string                 `protobuf:"bytes,5,opt,name=region,proto3" json:"region,omitempty"`
-	TenantSlug    string                 `protobuf:"bytes,6,opt,name=tenant_slug,json=tenantSlug,proto3" json:"tenant_slug,omitempty"`          // ADR-008: S3 key prefix (default: arb-sepolia-usdc)
-	Endpoint      string                 `protobuf:"bytes,7,opt,name=endpoint,proto3" json:"endpoint,omitempty"`                                // Custom S3 endpoint (for MinIO, leave empty for AWS)
-	UsePathStyle  bool                   `protobuf:"varint,8,opt,name=use_path_style,json=usePathStyle,proto3" json:"use_path_style,omitempty"` // Use path-style addressing (required for MinIO)
+	TenantSlug    string                 `protobuf:"bytes,6,opt,name=tenant_slug,json=tenantSlug,proto3" json:"tenant_slug,omitempty"` // ADR-008: S3 key prefix (default: arb-sepolia-usdc)
+	Endpoint      string                 `protobuf:"bytes,7,opt,name=endpoint,proto3" json:"endpoint,omitempty"`                       // Custom S3 endpoint (for MinIO)
+	UsePathStyle  bool                   `protobuf:"varint,8,opt,name=use_path_style,json=usePathStyle,proto3" json:"use_path_style,omitempty"` // Path-style addressing for MinIO
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Data_S3) Reset() {
 	*x = Data_S3{}
-	mi := &file_conf_proto_msgTypes[8]
+	mi := &file_internal_conf_conf_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -586,7 +586,7 @@ func (x *Data_S3) String() string {
 func (*Data_S3) ProtoMessage() {}
 
 func (x *Data_S3) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[8]
+	mi := &file_internal_conf_conf_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -599,7 +599,7 @@ func (x *Data_S3) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_S3.ProtoReflect.Descriptor instead.
 func (*Data_S3) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 3}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 3}
 }
 
 func (x *Data_S3) GetAccessKey() string {
@@ -667,7 +667,7 @@ type Data_Rpc struct {
 
 func (x *Data_Rpc) Reset() {
 	*x = Data_Rpc{}
-	mi := &file_conf_proto_msgTypes[9]
+	mi := &file_internal_conf_conf_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -679,7 +679,7 @@ func (x *Data_Rpc) String() string {
 func (*Data_Rpc) ProtoMessage() {}
 
 func (x *Data_Rpc) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[9]
+	mi := &file_internal_conf_conf_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -692,7 +692,7 @@ func (x *Data_Rpc) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_Rpc.ProtoReflect.Descriptor instead.
 func (*Data_Rpc) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 4}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 4}
 }
 
 func (x *Data_Rpc) GetRecommendationRpc() *Data_Rpc_RpcClient {
@@ -714,7 +714,7 @@ type Data_PostgresqlData_Postgresql struct {
 
 func (x *Data_PostgresqlData_Postgresql) Reset() {
 	*x = Data_PostgresqlData_Postgresql{}
-	mi := &file_conf_proto_msgTypes[10]
+	mi := &file_internal_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -726,7 +726,7 @@ func (x *Data_PostgresqlData_Postgresql) String() string {
 func (*Data_PostgresqlData_Postgresql) ProtoMessage() {}
 
 func (x *Data_PostgresqlData_Postgresql) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[10]
+	mi := &file_internal_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -739,7 +739,7 @@ func (x *Data_PostgresqlData_Postgresql) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_PostgresqlData_Postgresql.ProtoReflect.Descriptor instead.
 func (*Data_PostgresqlData_Postgresql) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 0, 0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 0, 0}
 }
 
 func (x *Data_PostgresqlData_Postgresql) GetDsn() string {
@@ -785,7 +785,7 @@ type Data_RedisData_Redis struct {
 
 func (x *Data_RedisData_Redis) Reset() {
 	*x = Data_RedisData_Redis{}
-	mi := &file_conf_proto_msgTypes[11]
+	mi := &file_internal_conf_conf_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -797,7 +797,7 @@ func (x *Data_RedisData_Redis) String() string {
 func (*Data_RedisData_Redis) ProtoMessage() {}
 
 func (x *Data_RedisData_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[11]
+	mi := &file_internal_conf_conf_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -810,7 +810,7 @@ func (x *Data_RedisData_Redis) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_RedisData_Redis.ProtoReflect.Descriptor instead.
 func (*Data_RedisData_Redis) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 1, 0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 1, 0}
 }
 
 func (x *Data_RedisData_Redis) GetNetwork() string {
@@ -872,7 +872,7 @@ type Data_Rpc_RpcClient struct {
 
 func (x *Data_Rpc_RpcClient) Reset() {
 	*x = Data_Rpc_RpcClient{}
-	mi := &file_conf_proto_msgTypes[12]
+	mi := &file_internal_conf_conf_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -884,7 +884,7 @@ func (x *Data_Rpc_RpcClient) String() string {
 func (*Data_Rpc_RpcClient) ProtoMessage() {}
 
 func (x *Data_Rpc_RpcClient) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[12]
+	mi := &file_internal_conf_conf_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -897,7 +897,7 @@ func (x *Data_Rpc_RpcClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Data_Rpc_RpcClient.ProtoReflect.Descriptor instead.
 func (*Data_Rpc_RpcClient) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{2, 4, 0}
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{2, 4, 0}
 }
 
 func (x *Data_Rpc_RpcClient) GetAddr() string {
@@ -914,31 +914,29 @@ func (x *Data_Rpc_RpcClient) GetTimeout() *durationpb.Duration {
 	return nil
 }
 
-type Custom_AssetToken struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Address       string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Symbol        string                 `protobuf:"bytes,3,opt,name=symbol,proto3" json:"symbol,omitempty"`
-	Decimals      uint32                 `protobuf:"varint,4,opt,name=decimals,proto3" json:"decimals,omitempty"`
+type Custom_AssetTokens struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Points        *Custom_AssetTokensToken `protobuf:"bytes,1,opt,name=points,proto3" json:"points,omitempty"`
+	Usdc          *Custom_AssetTokensToken `protobuf:"bytes,2,opt,name=usdc,proto3" json:"usdc,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Custom_AssetToken) Reset() {
-	*x = Custom_AssetToken{}
-	mi := &file_conf_proto_msgTypes[13]
+func (x *Custom_AssetTokens) Reset() {
+	*x = Custom_AssetTokens{}
+	mi := &file_internal_conf_conf_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Custom_AssetToken) String() string {
+func (x *Custom_AssetTokens) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Custom_AssetToken) ProtoMessage() {}
+func (*Custom_AssetTokens) ProtoMessage() {}
 
-func (x *Custom_AssetToken) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_proto_msgTypes[13]
+func (x *Custom_AssetTokens) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_conf_conf_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -949,45 +947,98 @@ func (x *Custom_AssetToken) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Custom_AssetToken.ProtoReflect.Descriptor instead.
-func (*Custom_AssetToken) Descriptor() ([]byte, []int) {
-	return file_conf_proto_rawDescGZIP(), []int{3, 0}
+// Deprecated: Use Custom_AssetTokens.ProtoReflect.Descriptor instead.
+func (*Custom_AssetTokens) Descriptor() ([]byte, []int) {
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{3, 0}
 }
 
-func (x *Custom_AssetToken) GetAddress() string {
+func (x *Custom_AssetTokens) GetPoints() *Custom_AssetTokensToken {
+	if x != nil {
+		return x.Points
+	}
+	return nil
+}
+
+func (x *Custom_AssetTokens) GetUsdc() *Custom_AssetTokensToken {
+	if x != nil {
+		return x.Usdc
+	}
+	return nil
+}
+
+type Custom_AssetTokensToken struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Address       string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Symbol        string                 `protobuf:"bytes,3,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Decimals      uint32                 `protobuf:"varint,4,opt,name=decimals,proto3" json:"decimals,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Custom_AssetTokensToken) Reset() {
+	*x = Custom_AssetTokensToken{}
+	mi := &file_internal_conf_conf_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Custom_AssetTokensToken) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Custom_AssetTokensToken) ProtoMessage() {}
+
+func (x *Custom_AssetTokensToken) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_conf_conf_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Custom_AssetTokensToken.ProtoReflect.Descriptor instead.
+func (*Custom_AssetTokensToken) Descriptor() ([]byte, []int) {
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{3, 0, 0}
+}
+
+func (x *Custom_AssetTokensToken) GetAddress() string {
 	if x != nil {
 		return x.Address
 	}
 	return ""
 }
 
-func (x *Custom_AssetToken) GetName() string {
+func (x *Custom_AssetTokensToken) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *Custom_AssetToken) GetSymbol() string {
+func (x *Custom_AssetTokensToken) GetSymbol() string {
 	if x != nil {
 		return x.Symbol
 	}
 	return ""
 }
 
-func (x *Custom_AssetToken) GetDecimals() uint32 {
+func (x *Custom_AssetTokensToken) GetDecimals() uint32 {
 	if x != nil {
 		return x.Decimals
 	}
 	return 0
 }
 
-var File_conf_proto protoreflect.FileDescriptor
+var File_internal_conf_conf_proto protoreflect.FileDescriptor
 
-const file_conf_proto_rawDesc = "" +
+const file_internal_conf_conf_proto_rawDesc = "" +
 	"\n" +
-	"\n" +
-	"conf.proto\x12\n" +
+	"\x18internal/conf/conf.proto\x12\n" +
 	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\x89\x01\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
@@ -998,7 +1049,7 @@ const file_conf_proto_rawDesc = "" +
 	"\x04GRPC\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xf5\r\n" +
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xb3\r\n" +
 	"\x04Data\x12?\n" +
 	"\n" +
 	"postgresql\x18\x01 \x01(\v2\x1f.kratos.api.Data.PostgresqlDataR\n" +
@@ -1039,7 +1090,7 @@ const file_conf_proto_rawDesc = "" +
 	"\x12entrypoint_address\x18\x05 \x01(\tR\x11entrypointAddress\x12)\n" +
 	"\x10fallback_address\x18\x06 \x01(\tR\x0ffallbackAddress\x12/\n" +
 	"\x14sign_tx_from_address\x18\a \x01(\tR\x11signTxFromAddress\x12-\n" +
-	"\x13sign_tx_private_key\x18\b \x01(\tR\x10signTxPrivateKey\x1a\xff\x01\n" +
+	"\x13sign_tx_private_key\x18\b \x01(\tR\x10signTxPrivateKey\x1a\xbd\x01\n" +
 	"\x02S3\x12\x1d\n" +
 	"\n" +
 	"access_key\x18\x01 \x01(\tR\taccessKey\x12\x1d\n" +
@@ -1050,48 +1101,45 @@ const file_conf_proto_rawDesc = "" +
 	"\fadmin_bucket\x18\x04 \x01(\tR\vadminBucket\x12\x16\n" +
 	"\x06region\x18\x05 \x01(\tR\x06region\x12\x1f\n" +
 	"\vtenant_slug\x18\x06 \x01(\tR\n" +
-	"tenantSlug\x12\x1a\n" +
-	"\bendpoint\x18\a \x01(\tR\bendpoint\x12$\n" +
-	"\x0euse_path_style\x18\b \x01(\bR\fusePathStyle\x1a\xac\x01\n" +
+	"tenantSlug\x1a\xac\x01\n" +
 	"\x03Rpc\x12N\n" +
 	"\x12recommendation_rpc\x18\x01 \x01(\v2\x1f.kratos.api.Data.Rpc.Rpc_clientR\x11recommendationRpc\x1aU\n" +
 	"\n" +
 	"Rpc_client\x12\x12\n" +
 	"\x04addr\x18\x01 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xf7\x03\n" +
-	"\x06Custom\x12F\n" +
-	"\fasset_tokens\x18\x01 \x03(\v2#.kratos.api.Custom.AssetTokensEntryR\vassetTokens\x12&\n" +
+	"\atimeout\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\x96\x04\n" +
+	"\x06Custom\x12A\n" +
+	"\fasset_tokens\x18\x01 \x01(\v2\x1e.kratos.api.Custom.AssetTokensR\vassetTokens\x12&\n" +
 	"\x0fnew_user_points\x18\x02 \x01(\rR\rnewUserPoints\x12\x14\n" +
 	"\x05chain\x18\x03 \x01(\tR\x05chain\x12(\n" +
 	"\x10lark_webhook_key\x18\x04 \x01(\tR\x0elarkWebhookKey\x12\x1d\n" +
 	"\n" +
 	"min_volume\x18\x05 \x01(\rR\tminVolume\x12,\n" +
 	"\x12max_deadline_hours\x18\x06 \x01(\rR\x10maxDeadlineHours\x12!\n" +
-	"\flark_enabled\x18\a \x01(\bR\vlarkEnabled\x1an\n" +
-	"\n" +
-	"AssetToken\x12\x18\n" +
+	"\flark_enabled\x18\a \x01(\bR\vlarkEnabled\x1a\xf0\x01\n" +
+	"\vAssetTokens\x12<\n" +
+	"\x06points\x18\x01 \x01(\v2$.kratos.api.Custom.AssetTokens.tokenR\x06points\x128\n" +
+	"\x04usdc\x18\x02 \x01(\v2$.kratos.api.Custom.AssetTokens.tokenR\x04usdc\x1ai\n" +
+	"\x05token\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06symbol\x18\x03 \x01(\tR\x06symbol\x12\x1a\n" +
-	"\bdecimals\x18\x04 \x01(\rR\bdecimals\x1a]\n" +
-	"\x10AssetTokensEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x123\n" +
-	"\x05value\x18\x02 \x01(\v2\x1d.kratos.api.Custom.AssetTokenR\x05value:\x028\x01B#Z!market-service/internal/conf;confb\x06proto3"
+	"\bdecimals\x18\x04 \x01(\rR\bdecimalsB#Z!market-service/internal/conf;confb\x06proto3"
 
 var (
-	file_conf_proto_rawDescOnce sync.Once
-	file_conf_proto_rawDescData []byte
+	file_internal_conf_conf_proto_rawDescOnce sync.Once
+	file_internal_conf_conf_proto_rawDescData []byte
 )
 
-func file_conf_proto_rawDescGZIP() []byte {
-	file_conf_proto_rawDescOnce.Do(func() {
-		file_conf_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_conf_proto_rawDesc), len(file_conf_proto_rawDesc)))
+func file_internal_conf_conf_proto_rawDescGZIP() []byte {
+	file_internal_conf_conf_proto_rawDescOnce.Do(func() {
+		file_internal_conf_conf_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_conf_conf_proto_rawDesc), len(file_internal_conf_conf_proto_rawDesc)))
 	})
-	return file_conf_proto_rawDescData
+	return file_internal_conf_conf_proto_rawDescData
 }
 
-var file_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
-var file_conf_proto_goTypes = []any{
+var file_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_internal_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),                      // 0: kratos.api.Bootstrap
 	(*Server)(nil),                         // 1: kratos.api.Server
 	(*Data)(nil),                           // 2: kratos.api.Data
@@ -1105,11 +1153,11 @@ var file_conf_proto_goTypes = []any{
 	(*Data_PostgresqlData_Postgresql)(nil), // 10: kratos.api.Data.PostgresqlData.Postgresql
 	(*Data_RedisData_Redis)(nil),           // 11: kratos.api.Data.RedisData.Redis
 	(*Data_Rpc_RpcClient)(nil),             // 12: kratos.api.Data.Rpc.Rpc_client
-	(*Custom_AssetToken)(nil),              // 13: kratos.api.Custom.AssetToken
-	nil,                                    // 14: kratos.api.Custom.AssetTokensEntry
+	(*Custom_AssetTokens)(nil),             // 13: kratos.api.Custom.AssetTokens
+	(*Custom_AssetTokensToken)(nil),        // 14: kratos.api.Custom.AssetTokens.token
 	(*durationpb.Duration)(nil),            // 15: google.protobuf.Duration
 }
-var file_conf_proto_depIdxs = []int32{
+var file_internal_conf_conf_proto_depIdxs = []int32{
 	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
 	2,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
 	3,  // 2: kratos.api.Bootstrap.custom:type_name -> kratos.api.Custom
@@ -1119,7 +1167,7 @@ var file_conf_proto_depIdxs = []int32{
 	7,  // 6: kratos.api.Data.alchemy:type_name -> kratos.api.Data.Alchemy
 	8,  // 7: kratos.api.Data.s3:type_name -> kratos.api.Data.S3
 	9,  // 8: kratos.api.Data.rpc:type_name -> kratos.api.Data.Rpc
-	14, // 9: kratos.api.Custom.asset_tokens:type_name -> kratos.api.Custom.AssetTokensEntry
+	13, // 9: kratos.api.Custom.asset_tokens:type_name -> kratos.api.Custom.AssetTokens
 	15, // 10: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
 	10, // 11: kratos.api.Data.PostgresqlData.usercenter:type_name -> kratos.api.Data.PostgresqlData.Postgresql
 	10, // 12: kratos.api.Data.PostgresqlData.marketcenter:type_name -> kratos.api.Data.PostgresqlData.Postgresql
@@ -1131,34 +1179,35 @@ var file_conf_proto_depIdxs = []int32{
 	15, // 18: kratos.api.Data.RedisData.Redis.write_timeout:type_name -> google.protobuf.Duration
 	15, // 19: kratos.api.Data.RedisData.Redis.dial_timeout:type_name -> google.protobuf.Duration
 	15, // 20: kratos.api.Data.Rpc.Rpc_client.timeout:type_name -> google.protobuf.Duration
-	13, // 21: kratos.api.Custom.AssetTokensEntry.value:type_name -> kratos.api.Custom.AssetToken
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	14, // 21: kratos.api.Custom.AssetTokens.points:type_name -> kratos.api.Custom.AssetTokens.token
+	14, // 22: kratos.api.Custom.AssetTokens.usdc:type_name -> kratos.api.Custom.AssetTokens.token
+	23, // [23:23] is the sub-list for method output_type
+	23, // [23:23] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
-func init() { file_conf_proto_init() }
-func file_conf_proto_init() {
-	if File_conf_proto != nil {
+func init() { file_internal_conf_conf_proto_init() }
+func file_internal_conf_conf_proto_init() {
+	if File_internal_conf_conf_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_proto_rawDesc), len(file_conf_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_conf_conf_proto_rawDesc), len(file_internal_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_conf_proto_goTypes,
-		DependencyIndexes: file_conf_proto_depIdxs,
-		MessageInfos:      file_conf_proto_msgTypes,
+		GoTypes:           file_internal_conf_conf_proto_goTypes,
+		DependencyIndexes: file_internal_conf_conf_proto_depIdxs,
+		MessageInfos:      file_internal_conf_conf_proto_msgTypes,
 	}.Build()
-	File_conf_proto = out.File
-	file_conf_proto_goTypes = nil
-	file_conf_proto_depIdxs = nil
+	File_internal_conf_conf_proto = out.File
+	file_internal_conf_conf_proto_goTypes = nil
+	file_internal_conf_conf_proto_depIdxs = nil
 }

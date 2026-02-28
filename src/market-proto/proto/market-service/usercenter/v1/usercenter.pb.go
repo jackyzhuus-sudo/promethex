@@ -232,6 +232,55 @@ func (IsShow) EnumDescriptor() ([]byte, []int) {
 	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{1}
 }
 
+type BaseTokenType int32
+
+const (
+	BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED BaseTokenType = 0
+	BaseTokenType_BASE_TOKEN_TYPE_POINTS      BaseTokenType = 1
+	BaseTokenType_BASE_TOKEN_TYPE_USDC        BaseTokenType = 2
+)
+
+// Enum value maps for BaseTokenType.
+var (
+	BaseTokenType_name = map[int32]string{
+		0: "BASE_TOKEN_TYPE_UNSPECIFIED",
+		1: "BASE_TOKEN_TYPE_POINTS",
+		2: "BASE_TOKEN_TYPE_USDC",
+	}
+	BaseTokenType_value = map[string]int32{
+		"BASE_TOKEN_TYPE_UNSPECIFIED": 0,
+		"BASE_TOKEN_TYPE_POINTS":      1,
+		"BASE_TOKEN_TYPE_USDC":        2,
+	}
+)
+
+func (x BaseTokenType) Enum() *BaseTokenType {
+	p := new(BaseTokenType)
+	*p = x
+	return p
+}
+
+func (x BaseTokenType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BaseTokenType) Descriptor() protoreflect.EnumDescriptor {
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[2].Descriptor()
+}
+
+func (BaseTokenType) Type() protoreflect.EnumType {
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[2]
+}
+
+func (x BaseTokenType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use BaseTokenType.Descriptor instead.
+func (BaseTokenType) EnumDescriptor() ([]byte, []int) {
+	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{2}
+}
+
 type IsFollowedUser int32
 
 const (
@@ -265,11 +314,11 @@ func (x IsFollowedUser) String() string {
 }
 
 func (IsFollowedUser) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[2].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[3].Descriptor()
 }
 
 func (IsFollowedUser) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[2]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[3]
 }
 
 func (x IsFollowedUser) Number() protoreflect.EnumNumber {
@@ -278,7 +327,7 @@ func (x IsFollowedUser) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use IsFollowedUser.Descriptor instead.
 func (IsFollowedUser) EnumDescriptor() ([]byte, []int) {
-	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{2}
+	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{3}
 }
 
 type IsLike int32
@@ -314,11 +363,11 @@ func (x IsLike) String() string {
 }
 
 func (IsLike) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[3].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[4].Descriptor()
 }
 
 func (IsLike) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[3]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[4]
 }
 
 func (x IsLike) Number() protoreflect.EnumNumber {
@@ -327,7 +376,7 @@ func (x IsLike) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use IsLike.Descriptor instead.
 func (IsLike) EnumDescriptor() ([]byte, []int) {
-	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{3}
+	return file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP(), []int{4}
 }
 
 type CreateUserRequest_Source int32
@@ -363,11 +412,11 @@ func (x CreateUserRequest_Source) String() string {
 }
 
 func (CreateUserRequest_Source) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[4].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[5].Descriptor()
 }
 
 func (CreateUserRequest_Source) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[4]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[5]
 }
 
 func (x CreateUserRequest_Source) Number() protoreflect.EnumNumber {
@@ -412,11 +461,11 @@ func (x UpdateLikeContentStatusRequest_ContentType) String() string {
 }
 
 func (UpdateLikeContentStatusRequest_ContentType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[5].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[6].Descriptor()
 }
 
 func (UpdateLikeContentStatusRequest_ContentType) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[5]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[6]
 }
 
 func (x UpdateLikeContentStatusRequest_ContentType) Number() protoreflect.EnumNumber {
@@ -461,11 +510,11 @@ func (x UpdateLikeContentStatusRequest_Status) String() string {
 }
 
 func (UpdateLikeContentStatusRequest_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[6].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[7].Descriptor()
 }
 
 func (UpdateLikeContentStatusRequest_Status) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[6]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[7]
 }
 
 func (x UpdateLikeContentStatusRequest_Status) Number() protoreflect.EnumNumber {
@@ -510,11 +559,11 @@ func (x UpdateFollowStatusRequest_Status) String() string {
 }
 
 func (UpdateFollowStatusRequest_Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[7].Descriptor()
+	return file_market_service_usercenter_v1_usercenter_proto_enumTypes[8].Descriptor()
 }
 
 func (UpdateFollowStatusRequest_Status) Type() protoreflect.EnumType {
-	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[7]
+	return &file_market_service_usercenter_v1_usercenter_proto_enumTypes[8]
 }
 
 func (x UpdateFollowStatusRequest_Status) Number() protoreflect.EnumNumber {
@@ -1025,16 +1074,16 @@ func (x *GetInviteUserListReply) GetTotalRewardPoints() uint32 {
 }
 
 type GetUserNotificationsRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Category         uint32                 `protobuf:"varint,2,opt,name=category,proto3" json:"category,omitempty"`
-	Status           uint32                 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
-	Type             uint32                 `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty"`
-	Page             uint32                 `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize         uint32                 `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,7,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Category      uint32                 `protobuf:"varint,2,opt,name=category,proto3" json:"category,omitempty"`
+	Status        uint32                 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	Type          uint32                 `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty"`
+	Page          uint32                 `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      uint32                 `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,7,opt,name=base_token_type,json=baseTokenType,proto3,enum=usercenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserNotificationsRequest) Reset() {
@@ -1109,11 +1158,11 @@ func (x *GetUserNotificationsRequest) GetPageSize() uint32 {
 	return 0
 }
 
-func (x *GetUserNotificationsRequest) GetBaseTokenAddress() string {
+func (x *GetUserNotificationsRequest) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type GetUserNotificationsResponse struct {
@@ -3677,17 +3726,17 @@ func (x *GetInviteUserListReply_User) GetRewardPoints() uint32 {
 }
 
 type GetUserNotificationsResponse_Notification struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Uid              string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Uuid             string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Type             uint32                 `protobuf:"varint,3,opt,name=type,proto3" json:"type,omitempty"`
-	Category         uint32                 `protobuf:"varint,4,opt,name=category,proto3" json:"category,omitempty"`
-	Status           uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
-	BizJson          string                 `protobuf:"bytes,6,opt,name=biz_json,json=bizJson,proto3" json:"biz_json,omitempty"` // 具体业务数据json
-	CreatedAt        int64                  `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	BaseTokenAddress string                 `protobuf:"bytes,8,opt,name=base_token_address,json=baseTokenAddress,proto3" json:"base_token_address,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           string                 `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Type          uint32                 `protobuf:"varint,3,opt,name=type,proto3" json:"type,omitempty"`
+	Category      uint32                 `protobuf:"varint,4,opt,name=category,proto3" json:"category,omitempty"`
+	Status        uint32                 `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	BizJson       string                 `protobuf:"bytes,6,opt,name=biz_json,json=bizJson,proto3" json:"biz_json,omitempty"` // 具体业务数据json
+	CreatedAt     int64                  `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	BaseTokenType BaseTokenType          `protobuf:"varint,8,opt,name=base_token_type,json=baseTokenType,proto3,enum=usercenter.v1.BaseTokenType" json:"base_token_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserNotificationsResponse_Notification) Reset() {
@@ -3769,11 +3818,11 @@ func (x *GetUserNotificationsResponse_Notification) GetCreatedAt() int64 {
 	return 0
 }
 
-func (x *GetUserNotificationsResponse_Notification) GetBaseTokenAddress() string {
+func (x *GetUserNotificationsResponse_Notification) GetBaseTokenType() BaseTokenType {
 	if x != nil {
-		return x.BaseTokenAddress
+		return x.BaseTokenType
 	}
-	return ""
+	return BaseTokenType_BASE_TOKEN_TYPE_UNSPECIFIED
 }
 
 type BatchGetMarketPostAndPublisherResponse_Post struct {
@@ -4877,18 +4926,18 @@ const file_market_service_usercenter_v1_usercenter_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x06 \x01(\rR\tcreatedAt\x12\x1b\n" +
 	"\tinvite_at\x18\a \x01(\rR\binviteAt\x12#\n" +
-	"\rreward_points\x18\b \x01(\rR\frewardPoints\"\xd6\x01\n" +
+	"\rreward_points\x18\b \x01(\rR\frewardPoints\"\xee\x01\n" +
 	"\x1bGetUserNotificationsRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x1a\n" +
 	"\bcategory\x18\x02 \x01(\rR\bcategory\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\rR\x06status\x12\x12\n" +
 	"\x04type\x18\x04 \x01(\rR\x04type\x12\x12\n" +
 	"\x04page\x18\x05 \x01(\rR\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x06 \x01(\rR\bpageSize\x12,\n" +
-	"\x12base_token_address\x18\a \x01(\tR\x10baseTokenAddress\"\xfb\x02\n" +
+	"\tpage_size\x18\x06 \x01(\rR\bpageSize\x12D\n" +
+	"\x0fbase_token_type\x18\a \x01(\x0e2\x1c.usercenter.v1.BaseTokenTypeR\rbaseTokenType\"\x93\x03\n" +
 	"\x1cGetUserNotificationsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12^\n" +
-	"\rnotifications\x18\x02 \x03(\v28.usercenter.v1.GetUserNotificationsResponse.NotificationR\rnotifications\x1a\xe4\x01\n" +
+	"\rnotifications\x18\x02 \x03(\v28.usercenter.v1.GetUserNotificationsResponse.NotificationR\rnotifications\x1a\xfc\x01\n" +
 	"\fNotification\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
@@ -4897,8 +4946,8 @@ const file_market_service_usercenter_v1_usercenter_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\rR\x06status\x12\x19\n" +
 	"\bbiz_json\x18\x06 \x01(\tR\abizJson\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\a \x01(\x03R\tcreatedAt\x12,\n" +
-	"\x12base_token_address\x18\b \x01(\tR\x10baseTokenAddress\"a\n" +
+	"created_at\x18\a \x01(\x03R\tcreatedAt\x12D\n" +
+	"\x0fbase_token_type\x18\b \x01(\x0e2\x1c.usercenter.v1.BaseTokenTypeR\rbaseTokenType\"a\n" +
 	"\x1eMarkNotificationsAsReadRequest\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\tR\x03uid\x12-\n" +
 	"\x12notification_uuids\x18\x02 \x03(\tR\x11notificationUuids\"!\n" +
@@ -5238,7 +5287,11 @@ const file_market_service_usercenter_v1_usercenter_proto_rawDesc = "" +
 	"\x13IS_SHOW_UNSPECIFIED\x10\x00\x12\x0f\n" +
 	"\vIS_SHOW_YES\x10\x01\x12\x0e\n" +
 	"\n" +
-	"IS_SHOW_NO\x10\x02*V\n" +
+	"IS_SHOW_NO\x10\x02*f\n" +
+	"\rBaseTokenType\x12\x1f\n" +
+	"\x1bBASE_TOKEN_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16BASE_TOKEN_TYPE_POINTS\x10\x01\x12\x18\n" +
+	"\x14BASE_TOKEN_TYPE_USDC\x10\x02*V\n" +
 	"\x0eIsFollowedUser\x12\x1b\n" +
 	"\x17IS_FOLLOWED_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fIS_FOLLOWED_YES\x10\x01\x12\x12\n" +
@@ -5288,146 +5341,149 @@ func file_market_service_usercenter_v1_usercenter_proto_rawDescGZIP() []byte {
 	return file_market_service_usercenter_v1_usercenter_proto_rawDescData
 }
 
-var file_market_service_usercenter_v1_usercenter_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_market_service_usercenter_v1_usercenter_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
 var file_market_service_usercenter_v1_usercenter_proto_msgTypes = make([]protoimpl.MessageInfo, 58)
 var file_market_service_usercenter_v1_usercenter_proto_goTypes = []any{
 	(ErrorCode)(0),                // 0: usercenter.v1.ErrorCode
 	(IsShow)(0),                   // 1: usercenter.v1.IsShow
-	(IsFollowedUser)(0),           // 2: usercenter.v1.IsFollowedUser
-	(IsLike)(0),                   // 3: usercenter.v1.IsLike
-	(CreateUserRequest_Source)(0), // 4: usercenter.v1.CreateUserRequest.Source
-	(UpdateLikeContentStatusRequest_ContentType)(0),                      // 5: usercenter.v1.UpdateLikeContentStatusRequest.ContentType
-	(UpdateLikeContentStatusRequest_Status)(0),                           // 6: usercenter.v1.UpdateLikeContentStatusRequest.Status
-	(UpdateFollowStatusRequest_Status)(0),                                // 7: usercenter.v1.UpdateFollowStatusRequest.Status
-	(*BatchGetUserInfoRequest)(nil),                                      // 8: usercenter.v1.BatchGetUserInfoRequest
-	(*BatchGetUserInfoResponse)(nil),                                     // 9: usercenter.v1.BatchGetUserInfoResponse
-	(*TaskDoneRequest)(nil),                                              // 10: usercenter.v1.TaskDoneRequest
-	(*TaskDoneResponse)(nil),                                             // 11: usercenter.v1.TaskDoneResponse
-	(*ClaimTaskRewardRequest)(nil),                                       // 12: usercenter.v1.ClaimTaskRewardRequest
-	(*ClaimTaskRewardResponse)(nil),                                      // 13: usercenter.v1.ClaimTaskRewardResponse
-	(*GetTasksRequest)(nil),                                              // 14: usercenter.v1.GetTasksRequest
-	(*GetTasksResponse)(nil),                                             // 15: usercenter.v1.GetTasksResponse
-	(*GetInviteUserListRequest)(nil),                                     // 16: usercenter.v1.GetInviteUserListRequest
-	(*GetInviteUserListReply)(nil),                                       // 17: usercenter.v1.GetInviteUserListReply
-	(*GetUserNotificationsRequest)(nil),                                  // 18: usercenter.v1.GetUserNotificationsRequest
-	(*GetUserNotificationsResponse)(nil),                                 // 19: usercenter.v1.GetUserNotificationsResponse
-	(*MarkNotificationsAsReadRequest)(nil),                               // 20: usercenter.v1.MarkNotificationsAsReadRequest
-	(*MarkNotificationsAsReadResponse)(nil),                              // 21: usercenter.v1.MarkNotificationsAsReadResponse
-	(*BatchGetMarketPostAndPublisherRequest)(nil),                        // 22: usercenter.v1.BatchGetMarketPostAndPublisherRequest
-	(*BatchGetMarketPostAndPublisherResponse)(nil),                       // 23: usercenter.v1.BatchGetMarketPostAndPublisherResponse
-	(*CreateUserRequest)(nil),                                            // 24: usercenter.v1.CreateUserRequest
-	(*CreateUserReply)(nil),                                              // 25: usercenter.v1.CreateUserReply
-	(*GetUserInfoRequest)(nil),                                           // 26: usercenter.v1.GetUserInfoRequest
-	(*GetUserInfoReply)(nil),                                             // 27: usercenter.v1.GetUserInfoReply
-	(*GetUserInfosByUidsRequest)(nil),                                    // 28: usercenter.v1.GetUserInfosByUidsRequest
-	(*GetUserInfosByUidsReply)(nil),                                      // 29: usercenter.v1.GetUserInfosByUidsReply
-	(*SetUserInfoRequest)(nil),                                           // 30: usercenter.v1.SetUserInfoRequest
-	(*SetUserInfoReply)(nil),                                             // 31: usercenter.v1.SetUserInfoReply
-	(*PublishPostRequest)(nil),                                           // 32: usercenter.v1.PublishPostRequest
-	(*PublishPostReply)(nil),                                             // 33: usercenter.v1.PublishPostReply
-	(*PublishCommentRequest)(nil),                                        // 34: usercenter.v1.PublishCommentRequest
-	(*PublishCommentReply)(nil),                                          // 35: usercenter.v1.PublishCommentReply
-	(*UpdateLikeContentStatusRequest)(nil),                               // 36: usercenter.v1.UpdateLikeContentStatusRequest
-	(*UpdateLikeContentStatusReply)(nil),                                 // 37: usercenter.v1.UpdateLikeContentStatusReply
-	(*UploadFileToBizBucketS3Request)(nil),                               // 38: usercenter.v1.UploadFileToBizBucketS3Request
-	(*UploadFileToBizBucketS3Reply)(nil),                                 // 39: usercenter.v1.UploadFileToBizBucketS3Reply
-	(*DownloadFileFromBizBucketS3Request)(nil),                           // 40: usercenter.v1.DownloadFileFromBizBucketS3Request
-	(*DownloadFileFromBizBucketS3Reply)(nil),                             // 41: usercenter.v1.DownloadFileFromBizBucketS3Reply
-	(*GetMarketPostsAndPublishersRequest)(nil),                           // 42: usercenter.v1.GetMarketPostsAndPublishersRequest
-	(*GetMarketPostsAndPublishersResponse)(nil),                          // 43: usercenter.v1.GetMarketPostsAndPublishersResponse
-	(*BatchGetCommentReplysAndUsersRequest)(nil),                         // 44: usercenter.v1.BatchGetCommentReplysAndUsersRequest
-	(*BatchGetCommentReplysAndUsersResponse)(nil),                        // 45: usercenter.v1.BatchGetCommentReplysAndUsersResponse
-	(*GetCommentsRequest)(nil),                                           // 46: usercenter.v1.GetCommentsRequest
-	(*GetCommentsResponse)(nil),                                          // 47: usercenter.v1.GetCommentsResponse
-	(*UpdateFollowStatusRequest)(nil),                                    // 48: usercenter.v1.UpdateFollowStatusRequest
-	(*UpdateFollowStatusReply)(nil),                                      // 49: usercenter.v1.UpdateFollowStatusReply
-	(*SearchUserRequest)(nil),                                            // 50: usercenter.v1.SearchUserRequest
-	(*SearchUserResponse)(nil),                                           // 51: usercenter.v1.SearchUserResponse
-	(*GetUsersInfoByAddressesRequest)(nil),                               // 52: usercenter.v1.GetUsersInfoByAddressesRequest
-	(*GetUsersInfoByAddressesReply)(nil),                                 // 53: usercenter.v1.GetUsersInfoByAddressesReply
-	(*BatchGetUserInfoResponse_UserInfo)(nil),                            // 54: usercenter.v1.BatchGetUserInfoResponse.UserInfo
-	(*GetTasksResponse_Task)(nil),                                        // 55: usercenter.v1.GetTasksResponse.Task
-	(*GetInviteUserListReply_User)(nil),                                  // 56: usercenter.v1.GetInviteUserListReply.User
-	(*GetUserNotificationsResponse_Notification)(nil),                    // 57: usercenter.v1.GetUserNotificationsResponse.Notification
-	(*BatchGetMarketPostAndPublisherResponse_Post)(nil),                  // 58: usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post
-	(*GetUserInfosByUidsReply_UserInfo)(nil),                             // 59: usercenter.v1.GetUserInfosByUidsReply.UserInfo
-	(*GetMarketPostsAndPublishersResponse_Post)(nil),                     // 60: usercenter.v1.GetMarketPostsAndPublishersResponse.Post
-	(*BatchGetCommentReplysAndUsersResponse_CommentAndReplys)(nil),       // 61: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys
-	(*BatchGetCommentReplysAndUsersResponse_CommentAndReplys_Reply)(nil), // 62: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply
-	(*GetCommentsResponse_Comment)(nil),                                  // 63: usercenter.v1.GetCommentsResponse.Comment
-	(*SearchUserResponse_User)(nil),                                      // 64: usercenter.v1.SearchUserResponse.User
-	(*GetUsersInfoByAddressesReply_User)(nil),                            // 65: usercenter.v1.GetUsersInfoByAddressesReply.User
+	(BaseTokenType)(0),            // 2: usercenter.v1.BaseTokenType
+	(IsFollowedUser)(0),           // 3: usercenter.v1.IsFollowedUser
+	(IsLike)(0),                   // 4: usercenter.v1.IsLike
+	(CreateUserRequest_Source)(0), // 5: usercenter.v1.CreateUserRequest.Source
+	(UpdateLikeContentStatusRequest_ContentType)(0),                      // 6: usercenter.v1.UpdateLikeContentStatusRequest.ContentType
+	(UpdateLikeContentStatusRequest_Status)(0),                           // 7: usercenter.v1.UpdateLikeContentStatusRequest.Status
+	(UpdateFollowStatusRequest_Status)(0),                                // 8: usercenter.v1.UpdateFollowStatusRequest.Status
+	(*BatchGetUserInfoRequest)(nil),                                      // 9: usercenter.v1.BatchGetUserInfoRequest
+	(*BatchGetUserInfoResponse)(nil),                                     // 10: usercenter.v1.BatchGetUserInfoResponse
+	(*TaskDoneRequest)(nil),                                              // 11: usercenter.v1.TaskDoneRequest
+	(*TaskDoneResponse)(nil),                                             // 12: usercenter.v1.TaskDoneResponse
+	(*ClaimTaskRewardRequest)(nil),                                       // 13: usercenter.v1.ClaimTaskRewardRequest
+	(*ClaimTaskRewardResponse)(nil),                                      // 14: usercenter.v1.ClaimTaskRewardResponse
+	(*GetTasksRequest)(nil),                                              // 15: usercenter.v1.GetTasksRequest
+	(*GetTasksResponse)(nil),                                             // 16: usercenter.v1.GetTasksResponse
+	(*GetInviteUserListRequest)(nil),                                     // 17: usercenter.v1.GetInviteUserListRequest
+	(*GetInviteUserListReply)(nil),                                       // 18: usercenter.v1.GetInviteUserListReply
+	(*GetUserNotificationsRequest)(nil),                                  // 19: usercenter.v1.GetUserNotificationsRequest
+	(*GetUserNotificationsResponse)(nil),                                 // 20: usercenter.v1.GetUserNotificationsResponse
+	(*MarkNotificationsAsReadRequest)(nil),                               // 21: usercenter.v1.MarkNotificationsAsReadRequest
+	(*MarkNotificationsAsReadResponse)(nil),                              // 22: usercenter.v1.MarkNotificationsAsReadResponse
+	(*BatchGetMarketPostAndPublisherRequest)(nil),                        // 23: usercenter.v1.BatchGetMarketPostAndPublisherRequest
+	(*BatchGetMarketPostAndPublisherResponse)(nil),                       // 24: usercenter.v1.BatchGetMarketPostAndPublisherResponse
+	(*CreateUserRequest)(nil),                                            // 25: usercenter.v1.CreateUserRequest
+	(*CreateUserReply)(nil),                                              // 26: usercenter.v1.CreateUserReply
+	(*GetUserInfoRequest)(nil),                                           // 27: usercenter.v1.GetUserInfoRequest
+	(*GetUserInfoReply)(nil),                                             // 28: usercenter.v1.GetUserInfoReply
+	(*GetUserInfosByUidsRequest)(nil),                                    // 29: usercenter.v1.GetUserInfosByUidsRequest
+	(*GetUserInfosByUidsReply)(nil),                                      // 30: usercenter.v1.GetUserInfosByUidsReply
+	(*SetUserInfoRequest)(nil),                                           // 31: usercenter.v1.SetUserInfoRequest
+	(*SetUserInfoReply)(nil),                                             // 32: usercenter.v1.SetUserInfoReply
+	(*PublishPostRequest)(nil),                                           // 33: usercenter.v1.PublishPostRequest
+	(*PublishPostReply)(nil),                                             // 34: usercenter.v1.PublishPostReply
+	(*PublishCommentRequest)(nil),                                        // 35: usercenter.v1.PublishCommentRequest
+	(*PublishCommentReply)(nil),                                          // 36: usercenter.v1.PublishCommentReply
+	(*UpdateLikeContentStatusRequest)(nil),                               // 37: usercenter.v1.UpdateLikeContentStatusRequest
+	(*UpdateLikeContentStatusReply)(nil),                                 // 38: usercenter.v1.UpdateLikeContentStatusReply
+	(*UploadFileToBizBucketS3Request)(nil),                               // 39: usercenter.v1.UploadFileToBizBucketS3Request
+	(*UploadFileToBizBucketS3Reply)(nil),                                 // 40: usercenter.v1.UploadFileToBizBucketS3Reply
+	(*DownloadFileFromBizBucketS3Request)(nil),                           // 41: usercenter.v1.DownloadFileFromBizBucketS3Request
+	(*DownloadFileFromBizBucketS3Reply)(nil),                             // 42: usercenter.v1.DownloadFileFromBizBucketS3Reply
+	(*GetMarketPostsAndPublishersRequest)(nil),                           // 43: usercenter.v1.GetMarketPostsAndPublishersRequest
+	(*GetMarketPostsAndPublishersResponse)(nil),                          // 44: usercenter.v1.GetMarketPostsAndPublishersResponse
+	(*BatchGetCommentReplysAndUsersRequest)(nil),                         // 45: usercenter.v1.BatchGetCommentReplysAndUsersRequest
+	(*BatchGetCommentReplysAndUsersResponse)(nil),                        // 46: usercenter.v1.BatchGetCommentReplysAndUsersResponse
+	(*GetCommentsRequest)(nil),                                           // 47: usercenter.v1.GetCommentsRequest
+	(*GetCommentsResponse)(nil),                                          // 48: usercenter.v1.GetCommentsResponse
+	(*UpdateFollowStatusRequest)(nil),                                    // 49: usercenter.v1.UpdateFollowStatusRequest
+	(*UpdateFollowStatusReply)(nil),                                      // 50: usercenter.v1.UpdateFollowStatusReply
+	(*SearchUserRequest)(nil),                                            // 51: usercenter.v1.SearchUserRequest
+	(*SearchUserResponse)(nil),                                           // 52: usercenter.v1.SearchUserResponse
+	(*GetUsersInfoByAddressesRequest)(nil),                               // 53: usercenter.v1.GetUsersInfoByAddressesRequest
+	(*GetUsersInfoByAddressesReply)(nil),                                 // 54: usercenter.v1.GetUsersInfoByAddressesReply
+	(*BatchGetUserInfoResponse_UserInfo)(nil),                            // 55: usercenter.v1.BatchGetUserInfoResponse.UserInfo
+	(*GetTasksResponse_Task)(nil),                                        // 56: usercenter.v1.GetTasksResponse.Task
+	(*GetInviteUserListReply_User)(nil),                                  // 57: usercenter.v1.GetInviteUserListReply.User
+	(*GetUserNotificationsResponse_Notification)(nil),                    // 58: usercenter.v1.GetUserNotificationsResponse.Notification
+	(*BatchGetMarketPostAndPublisherResponse_Post)(nil),                  // 59: usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post
+	(*GetUserInfosByUidsReply_UserInfo)(nil),                             // 60: usercenter.v1.GetUserInfosByUidsReply.UserInfo
+	(*GetMarketPostsAndPublishersResponse_Post)(nil),                     // 61: usercenter.v1.GetMarketPostsAndPublishersResponse.Post
+	(*BatchGetCommentReplysAndUsersResponse_CommentAndReplys)(nil),       // 62: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys
+	(*BatchGetCommentReplysAndUsersResponse_CommentAndReplys_Reply)(nil), // 63: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply
+	(*GetCommentsResponse_Comment)(nil),                                  // 64: usercenter.v1.GetCommentsResponse.Comment
+	(*SearchUserResponse_User)(nil),                                      // 65: usercenter.v1.SearchUserResponse.User
+	(*GetUsersInfoByAddressesReply_User)(nil),                            // 66: usercenter.v1.GetUsersInfoByAddressesReply.User
 }
 var file_market_service_usercenter_v1_usercenter_proto_depIdxs = []int32{
-	54, // 0: usercenter.v1.BatchGetUserInfoResponse.user_infos:type_name -> usercenter.v1.BatchGetUserInfoResponse.UserInfo
-	55, // 1: usercenter.v1.GetTasksResponse.tasks:type_name -> usercenter.v1.GetTasksResponse.Task
-	56, // 2: usercenter.v1.GetInviteUserListReply.users:type_name -> usercenter.v1.GetInviteUserListReply.User
-	57, // 3: usercenter.v1.GetUserNotificationsResponse.notifications:type_name -> usercenter.v1.GetUserNotificationsResponse.Notification
-	58, // 4: usercenter.v1.BatchGetMarketPostAndPublisherResponse.posts:type_name -> usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post
-	4,  // 5: usercenter.v1.CreateUserRequest.source:type_name -> usercenter.v1.CreateUserRequest.Source
-	2,  // 6: usercenter.v1.GetUserInfoReply.is_follow:type_name -> usercenter.v1.IsFollowedUser
-	59, // 7: usercenter.v1.GetUserInfosByUidsReply.user_infos:type_name -> usercenter.v1.GetUserInfosByUidsReply.UserInfo
-	5,  // 8: usercenter.v1.UpdateLikeContentStatusRequest.content_type:type_name -> usercenter.v1.UpdateLikeContentStatusRequest.ContentType
-	6,  // 9: usercenter.v1.UpdateLikeContentStatusRequest.status:type_name -> usercenter.v1.UpdateLikeContentStatusRequest.Status
-	60, // 10: usercenter.v1.GetMarketPostsAndPublishersResponse.posts:type_name -> usercenter.v1.GetMarketPostsAndPublishersResponse.Post
-	61, // 11: usercenter.v1.BatchGetCommentReplysAndUsersResponse.comment_and_replys:type_name -> usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys
-	63, // 12: usercenter.v1.GetCommentsResponse.comments:type_name -> usercenter.v1.GetCommentsResponse.Comment
-	7,  // 13: usercenter.v1.UpdateFollowStatusRequest.status:type_name -> usercenter.v1.UpdateFollowStatusRequest.Status
-	64, // 14: usercenter.v1.SearchUserResponse.users:type_name -> usercenter.v1.SearchUserResponse.User
-	65, // 15: usercenter.v1.GetUsersInfoByAddressesReply.users:type_name -> usercenter.v1.GetUsersInfoByAddressesReply.User
-	3,  // 16: usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post.is_like:type_name -> usercenter.v1.IsLike
-	62, // 17: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.replies:type_name -> usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply
-	3,  // 18: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply.is_like:type_name -> usercenter.v1.IsLike
-	3,  // 19: usercenter.v1.GetCommentsResponse.Comment.is_like:type_name -> usercenter.v1.IsLike
-	24, // 20: usercenter.v1.Usercenter.CreateUser:input_type -> usercenter.v1.CreateUserRequest
-	26, // 21: usercenter.v1.Usercenter.GetUserInfo:input_type -> usercenter.v1.GetUserInfoRequest
-	52, // 22: usercenter.v1.Usercenter.GetUsersInfoByAddresses:input_type -> usercenter.v1.GetUsersInfoByAddressesRequest
-	28, // 23: usercenter.v1.Usercenter.GetUserInfosByUids:input_type -> usercenter.v1.GetUserInfosByUidsRequest
-	50, // 24: usercenter.v1.Usercenter.SearchUser:input_type -> usercenter.v1.SearchUserRequest
-	30, // 25: usercenter.v1.Usercenter.SetUserInfo:input_type -> usercenter.v1.SetUserInfoRequest
-	16, // 26: usercenter.v1.Usercenter.GetInviteUserList:input_type -> usercenter.v1.GetInviteUserListRequest
-	32, // 27: usercenter.v1.Usercenter.PublishPost:input_type -> usercenter.v1.PublishPostRequest
-	34, // 28: usercenter.v1.Usercenter.PublishComment:input_type -> usercenter.v1.PublishCommentRequest
-	36, // 29: usercenter.v1.Usercenter.UpdateLikeContentStatus:input_type -> usercenter.v1.UpdateLikeContentStatusRequest
-	48, // 30: usercenter.v1.Usercenter.UpdateFollowStatus:input_type -> usercenter.v1.UpdateFollowStatusRequest
-	38, // 31: usercenter.v1.Usercenter.UploadFileToBizBucketS3:input_type -> usercenter.v1.UploadFileToBizBucketS3Request
-	40, // 32: usercenter.v1.Usercenter.DownloadFileFromBizBucketS3:input_type -> usercenter.v1.DownloadFileFromBizBucketS3Request
-	42, // 33: usercenter.v1.Usercenter.GetMarketPostsAndPublishers:input_type -> usercenter.v1.GetMarketPostsAndPublishersRequest
-	22, // 34: usercenter.v1.Usercenter.BatchGetMarketPostAndPublisher:input_type -> usercenter.v1.BatchGetMarketPostAndPublisherRequest
-	46, // 35: usercenter.v1.Usercenter.GetComments:input_type -> usercenter.v1.GetCommentsRequest
-	44, // 36: usercenter.v1.Usercenter.BatchGetCommentReplysAndUsers:input_type -> usercenter.v1.BatchGetCommentReplysAndUsersRequest
-	18, // 37: usercenter.v1.Usercenter.GetUserNotifications:input_type -> usercenter.v1.GetUserNotificationsRequest
-	20, // 38: usercenter.v1.Usercenter.MarkNotificationsAsRead:input_type -> usercenter.v1.MarkNotificationsAsReadRequest
-	14, // 39: usercenter.v1.Usercenter.GetTasks:input_type -> usercenter.v1.GetTasksRequest
-	12, // 40: usercenter.v1.Usercenter.ClaimTaskReward:input_type -> usercenter.v1.ClaimTaskRewardRequest
-	10, // 41: usercenter.v1.Usercenter.TaskDone:input_type -> usercenter.v1.TaskDoneRequest
-	25, // 42: usercenter.v1.Usercenter.CreateUser:output_type -> usercenter.v1.CreateUserReply
-	27, // 43: usercenter.v1.Usercenter.GetUserInfo:output_type -> usercenter.v1.GetUserInfoReply
-	53, // 44: usercenter.v1.Usercenter.GetUsersInfoByAddresses:output_type -> usercenter.v1.GetUsersInfoByAddressesReply
-	29, // 45: usercenter.v1.Usercenter.GetUserInfosByUids:output_type -> usercenter.v1.GetUserInfosByUidsReply
-	51, // 46: usercenter.v1.Usercenter.SearchUser:output_type -> usercenter.v1.SearchUserResponse
-	31, // 47: usercenter.v1.Usercenter.SetUserInfo:output_type -> usercenter.v1.SetUserInfoReply
-	17, // 48: usercenter.v1.Usercenter.GetInviteUserList:output_type -> usercenter.v1.GetInviteUserListReply
-	33, // 49: usercenter.v1.Usercenter.PublishPost:output_type -> usercenter.v1.PublishPostReply
-	35, // 50: usercenter.v1.Usercenter.PublishComment:output_type -> usercenter.v1.PublishCommentReply
-	37, // 51: usercenter.v1.Usercenter.UpdateLikeContentStatus:output_type -> usercenter.v1.UpdateLikeContentStatusReply
-	49, // 52: usercenter.v1.Usercenter.UpdateFollowStatus:output_type -> usercenter.v1.UpdateFollowStatusReply
-	39, // 53: usercenter.v1.Usercenter.UploadFileToBizBucketS3:output_type -> usercenter.v1.UploadFileToBizBucketS3Reply
-	41, // 54: usercenter.v1.Usercenter.DownloadFileFromBizBucketS3:output_type -> usercenter.v1.DownloadFileFromBizBucketS3Reply
-	43, // 55: usercenter.v1.Usercenter.GetMarketPostsAndPublishers:output_type -> usercenter.v1.GetMarketPostsAndPublishersResponse
-	23, // 56: usercenter.v1.Usercenter.BatchGetMarketPostAndPublisher:output_type -> usercenter.v1.BatchGetMarketPostAndPublisherResponse
-	47, // 57: usercenter.v1.Usercenter.GetComments:output_type -> usercenter.v1.GetCommentsResponse
-	45, // 58: usercenter.v1.Usercenter.BatchGetCommentReplysAndUsers:output_type -> usercenter.v1.BatchGetCommentReplysAndUsersResponse
-	19, // 59: usercenter.v1.Usercenter.GetUserNotifications:output_type -> usercenter.v1.GetUserNotificationsResponse
-	21, // 60: usercenter.v1.Usercenter.MarkNotificationsAsRead:output_type -> usercenter.v1.MarkNotificationsAsReadResponse
-	15, // 61: usercenter.v1.Usercenter.GetTasks:output_type -> usercenter.v1.GetTasksResponse
-	13, // 62: usercenter.v1.Usercenter.ClaimTaskReward:output_type -> usercenter.v1.ClaimTaskRewardResponse
-	11, // 63: usercenter.v1.Usercenter.TaskDone:output_type -> usercenter.v1.TaskDoneResponse
-	42, // [42:64] is the sub-list for method output_type
-	20, // [20:42] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	55, // 0: usercenter.v1.BatchGetUserInfoResponse.user_infos:type_name -> usercenter.v1.BatchGetUserInfoResponse.UserInfo
+	56, // 1: usercenter.v1.GetTasksResponse.tasks:type_name -> usercenter.v1.GetTasksResponse.Task
+	57, // 2: usercenter.v1.GetInviteUserListReply.users:type_name -> usercenter.v1.GetInviteUserListReply.User
+	2,  // 3: usercenter.v1.GetUserNotificationsRequest.base_token_type:type_name -> usercenter.v1.BaseTokenType
+	58, // 4: usercenter.v1.GetUserNotificationsResponse.notifications:type_name -> usercenter.v1.GetUserNotificationsResponse.Notification
+	59, // 5: usercenter.v1.BatchGetMarketPostAndPublisherResponse.posts:type_name -> usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post
+	5,  // 6: usercenter.v1.CreateUserRequest.source:type_name -> usercenter.v1.CreateUserRequest.Source
+	3,  // 7: usercenter.v1.GetUserInfoReply.is_follow:type_name -> usercenter.v1.IsFollowedUser
+	60, // 8: usercenter.v1.GetUserInfosByUidsReply.user_infos:type_name -> usercenter.v1.GetUserInfosByUidsReply.UserInfo
+	6,  // 9: usercenter.v1.UpdateLikeContentStatusRequest.content_type:type_name -> usercenter.v1.UpdateLikeContentStatusRequest.ContentType
+	7,  // 10: usercenter.v1.UpdateLikeContentStatusRequest.status:type_name -> usercenter.v1.UpdateLikeContentStatusRequest.Status
+	61, // 11: usercenter.v1.GetMarketPostsAndPublishersResponse.posts:type_name -> usercenter.v1.GetMarketPostsAndPublishersResponse.Post
+	62, // 12: usercenter.v1.BatchGetCommentReplysAndUsersResponse.comment_and_replys:type_name -> usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys
+	64, // 13: usercenter.v1.GetCommentsResponse.comments:type_name -> usercenter.v1.GetCommentsResponse.Comment
+	8,  // 14: usercenter.v1.UpdateFollowStatusRequest.status:type_name -> usercenter.v1.UpdateFollowStatusRequest.Status
+	65, // 15: usercenter.v1.SearchUserResponse.users:type_name -> usercenter.v1.SearchUserResponse.User
+	66, // 16: usercenter.v1.GetUsersInfoByAddressesReply.users:type_name -> usercenter.v1.GetUsersInfoByAddressesReply.User
+	2,  // 17: usercenter.v1.GetUserNotificationsResponse.Notification.base_token_type:type_name -> usercenter.v1.BaseTokenType
+	4,  // 18: usercenter.v1.BatchGetMarketPostAndPublisherResponse.Post.is_like:type_name -> usercenter.v1.IsLike
+	63, // 19: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.replies:type_name -> usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply
+	4,  // 20: usercenter.v1.BatchGetCommentReplysAndUsersResponse.CommentAndReplys.Reply.is_like:type_name -> usercenter.v1.IsLike
+	4,  // 21: usercenter.v1.GetCommentsResponse.Comment.is_like:type_name -> usercenter.v1.IsLike
+	25, // 22: usercenter.v1.Usercenter.CreateUser:input_type -> usercenter.v1.CreateUserRequest
+	27, // 23: usercenter.v1.Usercenter.GetUserInfo:input_type -> usercenter.v1.GetUserInfoRequest
+	53, // 24: usercenter.v1.Usercenter.GetUsersInfoByAddresses:input_type -> usercenter.v1.GetUsersInfoByAddressesRequest
+	29, // 25: usercenter.v1.Usercenter.GetUserInfosByUids:input_type -> usercenter.v1.GetUserInfosByUidsRequest
+	51, // 26: usercenter.v1.Usercenter.SearchUser:input_type -> usercenter.v1.SearchUserRequest
+	31, // 27: usercenter.v1.Usercenter.SetUserInfo:input_type -> usercenter.v1.SetUserInfoRequest
+	17, // 28: usercenter.v1.Usercenter.GetInviteUserList:input_type -> usercenter.v1.GetInviteUserListRequest
+	33, // 29: usercenter.v1.Usercenter.PublishPost:input_type -> usercenter.v1.PublishPostRequest
+	35, // 30: usercenter.v1.Usercenter.PublishComment:input_type -> usercenter.v1.PublishCommentRequest
+	37, // 31: usercenter.v1.Usercenter.UpdateLikeContentStatus:input_type -> usercenter.v1.UpdateLikeContentStatusRequest
+	49, // 32: usercenter.v1.Usercenter.UpdateFollowStatus:input_type -> usercenter.v1.UpdateFollowStatusRequest
+	39, // 33: usercenter.v1.Usercenter.UploadFileToBizBucketS3:input_type -> usercenter.v1.UploadFileToBizBucketS3Request
+	41, // 34: usercenter.v1.Usercenter.DownloadFileFromBizBucketS3:input_type -> usercenter.v1.DownloadFileFromBizBucketS3Request
+	43, // 35: usercenter.v1.Usercenter.GetMarketPostsAndPublishers:input_type -> usercenter.v1.GetMarketPostsAndPublishersRequest
+	23, // 36: usercenter.v1.Usercenter.BatchGetMarketPostAndPublisher:input_type -> usercenter.v1.BatchGetMarketPostAndPublisherRequest
+	47, // 37: usercenter.v1.Usercenter.GetComments:input_type -> usercenter.v1.GetCommentsRequest
+	45, // 38: usercenter.v1.Usercenter.BatchGetCommentReplysAndUsers:input_type -> usercenter.v1.BatchGetCommentReplysAndUsersRequest
+	19, // 39: usercenter.v1.Usercenter.GetUserNotifications:input_type -> usercenter.v1.GetUserNotificationsRequest
+	21, // 40: usercenter.v1.Usercenter.MarkNotificationsAsRead:input_type -> usercenter.v1.MarkNotificationsAsReadRequest
+	15, // 41: usercenter.v1.Usercenter.GetTasks:input_type -> usercenter.v1.GetTasksRequest
+	13, // 42: usercenter.v1.Usercenter.ClaimTaskReward:input_type -> usercenter.v1.ClaimTaskRewardRequest
+	11, // 43: usercenter.v1.Usercenter.TaskDone:input_type -> usercenter.v1.TaskDoneRequest
+	26, // 44: usercenter.v1.Usercenter.CreateUser:output_type -> usercenter.v1.CreateUserReply
+	28, // 45: usercenter.v1.Usercenter.GetUserInfo:output_type -> usercenter.v1.GetUserInfoReply
+	54, // 46: usercenter.v1.Usercenter.GetUsersInfoByAddresses:output_type -> usercenter.v1.GetUsersInfoByAddressesReply
+	30, // 47: usercenter.v1.Usercenter.GetUserInfosByUids:output_type -> usercenter.v1.GetUserInfosByUidsReply
+	52, // 48: usercenter.v1.Usercenter.SearchUser:output_type -> usercenter.v1.SearchUserResponse
+	32, // 49: usercenter.v1.Usercenter.SetUserInfo:output_type -> usercenter.v1.SetUserInfoReply
+	18, // 50: usercenter.v1.Usercenter.GetInviteUserList:output_type -> usercenter.v1.GetInviteUserListReply
+	34, // 51: usercenter.v1.Usercenter.PublishPost:output_type -> usercenter.v1.PublishPostReply
+	36, // 52: usercenter.v1.Usercenter.PublishComment:output_type -> usercenter.v1.PublishCommentReply
+	38, // 53: usercenter.v1.Usercenter.UpdateLikeContentStatus:output_type -> usercenter.v1.UpdateLikeContentStatusReply
+	50, // 54: usercenter.v1.Usercenter.UpdateFollowStatus:output_type -> usercenter.v1.UpdateFollowStatusReply
+	40, // 55: usercenter.v1.Usercenter.UploadFileToBizBucketS3:output_type -> usercenter.v1.UploadFileToBizBucketS3Reply
+	42, // 56: usercenter.v1.Usercenter.DownloadFileFromBizBucketS3:output_type -> usercenter.v1.DownloadFileFromBizBucketS3Reply
+	44, // 57: usercenter.v1.Usercenter.GetMarketPostsAndPublishers:output_type -> usercenter.v1.GetMarketPostsAndPublishersResponse
+	24, // 58: usercenter.v1.Usercenter.BatchGetMarketPostAndPublisher:output_type -> usercenter.v1.BatchGetMarketPostAndPublisherResponse
+	48, // 59: usercenter.v1.Usercenter.GetComments:output_type -> usercenter.v1.GetCommentsResponse
+	46, // 60: usercenter.v1.Usercenter.BatchGetCommentReplysAndUsers:output_type -> usercenter.v1.BatchGetCommentReplysAndUsersResponse
+	20, // 61: usercenter.v1.Usercenter.GetUserNotifications:output_type -> usercenter.v1.GetUserNotificationsResponse
+	22, // 62: usercenter.v1.Usercenter.MarkNotificationsAsRead:output_type -> usercenter.v1.MarkNotificationsAsReadResponse
+	16, // 63: usercenter.v1.Usercenter.GetTasks:output_type -> usercenter.v1.GetTasksResponse
+	14, // 64: usercenter.v1.Usercenter.ClaimTaskReward:output_type -> usercenter.v1.ClaimTaskRewardResponse
+	12, // 65: usercenter.v1.Usercenter.TaskDone:output_type -> usercenter.v1.TaskDoneResponse
+	44, // [44:66] is the sub-list for method output_type
+	22, // [22:44] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_market_service_usercenter_v1_usercenter_proto_init() }
@@ -5440,7 +5496,7 @@ func file_market_service_usercenter_v1_usercenter_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_market_service_usercenter_v1_usercenter_proto_rawDesc), len(file_market_service_usercenter_v1_usercenter_proto_rawDesc)),
-			NumEnums:      8,
+			NumEnums:      9,
 			NumMessages:   58,
 			NumExtensions: 0,
 			NumServices:   1,

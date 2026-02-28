@@ -32,24 +32,24 @@ const (
 )
 
 const (
-	LeaderboardKey = "leaderboard-%s-%s-%s"
+	LeaderboardKey = "leaderboard-%d-%s-%s"
 
-	// 排行榜相关zset  %s -> baseTokenAddress   %s -> timestr
-	VolumeDailyLeaderboard = "leaderboard-%s-volume-daily-%s"
-	TradesDailyLeaderboard = "leaderboard-%s-trades-daily-%s"
-	PnlDailyLeaderboard    = "leaderboard-%s-pnl-daily-%s"
+	// 排行榜相关zset  %d -> baseTokenType(1:Points, 2:USDC)   %s -> timestr
+	VolumeDailyLeaderboard = "leaderboard-%d-volume-daily-%s"
+	TradesDailyLeaderboard = "leaderboard-%d-trades-daily-%s"
+	PnlDailyLeaderboard    = "leaderboard-%d-pnl-daily-%s"
 
-	VolumeWeeklyLeaderboard = "leaderboard-%s-volume-weekly-%s"
-	TradesWeeklyLeaderboard = "leaderboard-%s-trades-weekly-%s"
-	PnlWeeklyLeaderboard    = "leaderboard-%s-pnl-weekly-%s"
+	VolumeWeeklyLeaderboard = "leaderboard-%d-volume-weekly-%s"
+	TradesWeeklyLeaderboard = "leaderboard-%d-trades-weekly-%s"
+	PnlWeeklyLeaderboard    = "leaderboard-%d-pnl-weekly-%s"
 
-	VolumeMonthlyLeaderboard = "leaderboard-%s-volume-monthly-%s"
-	TradesMonthlyLeaderboard = "leaderboard-%s-trades-monthly-%s"
-	PnlMonthlyLeaderboard    = "leaderboard-%s-pnl-monthly-%s"
+	VolumeMonthlyLeaderboard = "leaderboard-%d-volume-monthly-%s"
+	TradesMonthlyLeaderboard = "leaderboard-%d-trades-monthly-%s"
+	PnlMonthlyLeaderboard    = "leaderboard-%d-pnl-monthly-%s"
 
-	VolumeAllTimeLeaderboard = "leaderboard-%s-volume-all-time"
-	TradesAllTimeLeaderboard = "leaderboard-%s-trades-all-time"
-	PnlAllTimeLeaderboard    = "leaderboard-%s-pnl-all-time"
+	VolumeAllTimeLeaderboard = "leaderboard-%d-volume-all-time"
+	TradesAllTimeLeaderboard = "leaderboard-%d-trades-all-time"
+	PnlAllTimeLeaderboard    = "leaderboard-%d-pnl-all-time"
 )
 
 const (
@@ -61,6 +61,13 @@ const (
 	TxSourceTransferDeposit        = uint8(6)
 	TxSourceTransferWithdraw       = uint8(7)
 	TxSourceMintTaskRewardPoints   = uint8(8)
+
+	// CTF trading sources
+	TxSourceCTFSwapBuy           = uint8(10)
+	TxSourceCTFSwapSell          = uint8(11)
+	TxSourceCTFDepositLiquidity  = uint8(12)
+	TxSourceCTFWithdrawLiquidity = uint8(13)
+	TxSourceCTFRedeemPosition    = uint8(14)
 
 	TxTypeUserOperation = uint8(1)
 	TxTypeNormal        = uint8(2)
@@ -80,6 +87,9 @@ const (
 
 	UserTokenBalanceIsClaimedNo  = uint8(2)
 	UserTokenBalanceIsClaimedYes = uint8(1)
+
+	BaseTokenTypePoints = uint8(1)
+	BaseTokenTypeUsdc   = uint8(2)
 
 	UserMarketPositionStatusHolding = uint8(1)
 	UserMarketPositionStatusEnd     = uint8(2)
@@ -119,7 +129,7 @@ type OrderEntity struct {
 	TxHash           string          `json:"tx_hash"`
 	OpHash           string          `json:"op_hash"`
 	Pnl              decimal.Decimal `json:"pnl"`
-	BaseTokenAddress string          `json:"base_token_address"`
+	BaseTokenType    uint8           `json:"base_token_type"`
 
 	Tx *SendTxEntity `json:"send_tx_entity"`
 }
@@ -129,13 +139,13 @@ type UserClaimResultEntity struct {
 	UUID           string          `json:"uuid"`
 	UID            string          `json:"uid"`
 	MarketAddress  string          `json:"market_address"`
-	OptionAddress    string          `json:"option_address"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	Status           uint8           `json:"status"`
-	Amount           decimal.Decimal `json:"amount"`
-	EventProcessed   uint8           `json:"event_processed"`
-	TxHash           string          `json:"tx_hash"`
-	OpHash           string          `json:"op_hash"`
+	OptionAddress  string          `json:"option_address"`
+	BaseTokenType  uint8           `json:"base_token_type"`
+	Status         uint8           `json:"status"`
+	Amount         decimal.Decimal `json:"amount"`
+	EventProcessed uint8           `json:"event_processed"`
+	TxHash         string          `json:"tx_hash"`
+	OpHash         string          `json:"op_hash"`
 
 	Tx *SendTxEntity `json:"send_tx_entity"`
 }
@@ -149,9 +159,9 @@ type SendTxEntity struct {
 	Status        uint8  `json:"status"`
 	Chain         string `json:"chain"`
 	Type          uint8  `json:"type"`
-	ErrMsg           string `json:"err_msg"`
-	RetryCount       uint16 `json:"retry_count"`
-	BaseTokenAddress string `json:"base_token_address"`
+	ErrMsg        string `json:"err_msg"`
+	RetryCount    uint16 `json:"retry_count"`
+	BaseTokenType uint8  `json:"base_token_type"`
 
 	UserOperation *UserOperation `json:"user_operation"`
 }
@@ -163,9 +173,9 @@ type UserTokenBalanceEntity struct {
 	MarketAddress string          `json:"market_address"`
 	Balance       decimal.Decimal `json:"balance"`
 	Decimal       uint8           `json:"decimal"`
-	Type             uint8           `json:"type"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	BlockNumber      uint64          `json:"block_number"`
+	Type          uint8           `json:"type"`
+	BaseTokenType uint8           `json:"base_token_type"`
+	BlockNumber   uint64          `json:"block_number"`
 	AvgBuyPrice   decimal.Decimal `json:"avg_buy_price"`
 	Status        uint8           `json:"status"`
 	IsClaimed     uint8           `json:"is_claimed"`
@@ -189,9 +199,9 @@ type UserAssetValueEntity struct {
 	Value         decimal.Decimal `json:"value"`
 	Balance       decimal.Decimal `json:"balance"`
 	Portfolio     decimal.Decimal `json:"portfolio"`
-	Pnl              decimal.Decimal `json:"pnl"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	Time             time.Time       `json:"time"`
+	Pnl           decimal.Decimal `json:"pnl"`
+	BaseTokenType uint8           `json:"base_token_type"`
+	Time          time.Time       `json:"time"`
 
 	PortfolioPnl decimal.Decimal `json:"portfolio_pnl"`
 	SelfPnl      decimal.Decimal `json:"self_pnl"`
@@ -200,9 +210,9 @@ type UserAssetValueEntity struct {
 type UserMarketPositionEntity struct {
 	base.BaseEntity
 	UID           string          `json:"uid"`
-	MarketAddress    string          `json:"market_address"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	TotalValue       decimal.Decimal `json:"total_value"`
+	MarketAddress string          `json:"market_address"`
+	BaseTokenType uint8           `json:"base_token_type"`
+	TotalValue    decimal.Decimal `json:"total_value"`
 	Status        uint8           `json:"status"`
 }
 
@@ -345,9 +355,9 @@ type UserTransferTokensEntity struct {
 	UID             string          `json:"uid"`
 	TokenAddress    string          `json:"token_address"`
 	ExternalAddress string          `json:"external_address"`
-	Side             uint8           `json:"side"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	Amount           decimal.Decimal `json:"amount"`
+	Side            uint8           `json:"side"`
+	BaseTokenType   uint8           `json:"base_token_type"`
+	Amount          decimal.Decimal `json:"amount"`
 	Status          uint8           `json:"status"`
 	EventProcessed  uint8           `json:"event_processed"`
 	TxHash          string          `json:"tx_hash"`
@@ -360,9 +370,9 @@ type UserMintPointsEntity struct {
 	base.BaseEntity
 	UUID           string          `json:"uuid"`
 	UID            string          `json:"uid"`
-	TokenAddress     string          `json:"token_address"`
-	BaseTokenAddress string          `json:"base_token_address"`
-	Amount           decimal.Decimal `json:"amount"`
+	TokenAddress   string          `json:"token_address"`
+	BaseTokenType  uint8           `json:"base_token_type"`
+	Amount         decimal.Decimal `json:"amount"`
 	Status         uint8           `json:"status"`
 	EventProcessed uint8           `json:"event_processed"`
 	Source         uint8           `json:"source"`

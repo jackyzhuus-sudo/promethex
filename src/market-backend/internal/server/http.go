@@ -48,7 +48,7 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, h
 				ratelimit.WithLimiter(bbr.NewLimiter()),
 			),
 			middleware.TraceId(logger),
-			middleware.CommonParams(logger), // 公共参数提取中间件
+			middleware.CommonParams(logger, cfgCustom.AssetTokens.Usdc.Address, cfgCustom.AssetTokens.Points.Address), // 公共参数提取中间件
 			middleware.Alarm(larkAlarm),
 			middleware.Logging(logger),
 			middleware.Auth(cfgData, cfgCustom, logger, data),

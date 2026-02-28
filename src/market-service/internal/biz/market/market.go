@@ -220,11 +220,11 @@ func (h *MarketHandler) GetMarket(ctx common.Ctx, marketQuery *MarketQuery) (*Ma
 
 // resolveCategoryFromS3 resolves the category slug from the admin panel category_id UUID
 // by fetching the S3 category list and finding the matching category
-func (h *MarketHandler) resolveCategoryFromS3(ctx common.Ctx, categoryId string, baseTokenAddress string) string {
+func (h *MarketHandler) resolveCategoryFromS3(ctx common.Ctx, categoryId string, baseTokenType uint8) string {
 	if categoryId == "" {
 		return ""
 	}
-	categoryList, _, err := h.GetCategoriesFromS3(ctx, baseTokenAddress)
+	categoryList, _, err := h.GetCategoriesFromS3(ctx, baseTokenType)
 	if err != nil {
 		ctx.Log.Warnf("resolveCategoryFromS3 GetCategoriesFromS3 error: %+v", err)
 		return ""
@@ -269,7 +269,7 @@ func (h *MarketHandler) CreateMarketAndOptions(ctx common.Ctx, marketEntityList 
 
 		// If no categories from S3 Categories array, try resolving from category_id
 		if len(categories) == 0 && marketS3Info.CategoryId != "" {
-			resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, "")
+			resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, BaseTokenTypeUsdc)
 			if resolvedCategory != "" {
 				categories = append(categories, resolvedCategory)
 			}
@@ -759,12 +759,12 @@ func (h *MarketHandler) ProcessMarketDepositEventInMarketHandler(ctx common.Ctx,
 		}
 
 		optionTokenPriceEntityList = append(optionTokenPriceEntityList, &OptionTokenPriceEntity{
-			TokenAddress:     optionPrice.Address,
-			Price:            price,
-			Decimals:         uint8(optionPrice.Decimal),
-			BaseTokenAddress: req.BaseTokenAddress,
-			BlockNumber:      req.BlockNumber,
-			BlockTime:        time.Unix(int64(req.BlockTime), 0),
+			TokenAddress:  optionPrice.Address,
+			Price:         price,
+			Decimals:      uint8(optionPrice.Decimal),
+			BaseTokenType: uint8(req.BaseTokenType),
+			BlockNumber:   req.BlockNumber,
+			BlockTime:     time.Unix(int64(req.BlockTime), 0),
 		})
 	}
 	err = h.marketRepo.BatchCreateOptionTokenPrice(ctx, optionTokenPriceEntityList)
@@ -801,12 +801,12 @@ func (h *MarketHandler) ProcessMarketWithdrawEventInMarketHandler(ctx common.Ctx
 			return errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", err.Error())
 		}
 		optionTokenPriceEntityList = append(optionTokenPriceEntityList, &OptionTokenPriceEntity{
-			TokenAddress:     optionPrice.Address,
-			Price:            price,
-			Decimals:         uint8(optionPrice.Decimal),
-			BaseTokenAddress: req.BaseTokenAddress,
-			BlockNumber:      req.BlockNumber,
-			BlockTime:        time.Unix(int64(req.BlockTime), 0),
+			TokenAddress:  optionPrice.Address,
+			Price:         price,
+			Decimals:      uint8(optionPrice.Decimal),
+			BaseTokenType: uint8(req.BaseTokenType),
+			BlockNumber:   req.BlockNumber,
+			BlockTime:     time.Unix(int64(req.BlockTime), 0),
 		})
 	}
 	err = h.marketRepo.BatchCreateOptionTokenPrice(ctx, optionTokenPriceEntityList)
@@ -826,12 +826,12 @@ func (h *MarketHandler) ProcessMarketSwapEventInMarketHandler(ctx common.Ctx, re
 			return errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ERROR", err.Error())
 		}
 		optionTokenPriceEntityList = append(optionTokenPriceEntityList, &OptionTokenPriceEntity{
-			TokenAddress:     optionPrice.Address,
-			Price:            price,
-			Decimals:         uint8(optionPrice.Decimal),
-			BaseTokenAddress: req.BaseTokenAddress,
-			BlockNumber:      req.BlockNumber,
-			BlockTime:        time.Unix(int64(req.BlockTime), 0),
+			TokenAddress:  optionPrice.Address,
+			Price:         price,
+			Decimals:      uint8(optionPrice.Decimal),
+			BaseTokenType: uint8(req.BaseTokenType),
+			BlockNumber:   req.BlockNumber,
+			BlockTime:     time.Unix(int64(req.BlockTime), 0),
 		})
 	}
 	err := h.marketRepo.BatchCreateOptionTokenPrice(ctx, optionTokenPriceEntityList)
@@ -965,7 +965,7 @@ func (h *MarketHandler) GetTagsEmbedding(ctx common.Ctx, tagList []string) ([]fl
 	return tagEmbedding, nil
 }
 
-func (h *MarketHandler) GetCategoriesFromS3(ctx common.Ctx, baseTokenAddress string) ([]*S3CategoryInfo, int64, error) {
+func (h *MarketHandler) GetCategoriesFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3CategoryInfo, int64, error) {
 	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "categories"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
@@ -984,7 +984,7 @@ func (h *MarketHandler) GetCategoriesFromS3(ctx common.Ctx, baseTokenAddress str
 	return s3CategoryList, int64(len(s3CategoryList)), nil
 }
 
-func (h *MarketHandler) GetBannersFromS3(ctx common.Ctx, baseTokenAddress string) ([]*S3BannerInfo, int64, error) {
+func (h *MarketHandler) GetBannersFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3BannerInfo, int64, error) {
 	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "banners"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
@@ -999,7 +999,7 @@ func (h *MarketHandler) GetBannersFromS3(ctx common.Ctx, baseTokenAddress string
 	return s3BannerList, int64(len(s3BannerList)), nil
 }
 
-func (h *MarketHandler) GetSectionsFromS3(ctx common.Ctx, baseTokenAddress string) ([]*S3SectionInfo, int64, error) {
+func (h *MarketHandler) GetSectionsFromS3(ctx common.Ctx, baseTokenType uint8) ([]*S3SectionInfo, int64, error) {
 	data, _, err := h.marketRepo.DownloadFileFromAdminBucketS3(ctx, S3ContentKey(h.tenantSlug, "sections"))
 	if err != nil {
 		return nil, 0, errors.New(int(marketcenterPb.ErrorCode_S3), "S3_ERROR", err.Error())
@@ -1060,7 +1060,7 @@ func (h *MarketHandler) UpdateMarketInfoByS3Data(ctx common.Ctx, marketAddress s
 
 	// If no categories from S3 Categories array, try resolving from category_id
 	if len(categories) == 0 && marketS3Info.CategoryId != "" {
-		resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, "")
+		resolvedCategory := h.resolveCategoryFromS3(ctx, marketS3Info.CategoryId, BaseTokenTypeUsdc)
 		if resolvedCategory != "" {
 			categories = append(categories, resolvedCategory)
 		}

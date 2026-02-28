@@ -16,7 +16,7 @@ import (
 )
 
 // CommonParams 公共参数提取中间件
-func CommonParams(logger log.Logger) middleware.Middleware {
+func CommonParams(logger log.Logger, usdcAddr, pointsAddr string) middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (interface{}, error) {
 			tr, ok := transport.FromServerContext(ctx)
@@ -25,7 +25,7 @@ func CommonParams(logger log.Logger) middleware.Middleware {
 			}
 
 			// 提取并注入公共参数到上下文
-			enrichedCtx := extractAndInjectCommonParams(ctx, tr, logger)
+			enrichedCtx := extractAndInjectCommonParams(ctx, tr, logger, usdcAddr, pointsAddr)
 
 			return handler(enrichedCtx, req)
 		}
@@ -33,7 +33,7 @@ func CommonParams(logger log.Logger) middleware.Middleware {
 }
 
 // extractAndInjectCommonParams 提取公共参数并注入到上下文中
-func extractAndInjectCommonParams(ctx context.Context, tr transport.Transporter, logger log.Logger) context.Context {
+func extractAndInjectCommonParams(ctx context.Context, tr transport.Transporter, logger log.Logger, usdcAddr, pointsAddr string) context.Context {
 	newCtx := ctx
 
 	// 1. 提取客户端IP地址
@@ -69,7 +69,7 @@ func extractAndInjectCommonParams(ctx context.Context, tr transport.Transporter,
 	}
 	newCtx = context.WithValue(newCtx, util.DeviceTypeKey, deviceType)
 
-	newCtx = extractURLParams(newCtx, tr)
+	newCtx = extractURLParams(newCtx, tr, usdcAddr, pointsAddr)
 
 	return newCtx
 }
@@ -162,13 +162,28 @@ func detectDeviceType(userAgent string) string {
 }
 
 // extractURLParams 从URL参数中提取额外信息
-func extractURLParams(ctx context.Context, tr transport.Transporter) context.Context {
+func extractURLParams(ctx context.Context, tr transport.Transporter, usdcAddr, pointsAddr string) context.Context {
+	log.Infof("start extractURLParams")
+
+	// 尝试获取 HTTP 传输的具体实现
 	if httpTr, ok := tr.(kratosHttp.Transporter); ok {
+		log.Infof("ok1: got http transport")
+
 		req := httpTr.Request()
 		queryParams := req.URL.Query()
 		if addr := queryParams.Get("baseTokenAddress"); addr != "" {
-			ctx = context.WithValue(ctx, util.BaseTokenAddressKey, strings.ToLower(addr))
+			ctx = context.WithValue(ctx, util.BaseTokenAddressKey, addr)
+			tokenType := 0
+			switch strings.ToLower(addr) {
+			case strings.ToLower(usdcAddr):
+				tokenType = 2
+			case strings.ToLower(pointsAddr):
+				tokenType = 1
+			}
+			ctx = context.WithValue(ctx, util.BaseTokenKey, tokenType)
 		}
 	}
+
+	log.Infof("end extractURLParams")
 	return ctx
 }

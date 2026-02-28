@@ -15,7 +15,7 @@ type UserTransferTokens struct {
 	ExternalAddress string          `gorm:"column:external_address;type:varchar(42);not null;" comment:"外部地址"`
 	TokenAddress    string          `gorm:"column:token_address;type:varchar(42);not null;" comment:"代币地址"`
 	Side            uint8           `gorm:"column:side;type:smallint;not null;default:1" comment:"1: 转入deposit 2: 转出withdraw"`
-	BaseTokenAddress string          `gorm:"column:base_token_address" comment:"基础资产代币合约地址"`
+	BaseTokenType   uint8           `gorm:"column:base_token_type;type:smallint;not null;default:1" comment:"对应的基础代币类型 1: points 2: usdc"`
 	Amount          decimal.Decimal `gorm:"column:amount;type:NUMERIC;not null;default:0" comment:"数量"`
 	Status          uint8           `gorm:"column:status;type:smallint;not null;default:3" comment:"1成功2失败3执行中"`
 	EventProcessed  uint8           `gorm:"column:event_processed;type:smallint;not null;default:2" comment:"事件是否处理过 1: 已处理 2: 未处理"`
@@ -39,7 +39,7 @@ func (u *UserTransferTokens) ToEntity() *assetBiz.UserTransferTokensEntity {
 		ExternalAddress: u.ExternalAddress,
 		Side:            u.Side,
 		TokenAddress:    u.TokenAddress,
-		BaseTokenAddress: u.BaseTokenAddress,
+		BaseTokenType:   u.BaseTokenType,
 		Amount:          u.Amount,
 		Status:          u.Status,
 		EventProcessed:  u.EventProcessed,
@@ -54,7 +54,7 @@ func (u *UserTransferTokens) FromEntity(entity *assetBiz.UserTransferTokensEntit
 	u.ExternalAddress = entity.ExternalAddress
 	u.Side = entity.Side
 	u.TokenAddress = entity.TokenAddress
-	u.BaseTokenAddress = entity.BaseTokenAddress
+	u.BaseTokenType = entity.BaseTokenType
 	u.Amount = entity.Amount
 	u.Status = entity.Status
 	u.EventProcessed = entity.EventProcessed

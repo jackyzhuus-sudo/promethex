@@ -3,7 +3,7 @@ services:
     image: pgvector/pgvector:pg18-trixie
     container_name: market-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: market-user
       POSTGRES_PASSWORD: market-password
@@ -13,9 +13,8 @@ services:
       - ./sql:/sql:ro
       - ./postgres-data:/var/lib/postgresql
     restart: always
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
     logging:
       driver: "json-file"
       options:
@@ -27,13 +26,12 @@ services:
     container_name: market-redis
     command: ["redis-server", "--requirepass", "market_redis_password"]
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - ./redis-data:/data
     restart: always
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
     logging:
       driver: "json-file"
       options:
@@ -49,12 +47,11 @@ services:
       - "50051:50051"
     restart: always
     environment:
-      DATABASE_URL: postgresql+psycopg2://market-user:market-password@host.docker.internal:5432/embedding?sslmode=disable
+      DATABASE_URL: postgresql+psycopg2://market-user:market-password@market-postgres:5432/embedding?sslmode=disable
       GRPC_WORKERS: ${GRPC_WORKERS:-10}
       GRPC_PORT: ${GRPC_PORT:-50051}
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
 
   market-backend:
     container_name: market-backend
@@ -75,9 +72,8 @@ services:
       - ./configs/market-backend/config.yaml:/app/configs/config.yaml
     environment:
       - TZ=Asia/Shanghai
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
     logging:
       driver: "json-file"
       options:
@@ -97,14 +93,13 @@ services:
       - postgres
       - redis
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - ./configs/block-listener/config.yaml:/app/configs/config.yaml
     environment:
       - TZ=Asia/Shanghai
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
     logging:
       driver: "json-file"
       options:
@@ -123,16 +118,19 @@ services:
       - postgres
       - redis
     ports:
-      - "9000:9000"
+      - "9002:9000"
     volumes:
       - ./configs/market-service/config.yaml:/app/configs/config.yaml
     environment:
       - TZ=Asia/Shanghai
-    network_mode: bridge
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - market-net
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "10"
+
+networks:
+  market-net:
+    driver: bridge

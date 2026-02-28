@@ -4,7 +4,6 @@ FROM golang:1.25 AS builder
 # 设置Go环境变量
 ENV CGO_ENABLED=0 \
     GOOS=linux \
-    GOARCH=amd64 \
     GOPROXY=https://goproxy.cn,direct
 
 # 设置工作目录
@@ -23,7 +22,7 @@ RUN go mod download
 COPY . .
 
 # 编译服务
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin/block-listener ./cmd/block-listener
+RUN go build -ldflags "-s -w" -o /app/bin/block-listener ./cmd/block-listener
 
 # 第二阶段：创建运行环境
 FROM alpine:3.23
