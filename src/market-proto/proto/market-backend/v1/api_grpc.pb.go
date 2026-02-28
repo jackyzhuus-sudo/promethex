@@ -168,6 +168,11 @@ const (
 	HttpApi_TransferBaseToken_FullMethodName           = "/api.v1.HttpApi/TransferBaseToken"
 	HttpApi_FollowMarket_FullMethodName                = "/api.v1.HttpApi/FollowMarket"
 	HttpApi_UnfollowMarket_FullMethodName              = "/api.v1.HttpApi/UnfollowMarket"
+	HttpApi_Swap_FullMethodName                        = "/api.v1.HttpApi/Swap"
+	HttpApi_DepositLiquidity_FullMethodName            = "/api.v1.HttpApi/DepositLiquidity"
+	HttpApi_WithdrawLiquidity_FullMethodName           = "/api.v1.HttpApi/WithdrawLiquidity"
+	HttpApi_RedeemPosition_FullMethodName              = "/api.v1.HttpApi/RedeemPosition"
+	HttpApi_GetSwapPrice_FullMethodName                = "/api.v1.HttpApi/GetSwapPrice"
 	HttpApi_UploadFile_FullMethodName                  = "/api.v1.HttpApi/UploadFile"
 	HttpApi_DownloadFile_FullMethodName                = "/api.v1.HttpApi/DownloadFile"
 	HttpApi_PublishPost_FullMethodName                 = "/api.v1.HttpApi/PublishPost"
@@ -236,6 +241,16 @@ type HttpApiClient interface {
 	FollowMarket(ctx context.Context, in *FollowMarketRequest, opts ...grpc.CallOption) (*FollowMarketReply, error)
 	// 取消关注市场 need_auth = true
 	UnfollowMarket(ctx context.Context, in *UnfollowMarketRequest, opts ...grpc.CallOption) (*UnfollowMarketReply, error)
+	// CTF Swap 交易 need_auth = true
+	Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error)
+	// CTF 添加流动性 need_auth = true
+	DepositLiquidity(ctx context.Context, in *DepositLiquidityRequest, opts ...grpc.CallOption) (*DepositLiquidityReply, error)
+	// CTF 移除流动性 need_auth = true
+	WithdrawLiquidity(ctx context.Context, in *WithdrawLiquidityRequest, opts ...grpc.CallOption) (*WithdrawLiquidityReply, error)
+	// CTF 赎回 Position need_auth = true
+	RedeemPosition(ctx context.Context, in *RedeemPositionRequest, opts ...grpc.CallOption) (*RedeemPositionReply, error)
+	// CTF 获取 Swap 报价 need_auth = false
+	GetSwapPrice(ctx context.Context, in *GetSwapPriceRequest, opts ...grpc.CallOption) (*GetSwapPriceReply, error)
 	// 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
 	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error)
 	// 下载文件 need_auth = false
@@ -405,6 +420,56 @@ func (c *httpApiClient) UnfollowMarket(ctx context.Context, in *UnfollowMarketRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UnfollowMarketReply)
 	err := c.cc.Invoke(ctx, HttpApi_UnfollowMarket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *httpApiClient) Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SwapReply)
+	err := c.cc.Invoke(ctx, HttpApi_Swap_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *httpApiClient) DepositLiquidity(ctx context.Context, in *DepositLiquidityRequest, opts ...grpc.CallOption) (*DepositLiquidityReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DepositLiquidityReply)
+	err := c.cc.Invoke(ctx, HttpApi_DepositLiquidity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *httpApiClient) WithdrawLiquidity(ctx context.Context, in *WithdrawLiquidityRequest, opts ...grpc.CallOption) (*WithdrawLiquidityReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WithdrawLiquidityReply)
+	err := c.cc.Invoke(ctx, HttpApi_WithdrawLiquidity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *httpApiClient) RedeemPosition(ctx context.Context, in *RedeemPositionRequest, opts ...grpc.CallOption) (*RedeemPositionReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RedeemPositionReply)
+	err := c.cc.Invoke(ctx, HttpApi_RedeemPosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *httpApiClient) GetSwapPrice(ctx context.Context, in *GetSwapPriceRequest, opts ...grpc.CallOption) (*GetSwapPriceReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSwapPriceReply)
+	err := c.cc.Invoke(ctx, HttpApi_GetSwapPrice_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -837,6 +902,16 @@ type HttpApiServer interface {
 	FollowMarket(context.Context, *FollowMarketRequest) (*FollowMarketReply, error)
 	// 取消关注市场 need_auth = true
 	UnfollowMarket(context.Context, *UnfollowMarketRequest) (*UnfollowMarketReply, error)
+	// CTF Swap 交易 need_auth = true
+	Swap(context.Context, *SwapRequest) (*SwapReply, error)
+	// CTF 添加流动性 need_auth = true
+	DepositLiquidity(context.Context, *DepositLiquidityRequest) (*DepositLiquidityReply, error)
+	// CTF 移除流动性 need_auth = true
+	WithdrawLiquidity(context.Context, *WithdrawLiquidityRequest) (*WithdrawLiquidityReply, error)
+	// CTF 赎回 Position need_auth = true
+	RedeemPosition(context.Context, *RedeemPositionRequest) (*RedeemPositionReply, error)
+	// CTF 获取 Swap 报价 need_auth = false
+	GetSwapPrice(context.Context, *GetSwapPriceRequest) (*GetSwapPriceReply, error)
 	// 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
 	// 下载文件 need_auth = false
@@ -948,6 +1023,21 @@ func (UnimplementedHttpApiServer) FollowMarket(context.Context, *FollowMarketReq
 }
 func (UnimplementedHttpApiServer) UnfollowMarket(context.Context, *UnfollowMarketRequest) (*UnfollowMarketReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method UnfollowMarket not implemented")
+}
+func (UnimplementedHttpApiServer) Swap(context.Context, *SwapRequest) (*SwapReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method Swap not implemented")
+}
+func (UnimplementedHttpApiServer) DepositLiquidity(context.Context, *DepositLiquidityRequest) (*DepositLiquidityReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method DepositLiquidity not implemented")
+}
+func (UnimplementedHttpApiServer) WithdrawLiquidity(context.Context, *WithdrawLiquidityRequest) (*WithdrawLiquidityReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method WithdrawLiquidity not implemented")
+}
+func (UnimplementedHttpApiServer) RedeemPosition(context.Context, *RedeemPositionRequest) (*RedeemPositionReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method RedeemPosition not implemented")
+}
+func (UnimplementedHttpApiServer) GetSwapPrice(context.Context, *GetSwapPriceRequest) (*GetSwapPriceReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSwapPrice not implemented")
 }
 func (UnimplementedHttpApiServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadFile not implemented")
@@ -1248,6 +1338,96 @@ func _HttpApi_UnfollowMarket_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(HttpApiServer).UnfollowMarket(ctx, req.(*UnfollowMarketRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HttpApi_Swap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SwapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HttpApiServer).Swap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: HttpApi_Swap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HttpApiServer).Swap(ctx, req.(*SwapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HttpApi_DepositLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DepositLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HttpApiServer).DepositLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: HttpApi_DepositLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HttpApiServer).DepositLiquidity(ctx, req.(*DepositLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HttpApi_WithdrawLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithdrawLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HttpApiServer).WithdrawLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: HttpApi_WithdrawLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HttpApiServer).WithdrawLiquidity(ctx, req.(*WithdrawLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HttpApi_RedeemPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedeemPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HttpApiServer).RedeemPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: HttpApi_RedeemPosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HttpApiServer).RedeemPosition(ctx, req.(*RedeemPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HttpApi_GetSwapPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSwapPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HttpApiServer).GetSwapPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: HttpApi_GetSwapPrice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HttpApiServer).GetSwapPrice(ctx, req.(*GetSwapPriceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2014,6 +2194,26 @@ var HttpApi_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnfollowMarket",
 			Handler:    _HttpApi_UnfollowMarket_Handler,
+		},
+		{
+			MethodName: "Swap",
+			Handler:    _HttpApi_Swap_Handler,
+		},
+		{
+			MethodName: "DepositLiquidity",
+			Handler:    _HttpApi_DepositLiquidity_Handler,
+		},
+		{
+			MethodName: "WithdrawLiquidity",
+			Handler:    _HttpApi_WithdrawLiquidity_Handler,
+		},
+		{
+			MethodName: "RedeemPosition",
+			Handler:    _HttpApi_RedeemPosition_Handler,
+		},
+		{
+			MethodName: "GetSwapPrice",
+			Handler:    _HttpApi_GetSwapPrice_Handler,
 		},
 		{
 			MethodName: "UploadFile",

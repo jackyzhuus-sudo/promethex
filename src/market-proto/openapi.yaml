@@ -284,6 +284,101 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.UnlikeContentReply'
+    /api/v1/ctf/deposit-liquidity:
+        post:
+            tags:
+                - HttpApi
+            description: CTF 添加流动性 need_auth = true
+            operationId: HttpApi_DepositLiquidity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.DepositLiquidityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.DepositLiquidityReply'
+    /api/v1/ctf/redeem-position:
+        post:
+            tags:
+                - HttpApi
+            description: CTF 赎回 Position need_auth = true
+            operationId: HttpApi_RedeemPosition
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.RedeemPositionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.RedeemPositionReply'
+    /api/v1/ctf/swap:
+        post:
+            tags:
+                - HttpApi
+            description: CTF Swap 交易 need_auth = true
+            operationId: HttpApi_Swap
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.SwapRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.SwapReply'
+    /api/v1/ctf/swap-price:
+        post:
+            tags:
+                - HttpApi
+            description: CTF 获取 Swap 报价 need_auth = false
+            operationId: HttpApi_GetSwapPrice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.GetSwapPriceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.GetSwapPriceReply'
+    /api/v1/ctf/withdraw-liquidity:
+        post:
+            tags:
+                - HttpApi
+            description: CTF 移除流动性 need_auth = true
+            operationId: HttpApi_WithdrawLiquidity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.WithdrawLiquidityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.WithdrawLiquidityReply'
     /api/v1/market/claim-market-result:
         post:
             tags:
@@ -1432,6 +1527,26 @@ components:
                 id:
                     type: string
                     description: 回复ID 用于分页
+        api.v1.DepositLiquidityReply:
+            type: object
+            properties:
+                opHash:
+                    type: string
+            description: CTF 添加流动性响应
+        api.v1.DepositLiquidityRequest:
+            type: object
+            properties:
+                marketAddress:
+                    type: string
+                    description: 市场合约地址
+                amount:
+                    type: string
+                    description: USDC 数量
+                userOperation:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
+                    description: 用户操作信息
+            description: CTF 添加流动性请求
         api.v1.DownloadFileReply:
             type: object
             properties:
@@ -2299,6 +2414,35 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.Section_Prediction'
+        api.v1.GetSwapPriceReply:
+            type: object
+            properties:
+                expectedAmount:
+                    type: string
+                    description: 预期获得数量
+                priceImpact:
+                    type: string
+                    description: 价格影响 (bps)
+                fee:
+                    type: string
+                    description: 手续费
+            description: CTF 获取 Swap 报价响应
+        api.v1.GetSwapPriceRequest:
+            type: object
+            properties:
+                marketAddress:
+                    type: string
+                    description: 市场合约地址
+                optionIndex:
+                    type: string
+                    description: 选项索引
+                amount:
+                    type: string
+                    description: 交易数量
+                side:
+                    type: string
+                    description: 交易方向 "buy" or "sell"
+            description: CTF 获取 Swap 报价请求
         api.v1.GetTagsReply:
             type: object
             properties:
@@ -3045,6 +3189,31 @@ components:
                 content:
                     type: string
                     description: 内容
+        api.v1.RedeemPositionReply:
+            type: object
+            properties:
+                opHash:
+                    type: string
+            description: CTF 赎回 Position 响应
+        api.v1.RedeemPositionRequest:
+            type: object
+            properties:
+                marketAddress:
+                    type: string
+                    description: 市场合约地址
+                conditionId:
+                    type: string
+                    description: condition ID (bytes32 hex)
+                indexSets:
+                    type: array
+                    items:
+                        type: string
+                    description: index sets
+                userOperation:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
+                    description: 用户操作信息
+            description: CTF 赎回 Position 请求
         api.v1.SearchReply:
             type: object
             properties:
@@ -3191,6 +3360,37 @@ components:
                     items:
                         type: string
                     description: 必填 订阅的topic名
+        api.v1.SwapReply:
+            type: object
+            properties:
+                opHash:
+                    type: string
+                orderUuid:
+                    type: string
+            description: CTF Swap 交易响应
+        api.v1.SwapRequest:
+            type: object
+            properties:
+                marketAddress:
+                    type: string
+                    description: 市场合约地址
+                optionIndex:
+                    type: string
+                    description: 选项索引 (0 or 1, binary market)
+                amount:
+                    type: string
+                    description: 交易数量 (USDC)
+                minReceiveAmount:
+                    type: string
+                    description: 最小接收数量 (slippage protection)
+                side:
+                    type: string
+                    description: 交易方向 "buy" or "sell"
+                userOperation:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
+                    description: 用户操作信息
+            description: CTF Swap 交易请求
         api.v1.TransferBaseTokenReply:
             type: object
             properties:
@@ -3407,6 +3607,26 @@ components:
             description: |-
                 用户操作信息 (UserOperation 0.7)
                  包含区块链交易所需的完整参数集
+        api.v1.WithdrawLiquidityReply:
+            type: object
+            properties:
+                opHash:
+                    type: string
+            description: CTF 移除流动性响应
+        api.v1.WithdrawLiquidityRequest:
+            type: object
+            properties:
+                marketAddress:
+                    type: string
+                    description: 市场合约地址
+                lpAmount:
+                    type: string
+                    description: LP token 数量
+                userOperation:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.UserOperation'
+                    description: 用户操作信息
+            description: CTF 移除流动性请求
 tags:
     - name: HttpApi
       description: |-

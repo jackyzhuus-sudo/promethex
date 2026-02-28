@@ -2467,3 +2467,61 @@ func (s *MarketService) eventEntityToProto(entity *marketBiz.PredictionEventEnti
 
 	return pe
 }
+
+// ============================================
+// CTF APMM 交易桩 (TRADING_NOT_READY)
+// ============================================
+
+func (s *MarketService) CTFSwap(ctx context.Context, req *marketcenter.CTFSwapRequest) (*marketcenter.CTFSwapResponse, error) {
+	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+}
+
+func (s *MarketService) CTFDepositLiquidity(ctx context.Context, req *marketcenter.CTFDepositLiquidityRequest) (*marketcenter.CTFDepositLiquidityResponse, error) {
+	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+}
+
+func (s *MarketService) CTFWithdrawLiquidity(ctx context.Context, req *marketcenter.CTFWithdrawLiquidityRequest) (*marketcenter.CTFWithdrawLiquidityResponse, error) {
+	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+}
+
+func (s *MarketService) CTFRedeemPosition(ctx context.Context, req *marketcenter.CTFRedeemPositionRequest) (*marketcenter.CTFRedeemPositionResponse, error) {
+	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+}
+
+func (s *MarketService) CTFGetSwapPrice(ctx context.Context, req *marketcenter.CTFGetSwapPriceRequest) (*marketcenter.CTFGetSwapPriceResponse, error) {
+	return nil, errors.New(int(marketcenterPb.ErrorCode_TRADING_NOT_READY), "CTF Trading Not Ready", "CTF trading is not yet available")
+}
+
+// ============================================
+// CTF 链上事件处理桩 (log + return OK)
+// ============================================
+
+func (s *MarketService) ProcessCTFConditionEvent(ctx context.Context, req *marketcenter.ProcessCTFConditionEventRequest) (*marketcenter.ProcessCTFConditionEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+	c.Log.Infof("ProcessCTFConditionEvent stub: type=%v conditionId=%s txHash=%s", req.EventType, req.ConditionId, req.TxHash)
+	return &marketcenter.ProcessCTFConditionEventResponse{}, nil
+}
+
+func (s *MarketService) ProcessCTFPositionEvent(ctx context.Context, req *marketcenter.ProcessCTFPositionEventRequest) (*marketcenter.ProcessCTFPositionEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+	c.Log.Infof("ProcessCTFPositionEvent stub: type=%v stakeholder=%s conditionId=%s txHash=%s", req.EventType, req.Stakeholder, req.ConditionId, req.TxHash)
+	return &marketcenter.ProcessCTFPositionEventResponse{}, nil
+}
+
+func (s *MarketService) ProcessCTFTransferEvent(ctx context.Context, req *marketcenter.ProcessCTFTransferEventRequest) (*marketcenter.ProcessCTFTransferEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+	c.Log.Infof("ProcessCTFTransferEvent stub: type=%v from=%s to=%s txHash=%s", req.EventType, req.From, req.To, req.TxHash)
+	return &marketcenter.ProcessCTFTransferEventResponse{}, nil
+}
+
+func (s *MarketService) ProcessCTFMarketResolvedEvent(ctx context.Context, req *marketcenter.ProcessCTFMarketResolvedEventRequest) (*marketcenter.ProcessCTFMarketResolvedEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+	c.Log.Infof("ProcessCTFMarketResolvedEvent stub: market=%s txHash=%s", req.MarketAddress, req.TxHash)
+	return &marketcenter.ProcessCTFMarketResolvedEventResponse{}, nil
+}
+
+func (s *MarketService) ProcessCTFLiquidityEvent(ctx context.Context, req *marketcenter.ProcessCTFLiquidityEventRequest) (*marketcenter.ProcessCTFLiquidityEventResponse, error) {
+	c := common.NewBaseCtx(ctx, s.log)
+	c.Log.Infof("ProcessCTFLiquidityEvent stub: type=%v market=%s user=%s txHash=%s", req.EventType, req.MarketAddress, req.UserAddress, req.TxHash)
+	return &marketcenter.ProcessCTFLiquidityEventResponse{}, nil
+}

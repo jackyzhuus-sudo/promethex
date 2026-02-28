@@ -118,6 +118,7 @@ func (c *SseApiHTTPClientImpl) Unsubscribe(ctx context.Context, in *UnsubscribeR
 
 const OperationHttpApiClaimMarketResult = "/api.v1.HttpApi/ClaimMarketResult"
 const OperationHttpApiClaimTaskReward = "/api.v1.HttpApi/ClaimTaskReward"
+const OperationHttpApiDepositLiquidity = "/api.v1.HttpApi/DepositLiquidity"
 const OperationHttpApiDownloadFile = "/api.v1.HttpApi/DownloadFile"
 const OperationHttpApiFollowMarket = "/api.v1.HttpApi/FollowMarket"
 const OperationHttpApiFollowUser = "/api.v1.HttpApi/FollowUser"
@@ -139,6 +140,7 @@ const OperationHttpApiGetMarketTrades = "/api.v1.HttpApi/GetMarketTrades"
 const OperationHttpApiGetMarkets = "/api.v1.HttpApi/GetMarkets"
 const OperationHttpApiGetPaymasterData = "/api.v1.HttpApi/GetPaymasterData"
 const OperationHttpApiGetSections = "/api.v1.HttpApi/GetSections"
+const OperationHttpApiGetSwapPrice = "/api.v1.HttpApi/GetSwapPrice"
 const OperationHttpApiGetTags = "/api.v1.HttpApi/GetTags"
 const OperationHttpApiGetTasks = "/api.v1.HttpApi/GetTasks"
 const OperationHttpApiGetUserAssetHistory = "/api.v1.HttpApi/GetUserAssetHistory"
@@ -154,22 +156,27 @@ const OperationHttpApiMarkNotificationsAsRead = "/api.v1.HttpApi/MarkNotificatio
 const OperationHttpApiPlaceOrder = "/api.v1.HttpApi/PlaceOrder"
 const OperationHttpApiPublishComment = "/api.v1.HttpApi/PublishComment"
 const OperationHttpApiPublishPost = "/api.v1.HttpApi/PublishPost"
+const OperationHttpApiRedeemPosition = "/api.v1.HttpApi/RedeemPosition"
 const OperationHttpApiSearch = "/api.v1.HttpApi/Search"
 const OperationHttpApiSetAvatar = "/api.v1.HttpApi/SetAvatar"
 const OperationHttpApiSetDescription = "/api.v1.HttpApi/SetDescription"
 const OperationHttpApiSetName = "/api.v1.HttpApi/SetName"
 const OperationHttpApiShareTaskDone = "/api.v1.HttpApi/ShareTaskDone"
+const OperationHttpApiSwap = "/api.v1.HttpApi/Swap"
 const OperationHttpApiTransferBaseToken = "/api.v1.HttpApi/TransferBaseToken"
 const OperationHttpApiTranslate = "/api.v1.HttpApi/Translate"
 const OperationHttpApiUnfollowMarket = "/api.v1.HttpApi/UnfollowMarket"
 const OperationHttpApiUnfollowUser = "/api.v1.HttpApi/UnfollowUser"
 const OperationHttpApiUnlikeContent = "/api.v1.HttpApi/UnlikeContent"
 const OperationHttpApiUploadFile = "/api.v1.HttpApi/UploadFile"
+const OperationHttpApiWithdrawLiquidity = "/api.v1.HttpApi/WithdrawLiquidity"
 
 type HttpApiHTTPServer interface {
 	// ClaimMarketResult 领取市场结果 need_auth = true
 	ClaimMarketResult(context.Context, *ClaimMarketResultRequest) (*ClaimMarketResultReply, error)
 	ClaimTaskReward(context.Context, *ClaimTaskRewardRequest) (*ClaimTaskRewardReply, error)
+	// DepositLiquidity CTF 添加流动性 need_auth = true
+	DepositLiquidity(context.Context, *DepositLiquidityRequest) (*DepositLiquidityReply, error)
 	// DownloadFile 下载文件 need_auth = false
 	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileReply, error)
 	// FollowMarket 关注市场 need_auth = true
@@ -211,6 +218,8 @@ type HttpApiHTTPServer interface {
 	GetPaymasterData(context.Context, *GetPaymasterDataRequest) (*GetPaymasterDataReply, error)
 	// GetSections 获取section列表 need_auth = false
 	GetSections(context.Context, *GetSectionsRequest) (*GetSectionsReply, error)
+	// GetSwapPrice CTF 获取 Swap 报价 need_auth = false
+	GetSwapPrice(context.Context, *GetSwapPriceRequest) (*GetSwapPriceReply, error)
 	// GetTags 获取标签列表 need_auth = false
 	GetTags(context.Context, *GetTagsRequest) (*GetTagsReply, error)
 	GetTasks(context.Context, *GetTasksRequest) (*GetTasksReply, error)
@@ -241,6 +250,8 @@ type HttpApiHTTPServer interface {
 	PublishComment(context.Context, *PublishCommentRequest) (*PublishCommentReply, error)
 	// PublishPost 发布帖子 need_auth = true
 	PublishPost(context.Context, *PublishPostRequest) (*PublishPostReply, error)
+	// RedeemPosition CTF 赎回 Position need_auth = true
+	RedeemPosition(context.Context, *RedeemPositionRequest) (*RedeemPositionReply, error)
 	// Search 搜索 支持市场 用户 搜索  need_auth = false
 	Search(context.Context, *SearchRequest) (*SearchReply, error)
 	// SetAvatar 设置用户头像 need_auth = true
@@ -250,6 +261,8 @@ type HttpApiHTTPServer interface {
 	// SetName 设置用户名称 need_auth = true
 	SetName(context.Context, *SetNameRequest) (*SetNameReply, error)
 	ShareTaskDone(context.Context, *ShareTaskDoneRequest) (*ShareTaskDoneReply, error)
+	// Swap CTF Swap 交易 need_auth = true
+	Swap(context.Context, *SwapRequest) (*SwapReply, error)
 	// TransferBaseToken 转账基础代币 need_auth = true
 	TransferBaseToken(context.Context, *TransferBaseTokenRequest) (*TransferBaseTokenReply, error)
 	Translate(context.Context, *TranslateRequest) (*TranslateReply, error)
@@ -261,6 +274,8 @@ type HttpApiHTTPServer interface {
 	UnlikeContent(context.Context, *UnlikeContentRequest) (*UnlikeContentReply, error)
 	// UploadFile 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
+	// WithdrawLiquidity CTF 移除流动性 need_auth = true
+	WithdrawLiquidity(context.Context, *WithdrawLiquidityRequest) (*WithdrawLiquidityReply, error)
 }
 
 func RegisterHttpApiHTTPServer(s *http.Server, srv HttpApiHTTPServer) {
@@ -274,6 +289,11 @@ func RegisterHttpApiHTTPServer(s *http.Server, srv HttpApiHTTPServer) {
 	r.POST("/api/v1/market/transfer-base-token", _HttpApi_TransferBaseToken0_HTTP_Handler(srv))
 	r.POST("/api/v1/market/follow-market", _HttpApi_FollowMarket0_HTTP_Handler(srv))
 	r.POST("/api/v1/market/unfollow-market", _HttpApi_UnfollowMarket0_HTTP_Handler(srv))
+	r.POST("/api/v1/ctf/swap", _HttpApi_Swap0_HTTP_Handler(srv))
+	r.POST("/api/v1/ctf/deposit-liquidity", _HttpApi_DepositLiquidity0_HTTP_Handler(srv))
+	r.POST("/api/v1/ctf/withdraw-liquidity", _HttpApi_WithdrawLiquidity0_HTTP_Handler(srv))
+	r.POST("/api/v1/ctf/redeem-position", _HttpApi_RedeemPosition0_HTTP_Handler(srv))
+	r.POST("/api/v1/ctf/swap-price", _HttpApi_GetSwapPrice0_HTTP_Handler(srv))
 	r.POST("/api/v1/base/upload-file", _HttpApi_UploadFile0_HTTP_Handler(srv))
 	r.GET("/api/v1/base/download-file", _HttpApi_DownloadFile0_HTTP_Handler(srv))
 	r.POST("/api/v1/community/publish-post", _HttpApi_PublishPost0_HTTP_Handler(srv))
@@ -510,6 +530,116 @@ func _HttpApi_UnfollowMarket0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.
 			return err
 		}
 		reply := out.(*UnfollowMarketReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _HttpApi_Swap0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SwapRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationHttpApiSwap)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Swap(ctx, req.(*SwapRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SwapReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _HttpApi_DepositLiquidity0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DepositLiquidityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationHttpApiDepositLiquidity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DepositLiquidity(ctx, req.(*DepositLiquidityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DepositLiquidityReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _HttpApi_WithdrawLiquidity0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in WithdrawLiquidityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationHttpApiWithdrawLiquidity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.WithdrawLiquidity(ctx, req.(*WithdrawLiquidityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*WithdrawLiquidityReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _HttpApi_RedeemPosition0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RedeemPositionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationHttpApiRedeemPosition)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RedeemPosition(ctx, req.(*RedeemPositionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RedeemPositionReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _HttpApi_GetSwapPrice0_HTTP_Handler(srv HttpApiHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSwapPriceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationHttpApiGetSwapPrice)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSwapPrice(ctx, req.(*GetSwapPriceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSwapPriceReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1314,6 +1444,8 @@ type HttpApiHTTPClient interface {
 	// ClaimMarketResult 领取市场结果 need_auth = true
 	ClaimMarketResult(ctx context.Context, req *ClaimMarketResultRequest, opts ...http.CallOption) (rsp *ClaimMarketResultReply, err error)
 	ClaimTaskReward(ctx context.Context, req *ClaimTaskRewardRequest, opts ...http.CallOption) (rsp *ClaimTaskRewardReply, err error)
+	// DepositLiquidity CTF 添加流动性 need_auth = true
+	DepositLiquidity(ctx context.Context, req *DepositLiquidityRequest, opts ...http.CallOption) (rsp *DepositLiquidityReply, err error)
 	// DownloadFile 下载文件 need_auth = false
 	DownloadFile(ctx context.Context, req *DownloadFileRequest, opts ...http.CallOption) (rsp *DownloadFileReply, err error)
 	// FollowMarket 关注市场 need_auth = true
@@ -1355,6 +1487,8 @@ type HttpApiHTTPClient interface {
 	GetPaymasterData(ctx context.Context, req *GetPaymasterDataRequest, opts ...http.CallOption) (rsp *GetPaymasterDataReply, err error)
 	// GetSections 获取section列表 need_auth = false
 	GetSections(ctx context.Context, req *GetSectionsRequest, opts ...http.CallOption) (rsp *GetSectionsReply, err error)
+	// GetSwapPrice CTF 获取 Swap 报价 need_auth = false
+	GetSwapPrice(ctx context.Context, req *GetSwapPriceRequest, opts ...http.CallOption) (rsp *GetSwapPriceReply, err error)
 	// GetTags 获取标签列表 need_auth = false
 	GetTags(ctx context.Context, req *GetTagsRequest, opts ...http.CallOption) (rsp *GetTagsReply, err error)
 	GetTasks(ctx context.Context, req *GetTasksRequest, opts ...http.CallOption) (rsp *GetTasksReply, err error)
@@ -1385,6 +1519,8 @@ type HttpApiHTTPClient interface {
 	PublishComment(ctx context.Context, req *PublishCommentRequest, opts ...http.CallOption) (rsp *PublishCommentReply, err error)
 	// PublishPost 发布帖子 need_auth = true
 	PublishPost(ctx context.Context, req *PublishPostRequest, opts ...http.CallOption) (rsp *PublishPostReply, err error)
+	// RedeemPosition CTF 赎回 Position need_auth = true
+	RedeemPosition(ctx context.Context, req *RedeemPositionRequest, opts ...http.CallOption) (rsp *RedeemPositionReply, err error)
 	// Search 搜索 支持市场 用户 搜索  need_auth = false
 	Search(ctx context.Context, req *SearchRequest, opts ...http.CallOption) (rsp *SearchReply, err error)
 	// SetAvatar 设置用户头像 need_auth = true
@@ -1394,6 +1530,8 @@ type HttpApiHTTPClient interface {
 	// SetName 设置用户名称 need_auth = true
 	SetName(ctx context.Context, req *SetNameRequest, opts ...http.CallOption) (rsp *SetNameReply, err error)
 	ShareTaskDone(ctx context.Context, req *ShareTaskDoneRequest, opts ...http.CallOption) (rsp *ShareTaskDoneReply, err error)
+	// Swap CTF Swap 交易 need_auth = true
+	Swap(ctx context.Context, req *SwapRequest, opts ...http.CallOption) (rsp *SwapReply, err error)
 	// TransferBaseToken 转账基础代币 need_auth = true
 	TransferBaseToken(ctx context.Context, req *TransferBaseTokenRequest, opts ...http.CallOption) (rsp *TransferBaseTokenReply, err error)
 	Translate(ctx context.Context, req *TranslateRequest, opts ...http.CallOption) (rsp *TranslateReply, err error)
@@ -1405,6 +1543,8 @@ type HttpApiHTTPClient interface {
 	UnlikeContent(ctx context.Context, req *UnlikeContentRequest, opts ...http.CallOption) (rsp *UnlikeContentReply, err error)
 	// UploadFile 上传文件 need_auth = true   上传文件返回访问的key(非完整url)
 	UploadFile(ctx context.Context, req *UploadFileRequest, opts ...http.CallOption) (rsp *UploadFileReply, err error)
+	// WithdrawLiquidity CTF 移除流动性 need_auth = true
+	WithdrawLiquidity(ctx context.Context, req *WithdrawLiquidityRequest, opts ...http.CallOption) (rsp *WithdrawLiquidityReply, err error)
 }
 
 type HttpApiHTTPClientImpl struct {
@@ -1434,6 +1574,20 @@ func (c *HttpApiHTTPClientImpl) ClaimTaskReward(ctx context.Context, in *ClaimTa
 	pattern := "/api/v1/task/claim-task-reward"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationHttpApiClaimTaskReward))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DepositLiquidity CTF 添加流动性 need_auth = true
+func (c *HttpApiHTTPClientImpl) DepositLiquidity(ctx context.Context, in *DepositLiquidityRequest, opts ...http.CallOption) (*DepositLiquidityReply, error) {
+	var out DepositLiquidityReply
+	pattern := "/api/v1/ctf/deposit-liquidity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationHttpApiDepositLiquidity))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1735,6 +1889,20 @@ func (c *HttpApiHTTPClientImpl) GetSections(ctx context.Context, in *GetSections
 	return &out, nil
 }
 
+// GetSwapPrice CTF 获取 Swap 报价 need_auth = false
+func (c *HttpApiHTTPClientImpl) GetSwapPrice(ctx context.Context, in *GetSwapPriceRequest, opts ...http.CallOption) (*GetSwapPriceReply, error) {
+	var out GetSwapPriceReply
+	pattern := "/api/v1/ctf/swap-price"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationHttpApiGetSwapPrice))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetTags 获取标签列表 need_auth = false
 func (c *HttpApiHTTPClientImpl) GetTags(ctx context.Context, in *GetTagsRequest, opts ...http.CallOption) (*GetTagsReply, error) {
 	var out GetTagsReply
@@ -1945,6 +2113,20 @@ func (c *HttpApiHTTPClientImpl) PublishPost(ctx context.Context, in *PublishPost
 	return &out, nil
 }
 
+// RedeemPosition CTF 赎回 Position need_auth = true
+func (c *HttpApiHTTPClientImpl) RedeemPosition(ctx context.Context, in *RedeemPositionRequest, opts ...http.CallOption) (*RedeemPositionReply, error) {
+	var out RedeemPositionReply
+	pattern := "/api/v1/ctf/redeem-position"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationHttpApiRedeemPosition))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // Search 搜索 支持市场 用户 搜索  need_auth = false
 func (c *HttpApiHTTPClientImpl) Search(ctx context.Context, in *SearchRequest, opts ...http.CallOption) (*SearchReply, error) {
 	var out SearchReply
@@ -2006,6 +2188,20 @@ func (c *HttpApiHTTPClientImpl) ShareTaskDone(ctx context.Context, in *ShareTask
 	pattern := "/api/v1/task/share-task-done"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationHttpApiShareTaskDone))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Swap CTF Swap 交易 need_auth = true
+func (c *HttpApiHTTPClientImpl) Swap(ctx context.Context, in *SwapRequest, opts ...http.CallOption) (*SwapReply, error) {
+	var out SwapReply
+	pattern := "/api/v1/ctf/swap"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationHttpApiSwap))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -2089,6 +2285,20 @@ func (c *HttpApiHTTPClientImpl) UploadFile(ctx context.Context, in *UploadFileRe
 	pattern := "/api/v1/base/upload-file"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationHttpApiUploadFile))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// WithdrawLiquidity CTF 移除流动性 need_auth = true
+func (c *HttpApiHTTPClientImpl) WithdrawLiquidity(ctx context.Context, in *WithdrawLiquidityRequest, opts ...http.CallOption) (*WithdrawLiquidityReply, error) {
+	var out WithdrawLiquidityReply
+	pattern := "/api/v1/ctf/withdraw-liquidity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationHttpApiWithdrawLiquidity))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

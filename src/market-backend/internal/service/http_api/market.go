@@ -1170,3 +1170,193 @@ func (s *HttpApiService) GetEvents(ctx context.Context, req *apipb.GetEventsRequ
 
 	return rsp, nil
 }
+
+// ============================================
+// CTF APMM 交易接口
+// ============================================
+
+func (s *HttpApiService) Swap(ctx context.Context, req *apipb.SwapRequest) (*apipb.SwapReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+	uid := util.GetUidFromCtx(ctx)
+	if uid == "" {
+		return nil, pkg.ErrParam
+	}
+
+	swapRsp, err := s.data.RpcClient.MarketcenterClient.CTFSwap(ctx, &marketcenterpb.CTFSwapRequest{
+		Uid:              uid,
+		MarketAddress:    req.MarketAddress,
+		OptionIndex:      req.OptionIndex,
+		Amount:           req.Amount,
+		MinReceiveAmount: req.MinReceiveAmount,
+		Side:             req.Side,
+		UserOperation: &marketcenterpb.UserOperation{
+			Sender:                        req.UserOperation.Sender,
+			Nonce:                         req.UserOperation.Nonce,
+			InitCode:                      req.UserOperation.InitCode,
+			CallData:                      req.UserOperation.CallData,
+			CallGasLimit:                  req.UserOperation.CallGasLimit,
+			VerificationGasLimit:          req.UserOperation.VerificationGasLimit,
+			PreVerificationGas:            req.UserOperation.PreVerificationGas,
+			MaxFeePerGas:                  req.UserOperation.MaxFeePerGas,
+			MaxPriorityFeePerGas:          req.UserOperation.MaxPriorityFeePerGas,
+			Signature:                     req.UserOperation.Signature,
+			Factory:                       req.UserOperation.Factory,
+			FactoryData:                   req.UserOperation.FactoryData,
+			Paymaster:                     req.UserOperation.Paymaster,
+			PaymasterData:                 req.UserOperation.PaymasterData,
+			PaymasterVerificationGasLimit: req.UserOperation.PaymasterVerificationGasLimit,
+			PaymasterPostOpGasLimit:       req.UserOperation.PaymasterPostOpGasLimit,
+		},
+	})
+	if err != nil {
+		c.Log.Errorf("rpc CTFSwap failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	return &apipb.SwapReply{
+		OpHash:    swapRsp.OpHash,
+		OrderUuid: swapRsp.OrderUuid,
+	}, nil
+}
+
+func (s *HttpApiService) DepositLiquidity(ctx context.Context, req *apipb.DepositLiquidityRequest) (*apipb.DepositLiquidityReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+	uid := util.GetUidFromCtx(ctx)
+	if uid == "" {
+		return nil, pkg.ErrParam
+	}
+
+	depositRsp, err := s.data.RpcClient.MarketcenterClient.CTFDepositLiquidity(ctx, &marketcenterpb.CTFDepositLiquidityRequest{
+		Uid:           uid,
+		MarketAddress: req.MarketAddress,
+		Amount:        req.Amount,
+		UserOperation: &marketcenterpb.UserOperation{
+			Sender:                        req.UserOperation.Sender,
+			Nonce:                         req.UserOperation.Nonce,
+			InitCode:                      req.UserOperation.InitCode,
+			CallData:                      req.UserOperation.CallData,
+			CallGasLimit:                  req.UserOperation.CallGasLimit,
+			VerificationGasLimit:          req.UserOperation.VerificationGasLimit,
+			PreVerificationGas:            req.UserOperation.PreVerificationGas,
+			MaxFeePerGas:                  req.UserOperation.MaxFeePerGas,
+			MaxPriorityFeePerGas:          req.UserOperation.MaxPriorityFeePerGas,
+			Signature:                     req.UserOperation.Signature,
+			Factory:                       req.UserOperation.Factory,
+			FactoryData:                   req.UserOperation.FactoryData,
+			Paymaster:                     req.UserOperation.Paymaster,
+			PaymasterData:                 req.UserOperation.PaymasterData,
+			PaymasterVerificationGasLimit: req.UserOperation.PaymasterVerificationGasLimit,
+			PaymasterPostOpGasLimit:       req.UserOperation.PaymasterPostOpGasLimit,
+		},
+	})
+	if err != nil {
+		c.Log.Errorf("rpc CTFDepositLiquidity failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	return &apipb.DepositLiquidityReply{
+		OpHash: depositRsp.OpHash,
+	}, nil
+}
+
+func (s *HttpApiService) WithdrawLiquidity(ctx context.Context, req *apipb.WithdrawLiquidityRequest) (*apipb.WithdrawLiquidityReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+	uid := util.GetUidFromCtx(ctx)
+	if uid == "" {
+		return nil, pkg.ErrParam
+	}
+
+	withdrawRsp, err := s.data.RpcClient.MarketcenterClient.CTFWithdrawLiquidity(ctx, &marketcenterpb.CTFWithdrawLiquidityRequest{
+		Uid:           uid,
+		MarketAddress: req.MarketAddress,
+		LpAmount:      req.LpAmount,
+		UserOperation: &marketcenterpb.UserOperation{
+			Sender:                        req.UserOperation.Sender,
+			Nonce:                         req.UserOperation.Nonce,
+			InitCode:                      req.UserOperation.InitCode,
+			CallData:                      req.UserOperation.CallData,
+			CallGasLimit:                  req.UserOperation.CallGasLimit,
+			VerificationGasLimit:          req.UserOperation.VerificationGasLimit,
+			PreVerificationGas:            req.UserOperation.PreVerificationGas,
+			MaxFeePerGas:                  req.UserOperation.MaxFeePerGas,
+			MaxPriorityFeePerGas:          req.UserOperation.MaxPriorityFeePerGas,
+			Signature:                     req.UserOperation.Signature,
+			Factory:                       req.UserOperation.Factory,
+			FactoryData:                   req.UserOperation.FactoryData,
+			Paymaster:                     req.UserOperation.Paymaster,
+			PaymasterData:                 req.UserOperation.PaymasterData,
+			PaymasterVerificationGasLimit: req.UserOperation.PaymasterVerificationGasLimit,
+			PaymasterPostOpGasLimit:       req.UserOperation.PaymasterPostOpGasLimit,
+		},
+	})
+	if err != nil {
+		c.Log.Errorf("rpc CTFWithdrawLiquidity failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	return &apipb.WithdrawLiquidityReply{
+		OpHash: withdrawRsp.OpHash,
+	}, nil
+}
+
+func (s *HttpApiService) RedeemPosition(ctx context.Context, req *apipb.RedeemPositionRequest) (*apipb.RedeemPositionReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+	uid := util.GetUidFromCtx(ctx)
+	if uid == "" {
+		return nil, pkg.ErrParam
+	}
+
+	redeemRsp, err := s.data.RpcClient.MarketcenterClient.CTFRedeemPosition(ctx, &marketcenterpb.CTFRedeemPositionRequest{
+		Uid:           uid,
+		MarketAddress: req.MarketAddress,
+		ConditionId:   req.ConditionId,
+		IndexSets:     req.IndexSets,
+		UserOperation: &marketcenterpb.UserOperation{
+			Sender:                        req.UserOperation.Sender,
+			Nonce:                         req.UserOperation.Nonce,
+			InitCode:                      req.UserOperation.InitCode,
+			CallData:                      req.UserOperation.CallData,
+			CallGasLimit:                  req.UserOperation.CallGasLimit,
+			VerificationGasLimit:          req.UserOperation.VerificationGasLimit,
+			PreVerificationGas:            req.UserOperation.PreVerificationGas,
+			MaxFeePerGas:                  req.UserOperation.MaxFeePerGas,
+			MaxPriorityFeePerGas:          req.UserOperation.MaxPriorityFeePerGas,
+			Signature:                     req.UserOperation.Signature,
+			Factory:                       req.UserOperation.Factory,
+			FactoryData:                   req.UserOperation.FactoryData,
+			Paymaster:                     req.UserOperation.Paymaster,
+			PaymasterData:                 req.UserOperation.PaymasterData,
+			PaymasterVerificationGasLimit: req.UserOperation.PaymasterVerificationGasLimit,
+			PaymasterPostOpGasLimit:       req.UserOperation.PaymasterPostOpGasLimit,
+		},
+	})
+	if err != nil {
+		c.Log.Errorf("rpc CTFRedeemPosition failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	return &apipb.RedeemPositionReply{
+		OpHash: redeemRsp.OpHash,
+	}, nil
+}
+
+func (s *HttpApiService) GetSwapPrice(ctx context.Context, req *apipb.GetSwapPriceRequest) (*apipb.GetSwapPriceReply, error) {
+	c := util.NewBaseCtx(ctx, s.logger)
+
+	priceRsp, err := s.data.RpcClient.MarketcenterClient.CTFGetSwapPrice(ctx, &marketcenterpb.CTFGetSwapPriceRequest{
+		MarketAddress: req.MarketAddress,
+		OptionIndex:   req.OptionIndex,
+		Amount:        req.Amount,
+		Side:          req.Side,
+	})
+	if err != nil {
+		c.Log.Errorf("rpc CTFGetSwapPrice failed, err: [%+v]", err)
+		return nil, err
+	}
+
+	return &apipb.GetSwapPriceReply{
+		ExpectedAmount: priceRsp.ExpectedAmount,
+		PriceImpact:    priceRsp.PriceImpact,
+		Fee:            priceRsp.Fee,
+	}, nil
+}

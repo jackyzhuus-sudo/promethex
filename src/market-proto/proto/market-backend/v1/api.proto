@@ -171,6 +171,55 @@ service HttpApi {
   }
 
   //==============================
+  // CTF APMM 交易API
+  //==============================
+
+  // CTF Swap 交易 need_auth = true
+  rpc Swap (SwapRequest) returns (SwapReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ctf/swap"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // CTF 添加流动性 need_auth = true
+  rpc DepositLiquidity (DepositLiquidityRequest) returns (DepositLiquidityReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ctf/deposit-liquidity"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // CTF 移除流动性 need_auth = true
+  rpc WithdrawLiquidity (WithdrawLiquidityRequest) returns (WithdrawLiquidityReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ctf/withdraw-liquidity"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // CTF 赎回 Position need_auth = true
+  rpc RedeemPosition (RedeemPositionRequest) returns (RedeemPositionReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ctf/redeem-position"
+      body: "*"
+    };
+    option (need_auth) = true;
+  }
+
+  // CTF 获取 Swap 报价 need_auth = false
+  rpc GetSwapPrice (GetSwapPriceRequest) returns (GetSwapPriceReply) {
+    option (google.api.http) = {
+      post: "/api/v1/ctf/swap-price"
+      body: "*"
+    };
+    option (need_auth) = false;
+  }
+
+  //==============================
   // 基础工具API
   //==============================
   
@@ -2303,4 +2352,99 @@ message GetEventsReply {
   uint32 total = 1;
   // Event 列表
   repeated EventSummary events = 2;
+}
+
+// ============================================
+// CTF APMM 交易 Messages
+// ============================================
+
+// CTF Swap 交易请求
+message SwapRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // 选项索引 (0 or 1, binary market)
+  string option_index = 2;
+  // 交易数量 (USDC)
+  string amount = 3;
+  // 最小接收数量 (slippage protection)
+  string min_receive_amount = 4;
+  // 交易方向 "buy" or "sell"
+  string side = 5;
+  // 用户操作信息
+  UserOperation user_operation = 6;
+}
+
+// CTF Swap 交易响应
+message SwapReply {
+  string op_hash = 1;
+  string order_uuid = 2;
+}
+
+// CTF 添加流动性请求
+message DepositLiquidityRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // USDC 数量
+  string amount = 2;
+  // 用户操作信息
+  UserOperation user_operation = 3;
+}
+
+// CTF 添加流动性响应
+message DepositLiquidityReply {
+  string op_hash = 1;
+}
+
+// CTF 移除流动性请求
+message WithdrawLiquidityRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // LP token 数量
+  string lp_amount = 2;
+  // 用户操作信息
+  UserOperation user_operation = 3;
+}
+
+// CTF 移除流动性响应
+message WithdrawLiquidityReply {
+  string op_hash = 1;
+}
+
+// CTF 赎回 Position 请求
+message RedeemPositionRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // condition ID (bytes32 hex)
+  string condition_id = 2;
+  // index sets
+  repeated string index_sets = 3;
+  // 用户操作信息
+  UserOperation user_operation = 4;
+}
+
+// CTF 赎回 Position 响应
+message RedeemPositionReply {
+  string op_hash = 1;
+}
+
+// CTF 获取 Swap 报价请求
+message GetSwapPriceRequest {
+  // 市场合约地址
+  string market_address = 1;
+  // 选项索引
+  string option_index = 2;
+  // 交易数量
+  string amount = 3;
+  // 交易方向 "buy" or "sell"
+  string side = 4;
+}
+
+// CTF 获取 Swap 报价响应
+message GetSwapPriceReply {
+  // 预期获得数量
+  string expected_amount = 1;
+  // 价格影响 (bps)
+  string price_impact = 2;
+  // 手续费
+  string fee = 3;
 }

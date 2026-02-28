@@ -677,35 +677,154 @@ func (p *EventProcessor) handleCTFEvent(
 		return fmt.Errorf("解析CTF事件失败: %w", err)
 	}
 
+	blockTime, _ := chainData.blockNumberToTime[eventLog.BlockNumber]
+
 	switch e := ctfEvent.(type) {
 	case *contract.ConditionPreparationEvent:
 		ctx.Log.Infof("CTF ConditionPreparation: conditionId=%s, oracle=%s, questionId=%s, outcomes=%d",
 			e.ConditionId.Hex(), e.Oracle.Hex(), e.QuestionId.Hex(), e.OutcomeSlotCount)
-		// TODO: 记录condition到数据库，关联market
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFConditionEvent(ctx.Ctx, &marketcenterPb.ProcessCTFConditionEventRequest{
+			EventType:        marketcenterPb.ProcessCTFConditionEventRequest_CONDITION_PREPARATION,
+			ConditionId:      e.ConditionId.Hex(),
+			Oracle:           e.Oracle.Hex(),
+			QuestionId:       e.QuestionId.Hex(),
+			OutcomeSlotCount: uint32(e.OutcomeSlotCount),
+			TxHash:           eventLog.TxHash,
+			BlockNumber:      eventLog.BlockNumber,
+			BlockTime:        blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFConditionEvent(Preparation) failed: %w", err)
+		}
 	case *contract.ConditionResolutionEvent:
 		ctx.Log.Infof("CTF ConditionResolution: conditionId=%s, oracle=%s, outcomes=%d",
 			e.ConditionId.Hex(), e.Oracle.Hex(), e.OutcomeSlotCount)
-		// TODO: 更新condition解决状态，触发市场结算
+		payoutNumerators := make([]string, 0, len(e.PayoutNumerators))
+		for _, pn := range e.PayoutNumerators {
+			payoutNumerators = append(payoutNumerators, pn.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFConditionEvent(ctx.Ctx, &marketcenterPb.ProcessCTFConditionEventRequest{
+			EventType:        marketcenterPb.ProcessCTFConditionEventRequest_CONDITION_RESOLUTION,
+			ConditionId:      e.ConditionId.Hex(),
+			Oracle:           e.Oracle.Hex(),
+			QuestionId:       e.QuestionId.Hex(),
+			OutcomeSlotCount: uint32(e.OutcomeSlotCount),
+			PayoutNumerators: payoutNumerators,
+			TxHash:           eventLog.TxHash,
+			BlockNumber:      eventLog.BlockNumber,
+			BlockTime:        blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFConditionEvent(Resolution) failed: %w", err)
+		}
 	case *contract.PositionSplitEvent:
 		ctx.Log.Infof("CTF PositionSplit: stakeholder=%s, conditionId=%s, amount=%s",
 			e.Stakeholder.Hex(), e.ConditionId.Hex(), e.Amount.String())
-		// TODO: 更新用户position记录
+		partition := make([]string, 0, len(e.Partition))
+		for _, part := range e.Partition {
+			partition = append(partition, part.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFPositionEvent(ctx.Ctx, &marketcenterPb.ProcessCTFPositionEventRequest{
+			EventType:          marketcenterPb.ProcessCTFPositionEventRequest_POSITION_SPLIT,
+			Stakeholder:        e.Stakeholder.Hex(),
+			CollateralToken:    e.CollateralToken.Hex(),
+			ParentCollectionId: e.ParentCollectionId.Hex(),
+			ConditionId:        e.ConditionId.Hex(),
+			Partition:          partition,
+			Amount:             e.Amount.String(),
+			TxHash:             eventLog.TxHash,
+			BlockNumber:        eventLog.BlockNumber,
+			BlockTime:          blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFPositionEvent(Split) failed: %w", err)
+		}
 	case *contract.PositionsMergeEvent:
 		ctx.Log.Infof("CTF PositionsMerge: stakeholder=%s, conditionId=%s, amount=%s",
 			e.Stakeholder.Hex(), e.ConditionId.Hex(), e.Amount.String())
-		// TODO: 更新用户position记录
+		partition := make([]string, 0, len(e.Partition))
+		for _, part := range e.Partition {
+			partition = append(partition, part.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFPositionEvent(ctx.Ctx, &marketcenterPb.ProcessCTFPositionEventRequest{
+			EventType:          marketcenterPb.ProcessCTFPositionEventRequest_POSITIONS_MERGE,
+			Stakeholder:        e.Stakeholder.Hex(),
+			CollateralToken:    e.CollateralToken.Hex(),
+			ParentCollectionId: e.ParentCollectionId.Hex(),
+			ConditionId:        e.ConditionId.Hex(),
+			Partition:          partition,
+			Amount:             e.Amount.String(),
+			TxHash:             eventLog.TxHash,
+			BlockNumber:        eventLog.BlockNumber,
+			BlockTime:          blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFPositionEvent(Merge) failed: %w", err)
+		}
 	case *contract.PayoutRedemptionEvent:
 		ctx.Log.Infof("CTF PayoutRedemption: redeemer=%s, conditionId=%s, payout=%s",
 			e.Redeemer.Hex(), e.ConditionId.Hex(), e.Payout.String())
-		// TODO: 记录赎回事件
+		indexSets := make([]string, 0, len(e.IndexSets))
+		for _, is := range e.IndexSets {
+			indexSets = append(indexSets, is.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFPositionEvent(ctx.Ctx, &marketcenterPb.ProcessCTFPositionEventRequest{
+			EventType:          marketcenterPb.ProcessCTFPositionEventRequest_PAYOUT_REDEMPTION,
+			Stakeholder:        e.Redeemer.Hex(),
+			CollateralToken:    e.CollateralToken.Hex(),
+			ParentCollectionId: e.ParentCollectionId.Hex(),
+			ConditionId:        e.ConditionId.Hex(),
+			IndexSets:          indexSets,
+			Amount:             e.Payout.String(),
+			TxHash:             eventLog.TxHash,
+			BlockNumber:        eventLog.BlockNumber,
+			BlockTime:          blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFPositionEvent(Redemption) failed: %w", err)
+		}
 	case *contract.TransferSingleEvent:
 		ctx.Log.Debugf("CTF TransferSingle: from=%s, to=%s, id=%s, value=%s",
 			e.From.Hex(), e.To.Hex(), e.Id.String(), e.Value.String())
-		// TODO: 更新ERC1155持仓
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFTransferEvent(ctx.Ctx, &marketcenterPb.ProcessCTFTransferEventRequest{
+			EventType:   marketcenterPb.ProcessCTFTransferEventRequest_TRANSFER_SINGLE,
+			Operator:    e.Operator.Hex(),
+			From:        e.From.Hex(),
+			To:          e.To.Hex(),
+			Ids:         []string{e.Id.String()},
+			Values:      []string{e.Value.String()},
+			TxHash:      eventLog.TxHash,
+			BlockNumber: eventLog.BlockNumber,
+			BlockTime:   blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFTransferEvent(Single) failed: %w", err)
+		}
 	case *contract.TransferBatchEvent:
 		ctx.Log.Debugf("CTF TransferBatch: from=%s, to=%s, ids=%d",
 			e.From.Hex(), e.To.Hex(), len(e.Ids))
-		// TODO: 批量更新ERC1155持仓
+		ids := make([]string, 0, len(e.Ids))
+		for _, id := range e.Ids {
+			ids = append(ids, id.String())
+		}
+		values := make([]string, 0, len(e.Values))
+		for _, v := range e.Values {
+			values = append(values, v.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFTransferEvent(ctx.Ctx, &marketcenterPb.ProcessCTFTransferEventRequest{
+			EventType:   marketcenterPb.ProcessCTFTransferEventRequest_TRANSFER_BATCH,
+			Operator:    e.Operator.Hex(),
+			From:        e.From.Hex(),
+			To:          e.To.Hex(),
+			Ids:         ids,
+			Values:      values,
+			TxHash:      eventLog.TxHash,
+			BlockNumber: eventLog.BlockNumber,
+			BlockTime:   blockTime,
+		})
+		if err != nil {
+			return fmt.Errorf("ProcessCTFTransferEvent(Batch) failed: %w", err)
+		}
 	default:
 		ctx.Log.Debugf("未处理的CTF事件类型: %T", e)
 	}
@@ -811,15 +930,73 @@ func (p *EventProcessor) routeCTFEvent(ctx com.Ctx, predictionCTFEvent interface
 		return p.handleSwapEvent(ctx, e, params)
 	case *contract.CTFMarketResolvedEvent:
 		ctx.Log.Infof("处理CTF市场解决事件: %s, address: %s", params.EventLog.TxHash, params.EventLog.Address)
-		// TODO: 处理CTF市场解决事件（通过RPC通知market-service）
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFMarketResolvedEvent(ctx.Ctx, &marketcenterPb.ProcessCTFMarketResolvedEventRequest{
+			MarketAddress: params.EventLog.Address,
+			TxHash:        params.EventLog.TxHash,
+			BlockNumber:   params.EventLog.BlockNumber,
+			BlockTime:     params.BlockTime,
+			OptionPrices:  params.OptionPrices,
+			BaseTokenType: params.BaseTokenType,
+		})
+		if err != nil {
+			ctx.Log.Errorf("ProcessCTFMarketResolvedEvent failed: %v", err)
+			return fmt.Errorf("ProcessCTFMarketResolvedEvent failed: %w", err)
+		}
 		return nil
 	case *contract.LiquidityAddedEvent:
 		ctx.Log.Infof("处理CTF流动性添加事件: %s", params.EventLog.TxHash)
-		// TODO: 处理CTF流动性事件
+		userAddress := e.User.Hex()
+		uid := ""
+		if userInfo, exists := params.UserInfoMap[userAddress]; exists && userInfo.Uid != "" {
+			uid = userInfo.Uid
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFLiquidityEvent(ctx.Ctx, &marketcenterPb.ProcessCTFLiquidityEventRequest{
+			EventType:     marketcenterPb.ProcessCTFLiquidityEventRequest_LIQUIDITY_ADDED,
+			Uid:           uid,
+			UserAddress:   userAddress,
+			MarketAddress: params.EventLog.Address,
+			Amount:        e.Amount.String(),
+			LpAmount:      e.LpAmount.String(),
+			TxHash:        params.EventLog.TxHash,
+			BlockNumber:   params.EventLog.BlockNumber,
+			BlockTime:     params.BlockTime,
+			OptionPrices:  params.OptionPrices,
+			BaseTokenType: params.BaseTokenType,
+		})
+		if err != nil {
+			ctx.Log.Errorf("ProcessCTFLiquidityEvent(Added) failed: %v", err)
+			return fmt.Errorf("ProcessCTFLiquidityEvent(Added) failed: %w", err)
+		}
 		return nil
 	case *contract.CTFLiquidityRemovedEvent:
 		ctx.Log.Infof("处理CTF流动性移除事件: %s", params.EventLog.TxHash)
-		// TODO: 处理CTF流动性移除事件
+		userAddress := e.User.Hex()
+		uid := ""
+		if userInfo, exists := params.UserInfoMap[userAddress]; exists && userInfo.Uid != "" {
+			uid = userInfo.Uid
+		}
+		excessPositions := make([]string, 0, len(e.ExcessPositions))
+		for _, ep := range e.ExcessPositions {
+			excessPositions = append(excessPositions, ep.String())
+		}
+		_, err := p.rpcClient.MarketcenterClient.ProcessCTFLiquidityEvent(ctx.Ctx, &marketcenterPb.ProcessCTFLiquidityEventRequest{
+			EventType:       marketcenterPb.ProcessCTFLiquidityEventRequest_LIQUIDITY_REMOVED,
+			Uid:             uid,
+			UserAddress:     userAddress,
+			MarketAddress:   params.EventLog.Address,
+			Amount:          e.Amount.String(),
+			LpAmount:        e.LpAmount.String(),
+			ExcessPositions: excessPositions,
+			TxHash:          params.EventLog.TxHash,
+			BlockNumber:     params.EventLog.BlockNumber,
+			BlockTime:       params.BlockTime,
+			OptionPrices:    params.OptionPrices,
+			BaseTokenType:   params.BaseTokenType,
+		})
+		if err != nil {
+			ctx.Log.Errorf("ProcessCTFLiquidityEvent(Removed) failed: %v", err)
+			return fmt.Errorf("ProcessCTFLiquidityEvent(Removed) failed: %w", err)
+		}
 		return nil
 	case *contract.FeeSetEvent:
 		ctx.Log.Infof("处理CTF费率设置事件: %s", params.EventLog.TxHash)

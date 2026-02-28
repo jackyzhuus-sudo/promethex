@@ -61,6 +61,16 @@ const (
 	Marketcenter_GetEvent_FullMethodName                             = "/marketcenter.v1.Marketcenter/GetEvent"
 	Marketcenter_ListEvents_FullMethodName                           = "/marketcenter.v1.Marketcenter/ListEvents"
 	Marketcenter_CreateEvent_FullMethodName                          = "/marketcenter.v1.Marketcenter/CreateEvent"
+	Marketcenter_CTFSwap_FullMethodName                              = "/marketcenter.v1.Marketcenter/CTFSwap"
+	Marketcenter_CTFDepositLiquidity_FullMethodName                  = "/marketcenter.v1.Marketcenter/CTFDepositLiquidity"
+	Marketcenter_CTFWithdrawLiquidity_FullMethodName                 = "/marketcenter.v1.Marketcenter/CTFWithdrawLiquidity"
+	Marketcenter_CTFRedeemPosition_FullMethodName                    = "/marketcenter.v1.Marketcenter/CTFRedeemPosition"
+	Marketcenter_CTFGetSwapPrice_FullMethodName                      = "/marketcenter.v1.Marketcenter/CTFGetSwapPrice"
+	Marketcenter_ProcessCTFConditionEvent_FullMethodName             = "/marketcenter.v1.Marketcenter/ProcessCTFConditionEvent"
+	Marketcenter_ProcessCTFPositionEvent_FullMethodName              = "/marketcenter.v1.Marketcenter/ProcessCTFPositionEvent"
+	Marketcenter_ProcessCTFTransferEvent_FullMethodName              = "/marketcenter.v1.Marketcenter/ProcessCTFTransferEvent"
+	Marketcenter_ProcessCTFMarketResolvedEvent_FullMethodName        = "/marketcenter.v1.Marketcenter/ProcessCTFMarketResolvedEvent"
+	Marketcenter_ProcessCTFLiquidityEvent_FullMethodName             = "/marketcenter.v1.Marketcenter/ProcessCTFLiquidityEvent"
 )
 
 // MarketcenterClient is the client API for Marketcenter service.
@@ -118,6 +128,18 @@ type MarketcenterClient interface {
 	GetEvent(ctx context.Context, in *GetEventRequest, opts ...grpc.CallOption) (*GetEventResponse, error)
 	ListEvents(ctx context.Context, in *ListEventsRequest, opts ...grpc.CallOption) (*ListEventsResponse, error)
 	CreateEvent(ctx context.Context, in *CreateEventRequest, opts ...grpc.CallOption) (*CreateEventResponse, error)
+	// CTF APMM 交易接口
+	CTFSwap(ctx context.Context, in *CTFSwapRequest, opts ...grpc.CallOption) (*CTFSwapResponse, error)
+	CTFDepositLiquidity(ctx context.Context, in *CTFDepositLiquidityRequest, opts ...grpc.CallOption) (*CTFDepositLiquidityResponse, error)
+	CTFWithdrawLiquidity(ctx context.Context, in *CTFWithdrawLiquidityRequest, opts ...grpc.CallOption) (*CTFWithdrawLiquidityResponse, error)
+	CTFRedeemPosition(ctx context.Context, in *CTFRedeemPositionRequest, opts ...grpc.CallOption) (*CTFRedeemPositionResponse, error)
+	CTFGetSwapPrice(ctx context.Context, in *CTFGetSwapPriceRequest, opts ...grpc.CallOption) (*CTFGetSwapPriceResponse, error)
+	// CTF 链上事件处理 (block-listener → market-service)
+	ProcessCTFConditionEvent(ctx context.Context, in *ProcessCTFConditionEventRequest, opts ...grpc.CallOption) (*ProcessCTFConditionEventResponse, error)
+	ProcessCTFPositionEvent(ctx context.Context, in *ProcessCTFPositionEventRequest, opts ...grpc.CallOption) (*ProcessCTFPositionEventResponse, error)
+	ProcessCTFTransferEvent(ctx context.Context, in *ProcessCTFTransferEventRequest, opts ...grpc.CallOption) (*ProcessCTFTransferEventResponse, error)
+	ProcessCTFMarketResolvedEvent(ctx context.Context, in *ProcessCTFMarketResolvedEventRequest, opts ...grpc.CallOption) (*ProcessCTFMarketResolvedEventResponse, error)
+	ProcessCTFLiquidityEvent(ctx context.Context, in *ProcessCTFLiquidityEventRequest, opts ...grpc.CallOption) (*ProcessCTFLiquidityEventResponse, error)
 }
 
 type marketcenterClient struct {
@@ -548,6 +570,106 @@ func (c *marketcenterClient) CreateEvent(ctx context.Context, in *CreateEventReq
 	return out, nil
 }
 
+func (c *marketcenterClient) CTFSwap(ctx context.Context, in *CTFSwapRequest, opts ...grpc.CallOption) (*CTFSwapResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CTFSwapResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_CTFSwap_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) CTFDepositLiquidity(ctx context.Context, in *CTFDepositLiquidityRequest, opts ...grpc.CallOption) (*CTFDepositLiquidityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CTFDepositLiquidityResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_CTFDepositLiquidity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) CTFWithdrawLiquidity(ctx context.Context, in *CTFWithdrawLiquidityRequest, opts ...grpc.CallOption) (*CTFWithdrawLiquidityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CTFWithdrawLiquidityResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_CTFWithdrawLiquidity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) CTFRedeemPosition(ctx context.Context, in *CTFRedeemPositionRequest, opts ...grpc.CallOption) (*CTFRedeemPositionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CTFRedeemPositionResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_CTFRedeemPosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) CTFGetSwapPrice(ctx context.Context, in *CTFGetSwapPriceRequest, opts ...grpc.CallOption) (*CTFGetSwapPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CTFGetSwapPriceResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_CTFGetSwapPrice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) ProcessCTFConditionEvent(ctx context.Context, in *ProcessCTFConditionEventRequest, opts ...grpc.CallOption) (*ProcessCTFConditionEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessCTFConditionEventResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_ProcessCTFConditionEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) ProcessCTFPositionEvent(ctx context.Context, in *ProcessCTFPositionEventRequest, opts ...grpc.CallOption) (*ProcessCTFPositionEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessCTFPositionEventResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_ProcessCTFPositionEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) ProcessCTFTransferEvent(ctx context.Context, in *ProcessCTFTransferEventRequest, opts ...grpc.CallOption) (*ProcessCTFTransferEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessCTFTransferEventResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_ProcessCTFTransferEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) ProcessCTFMarketResolvedEvent(ctx context.Context, in *ProcessCTFMarketResolvedEventRequest, opts ...grpc.CallOption) (*ProcessCTFMarketResolvedEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessCTFMarketResolvedEventResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_ProcessCTFMarketResolvedEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketcenterClient) ProcessCTFLiquidityEvent(ctx context.Context, in *ProcessCTFLiquidityEventRequest, opts ...grpc.CallOption) (*ProcessCTFLiquidityEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessCTFLiquidityEventResponse)
+	err := c.cc.Invoke(ctx, Marketcenter_ProcessCTFLiquidityEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketcenterServer is the server API for Marketcenter service.
 // All implementations must embed UnimplementedMarketcenterServer
 // for forward compatibility.
@@ -603,6 +725,18 @@ type MarketcenterServer interface {
 	GetEvent(context.Context, *GetEventRequest) (*GetEventResponse, error)
 	ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error)
 	CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error)
+	// CTF APMM 交易接口
+	CTFSwap(context.Context, *CTFSwapRequest) (*CTFSwapResponse, error)
+	CTFDepositLiquidity(context.Context, *CTFDepositLiquidityRequest) (*CTFDepositLiquidityResponse, error)
+	CTFWithdrawLiquidity(context.Context, *CTFWithdrawLiquidityRequest) (*CTFWithdrawLiquidityResponse, error)
+	CTFRedeemPosition(context.Context, *CTFRedeemPositionRequest) (*CTFRedeemPositionResponse, error)
+	CTFGetSwapPrice(context.Context, *CTFGetSwapPriceRequest) (*CTFGetSwapPriceResponse, error)
+	// CTF 链上事件处理 (block-listener → market-service)
+	ProcessCTFConditionEvent(context.Context, *ProcessCTFConditionEventRequest) (*ProcessCTFConditionEventResponse, error)
+	ProcessCTFPositionEvent(context.Context, *ProcessCTFPositionEventRequest) (*ProcessCTFPositionEventResponse, error)
+	ProcessCTFTransferEvent(context.Context, *ProcessCTFTransferEventRequest) (*ProcessCTFTransferEventResponse, error)
+	ProcessCTFMarketResolvedEvent(context.Context, *ProcessCTFMarketResolvedEventRequest) (*ProcessCTFMarketResolvedEventResponse, error)
+	ProcessCTFLiquidityEvent(context.Context, *ProcessCTFLiquidityEventRequest) (*ProcessCTFLiquidityEventResponse, error)
 	mustEmbedUnimplementedMarketcenterServer()
 }
 
@@ -738,6 +872,36 @@ func (UnimplementedMarketcenterServer) ListEvents(context.Context, *ListEventsRe
 }
 func (UnimplementedMarketcenterServer) CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateEvent not implemented")
+}
+func (UnimplementedMarketcenterServer) CTFSwap(context.Context, *CTFSwapRequest) (*CTFSwapResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CTFSwap not implemented")
+}
+func (UnimplementedMarketcenterServer) CTFDepositLiquidity(context.Context, *CTFDepositLiquidityRequest) (*CTFDepositLiquidityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CTFDepositLiquidity not implemented")
+}
+func (UnimplementedMarketcenterServer) CTFWithdrawLiquidity(context.Context, *CTFWithdrawLiquidityRequest) (*CTFWithdrawLiquidityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CTFWithdrawLiquidity not implemented")
+}
+func (UnimplementedMarketcenterServer) CTFRedeemPosition(context.Context, *CTFRedeemPositionRequest) (*CTFRedeemPositionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CTFRedeemPosition not implemented")
+}
+func (UnimplementedMarketcenterServer) CTFGetSwapPrice(context.Context, *CTFGetSwapPriceRequest) (*CTFGetSwapPriceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CTFGetSwapPrice not implemented")
+}
+func (UnimplementedMarketcenterServer) ProcessCTFConditionEvent(context.Context, *ProcessCTFConditionEventRequest) (*ProcessCTFConditionEventResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessCTFConditionEvent not implemented")
+}
+func (UnimplementedMarketcenterServer) ProcessCTFPositionEvent(context.Context, *ProcessCTFPositionEventRequest) (*ProcessCTFPositionEventResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessCTFPositionEvent not implemented")
+}
+func (UnimplementedMarketcenterServer) ProcessCTFTransferEvent(context.Context, *ProcessCTFTransferEventRequest) (*ProcessCTFTransferEventResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessCTFTransferEvent not implemented")
+}
+func (UnimplementedMarketcenterServer) ProcessCTFMarketResolvedEvent(context.Context, *ProcessCTFMarketResolvedEventRequest) (*ProcessCTFMarketResolvedEventResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessCTFMarketResolvedEvent not implemented")
+}
+func (UnimplementedMarketcenterServer) ProcessCTFLiquidityEvent(context.Context, *ProcessCTFLiquidityEventRequest) (*ProcessCTFLiquidityEventResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessCTFLiquidityEvent not implemented")
 }
 func (UnimplementedMarketcenterServer) mustEmbedUnimplementedMarketcenterServer() {}
 func (UnimplementedMarketcenterServer) testEmbeddedByValue()                      {}
@@ -1516,6 +1680,186 @@ func _Marketcenter_CreateEvent_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Marketcenter_CTFSwap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CTFSwapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).CTFSwap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_CTFSwap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).CTFSwap(ctx, req.(*CTFSwapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_CTFDepositLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CTFDepositLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).CTFDepositLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_CTFDepositLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).CTFDepositLiquidity(ctx, req.(*CTFDepositLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_CTFWithdrawLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CTFWithdrawLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).CTFWithdrawLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_CTFWithdrawLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).CTFWithdrawLiquidity(ctx, req.(*CTFWithdrawLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_CTFRedeemPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CTFRedeemPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).CTFRedeemPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_CTFRedeemPosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).CTFRedeemPosition(ctx, req.(*CTFRedeemPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_CTFGetSwapPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CTFGetSwapPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).CTFGetSwapPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_CTFGetSwapPrice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).CTFGetSwapPrice(ctx, req.(*CTFGetSwapPriceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_ProcessCTFConditionEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessCTFConditionEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).ProcessCTFConditionEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_ProcessCTFConditionEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).ProcessCTFConditionEvent(ctx, req.(*ProcessCTFConditionEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_ProcessCTFPositionEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessCTFPositionEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).ProcessCTFPositionEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_ProcessCTFPositionEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).ProcessCTFPositionEvent(ctx, req.(*ProcessCTFPositionEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_ProcessCTFTransferEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessCTFTransferEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).ProcessCTFTransferEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_ProcessCTFTransferEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).ProcessCTFTransferEvent(ctx, req.(*ProcessCTFTransferEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_ProcessCTFMarketResolvedEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessCTFMarketResolvedEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).ProcessCTFMarketResolvedEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_ProcessCTFMarketResolvedEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).ProcessCTFMarketResolvedEvent(ctx, req.(*ProcessCTFMarketResolvedEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Marketcenter_ProcessCTFLiquidityEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessCTFLiquidityEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketcenterServer).ProcessCTFLiquidityEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Marketcenter_ProcessCTFLiquidityEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketcenterServer).ProcessCTFLiquidityEvent(ctx, req.(*ProcessCTFLiquidityEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Marketcenter_ServiceDesc is the grpc.ServiceDesc for Marketcenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1690,6 +2034,46 @@ var Marketcenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateEvent",
 			Handler:    _Marketcenter_CreateEvent_Handler,
+		},
+		{
+			MethodName: "CTFSwap",
+			Handler:    _Marketcenter_CTFSwap_Handler,
+		},
+		{
+			MethodName: "CTFDepositLiquidity",
+			Handler:    _Marketcenter_CTFDepositLiquidity_Handler,
+		},
+		{
+			MethodName: "CTFWithdrawLiquidity",
+			Handler:    _Marketcenter_CTFWithdrawLiquidity_Handler,
+		},
+		{
+			MethodName: "CTFRedeemPosition",
+			Handler:    _Marketcenter_CTFRedeemPosition_Handler,
+		},
+		{
+			MethodName: "CTFGetSwapPrice",
+			Handler:    _Marketcenter_CTFGetSwapPrice_Handler,
+		},
+		{
+			MethodName: "ProcessCTFConditionEvent",
+			Handler:    _Marketcenter_ProcessCTFConditionEvent_Handler,
+		},
+		{
+			MethodName: "ProcessCTFPositionEvent",
+			Handler:    _Marketcenter_ProcessCTFPositionEvent_Handler,
+		},
+		{
+			MethodName: "ProcessCTFTransferEvent",
+			Handler:    _Marketcenter_ProcessCTFTransferEvent_Handler,
+		},
+		{
+			MethodName: "ProcessCTFMarketResolvedEvent",
+			Handler:    _Marketcenter_ProcessCTFMarketResolvedEvent_Handler,
+		},
+		{
+			MethodName: "ProcessCTFLiquidityEvent",
+			Handler:    _Marketcenter_ProcessCTFLiquidityEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

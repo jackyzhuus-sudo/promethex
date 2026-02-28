@@ -39,6 +39,7 @@ enum ErrorCode {
   // - asset
   INVALID_USER_OPERATION = 114101;
   PLACE_ORDER_TOO_QUICK = 114102;
+  TRADING_NOT_READY = 114103;
 
   // - event
   EVENT_NOT_FOUND        = 115101;
@@ -110,6 +111,20 @@ service Marketcenter {
     rpc GetEvent(GetEventRequest) returns (GetEventResponse) {}
     rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {}
     rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse) {}
+
+    // CTF APMM 交易接口
+    rpc CTFSwap(CTFSwapRequest) returns (CTFSwapResponse) {}
+    rpc CTFDepositLiquidity(CTFDepositLiquidityRequest) returns (CTFDepositLiquidityResponse) {}
+    rpc CTFWithdrawLiquidity(CTFWithdrawLiquidityRequest) returns (CTFWithdrawLiquidityResponse) {}
+    rpc CTFRedeemPosition(CTFRedeemPositionRequest) returns (CTFRedeemPositionResponse) {}
+    rpc CTFGetSwapPrice(CTFGetSwapPriceRequest) returns (CTFGetSwapPriceResponse) {}
+
+    // CTF 链上事件处理 (block-listener → market-service)
+    rpc ProcessCTFConditionEvent(ProcessCTFConditionEventRequest) returns (ProcessCTFConditionEventResponse) {}
+    rpc ProcessCTFPositionEvent(ProcessCTFPositionEventRequest) returns (ProcessCTFPositionEventResponse) {}
+    rpc ProcessCTFTransferEvent(ProcessCTFTransferEventRequest) returns (ProcessCTFTransferEventResponse) {}
+    rpc ProcessCTFMarketResolvedEvent(ProcessCTFMarketResolvedEventRequest) returns (ProcessCTFMarketResolvedEventResponse) {}
+    rpc ProcessCTFLiquidityEvent(ProcessCTFLiquidityEventRequest) returns (ProcessCTFLiquidityEventResponse) {}
 
 }
 
@@ -1489,3 +1504,161 @@ message CreateEventRequest {
 message CreateEventResponse {
   string id = 1;                      // 创建后的 UUID
 }
+
+// ============================================
+// CTF APMM 交易 Messages
+// ============================================
+
+message CTFSwapRequest {
+  string uid = 1;
+  string market_address = 2;
+  string option_index = 3;       // 0 or 1 (binary market)
+  string amount = 4;             // USDC amount
+  string min_receive_amount = 5; // slippage protection
+  string side = 6;               // "buy" or "sell"
+  UserOperation user_operation = 7;
+}
+message CTFSwapResponse {
+  string op_hash = 1;
+  string order_uuid = 2;
+}
+
+message CTFDepositLiquidityRequest {
+  string uid = 1;
+  string market_address = 2;
+  string amount = 3;             // USDC amount
+  UserOperation user_operation = 4;
+}
+message CTFDepositLiquidityResponse {
+  string op_hash = 1;
+}
+
+message CTFWithdrawLiquidityRequest {
+  string uid = 1;
+  string market_address = 2;
+  string lp_amount = 3;          // LP token amount
+  UserOperation user_operation = 4;
+}
+message CTFWithdrawLiquidityResponse {
+  string op_hash = 1;
+}
+
+message CTFRedeemPositionRequest {
+  string uid = 1;
+  string market_address = 2;
+  string condition_id = 3;       // bytes32 hex
+  repeated string index_sets = 4;
+  UserOperation user_operation = 5;
+}
+message CTFRedeemPositionResponse {
+  string op_hash = 1;
+}
+
+message CTFGetSwapPriceRequest {
+  string market_address = 1;
+  string option_index = 2;
+  string amount = 3;
+  string side = 4;               // "buy" or "sell"
+}
+message CTFGetSwapPriceResponse {
+  string expected_amount = 1;    // 预期获得数量
+  string price_impact = 2;       // 价格影响 (bps)
+  string fee = 3;                // 手续费
+}
+
+// ============================================
+// CTF 链上事件处理 Messages (block-listener → market-service)
+// ============================================
+
+// ConditionPreparation + ConditionResolution
+message ProcessCTFConditionEventRequest {
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    CONDITION_PREPARATION = 1;
+    CONDITION_RESOLUTION = 2;
+  }
+  EventType event_type = 1;
+  string condition_id = 2;       // bytes32 hex
+  string oracle = 3;             // address
+  string question_id = 4;        // bytes32 hex
+  uint32 outcome_slot_count = 5;
+  repeated string payout_numerators = 6; // Resolution only
+  string tx_hash = 7;
+  uint64 block_number = 8;
+  uint64 block_time = 9;
+}
+message ProcessCTFConditionEventResponse {}
+
+// PositionSplit + PositionsMerge + PayoutRedemption
+message ProcessCTFPositionEventRequest {
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    POSITION_SPLIT = 1;
+    POSITIONS_MERGE = 2;
+    PAYOUT_REDEMPTION = 3;
+  }
+  EventType event_type = 1;
+  string stakeholder = 2;       // address (Split/Merge) or redeemer (Redemption)
+  string collateral_token = 3;
+  string parent_collection_id = 4;
+  string condition_id = 5;
+  repeated string partition = 6; // index sets (Split/Merge)
+  repeated string index_sets = 7; // Redemption
+  string amount = 8;             // split/merge amount or payout
+  string tx_hash = 9;
+  uint64 block_number = 10;
+  uint64 block_time = 11;
+}
+message ProcessCTFPositionEventResponse {}
+
+// TransferSingle + TransferBatch
+message ProcessCTFTransferEventRequest {
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    TRANSFER_SINGLE = 1;
+    TRANSFER_BATCH = 2;
+  }
+  EventType event_type = 1;
+  string operator = 2;
+  string from = 3;
+  string to = 4;
+  repeated string ids = 5;      // Single: 1 elem; Batch: N elems
+  repeated string values = 6;
+  string tx_hash = 7;
+  uint64 block_number = 8;
+  uint64 block_time = 9;
+}
+message ProcessCTFTransferEventResponse {}
+
+// CTFMarketResolved
+message ProcessCTFMarketResolvedEventRequest {
+  string market_address = 1;
+  string tx_hash = 2;
+  uint64 block_number = 3;
+  uint64 block_time = 4;
+  repeated UpdateOptionPrice option_prices = 5;
+  BaseTokenType base_token_type = 6;
+}
+message ProcessCTFMarketResolvedEventResponse {}
+
+// LiquidityAdded + CTFLiquidityRemoved
+message ProcessCTFLiquidityEventRequest {
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    LIQUIDITY_ADDED = 1;
+    LIQUIDITY_REMOVED = 2;
+  }
+  EventType event_type = 1;
+  string uid = 2;
+  string user_address = 3;
+  string market_address = 4;
+  string amount = 5;            // USDC amount
+  string lp_amount = 6;         // LP tokens
+  repeated string excess_positions = 7; // LiquidityRemoved only
+  string tx_hash = 8;
+  uint64 block_number = 9;
+  uint64 block_time = 10;
+  repeated UpdateOptionPrice option_prices = 11;
+  BaseTokenType base_token_type = 12;
+}
+message ProcessCTFLiquidityEventResponse {}
