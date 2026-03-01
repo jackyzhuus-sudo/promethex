@@ -61,7 +61,7 @@ CREATE TABLE
 
 CREATE INDEX IF NOT EXISTS idx_notification_uid ON t_user_notification (uid);
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_user_post_like_notification ON t_user_notification (uid, (biz_json - > > 'post_uuid'))
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_post_like_notification ON t_user_notification (uid, (biz_json->>'post_uuid'))
 WHERE
     type = 7
     AND status = 2;
