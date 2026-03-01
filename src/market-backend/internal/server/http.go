@@ -68,6 +68,13 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, h
 	apipb.RegisterHttpApiHTTPServer(srv, httpApiService)
 	apipb.RegisterSseApiHTTPServer(srv, sseApiService)
 
+	// Health check endpoint (bypasses middleware)
+	srv.HandleFunc("/healthz", func(w netHttp.ResponseWriter, r *netHttp.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(netHttp.StatusOK)
+		w.Write([]byte(`{"status":"ok"}`))
+	})
+
 	// SSE 连接使用自定义处理器，只接受 POST 请求，设置较长的超时时间
 	srv.HandleFunc("/api/v1/sse/connect", func(w netHttp.ResponseWriter, r *netHttp.Request) {
 		// 只允许 POST 方法

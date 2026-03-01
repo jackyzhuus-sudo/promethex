@@ -1,0 +1,79 @@
+# market-service v2 配置 — hostnames point to v2 containers
+server:
+  grpc:
+    network: tcp
+    addr: :9000
+    timeout: 60s
+
+data:
+  postgresql:
+    usercenter:
+      dsn: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@v2-market-postgres:5432/usercenter?sslmode=disable
+      max_idle_conns: 5
+      max_open_conns: 20
+      conn_max_lifetime: 3600s
+    marketcenter:
+      dsn: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@v2-market-postgres:5432/marketcenter?sslmode=disable
+      max_idle_conns: 5
+      max_open_conns: 20
+      conn_max_lifetime: 3600s
+
+  redis:
+    usercenter:
+      network: tcp
+      addr: v2-market-redis:6379
+      db: 0
+      password: "${REDIS_PASSWORD}"
+      read_timeout: 60s
+      write_timeout: 60s
+      dial_timeout: 60s
+    marketcenter:
+      network: tcp
+      addr: v2-market-redis:6379
+      db: 1
+      password: "${REDIS_PASSWORD}"
+      read_timeout: 60s
+      write_timeout: 60s
+      dial_timeout: 60s
+
+  alchemy:
+    api_key: "${ALCHEMY_API_KEY}"
+    network: arb-sepolia
+    chain_id: 421614
+    policy_id: "${ALCHEMY_POLICY_ID}"
+    entrypoint_address: "0x0000000071727De22E5E9d8BAf0edAc6f37da032"
+    fallback_address: ""
+    sign_tx_from_address: "${SIGNER_ADDRESS}"
+    sign_tx_private_key: "${SIGNER_PRIVATE_KEY}"
+
+  s3:
+    access_key: "${AWS_ACCESS_KEY_ID}"
+    secret_key: "${AWS_SECRET_ACCESS_KEY}"
+    biz_bucket: "${S3_BUCKET}"
+    admin_bucket: "${S3_BUCKET}"
+    region: "${S3_REGION}"
+    tenant_slug: "${S3_TENANT_SLUG}"
+
+  rpc:
+    recommendation_rpc:
+      addr: localhost:50051
+      timeout: 3s
+
+custom:
+  asset_tokens:
+    points:
+      address: "0x934E616cA9538397E3f9a12895C40ea2E8C45E48"
+      name: Points
+      symbol: POINTS
+      decimals: 18
+    usdc:
+      address: "0x1A8da4723A4f7aD0A965cb3dBC31c72435b1B490"
+      name: USD Coin
+      symbol: tUSDC
+      decimals: 6
+  new_user_points: 1000
+  chain: arb-sepolia
+  lark_webhook_key: "${LARK_WEBHOOK_KEY}"
+  lark_enabled: false
+  min_volume: 0
+  max_deadline_hours: 24

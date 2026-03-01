@@ -22,3 +22,4 @@ build/
 postgres-data/
 redis-data/
 
+.env.production

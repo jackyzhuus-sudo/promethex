@@ -1,0 +1,51 @@
+# block-listener v2 配置 — hostnames point to v2 containers
+data:
+  db:
+    dsn: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@v2-market-postgres:5432/chain_events?sslmode=disable
+    max_idle_conns: 5
+    max_open_conns: 20
+    conn_max_lifetime: 3600s
+
+  redis:
+    addr: v2-market-redis:6379
+    password: "${REDIS_PASSWORD}"
+    db: 0
+    read_timeout: 60s
+    write_timeout: 60s
+
+  marketcenter_rpc:
+    addr: v2-market-service:9000
+    timeout: 60s
+
+  usercenter_rpc:
+    addr: v2-market-service:9000
+    timeout: 60s
+
+  blockchain:
+    start_block: 0
+    factory_contract_address: "${FACTORY_ADDRESS}"
+    points_token_address: "0x1A8da4723A4f7aD0A965cb3dBC31c72435b1B490"
+    batch_scan_size: 500
+    confirmed_block_num: 12
+    cron_scan_db_rows: 1000
+    arb_rpc_urls:
+      - "https://arb-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+      - "https://sepolia-rollup.arbitrum.io/rpc"
+      - "https://arbitrum-sepolia-rpc.publicnode.com"
+    conditional_tokens_address: "${CONDITIONAL_TOKENS_ADDRESS}"
+    prediction_ctf_addresses: []
+
+custom:
+  lark_webhook_key: "${LARK_WEBHOOK_KEY}"
+  lark_enabled: false
+  asset_tokens:
+    points:
+      address: "0x934E616cA9538397E3f9a12895C40ea2E8C45E48"
+      name: Points
+      symbol: POINTS
+      decimals: 18
+    usdc:
+      address: "0x1A8da4723A4f7aD0A965cb3dBC31c72435b1B490"
+      name: USD Coin
+      symbol: tUSDC
+      decimals: 6

@@ -26,7 +26,8 @@ RUN go build -ldflags "-s -w" -o /app/bin/market-service ./cmd/market-service
 
 # 第二阶段：创建运行环境
 FROM alpine:3.23
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add ca-certificates tzdata \
+    && addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # 设置工作目录
 WORKDIR /app
@@ -34,12 +35,15 @@ WORKDIR /app
 # 从构建阶段复制二进制文件和配置
 COPY --from=builder /app/bin/market-service /app/bin/
 
-# 暴露服务端口
-EXPOSE 9000 
+RUN chown -R appuser:appgroup /app
+USER appuser
 
-# 添加健康检查
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD ps -ef | grep market-service | grep -v grep || exit 1
+# 暴露服务端口
+EXPOSE 9000
+
+# gRPC 健康检查 — 使用 TCP 连通性检测
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=15s \
+  CMD nc -z localhost 9000 || exit 1
 
 # 启动服务
-CMD ["/app/bin/market-service", "-conf", "/app/configs"] 
+CMD ["/app/bin/market-service", "-conf", "/app/configs"]
