@@ -300,7 +300,7 @@ func (p *EventProcessor) collectUserAddresses(
 			userAddr = e.User.Hex()
 		case *contract.SwappedEvent:
 			ctx.Log.Debugf("处理 交换事件: %s, address: %s", eventLog.TxHash, eventLog.Address)
-			// 忽略user
+			userAddr = e.User.Hex()
 		default:
 			// 其他事件不用收集用户地址
 		}
@@ -468,7 +468,9 @@ func (p *EventProcessor) collectCTFTokenPairs(
 		return p.prepareDepositQuery(e, marketInfo, queryParams, processingCtx)
 	case *contract.WithdrawnEvent:
 		return p.prepareWithdrawQuery(e, marketInfo, queryParams, processingCtx)
-	case *contract.SwappedEvent, *contract.CTFMarketResolvedEvent, *contract.CTFLiquidityRemovedEvent,
+	case *contract.SwappedEvent:
+		return p.prepareSwapQuery(e, marketInfo, queryParams, processingCtx)
+	case *contract.CTFMarketResolvedEvent, *contract.CTFLiquidityRemovedEvent,
 		*contract.LiquidityAddedEvent, *contract.FeeSetEvent, *contract.CTFFeeCollectedEvent:
 		return true // 这些事件不需要收集用户代币对
 	default:
@@ -523,6 +525,40 @@ func (p *EventProcessor) prepareWithdrawQuery(
 	return true
 }
 
+// prepareSwapQuery 处理交换事件的查询参数收集
+func (p *EventProcessor) prepareSwapQuery(
+	event *contract.SwappedEvent,
+	marketInfo *marketcenterPb.GetMarketsAndOptionsForBlockListenerResponse_Market,
+	queryParams *QueryParams,
+	processingCtx *ProcessingContext,
+) bool {
+	userAddr := event.User.Hex()
+	_, userExists := processingCtx.UserInfoMap[userAddr]
+	if !userExists {
+		return true // 非平台用户也要返回true，但不收集代币对
+	}
+
+	// 收集optionIn（卖出方）的余额查询参数
+	optionInIndex := uint32(event.OptionIn)
+	for _, option := range marketInfo.Options {
+		if option.Index == optionInIndex {
+			queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{event.User, common.HexToAddress(option.Address), uint64(event.BlockNumber)})
+			break
+		}
+	}
+
+	// 收集optionOut（买入方）的余额查询参数
+	optionOutIndex := uint32(event.OptionOut)
+	for _, option := range marketInfo.Options {
+		if option.Index == optionOutIndex {
+			queryParams.UserTokenPairs = append(queryParams.UserTokenPairs, [3]interface{}{event.User, common.HexToAddress(option.Address), uint64(event.BlockNumber)})
+			break
+		}
+	}
+
+	return true
+}
+
 // addEventToChannel 添加事件到通道
 func (p *EventProcessor) addEventToChannel(eventChannels map[string]chan *model.EventLog, address string, eventLog *model.EventLog) {
 	if eventChan, ok := eventChannels[address]; ok {
@@ -553,12 +589,18 @@ func (p *EventProcessor) queryChainData(ctx com.Ctx, queryParams *QueryParams, e
 	}
 
 	// 查询用户代币余额
+	// NOTE: CTF option tokens use synthetic addresses (not real on-chain ERC20 contracts),
+	// so the ERC20 balanceOf call will fail for these. We make this non-fatal: log warning
+	// and continue with empty balances. The event handlers (handleSwapEvent, etc.) already
+	// gracefully fall back to balance=0 when balance lookup fails.
 	if len(queryParams.UserTokenPairs) > 0 {
 		balances, err := p.arbClient.BatchQueryERC20BalancesByPairs(ctx.Ctx, queryParams.UserTokenPairs, endBlockNumber)
 		if err != nil {
-			return nil, fmt.Errorf("批量查询用户代币余额失败: %w", err)
+			ctx.Log.Warnf("批量查询用户代币余额失败(非致命，CTF合成地址无链上合约): %v", err)
+			// Continue with empty balances — event handlers will use 0
+		} else {
+			chainData.userTokenBalances = balances
 		}
-		chainData.userTokenBalances = balances
 	}
 
 	// 查询区块时间
@@ -1074,7 +1116,8 @@ func (p *EventProcessor) handleDepositEvent(ctx com.Ctx, event *contract.Deposit
 
 	userBalance, err := p.getBalance(ctx, userAddress, optionOutAddress, params.EventLog.BlockNumber, params.ChainData)
 	if err != nil {
-		return err
+		ctx.Log.Warnf("获取deposit optionOut余额失败，使用0: %v", err)
+		userBalance = big.NewInt(0)
 	}
 
 	// 调用RPC处理存款事件
@@ -1118,7 +1161,8 @@ func (p *EventProcessor) handleWithdrawEvent(ctx com.Ctx, event *contract.Withdr
 
 	userBalance, err := p.getBalance(ctx, userAddress, optionInAddress, params.EventLog.BlockNumber, params.ChainData)
 	if err != nil {
-		return err
+		ctx.Log.Warnf("获取withdraw optionIn余额失败，使用0: %v", err)
+		userBalance = big.NewInt(0)
 	}
 
 	// 调用RPC处理提款事件
@@ -1147,26 +1191,84 @@ func (p *EventProcessor) handleWithdrawEvent(ctx com.Ctx, event *contract.Withdr
 	return nil
 }
 
-// handleSwapEvent 处理交换事件
+// handleSwapEvent 处理交换事件（option-to-option swap）
+// Swap = 卖出optionIn + 买入optionOut，处理为两笔交易记录
 func (p *EventProcessor) handleSwapEvent(ctx com.Ctx, event *contract.SwappedEvent, params *EventParams) error {
 	userAddress := event.User.Hex()
-	_, exists := params.UserInfoMap[userAddress]
-	if !exists {
-		ctx.Log.Debugf("swap非平台用户: %s", userAddress)
+	userInfo, exists := params.UserInfoMap[userAddress]
+	if !exists || userInfo.Uid == "" {
+		// 非平台用户，只更新价格
+		ctx.Log.Debugf("swap非平台用户: %s，仅更新价格", userAddress)
+		return p.updatePricesOnly(ctx, params)
 	}
 
-	// 调用RPC处理交换事件
-	_, err := p.rpcClient.MarketcenterClient.ProcessMarketSwapEvent(ctx.Ctx, &marketcenterPb.ProcessMarketSwapEventRequest{
-		TxHash:        params.EventLog.TxHash,
-		BlockNumber:   params.EventLog.BlockNumber,
-		OptionPrices:  params.OptionPrices,
-		BaseTokenType: params.BaseTokenType,
-		BlockTime:     params.BlockTime,
-	})
+	// 1. 处理卖出方（optionIn -> 基础代币方向）
+	optionInAddress, optionInDecimal, err := p.findOptionAddress(uint32(event.OptionIn), params.MarketInfo)
+	if err != nil || optionInAddress == "" {
+		ctx.Log.Errorf("swap事件找不到optionIn地址: optionIn=%d, err=%v", event.OptionIn, err)
+		// 仍然更新价格
+		return p.updatePricesOnly(ctx, params)
+	}
 
+	optionInBalance, err := p.getBalance(ctx, userAddress, optionInAddress, params.EventLog.BlockNumber, params.ChainData)
 	if err != nil {
-		ctx.Log.Errorf("处理交换事件失败: %v", err)
-		return fmt.Errorf("处理交换事件失败: %w", err)
+		ctx.Log.Warnf("获取optionIn余额失败，使用0: %v", err)
+		optionInBalance = big.NewInt(0)
+	}
+
+	_, err = p.rpcClient.MarketcenterClient.ProcessMarketDepositOrWithdrawEvent(ctx.Ctx, &marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest{
+		Uid:                    userInfo.Uid,
+		TxHash:                 params.EventLog.TxHash,
+		BlockNumber:            params.EventLog.BlockNumber,
+		UserAddress:            userAddress,
+		UserOptionTokenAddress: optionInAddress,
+		UserOptionTokenBalance: optionInBalance.String(),
+		MarketAddress:          params.EventLog.Address,
+		AmountIn:               event.AmountIn.String(),
+		AmountOut:              "0", // swap中卖出方的基础代币收入在这里不直接体现
+		OptionPrices:           params.OptionPrices,
+		BaseTokenType:          params.BaseTokenType,
+		Decimal:                optionInDecimal,
+		BlockTime:              params.BlockTime,
+		Side:                   marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest_SIDE_WITHDRAW,
+	})
+	if err != nil {
+		ctx.Log.Errorf("处理swap卖出方失败: %v", err)
+		return fmt.Errorf("处理swap卖出方失败: %w", err)
+	}
+
+	// 2. 处理买入方（基础代币 -> optionOut方向）
+	optionOutAddress, optionOutDecimal, err := p.findOptionAddress(uint32(event.OptionOut), params.MarketInfo)
+	if err != nil || optionOutAddress == "" {
+		ctx.Log.Errorf("swap事件找不到optionOut地址: optionOut=%d, err=%v", event.OptionOut, err)
+		return nil // 卖出方已处理成功
+	}
+
+	optionOutBalance, err := p.getBalance(ctx, userAddress, optionOutAddress, params.EventLog.BlockNumber, params.ChainData)
+	if err != nil {
+		ctx.Log.Warnf("获取optionOut余额失败，使用0: %v", err)
+		optionOutBalance = big.NewInt(0)
+	}
+
+	_, err = p.rpcClient.MarketcenterClient.ProcessMarketDepositOrWithdrawEvent(ctx.Ctx, &marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest{
+		Uid:                    userInfo.Uid,
+		TxHash:                 params.EventLog.TxHash + "-swap-buy", // 添加后缀以区分同一tx的两笔记录
+		BlockNumber:            params.EventLog.BlockNumber,
+		UserAddress:            userAddress,
+		UserOptionTokenAddress: optionOutAddress,
+		UserOptionTokenBalance: optionOutBalance.String(),
+		MarketAddress:          params.EventLog.Address,
+		AmountIn:               "0", // swap中买入方的基础代币投入在这里不直接体现
+		AmountOut:              event.AmountOut.String(),
+		OptionPrices:           params.OptionPrices,
+		BaseTokenType:          params.BaseTokenType,
+		Decimal:                optionOutDecimal,
+		BlockTime:              params.BlockTime,
+		Side:                   marketcenterPb.ProcessMarketDepositOrWithdrawEventRequest_SIDE_DEPOSIT,
+	})
+	if err != nil {
+		ctx.Log.Errorf("处理swap买入方失败: %v", err)
+		return fmt.Errorf("处理swap买入方失败: %w", err)
 	}
 
 	return nil

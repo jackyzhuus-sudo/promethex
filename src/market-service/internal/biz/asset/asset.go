@@ -853,7 +853,13 @@ func (h *AssetHandler) ProcessMarketDepositEventInAssetHandler(ctx common.Ctx, r
 		newBalance := oldBalance.Add(amountOut)      // 没算精度信息（1次）
 		newAvgBuyPrice := totalValue.Div(newBalance) // 没算精度信息（1次）
 
-		userTokenBalanceEntity.Balance = userOptionOutBalance // 没算精度信息（1次）
+		// CTF option tokens are ERC1155, on-chain balance query returns 0.
+		// Use computed balance (oldBalance + amountOut) when on-chain balance is zero.
+		if userOptionOutBalance.IsZero() {
+			userTokenBalanceEntity.Balance = newBalance
+		} else {
+			userTokenBalanceEntity.Balance = userOptionOutBalance // 没算精度信息（1次）
+		}
 		userTokenBalanceEntity.AvgBuyPrice = newAvgBuyPrice   // 没算精度信息（1次）
 		err = h.assetRepo.UpdateUserTokenBalanceByUidAndTokenAddress(ctx, userTokenBalanceEntity, map[string]interface{}{
 			"balance":       userTokenBalanceEntity.Balance,
@@ -866,11 +872,17 @@ func (h *AssetHandler) ProcessMarketDepositEventInAssetHandler(ctx common.Ctx, r
 		}
 
 	} else {
+		// CTF option tokens are ERC1155, on-chain balance query returns 0.
+		// Use amountOut (shares received) as initial balance when on-chain balance is zero.
+		initBalance := userOptionOutBalance
+		if initBalance.IsZero() {
+			initBalance = amountOut
+		}
 		userTokenBalanceEntity := &UserTokenBalanceEntity{
 			UID:           req.Uid,
 			TokenAddress:  req.UserOptionTokenAddress,
 			MarketAddress: req.MarketAddress,
-			Balance:       userOptionOutBalance, // 没算精度信息1次
+			Balance:       initBalance, // 没算精度信息1次
 			AvgBuyPrice:   buyPirce,             // 没算精度信息1次
 			BlockNumber:   req.BlockNumber,
 			Decimal:       uint8(req.Decimal),
@@ -965,8 +977,17 @@ func (h *AssetHandler) ProcessMarketWithdrawEventInAssetHandler(ctx common.Ctx, 
 		return errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
 	}
 
+	// CTF option tokens are ERC1155, on-chain balance query returns 0.
+	// Use computed balance (oldBalance - amountIn) when on-chain balance is zero.
+	withdrawBalance := userOptionInBalance
+	if withdrawBalance.IsZero() {
+		withdrawBalance = userTokenBalanceEntity.Balance.Sub(amountIn)
+		if withdrawBalance.IsNegative() {
+			withdrawBalance = decimal.Zero
+		}
+	}
 	err = h.assetRepo.UpdateUserTokenBalanceByUidAndTokenAddress(ctx, userTokenBalanceEntity, map[string]interface{}{
-		"balance":      userOptionInBalance, // 没算精度信息（1次）
+		"balance":      withdrawBalance, // 没算精度信息（1次）
 		"block_number": req.BlockNumber,
 	})
 	if err != nil {

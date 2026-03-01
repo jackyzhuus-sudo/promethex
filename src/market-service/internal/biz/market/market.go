@@ -1140,11 +1140,33 @@ func (h *MarketHandler) GetEvent(ctx common.Ctx, eventQuery *PredictionEventQuer
 			return nil, errors.New(int(marketcenterPb.ErrorCode_DATABASE), "DATABASE_ERROR", err.Error())
 		}
 		optionsByMarket := make(map[string][]*OptionEntity)
+		optionAddressList := make([]string, 0, len(options))
 		for _, opt := range options {
 			optionsByMarket[opt.MarketAddress] = append(optionsByMarket[opt.MarketAddress], opt)
+			optionAddressList = append(optionAddressList, opt.Address)
 		}
 		for _, m := range markets {
 			m.Options = optionsByMarket[m.Address]
+		}
+
+		// 预加载 option prices
+		if len(optionAddressList) > 0 {
+			optionTokenPriceEntities, err := h.marketRepo.GetLatestOptionPrice(ctx, optionAddressList)
+			if err != nil {
+				ctx.Log.Warnf("GetEvent GetLatestOptionPrice error: %+v", err)
+			} else {
+				optionTokenPriceMap := make(map[string]*OptionTokenPriceEntity)
+				for _, price := range optionTokenPriceEntities {
+					optionTokenPriceMap[price.TokenAddress] = price
+				}
+				for _, m := range markets {
+					for _, opt := range m.Options {
+						if price, ok := optionTokenPriceMap[opt.Address]; ok {
+							opt.OptionTokenPrice = price
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1186,11 +1208,33 @@ func (h *MarketHandler) ListEvents(ctx common.Ctx, eventQuery *PredictionEventQu
 			ctx.Log.Errorf("ListEvents GetOptions error: %+v", err)
 		} else {
 			optionsByMarket := make(map[string][]*OptionEntity)
+			optionAddressList := make([]string, 0, len(options))
 			for _, opt := range options {
 				optionsByMarket[opt.MarketAddress] = append(optionsByMarket[opt.MarketAddress], opt)
+				optionAddressList = append(optionAddressList, opt.Address)
 			}
 			for _, m := range allMarkets {
 				m.Options = optionsByMarket[m.Address]
+			}
+
+			// 预加载 option prices
+			if len(optionAddressList) > 0 {
+				optionTokenPriceEntities, priceErr := h.marketRepo.GetLatestOptionPrice(ctx, optionAddressList)
+				if priceErr != nil {
+					ctx.Log.Warnf("ListEvents GetLatestOptionPrice error: %+v", priceErr)
+				} else {
+					optionTokenPriceMap := make(map[string]*OptionTokenPriceEntity)
+					for _, price := range optionTokenPriceEntities {
+						optionTokenPriceMap[price.TokenAddress] = price
+					}
+					for _, m := range allMarkets {
+						for _, opt := range m.Options {
+							if price, ok := optionTokenPriceMap[opt.Address]; ok {
+								opt.OptionTokenPrice = price
+							}
+						}
+					}
+				}
 			}
 		}
 	}

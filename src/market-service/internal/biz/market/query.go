@@ -103,7 +103,7 @@ func (query *MarketQuery) applyConditions(db *gorm.DB, prefix string) *gorm.DB {
 		db = db.Where(prefix+"address IN ?", query.AddressList)
 	}
 	if query.Address != "" {
-		db = db.Where(prefix+"address = ?", query.Address)
+		db = db.Where("LOWER("+prefix+"address) = LOWER(?)", query.Address)
 	}
 	if query.TxHash != "" {
 		db = db.Where(prefix+"tx_hash = ?", query.TxHash)

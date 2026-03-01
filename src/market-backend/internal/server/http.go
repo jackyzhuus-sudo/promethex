@@ -10,7 +10,6 @@ import (
 	"market-backend/internal/service/sse_api"
 	apipb "market-proto/proto/market-backend/v1"
 	netHttp "net/http"
-	"strings"
 	"time"
 
 	"github.com/go-kratos/aegis/ratelimit/bbr"
@@ -21,19 +20,6 @@ import (
 	"github.com/gorilla/handlers"
 )
 
-// legacyPathRewrite creates an HTTP filter that rewrites legacy /bayes/* paths to /api/v1/*
-// This ensures backward compatibility with existing clients during migration.
-func legacyPathRewrite(next netHttp.Handler) netHttp.Handler {
-	return netHttp.HandlerFunc(func(w netHttp.ResponseWriter, r *netHttp.Request) {
-		if strings.HasPrefix(r.URL.Path, "/bayes/") {
-			r.URL.Path = "/api/v1/" + strings.TrimPrefix(r.URL.Path, "/bayes/")
-			if r.URL.RawPath != "" {
-				r.URL.RawPath = "/api/v1/" + strings.TrimPrefix(r.URL.RawPath, "/bayes/")
-			}
-		}
-		next.ServeHTTP(w, r)
-	})
-}
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, httpApiService *http_api.HttpApiService, sseApiService *sse_api.SseApiService, logger log.Logger, data *data.Data, larkAlarm *alarm.LarkAlarm) *http.Server {
@@ -58,10 +44,8 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, h
 		http.ErrorEncoder(middleware.ErrorEncoder()),
 	}
 
-	// Legacy path rewrite + CORS: combined in single Filter call
-	// (Kratos http.Filter replaces previous filters, so they must be in one call)
+	// CORS filter
 	opts = append(opts, http.Filter(
-		legacyPathRewrite,
 		handlers.CORS(
 			handlers.AllowedOrigins([]string{"*"}),
 			handlers.AllowedMethods([]string{"GET", "POST"}),

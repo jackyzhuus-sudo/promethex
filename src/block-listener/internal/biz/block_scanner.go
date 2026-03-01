@@ -14,6 +14,8 @@ import (
 	"block-listener/pkg/alarm"
 	com "block-listener/pkg/common"
 
+	marketcenterPb "market-proto/proto/market-service/marketcenter/v1"
+
 	"github.com/ethereum/go-ethereum/common"
 	ethereumType "github.com/ethereum/go-ethereum/core/types"
 	"github.com/go-kratos/kratos/v2/log"
@@ -33,6 +35,11 @@ type BlockScanner struct {
 	// 解析器
 	conditionalTokensParser *contract.ConditionalTokensContract
 	predictionCTFParser     *contract.PredictionCTFContract
+
+	// 动态加载的PredictionCTF池地址 (从market-service获取)
+	dynamicCtfAddresses []common.Address
+	addressMu           sync.RWMutex
+	lastAddressRefresh  time.Time
 
 	// 控制监听的通道
 	stopCh    chan struct{}
@@ -304,9 +311,13 @@ func (scanner *BlockScanner) getCTFEvents(ctx com.Ctx, fromBlock, toBlock uint64
 
 // getPredictionCTFEvents 获取PredictionCTF池合约事件
 func (scanner *BlockScanner) getPredictionCTFEvents(ctx com.Ctx, fromBlock, toBlock uint64) ([]ethereumType.Log, error) {
-	ctfAddresses := scanner.cfg.PredictionCtfAddresses
-	if len(ctfAddresses) == 0 {
-		return nil, nil // 未配置PredictionCTF池地址，跳过
+	// 动态刷新PredictionCTF池地址
+	scanner.refreshPredictionCTFAddresses(ctx)
+
+	addresses := scanner.getPredictionCTFAddresses()
+	if len(addresses) == 0 {
+		ctx.Log.Debugf("无PredictionCTF池地址可监听，跳过")
+		return nil, nil
 	}
 
 	// 定义需要监听的PredictionCTF事件类型
@@ -320,12 +331,6 @@ func (scanner *BlockScanner) getPredictionCTFEvents(ctx com.Ctx, fromBlock, toBl
 		common.HexToHash(scanner.predictionCTFParser.GetEventSignature(contract.EventTypeCTFFeeCollected)),
 	}
 
-	// 构建地址列表
-	addresses := make([]common.Address, len(ctfAddresses))
-	for i, addr := range ctfAddresses {
-		addresses[i] = common.HexToAddress(addr)
-	}
-
 	txLogs, err := scanner.arbClient.GetBlockRangeLogsWithAddress(ctx.Ctx, fromBlock, toBlock, eventHashes, addresses)
 	if err != nil {
 		ctx.Log.Errorf("获取PredictionCTF池合约事件失败: %v", err)
@@ -333,6 +338,90 @@ func (scanner *BlockScanner) getPredictionCTFEvents(ctx com.Ctx, fromBlock, toBl
 	}
 
 	return txLogs, nil
+}
+
+// refreshPredictionCTFAddresses 从market-service动态获取所有PredictionCTF池合约地址
+func (scanner *BlockScanner) refreshPredictionCTFAddresses(ctx com.Ctx) {
+	scanner.addressMu.RLock()
+	// 每5分钟刷新一次
+	if time.Since(scanner.lastAddressRefresh) < 5*time.Minute {
+		scanner.addressMu.RUnlock()
+		return
+	}
+	scanner.addressMu.RUnlock()
+
+	// 分页获取所有活跃市场的地址
+	allAddresses := make([]common.Address, 0)
+	addressSet := make(map[string]bool)
+
+	var page uint32 = 1
+	var pageSize uint32 = 100
+
+	for {
+		resp, err := scanner.rpcClient.MarketcenterClient.GetMarketsAndOptionsInfo(ctx.Ctx, &marketcenterPb.GetMarketsAndOptionsInfoRequest{
+			Page:          page,
+			PageSize:      pageSize,
+			Status:        1, // 活跃市场
+			SortType:      marketcenterPb.GetMarketsAndOptionsInfoRequest_SORT_TYPE_OLDEST,
+			NotQueryPrice: true,
+		})
+		if err != nil {
+			ctx.Log.Errorf("从market-service获取市场地址失败: %v", err)
+			break
+		}
+
+		if len(resp.Markets) == 0 {
+			break
+		}
+
+		for _, market := range resp.Markets {
+			if market.Address != "" && !addressSet[market.Address] {
+				addressSet[market.Address] = true
+				allAddresses = append(allAddresses, common.HexToAddress(market.Address))
+			}
+		}
+
+		if len(resp.Markets) < int(pageSize) {
+			break
+		}
+		page++
+	}
+
+	// 同时包含config中静态配置的地址
+	for _, addr := range scanner.cfg.PredictionCtfAddresses {
+		if addr != "" && !addressSet[addr] {
+			addressSet[addr] = true
+			allAddresses = append(allAddresses, common.HexToAddress(addr))
+		}
+	}
+
+	scanner.addressMu.Lock()
+	scanner.dynamicCtfAddresses = allAddresses
+	scanner.lastAddressRefresh = time.Now()
+	scanner.addressMu.Unlock()
+
+	ctx.Log.Infof("刷新PredictionCTF池地址完成，共%d个地址", len(allAddresses))
+}
+
+// getPredictionCTFAddresses 获取当前的PredictionCTF池地址列表
+func (scanner *BlockScanner) getPredictionCTFAddresses() []common.Address {
+	scanner.addressMu.RLock()
+	defer scanner.addressMu.RUnlock()
+
+	if len(scanner.dynamicCtfAddresses) > 0 {
+		return scanner.dynamicCtfAddresses
+	}
+
+	// 回退到静态配置
+	if len(scanner.cfg.PredictionCtfAddresses) > 0 {
+		addresses := make([]common.Address, len(scanner.cfg.PredictionCtfAddresses))
+		for i, addr := range scanner.cfg.PredictionCtfAddresses {
+			addresses[i] = common.HexToAddress(addr)
+		}
+		return addresses
+	}
+
+	return nil
 }
 
 // saveEventLogs 批量保存事件日志
