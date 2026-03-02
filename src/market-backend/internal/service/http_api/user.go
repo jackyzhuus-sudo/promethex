@@ -75,8 +75,8 @@ func (s *HttpApiService) Login(ctx context.Context, req *apipb.LoginRequest) (*a
 		}
 	}
 
-	if email == "" || eoaAddress == "" {
-		c.Log.Errorf("email or eoaAddress is empty")
+	if email == "" && eoaAddress == "" {
+		c.Log.Errorf("email and eoaAddress are both empty")
 		return nil, pkg.ErrParam
 	}
 	address = req.Address
@@ -300,6 +300,20 @@ func (s *HttpApiService) GetUserBaseInfo(ctx context.Context, req *apipb.GetUser
 		InviteByCode:    GetUserBaseInfoRsp.InviteByCode,
 		InviterUserName: GetUserBaseInfoRsp.InviterUserName,
 		InviteAt:        GetUserBaseInfoRsp.InviteAt,
+	}
+
+	// Strip sensitive fields for non-self queries (IDOR protection)
+	isSelf := uid != "" && uid == GetUserBaseInfoRsp.Uid
+	if !isSelf {
+		rsp.Email = ""
+		rsp.EoaAddress = ""
+		rsp.Address = ""
+		rsp.Issuer = ""
+		rsp.InviteCode = ""
+		rsp.InviteByCode = ""
+		rsp.InviterUid = ""
+		rsp.InviterUserName = ""
+		rsp.InviteAt = 0
 	}
 
 	return rsp, nil

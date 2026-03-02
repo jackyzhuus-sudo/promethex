@@ -827,7 +827,7 @@ func (s *HttpApiService) GetUserAssetInfo(ctx context.Context, req *apipb.GetUse
 		return nil, err
 	}
 
-	return &apipb.GetUserAssetInfoReply{
+	rsp := &apipb.GetUserAssetInfoReply{
 		Balance:   GetUserAssetInfoRsp.Balance,
 		Portfolio: GetUserAssetInfoRsp.Portfolio,
 		Pnl:       GetUserAssetInfoRsp.Pnl,
@@ -835,7 +835,16 @@ func (s *HttpApiService) GetUserAssetInfo(ctx context.Context, req *apipb.GetUse
 		Decimal:   uint32(GetUserAssetInfoRsp.Decimal),
 		Volume:    GetUserAssetInfoRsp.Volume,
 		PnlRank:   GetUserAssetInfoRsp.PnlRank,
-	}, nil
+	}
+
+	// Hide wallet balance for non-self queries (IDOR protection)
+	// Portfolio/PnL/Volume remain public (shown on profile & leaderboard)
+	uid := util.GetUidFromCtx(ctx)
+	if uid == "" || uid != req.Uid {
+		rsp.Balance = "0"
+	}
+
+	return rsp, nil
 }
 
 func (s *HttpApiService) GetCategories(ctx context.Context, req *apipb.GetCategoriesRequest) (*apipb.GetCategoriesReply, error) {

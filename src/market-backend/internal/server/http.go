@@ -44,11 +44,19 @@ func NewHTTPServer(c *conf.Server, cfgCustom *conf.Custom, cfgData *conf.Data, h
 		http.ErrorEncoder(middleware.ErrorEncoder()),
 	}
 
-	// CORS filter
+	// CORS filter — explicit origin whitelist (wildcard + credentials violates CORS spec)
 	opts = append(opts, http.Filter(
 		handlers.CORS(
-			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedMethods([]string{"GET", "POST"}),
+			handlers.AllowedOrigins([]string{
+				"https://app.promethex.market",
+				"https://promethex-market-production.promethex.workers.dev",
+				"https://promethex-market-v2-staging.promethex.workers.dev",
+				"https://promethex-market-staging.promethex.workers.dev",
+				"http://localhost:5173",
+				"http://localhost:5174",
+				"http://localhost:5175",
+			}),
+			handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
 			handlers.AllowedHeaders([]string{"Content-Type", "Authorization", "sentry-trace", "baggage"}),
 			handlers.AllowCredentials(),
 		),

@@ -167,6 +167,11 @@ var (
 )
 
 func bizCodeToHttpCode(bizCode int) int {
+	// 标准 HTTP 状态码直接返回（如 auth 中间件的 401）
+	if bizCode >= 100 && bizCode < 600 {
+		return bizCode
+	}
+
 	// bizCode 格式：aabcdd
 	// aa: 服务编号
 	// b: 服务内的领域编号
@@ -180,8 +185,8 @@ func bizCodeToHttpCode(bizCode int) int {
 	default:
 	}
 
-	// 提取错误类型（第三位数字）
-	errorType := (bizCode / 10) % 10
+	// 提取错误类型（c 位，从右数第 3 位）
+	errorType := (bizCode / 100) % 10
 
 	// 根据错误类型返回对应的 HTTP 状态码
 	switch errorType {
@@ -262,6 +267,18 @@ func ErrorEncoder() httpTransport.EncodeErrorFunc {
 				msg = err.Error()
 				// 对于未知业务错误，默认使用 400
 				code = 400
+			}
+		}
+
+		// Sanitize client error messages — don't leak Go internals
+		if httpCode == http.StatusBadRequest {
+			internalPatterns := []string{"strconv.", "parsing", "cannot unmarshal", "proto:", "unexpected end", "invalid syntax"}
+			lowerMsg := strings.ToLower(msg)
+			for _, pattern := range internalPatterns {
+				if strings.Contains(lowerMsg, pattern) {
+					msg = "invalid request parameters"
+					break
+				}
 			}
 		}
 
