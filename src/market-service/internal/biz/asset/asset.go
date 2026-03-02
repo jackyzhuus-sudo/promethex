@@ -223,11 +223,16 @@ func (h *AssetHandler) GetPayMasterData(ctx common.Ctx, userOperation *UserOpera
 
 	preVerificationGas, verificationGasLimit, callGasLimit, paymasterVerificationGasLimit, err := h.assetRepo.EstimateUserOperationGas(ctx, userOperation)
 	if err != nil {
-		if strings.Contains(err.Error(), "alchemy estimate user operation gas failed") {
-			return nil, errors.New(int(marketcenterPb.ErrorCode_PARAM), "PARAM_ALCHEMY_ERROR", "estimate user operation gas failed: "+err.Error())
-		}
-		ctx.Log.Errorf("EstimateUserOperationGas error: %+v", err)
-		return nil, errors.New(int(marketcenterPb.ErrorCode_ALCHEMY), "ALCHEMY_ERROR", "estimate user operation gas failed: "+err.Error())
+		// Fallback: use generous gas values when estimation fails.
+		// Alchemy's eth_estimateUserOperationGas simulation does not persist
+		// intermediate state changes in multi-call batches (e.g. approve + deposit,
+		// setApprovalForAll + withdraw), causing execution reverts during estimation
+		// even though the on-chain execution would succeed.
+		ctx.Log.Warnf("EstimateUserOperationGas failed, using fallback gas values: %v", err)
+		preVerificationGas = "0x100000"     // 1,048,576
+		verificationGasLimit = "0x100000"   // 1,048,576
+		callGasLimit = "0x300000"           // 3,145,728 (generous for approve + trade)
+		paymasterVerificationGasLimit = "0x100000" // 1,048,576
 	}
 	userOperation.PreVerificationGas = preVerificationGas
 	userOperation.VerificationGasLimit = verificationGasLimit

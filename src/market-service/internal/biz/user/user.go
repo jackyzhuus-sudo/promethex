@@ -101,8 +101,8 @@ func (handler *UserHandler) CreateUser(ctx common.Ctx, userEntity *UserEntity) (
 	if userEntity.Issuer == "" {
 		return nil, errors.New(int(usercenterPb.ErrorCode_PARAM), "PARAM_ERROR", "issuer is empty")
 	}
-	if userEntity.Email == "" {
-		return nil, errors.New(int(usercenterPb.ErrorCode_PARAM), "PARAM_ERROR", "email is empty")
+	if userEntity.Email == "" && userEntity.EoaAddress == "" {
+		return nil, errors.New(int(usercenterPb.ErrorCode_PARAM), "PARAM_ERROR", "email and eoaAddress are both empty")
 	}
 	if len(userEntity.Name) > 64 {
 		return nil, ErrNameTooLong
@@ -184,19 +184,14 @@ func (handler *UserHandler) CreateUser(ctx common.Ctx, userEntity *UserEntity) (
 }
 
 func generateName(uid string) string {
-	// 角色名列表
-	roles := []string{
-		"Seer",       // 先知
-		"Forecaster", // 预测者
-		"Thinker",    // 思考者
-		"Agent",      // 智能体
-		"Node",       // 节点
-		"Prophet",    // 预言家
-		"Predictor",  // 预测师
-		"Sage",       // 智者
-		"Explorer",   // 探索者
-		"Arbitrator", // 仲裁者
-		"Pioneer",    // 先驱者
+	// Generic prediction-themed adjectives + nouns (no brand names)
+	adjectives := []string{
+		"Swift", "Bold", "Keen", "Sharp", "Bright",
+		"Calm", "Prime", "Noble", "Vivid", "Lucid",
+	}
+	nouns := []string{
+		"Seer", "Thinker", "Oracle", "Seeker", "Voyager",
+		"Cipher", "Sage", "Ranger", "Scout", "Pilot",
 	}
 
 	// 从uid中提取snowflakeID (去掉"bayes"前缀)
@@ -209,19 +204,16 @@ func generateName(uid string) string {
 	sequence := snowflakeID & 4095
 
 	// 混合生成4位数字
-	// 使用时间戳的末2位（取模100）和序列号的后8位
 	number := (timestamp%100)*100 + sequence%100
-
-	// 确保是4位数
 	number = number % 10000
 	if number < 1000 {
 		number += 1000
 	}
 
-	role := roles[util.SecureRandom(0, int64(len(roles)-1))]
+	adj := adjectives[util.SecureRandom(0, int64(len(adjectives)-1))]
+	noun := nouns[util.SecureRandom(0, int64(len(nouns)-1))]
 
-	// 组合用户名
-	return fmt.Sprintf("Bayes_%s_%04d", role, number)
+	return fmt.Sprintf("%s%s_%04d", adj, noun, number)
 }
 
 func (handler *UserHandler) GetUsersInfo(ctx common.Ctx, query *UserQuery) ([]*UserEntity, error) {
