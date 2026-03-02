@@ -13,6 +13,18 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 )
 
+// capPagination enforces pagination limits at BFF layer (defense-in-depth)
+func capPagination(page, pageSize *uint32) {
+	if *page == 0 {
+		*page = 1
+	}
+	if *pageSize == 0 {
+		*pageSize = 10
+	} else if *pageSize > 100 {
+		*pageSize = 100
+	}
+}
+
 func (s *HttpApiService) GetHotMarkets(ctx context.Context, req *apipb.GetHotMarketsRequest) (*apipb.GetHotMarketsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
 	hotMarketsRsp, err := s.data.RpcClient.MarketcenterClient.GetHotMarkets(ctx, &marketcenterpb.GetHotMarketsRequest{
@@ -47,6 +59,7 @@ func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFol
 	if uid == "" {
 		return nil, pkg.ErrParam
 	}
+	capPagination(&req.Page, &req.PageSize)
 	followedMarketsRsp, err := s.data.RpcClient.MarketcenterClient.GetFollowedMarkets(ctx, &marketcenterpb.GetFollowedMarketsRequest{
 		Uid:           uid,
 		Page:          req.Page,
@@ -78,6 +91,7 @@ func (s *HttpApiService) GetFollowMarkets(ctx context.Context, req *apipb.GetFol
 
 func (s *HttpApiService) GetHoldingPositionsMarket(ctx context.Context, req *apipb.GetHoldingPositionsMarketRequest) (*apipb.GetHoldingPositionsMarketReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
+	capPagination(&req.Page, &req.PageSize)
 	holdingPositionsMarketRsp, err := s.data.RpcClient.MarketcenterClient.GetHoldingPositionsMarkets(ctx, &marketcenterpb.GetHoldingPositionsMarketsRequest{
 		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
 		Uid:           req.Uid,
@@ -341,6 +355,7 @@ func (s *HttpApiService) GetMarketTrades(ctx context.Context, req *apipb.GetMark
 		Orders: make([]*apipb.GetMarketTradesReply_Order, 0),
 	}
 
+	capPagination(&req.Page, &req.PageSize)
 	GetMarketTradesRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketTrades(ctx, &marketcenterpb.GetMarketTradesRequest{
 		Address:  req.MarketAddress,
 		Page:     req.Page,
@@ -409,6 +424,7 @@ func (s *HttpApiService) GetUserTrades(ctx context.Context, req *apipb.GetUserTr
 	if uid == "" {
 		uid = util.GetUidFromCtx(ctx)
 	}
+	capPagination(&req.Page, &req.PageSize)
 	GetUserTradesRsp, err := s.data.RpcClient.MarketcenterClient.GetUserTrades(ctx, &marketcenterpb.GetUserTradesRequest{
 		Uid:           uid,
 		MarketAddress: req.MarketAddress,
@@ -522,6 +538,7 @@ func (s *HttpApiService) GetUserPositions(ctx context.Context, req *apipb.GetUse
 		uid = util.GetUidFromCtx(ctx)
 	}
 
+	capPagination(&req.Page, &req.PageSize)
 	GetUserPositionsRsp, err := s.data.RpcClient.MarketcenterClient.GetUserPositions(ctx, &marketcenterpb.GetUserPositionsRequest{
 		Uid:           uid,
 		MarketAddress: req.MarketAddress,
@@ -643,6 +660,7 @@ func (s *HttpApiService) GetMarkets(ctx context.Context, req *apipb.GetMarketsRe
 	}
 
 	// 1. 分页查询市场
+	capPagination(&req.Page, &req.PageSize)
 	GetMarketsRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketsAndOptionsInfo(ctx, &marketcenterpb.GetMarketsAndOptionsInfoRequest{
 		Uid:               uid,
 		Tag:               req.Tag,
@@ -798,7 +816,7 @@ func (s *HttpApiService) GetMarkets(ctx context.Context, req *apipb.GetMarketsRe
 
 func (s *HttpApiService) GetTags(ctx context.Context, req *apipb.GetTagsRequest) (*apipb.GetTagsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
-
+	capPagination(&req.Page, &req.PageSize)
 	GetMarketTagsRsp, err := s.data.RpcClient.MarketcenterClient.GetMarketTags(ctx, &marketcenterpb.GetMarketTagsRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -882,6 +900,7 @@ func (s *HttpApiService) GetUserTransactions(ctx context.Context, req *apipb.Get
 		return nil, pkg.ErrParam
 	}
 
+	capPagination(&req.Page, &req.PageSize)
 	GetUserTransactionsRsp, err := s.data.RpcClient.MarketcenterClient.GetUserTransactions(ctx, &marketcenterpb.GetUserTransactionsRequest{
 		Uid:           uid,
 		Page:          req.Page,
@@ -985,6 +1004,7 @@ func (s *HttpApiService) GetLeaderboard(ctx context.Context, req *apipb.GetLeade
 	}
 
 	uid := req.Uid
+	capPagination(&req.Page, &req.PageSize)
 	GetLeaderboardRsp, err := s.data.RpcClient.MarketcenterClient.GetLeaderboard(ctx, &marketcenterpb.GetLeaderboardRequest{
 		BaseTokenType: marketcenterpb.BaseTokenType(util.GetBaseTokenFromCtx(ctx)),
 		Uid:           req.Uid,
@@ -1133,7 +1153,7 @@ func (s *HttpApiService) GetEventDetail(ctx context.Context, req *apipb.GetEvent
 
 func (s *HttpApiService) GetEvents(ctx context.Context, req *apipb.GetEventsRequest) (*apipb.GetEventsReply, error) {
 	c := util.NewBaseCtx(ctx, s.logger)
-
+	capPagination(&req.Page, &req.PageSize)
 	listEventsRsp, err := s.data.RpcClient.MarketcenterClient.ListEvents(ctx, &marketcenterpb.ListEventsRequest{
 		Status:   marketcenterpb.EventStatus(req.Status),
 		SortType: marketcenterpb.ListEventsRequest_SortType(req.SortType),
